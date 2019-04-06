@@ -1,38 +1,25 @@
 <template>
-  <v-app>
-    <v-toolbar app>
-      <v-toolbar-title class="headline text-uppercase">
-        <span>Vuetify</span>
-        <span class="font-weight-light">MATERIAL DESIGN</span>
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn
-        flat
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-      >
-        <span class="mr-2">Latest Release</span>
-      </v-btn>
-    </v-toolbar>
-
+  <v-app id="app">
     <v-content>
-      <HelloWorld/>
+      <h1>Natural Resources Get Token</h1>
     </v-content>
+    <Footer></Footer>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
+  import Footer from './components/Footer'
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  },
-  data () {
-    return {
-      //
+  export default {
+    name: 'app',
+    components: {
+      Footer
     }
   }
-}
 </script>
+
+<style>
+  .v-card--flat{
+    background-color: transparent !important;
+  }
+</style>
