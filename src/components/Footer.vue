@@ -20,16 +20,19 @@
 
 <style>
   .footer .container {
-    min-height: 45px;
     background-color: rgb(0, 51, 102);
+    border-top: 2px solid rgb(252, 186, 25);
+    min-height: 45px;
     min-width: 100%;
   }
 
   .footer a {
-    color: #fff!important;
+    color: #fff !important;
     text-decoration: none;
   }
-  .v-btn--active.footer:before, .v-btn.footer:focus:before, .v-btn.footer:hover:before {
+  .v-btn--active.footer:before,
+  .v-btn.footer:focus:before,
+  .v-btn.footer:hover:before {
     background: none !important;
   }
 </style>
