@@ -2,7 +2,7 @@
   <footer class="footer">
     <v-container class="pa-0">
       <v-layout row>
-        <v-btn flat id="footer-home" href="https://www.gov.bc.ca/">Home</v-btn>
+        <v-btn flat id='footer-home' href="https://www.gov.bc.ca/">Home</v-btn>
         <v-btn flat id="footer-about" href="https://www2.gov.bc.ca/gov/content/about-gov-bc-ca">About gov.bc.ca</v-btn>
         <v-btn flat id="footer-disclaimer" href="http://gov.bc.ca/disclaimer">Disclaimer</v-btn>
         <v-btn flat id="footer-privacy" href="http://gov.bc.ca/privacy">Privacy</v-btn>
@@ -26,13 +26,13 @@
     min-width: 100%;
   }
 
-  .footer a {
-    color: #fff !important;
+  .footer .v-btn {
+    color: #fff;
     text-decoration: none;
   }
   .v-btn--active.footer:before,
   .v-btn.footer:focus:before,
   .v-btn.footer:hover:before {
-    background: none !important;
+    background: none;
   }
 </style>
