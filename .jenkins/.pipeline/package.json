@@ -1,0 +1,23 @@
+{
+  "name": "pipeline",
+  "version": "1.0.0",
+  "description": "This a pipeliene script",
+  "engines": {
+    "node": ">=8"
+  },
+  "scripts": {
+    "build": "node build.js",
+    "clean": "node clean.js",
+    "deploy": "node deploy.js",
+    "version": "echo \"node@$(node --version) ($(which node))\" && echo \"npm@$(npm --version) ($(which npm))\" && npm ls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cvarjao-o/hello-world.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "pipeline-cli": "git+https://github.com/bcdevops/pipeline-cli.git#c1a1811a0949a3ece253ae8293f3baaea7733f28"
+  }
+}

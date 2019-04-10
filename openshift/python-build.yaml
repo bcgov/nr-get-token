@@ -1,0 +1,84 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: caps-python
+parameters:
+- name: NAME
+- name: SUFFIX
+- name: GIT_REF
+  value: master
+- name: VERSION
+  description: Tag used for generated images
+- name: GIT_URL
+  value: https://github.com/bcgov/GDX-Analytics-Snowplow-Gateway-Service.git
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations: {}
+    creationTimestamp: null
+    labels:
+      shared: "true"
+    name: python
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage      
+        name: registry.access.redhat.com/rhscl/python-36-rhel7:1-41
+      importPolicy: {}
+      name: "3.6-1-41"
+      referencePolicy:
+        type: Local
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftWebConsole
+    creationTimestamp: null
+    generation: 1
+    labels:
+      shared: "true"
+    name: ${NAME}
+  spec:
+    lookupPolicy:
+      local: false
+  status:
+    dockerImageRepository: ""
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftWebConsole
+    creationTimestamp: null
+    name: ${NAME}${SUFFIX}
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: ${NAME}:${VERSION}
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        ref: ${GIT_REF}
+        uri: ${GIT_URL}
+      type: Git
+      contextDir: "app"
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: python:3.6-1-41
+      type: Source
+    triggers:
+    - imageChange: {}
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    lastVersion: 0
