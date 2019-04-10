@@ -17,21 +17,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-menu offset-y bottom>
-        <template v-slot:activator="{ on }">
-          <v-btn flat v-on="on">Language</v-btn>
-        </template>
-        <v-layout align-center justify-center row fill-height>
-          <v-flex xs12>
-            <v-list class="header-menu-secondary">
-              <v-list-tile @click="setLanguage('en')">English</v-list-tile>
-              <v-list-tile @click="setLanguage('fr')">Français</v-list-tile>
-            </v-list>
-          </v-flex>
-        </v-layout>
-      </v-menu>
-
-      <v-menu bottom left>
+      <!-- <v-menu bottom left>
         <template v-slot:activator="{ on }">
           <v-btn icon v-on="on">
             <v-icon x-large>menu</v-icon>
@@ -67,7 +53,7 @@
             </v-list>
           </v-flex>
         </v-layout>
-      </v-menu>
+      </v-menu> -->
     </v-toolbar>
   </header>
 </template>
