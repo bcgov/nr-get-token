@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "npm run serve",
-    "test": "npm run test",
     "serve": "vue-cli-service serve",
+    "start": "NODE_ENV=prod node ./bin/www",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "test": "npm run test"
   },
   "dependencies": {
     "core-js": "^2.6.5",
