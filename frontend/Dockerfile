@@ -22,7 +22,7 @@ LABEL io.k8s.description="NR Get Token Frontend" \
       io.openshift.tags="builder,nginx"
 
 # Openshift Changes
-RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx
+RUN chmod -R 777 /var/cache/nginx /var/run /var/log/nginx
 RUN sed -i.bak 's/listen\(.*\)80;/listen 8080;/' /etc/nginx/conf.d/default.conf
 EXPOSE 8080
 
