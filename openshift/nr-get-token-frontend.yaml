@@ -1,0 +1,93 @@
+apiVersion: v1
+objects:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewBuild
+    creationTimestamp: null
+    labels:
+      build: nr-get-token-frontend
+    name: nodejs-8-rhel7
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations:
+        openshift.io/imported-from: registry.access.redhat.com/rhscl/nodejs-8-rhel7:1-41
+      from:
+        kind: DockerImage
+        name: registry.access.redhat.com/rhscl/nodejs-8-rhel7:1-41
+      generation: null
+      importPolicy: {}
+      name: 1-41
+      referencePolicy:
+        type: Local
+  status:
+    dockerImageRepository: ""
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewBuild
+    creationTimestamp: null
+    labels:
+      build: nr-get-token-frontend
+    name: nr-get-token-frontend
+  spec:
+    lookupPolicy:
+      local: false
+  status:
+    dockerImageRepository: ""
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewBuild
+    creationTimestamp: null
+    labels:
+      build: nr-get-token-frontend
+    name: nr-get-token-frontend
+  spec:
+    nodeSelector: null
+    completionDeadlineSeconds: 900
+    output:
+      to:
+        kind: ImageStreamTag
+        name: nr-get-token-frontend:latest
+    postCommit: {}
+    resources:
+      requests:
+        cpu: 1000m
+        memory: 1Gi
+      limits:
+        cpu: 2000m
+        memory: 2Gi
+    runPolicy: SerialLatestOnly
+    source:
+      contextDir: frontend
+      git:
+        ref: feature/imagestream
+        uri: https://github.com/jujaga/nr-get-token.git
+      type: Git
+    strategy:
+      sourceStrategy:
+        env:
+          - name: NODE_ENV
+            value: production
+          - name: BUILD_LOGLEVEL
+            value: '2'
+          - name: DEV_MODE
+            value: 'false'
+        from:
+          kind: ImageStreamTag
+          name: nodejs-8-rhel7:1-41
+      type: Source
+    triggers:
+    - type: ConfigChange
+    - imageChange: {}
+      type: ImageChange
+  status:
+    lastVersion: 0
+kind: Template
+metadata: {}
