@@ -1,20 +1,64 @@
-# Generating Build Configs
+# Generating Build Configuration Templates
+
+You will likely not need to run the new template generation sections as that the base templates should already be in git. You should be able to skip those steps.
+
+## New Node Builder Template
+
+*If you are creating a new build configuration template, you will likely use the following commands:*
+
+```sh
+oc new-build -n k8vopl-tools registry.access.redhat.com/rhscl/nodejs-8-rhel7:latest~https://github.com/jujaga/nr-get-token.git#feature/imagestream --context-dir=frontend --name=nr-get-token-frontend --dry-run -o yaml > openshift/nr-get-token-frontend.build.yaml
+sed -i '' -e 's/kind: List/kind: Template/g' openshift/nr-get-token-frontend.build.yaml
+sed -i '' -e 's/items:/objects:/g' openshift/nr-get-token-frontend.build.yaml
 ```
-oc new-build registry.access.redhat.com/rhscl/python-36-rhel7:1~https://github.com/bcgov/GDX-Analytics-Snowplow-Gateway-Service.git --strategy=source --dry-run -o yaml '--name=${NAME}${SUFFIX}' '--context-dir=${GIT_DIR'
 
+## Process and Apply Builder Template
+
+```sh
+oc process -n k8vopl-tools -f openshift/nr-get-token-frontend.build.yaml -o yaml | oc create -f -
 ```
 
-# Generating Deployment Config
+## New Caddy Static Image Template
+
+*If you are creating a new build configuration template, you will likely use the following commands:*
+
+```sh
+oc new-build -n k8vopl-tools --docker-image=docker-registry.default.svc:5000/bcgov/s2i-caddy:v1-stable --source-image=nr-get-token-frontend:latest --source-image-path=/opt/app-root/src/dist:tmp -D $'FROM docker-registry.default.svc:5000/bcgov/s2i-caddy:v1-stable\nCOPY tmp/dist/ /var/www/html/\nCMD /tmp/scripts/run' --dry-run --name=nr-get-token-frontend-static -o yaml > openshift/nr-get-token-frontend-static.build.yaml
+sed -i '' -e 's/kind: List/kind: Template/g' openshift/nr-get-token-frontend-static.build.yaml
+sed -i '' -e 's/items:/objects:/g' openshift/nr-get-token-frontend-static.build.yaml
 ```
-oc new-app registry.access.redhat.com/rhscl/python-36-rhel7:1 --dry-run -o yaml '--name=${NAME}${SUFFIX}'
+
+## Process and Apply Static Image Template
+
+```sh
+oc process -n k8vopl-tools -f openshift/nr-get-token-frontend-static.build.yaml -o yaml | oc create -f -
 ```
 
-# IP Ranges
+## Tag the latest build and migrate it to the correct project namespace
 
-Hostnames on the ***.pathfinder.gov.bc.ca:80/443 - (142.34.208.209)*** are internet accessible application routes; there is an Entrust wildcard SSL cert on this route. To contain the applicationn to BC Government traffic, we specify a whitelist range on the route. More detail in the BC Gov Pathfinder OpenShift GitBook chapter on *[Networking](https://pathfinder-faq-ocio-pathfinder-prod.pathfinder.gov.bc.ca/OCP/Networking.html)*.
+```sh
+oc tag -n k8vopl-dev k8vopl-tools/nr-get-token-frontend-static:latest nr-get-token-frontend-static:dev --reference-policy=local
+```
 
-| Range Name               | IPs                                                                                                                                                                                                               |   |   |   |
-|--------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---|---|---|
-| ***Private Network IP Range*** | 172.51.0.0/16                                                                                                                                                                                                     |   |   |   |
-| ***PROD VLAN CIDR Range***     | 142.34.143.128/26; Netmask 255.255.255.192; Wildcard Bits 0.0.0.63; First IP 142.34.143.128; Last IP 142.34.143.191                                                                                                                                                                                                 |   |   |   |
-| ***BCGov IP 142 Subnets***     | 142.22.0.0/16 142.23.0.0/16 142.24.0.0/16 142.25.0.0/16 142.26.0.0/16 142.27.0.0/16 142.28.0.0/16 142.29.0.0/16 142.30.0.0/16 142.31.0.0/16 142.32.0.0/16 142.33.0.0/16 142.34.0.0/16 142.35.0.0/16 142.36.0.0/16 |   |   |   |
+## Create new Application Deployment
+
+*If you are creating a new application deployment template, you will likely use the following commands:*
+
+```sh
+oc new-app -n k8vopl-dev --image-stream=nr-get-token-frontend-static:latest --name=nr-get-token-frontend --dry-run -o yaml > openshift/nr-get-token-frontend-static.deployment.yaml
+```
+
+## Apply the Application Deployment
+
+```sh
+oc create -n k8vopl-dev -f openshift/nr-get-token-frontend-static.deployment.yaml
+oc create -n k8vopl-dev route edge nr-get-token-frontend --service=nr-get-token-frontend --port=2015-tcp
+```
+
+## Templating Work in Progress
+
+The above commands will need to be templated. We can expect something like the following in part of the commands:
+
+```sh
+'--name=${NAME}${SUFFIX}' '--context-dir=${GIT_DIR}'
+```
