@@ -1,0 +1,101 @@
+---
+apiVersion: v1
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewBuild
+    creationTimestamp: null
+    labels:
+      build: nr-get-token-frontend-static
+    name: s2i-caddy
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations:
+        openshift.io/imported-from: docker-registry.default.svc:5000/bcgov/s2i-caddy:v1-stable
+      from:
+        kind: DockerImage
+        name: docker-registry.default.svc:5000/bcgov/s2i-caddy:v1-stable
+      generation: null
+      importPolicy: {}
+      name: v1-stable
+      referencePolicy:
+        type: Local
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewBuild
+    creationTimestamp: null
+    labels:
+      build: nr-get-token-frontend-static
+    name: nr-get-token-frontend-static
+  spec:
+    lookupPolicy:
+      local: false
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewBuild
+    creationTimestamp: null
+    labels:
+      build: nr-get-token-frontend-static
+    name: nr-get-token-frontend-static
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: nr-get-token-frontend-static:latest
+    postCommit: {}
+    resources:
+      requests:
+        cpu: 1000m
+        memory: 1Gi
+      limits:
+        cpu: 2000m
+        memory: 2Gi
+    runPolicy: SerialLatestOnly
+    source:
+      dockerfile: |-
+        FROM docker-registry.default.svc:5000/bcgov/s2i-caddy:v1-stable
+        COPY tmp/dist/ /var/www/html/
+        CMD /tmp/scripts/run
+      images:
+      - as: null
+        from:
+          kind: ImageStreamTag
+          name: nr-get-token-frontend:latest
+          namespace: k8vopl-tools
+        paths:
+        - destinationDir: tmp
+          sourcePath: /opt/app-root/src/dist
+      type: Dockerfile
+    strategy:
+      dockerStrategy:
+        from:
+          kind: ImageStreamTag
+          name: s2i-caddy:v1-stable
+      type: Docker
+    triggers:
+    - imageChange:
+        from:
+          kind: ImageStreamTag
+          name: nr-get-token-frontend:latest
+          namespace: k8vopl-tools
+      type: ImageChange
+    - type: ConfigChange
+    - imageChange: {}
+      type: ImageChange
+  status:
+    lastVersion: 0
+kind: Template
+metadata: {}

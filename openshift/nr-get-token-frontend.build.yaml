@@ -1,6 +1,7 @@
+---
 apiVersion: v1
 objects:
-- apiVersion: image.openshift.io/v1
+- apiVersion: v1
   kind: ImageStream
   metadata:
     annotations:
@@ -14,18 +15,18 @@ objects:
       local: false
     tags:
     - annotations:
-        openshift.io/imported-from: registry.access.redhat.com/rhscl/nodejs-8-rhel7:1-41
+        openshift.io/imported-from: registry.access.redhat.com/rhscl/nodejs-8-rhel7:latest
       from:
         kind: DockerImage
-        name: registry.access.redhat.com/rhscl/nodejs-8-rhel7:1-41
+        name: registry.access.redhat.com/rhscl/nodejs-8-rhel7:latest
       generation: null
       importPolicy: {}
-      name: 1-41
+      name: latest
       referencePolicy:
         type: Local
   status:
     dockerImageRepository: ""
-- apiVersion: image.openshift.io/v1
+- apiVersion: v1
   kind: ImageStream
   metadata:
     annotations:
@@ -39,7 +40,7 @@ objects:
       local: false
   status:
     dockerImageRepository: ""
-- apiVersion: build.openshift.io/v1
+- apiVersion: v1
   kind: BuildConfig
   metadata:
     annotations:
@@ -49,8 +50,8 @@ objects:
       build: nr-get-token-frontend
     name: nr-get-token-frontend
   spec:
+    completionDeadlineSeconds: 600
     nodeSelector: null
-    completionDeadlineSeconds: 900
     output:
       to:
         kind: ImageStreamTag
@@ -73,15 +74,11 @@ objects:
     strategy:
       sourceStrategy:
         env:
-          - name: NODE_ENV
-            value: production
           - name: BUILD_LOGLEVEL
             value: '2'
-          - name: DEV_MODE
-            value: 'false'
         from:
           kind: ImageStreamTag
-          name: nodejs-8-rhel7:1-41
+          name: nodejs-8-rhel7:latest
       type: Source
     triggers:
     - type: ConfigChange
