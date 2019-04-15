@@ -23,7 +23,7 @@ objects:
       importPolicy: {}
       name: latest
       referencePolicy:
-        type: Local
+        type: local
   status:
     dockerImageRepository: ""
 - apiVersion: v1
