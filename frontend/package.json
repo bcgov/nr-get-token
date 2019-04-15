@@ -2,7 +2,6 @@
   "name": "nr-get-token",
   "version": "0.1.0",
   "description": "Natural Resources Get Token",
-  "sideEffects": false,
   "private": true,
   "scripts": {
     "build": "node_modules/.bin/vue-cli-service build",

@@ -27,7 +27,7 @@ items:
           deploymentconfig: nr-get-token-frontend
       spec:
         containers:
-        - image: docker-registry.default.svc:5000/k8vopl-tools/nr-get-token-frontend-static:latest
+        - image: docker-registry.default.svc:5000/k8vopl-dev/nr-get-token-frontend-static:dev
           name: nr-get-token-frontend
           ports:
           - containerPort: 2015
@@ -42,8 +42,8 @@ items:
         - nr-get-token-frontend
         from:
           kind: ImageStreamTag
-          name: nr-get-token-frontend-static:latest
-          namespace: k8vopl-tools
+          name: nr-get-token-frontend-static:dev
+          namespace: k8vopl-dev
       type: ImageChange
   status:
     availableReplicas: 0
