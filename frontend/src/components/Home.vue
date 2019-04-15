@@ -75,6 +75,7 @@ export default {
       headers.set("Content-Type", "application/json");
 
       const config = JSON.parse(this.appConfig);
+      /*eslint-disable */
 
       fetch(url, {
         method: "POST",
@@ -84,12 +85,17 @@ export default {
         .then(res => res.json())
         .then(function(response) {
           console.log("Success:", JSON.stringify(response));
-          alert(`SUCCESS, application configuration for ${config.applicationAcronym} updated in Integration`)
+          alert(
+            `SUCCESS, application configuration for ${
+              config.applicationAcronym
+            } updated in Integration`
+          );
         })
         .catch(function(error) {
           console.error("Error:", error);
           alert("ERROR, see console");
         });
+      /*eslint-enable */
     }
   }
 };

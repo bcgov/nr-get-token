@@ -42,7 +42,6 @@ export default {
 
   methods: {
     handleSubmit() {
-      console.log("submitted");
       const url = `https://i1api.nrs.gov.bc.ca/oauth2/v1/oauth/token?disableDeveloperFilter=true&grant_type=client_credentials&scope=WEBADE-REST.*`;
 
       const headers = new Headers();
@@ -50,6 +49,7 @@ export default {
         "Authorization",
         "Basic " + window.btoa("GETOK_SERVICE" + ":" + this.password)
       );
+      /*eslint-disable */
 
       fetch(url, {
         method: "get",
@@ -58,7 +58,6 @@ export default {
         .then(resp => resp.json())
         .then(function(data) {
           // TODO: This is all hard JS. Should be moved to proper Vue
-          console.log(data);
           const tokenResponseField = document.querySelector("#tokenResponse");
           const hiddenTokenField = document.querySelector("#hiddenToken");
           tokenResponseField.value = JSON.stringify(data, null, 2);
@@ -74,6 +73,7 @@ export default {
           console.log(`ERROR, caught error fetching from ${url}`);
           console.log(error);
         });
+      /*eslint-enable */
     }
   }
 };
