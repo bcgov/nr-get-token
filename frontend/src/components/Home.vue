@@ -75,7 +75,6 @@ export default {
       headers.set("Content-Type", "application/json");
 
       const config = JSON.parse(this.appConfig);
-      /*eslint-disable */
 
       fetch(url, {
         method: "POST",
@@ -84,7 +83,7 @@ export default {
       })
         .then(res => res.json())
         .then(function(response) {
-          console.log("Success:", JSON.stringify(response));
+          console.log("Success:", JSON.stringify(response)); // eslint-disable-line no-console
           alert(
             `SUCCESS, application configuration for ${
               config.applicationAcronym
@@ -92,10 +91,9 @@ export default {
           );
         })
         .catch(function(error) {
-          console.error("Error:", error);
+          console.error("Error:", error); // eslint-disable-line no-console
           alert("ERROR, see console");
         });
-      /*eslint-enable */
     }
   }
 };

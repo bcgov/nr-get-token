@@ -49,7 +49,6 @@ export default {
         "Authorization",
         "Basic " + window.btoa("GETOK_SERVICE" + ":" + this.password)
       );
-      /*eslint-disable */
 
       fetch(url, {
         method: "get",
@@ -70,10 +69,9 @@ export default {
           }
         })
         .catch(function(error) {
-          console.log(`ERROR, caught error fetching from ${url}`);
-          console.log(error);
+          console.log(`ERROR, caught error fetching from ${url}`); // eslint-disable-line no-console
+          console.log(error); // eslint-disable-line no-console
         });
-      /*eslint-enable */
     }
   }
 };
