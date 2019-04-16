@@ -10,8 +10,8 @@ def appRepo = new File('/var/run/configs/jobs/repo.name').getText('UTF-8').trim(
 def appName = new File('/var/run/configs/jobs/app.name').getText('UTF-8').trim()
 def appDomain = new File('/var/run/configs/jobs/app.domain').getText('UTF-8').trim()
 
-def nameSelector = "${appName}"
-def label = "'app-name'=${appName}"
+def nameSelector = "pr-${env.CHANGE_ID}"
+def label = "changeid=${env.CHANGE_ID}"
 def rawRepoBase = ""
 def devDomain = ""
 
@@ -31,13 +31,16 @@ pipeline {
                         openshift.withProject(devProject) {
 
                             // fill in some of the globals here...
-                            rawRepoBase = "https://raw.githubusercontent.com/${repoOwner}/${appRepo}/master"
+                            rawRepoBase = "https://raw.githubusercontent.com/${repoOwner}/${appRepo}/${CHANGE_BRANCH}"
                             devDomain = "${nameSelector}-${devProject}.${appDomain}"
 
                             if (doEcho) {
                                 echo "Using project: ${openshift.project()}"
                                 echo "----- Environment -----"
                                 echo "   Git"
+                                echo "      CHANGE_BRANCH = ${CHANGE_BRANCH}"
+                                echo "      CHANGE_TARGET = ${CHANGE_TARGET}"
+                                echo "      CHANGE_ID = ${CHANGE_ID}"
                                 echo "      BRANCH_NAME = ${BRANCH_NAME}"
                                 echo "      GIT_BRANCH = ${GIT_BRANCH}"
                                 echo "      GIT_COMMIT = ${GIT_COMMIT}"
@@ -53,6 +56,7 @@ pipeline {
                                 echo "      appRepo = ${appRepo}"
                                 echo "      appName = ${appName}"
                                 echo "      appDomain = ${appDomain}"
+
 
                                 echo "   Global Variables"
                                 echo "   nameSelector = ${nameSelector}"
