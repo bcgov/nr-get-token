@@ -1,4 +1,4 @@
-# jenkins
+# Jenkins
 
 Uses BcDevOPs CICD Jenkins Basic install  [link](https://github.com/BCDevOps/openshift-components/tree/cvarjao-update-jenkins-basic/cicd/jenkins-basic)  
 
@@ -12,14 +12,13 @@ See tools/docker/contrib/jenkins/configuration/init.groovy.d/003-create-jobs.gro
 
 To add or change the jobs, this is where you want to go.  The name of this file is important, as it needs to get run *BEFORE* the 003-register-github-webhooks.groovy included in the basic install.  Scripts are run alphabetically.  The jobs need to be created before the github webhooks are created.  Our jobs script will read secrets and configmaps created during this setup; described below.  
 
-## prerequisites
+## Prerequisites
+
 You should have your 4 OpenShift projects created for you by ???: dev, test, prod, tools.
 
 You will need a github account and token (preferrably a team shared account) with access to your repo: [New Personal Access Token](https://github.com/settings/tokens/new?scopes=repo,read:user,user:email,admin:repo_hook).
 
-
-
-# setup jenkins
+# Setup Jenkins
 
 The following commands setup up the Prod instance of Jenkins and uses this repository and specific OpenShift project namespaces.  
 
