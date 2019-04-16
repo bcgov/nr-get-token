@@ -9,6 +9,7 @@ import static jenkins.model.Jenkins.instance as jenkins
 import com.cloudbees.hudson.plugins.folder.computed.DefaultOrphanedItemStrategy
 import org.jenkinsci.plugins.github_branch_source.*
 import jenkins.scm.impl.trait.*
+import jenkins.scm.api.mixin.*
 import org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject
 import jenkins.branch.BranchSource
 
