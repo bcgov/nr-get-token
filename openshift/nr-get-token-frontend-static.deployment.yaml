@@ -1,0 +1,76 @@
+---
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: nr-get-token-frontend
+    name: nr-get-token-frontend
+  spec:
+    replicas: 1
+    selector:
+      app: nr-get-token-frontend
+      deploymentconfig: nr-get-token-frontend
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        annotations:
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: nr-get-token-frontend
+          deploymentconfig: nr-get-token-frontend
+      spec:
+        containers:
+        - image: docker-registry.default.svc:5000/k8vopl-dev/nr-get-token-frontend-static:dev
+          name: nr-get-token-frontend
+          ports:
+          - containerPort: 2015
+            protocol: TCP
+          resources: {}
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - nr-get-token-frontend
+        from:
+          kind: ImageStreamTag
+          name: nr-get-token-frontend-static:dev
+          namespace: k8vopl-dev
+      type: ImageChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
+    labels:
+      app: nr-get-token-frontend
+    name: nr-get-token-frontend
+  spec:
+    ports:
+    - name: 2015-tcp
+      port: 2015
+      protocol: TCP
+      targetPort: 2015
+    selector:
+      app: nr-get-token-frontend
+      deploymentconfig: nr-get-token-frontend
+  status:
+    loadBalancer: {}
+kind: List
+metadata: {}
