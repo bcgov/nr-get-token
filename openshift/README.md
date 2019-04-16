@@ -12,6 +12,8 @@ sed -i '' -e 's/kind: List/kind: Template/g' openshift/nr-get-token-frontend.bui
 sed -i '' -e 's/items:/objects:/g' openshift/nr-get-token-frontend.build.yaml
 ```
 
+*Note: You need to remove any secrets and credentials that are auto-inserted into the nr-get-token-frontend.build.yaml file.*
+
 ## Process and Apply Builder Template
 
 ```sh
@@ -27,6 +29,8 @@ oc new-build -n k8vopl-tools --docker-image=docker-registry.default.svc:5000/bcg
 sed -i '' -e 's/kind: List/kind: Template/g' openshift/nr-get-token-frontend-static.build.yaml
 sed -i '' -e 's/items:/objects:/g' openshift/nr-get-token-frontend-static.build.yaml
 ```
+
+*Note: You need to remove any secrets and credentials that are auto-inserted into the nr-get-token-frontend-static.build.yaml file.*
 
 ## Process and Apply Static Image Template
 
@@ -45,7 +49,7 @@ oc tag -n k8vopl-dev k8vopl-tools/nr-get-token-frontend-static:latest nr-get-tok
 *If you are creating a new application deployment template, you will likely use the following commands:*
 
 ```sh
-oc new-app -n k8vopl-dev --image-stream=nr-get-token-frontend-static:latest --name=nr-get-token-frontend --dry-run -o yaml > openshift/nr-get-token-frontend-static.deployment.yaml
+oc new-app -n k8vopl-dev --image-stream=nr-get-token-frontend-static:dev --name=nr-get-token-frontend --dry-run -o yaml > openshift/nr-get-token-frontend-static.deployment.yaml
 ```
 
 ## Apply the Application Deployment
