@@ -4,14 +4,17 @@ This tool will automate the process for getting setup to use common services pub
 
 ## Project Status
 
-TBD
+TBD - This will have build status and badges
 
 ## Directory Structure
 
+    .github/                   - PR and Issue templates
     backend/                   - Backend codebase
     docs/                      - Documentation
     frontend/                  - Frontend codebase
     openshift/                 - OpenShift-deployment specific files
+    tools/                     - Devops utilities
+    └── jenkins                - Jenkins standup
     CODE-OF-CONDUCT.md         - Code of Conduct
     CONTRIBUTING.md            - Contributing Guidelines
     Jenkinsfile                - Top-level Pipeline
