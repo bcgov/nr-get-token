@@ -1,3 +1,5 @@
+#!groovy
+
 // get projects/namespaces from config maps
 def devProject = new File('/var/run/configs/ns/project.dev').getText('UTF-8').trim()
 def testProject = new File('/var/run/configs/ns/project.test').getText('UTF-8').trim()
@@ -20,19 +22,42 @@ def doEcho = true
 pipeline {
     agent any
 
-    stages {
+    environment {
+        // PR_NUM is the pull request number e.g. 'pr-4'
+        PR_NUM = "${JOB_BASE_NAME}".toLowerCase()
+        NAME_SUFFIX="-${DEV_SUFFIX}-${PR_NUM}"
 
-        stage('preamble') {
+        SOURCE_REPO_URL="https://github.com/jujaga/nr-get-token.git"
+        SOURCE_REPO_REF="pull/${CHANGE_ID}/head"
+    }
+
+    stages {
+        stage('Build Config') {
             steps {
+                git branch: 'feature/newpipe' url: "${SOURCE_REPO_URL}"
+
                 echo "Print out all environment variables in this pipeline."
                 echo sh(returnStdout: true, script: 'env')
+
                 script {
                     openshift.withCluster() {
                         openshift.withProject(devProject) {
+                            // Build Frontend
+                            def buildTemplateFrontend = openshift.process("-f",
+                                "openshift/nr-get-token-frontend.build.yaml"
+                            )
+                            openshift.apply(buildTemplateFrontend)
+
+                            // Build Frontend Static
+                            // def buildTemplateFrontendStatic = openshift.process("-f",
+                            //     "openshift/nr-get-token-frontend-static.build.yaml"
+                            // )
+                            // openshift.apply(buildTemplateFrontendStatic)
+
 
                             // fill in some of the globals here...
                             rawRepoBase = "https://raw.githubusercontent.com/${repoOwner}/${appRepo}/master"
-                            devDomain = "${nameSelector}-${devProject}.${appDomain}"
+                            devDomain = "${devProject}.${appDomain}-${nameSelector}"
 
                             if (doEcho) {
                                 echo "Using project: ${openshift.project()}"
@@ -60,12 +85,10 @@ pipeline {
                                 echo "   devDomain = ${devDomain}"
                                 echo "   rawRepoBase = ${rawRepoBase}"
                             }
-
                         }
                     }
                 }
             }
         }
-
     }
 }

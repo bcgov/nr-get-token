@@ -68,8 +68,8 @@ objects:
     source:
       contextDir: frontend
       git:
-        ref: feature/imagestream
-        uri: https://github.com/jujaga/nr-get-token.git
+        ref: master
+        uri: https://github.com/bcgov/nr-get-token.git
       type: Git
     strategy:
       sourceStrategy:
