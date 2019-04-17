@@ -1,12 +1,15 @@
 #!groovy
 
-// get projects/namespaces from config maps
+// ------------------
+// Pipeline Variables
+// ------------------
+// Get projects/namespaces from config maps
 def devProject = new File('/var/run/configs/ns/project.dev').getText('UTF-8').trim()
 def testProject = new File('/var/run/configs/ns/project.test').getText('UTF-8').trim()
 def prodProject = new File('/var/run/configs/ns/project.prod').getText('UTF-8').trim()
 def toolsProject = new File('/var/run/configs/ns/project.tools').getText('UTF-8').trim()
 
-// get application config from config maps
+// Get application config from config maps
 def repoOwner = new File('/var/run/configs/jobs/repo.owner').getText('UTF-8').trim()
 def appRepo = new File('/var/run/configs/jobs/repo.name').getText('UTF-8').trim()
 def appName = new File('/var/run/configs/jobs/app.name').getText('UTF-8').trim()
@@ -14,11 +17,14 @@ def appDomain = new File('/var/run/configs/jobs/app.domain').getText('UTF-8').tr
 
 def nameSelector = "${appName}"
 def label = "'app-name'=${appName}"
-def rawRepoBase = ""
-def devDomain = ""
+def rawRepoBase = ''
+def devDomain = ''
 
 def doEcho = true
 
+// --------------------
+// Declarative Pipeline
+// --------------------
 pipeline {
     agent any
 
@@ -32,30 +38,40 @@ pipeline {
     }
 
     stages {
-        stage('Build Config') {
+        stage('Debug') {
             steps {
-                git branch: 'feature/newpipe', url: "${SOURCE_REPO_URL}"
+                git branch: 'feature/newpipe', url: 'https://github.com/jujaga/nr-get-token.git'
+                script {
+                    openshift.logLevel(5)
+                }
+            }
+        }
+
+        stage('Create Build Configs') {
+            steps {
+                echo "Cancelling previous builds..."
+                timeout(10) {
+                    abortAllPreviousBuildInProgress(currentBuild)
+                }
+                echo "Previous builds cancelled"
 
                 echo "Print out all environment variables in this pipeline."
                 echo sh(returnStdout: true, script: 'env')
 
                 script {
                     openshift.withCluster() {
-                        openshift.withProject(devProject) {
-                            openshift.logLevel(5)
-
+                        openshift.withProject(toolsProject) {
                             // Build Frontend
-                            def buildTemplateFrontend = openshift.process("-f",
-                                "openshift/nr-get-token-frontend.build.yaml"
+                            def buildTemplateFrontend = openshift.process('-f',
+                                'openshift/frontend.bc.yaml'
                             )
                             openshift.apply(buildTemplateFrontend)
 
                             // Build Frontend Static
-                            // def buildTemplateFrontendStatic = openshift.process("-f",
-                            //     "openshift/nr-get-token-frontend-static.build.yaml"
-                            // )
-                            // openshift.apply(buildTemplateFrontendStatic)
-
+                            def buildTemplateFrontendStatic = openshift.process('-f',
+                                'openshift/frontend-static.bc.yaml'
+                            )
+                            openshift.apply(buildTemplateFrontendStatic)
 
                             // fill in some of the globals here...
                             rawRepoBase = "https://raw.githubusercontent.com/${repoOwner}/${appRepo}/master"
@@ -64,10 +80,10 @@ pipeline {
                             if (doEcho) {
                                 echo "Using project: ${openshift.project()}"
                                 echo "----- Environment -----"
-                                echo "   Git"
-                                echo "      BRANCH_NAME = ${BRANCH_NAME}"
-                                echo "      GIT_BRANCH = ${GIT_BRANCH}"
-                                echo "      GIT_COMMIT = ${GIT_COMMIT}"
+                                // echo "   Git"
+                                // echo "      BRANCH_NAME = ${BRANCH_NAME}"
+                                // echo "      GIT_BRANCH = ${GIT_BRANCH}"
+                                // echo "      GIT_COMMIT = ${GIT_COMMIT}"
 
                                 echo "   NS Config"
                                 echo "      devProject = ${devProject}"
@@ -88,6 +104,22 @@ pipeline {
                                 echo "   rawRepoBase = ${rawRepoBase}"
                             }
                         }
+                    }
+                }
+            }
+        }
+
+        stage('Build & Test Images') {
+            steps {
+                openshift.withCluster() {
+                    openshift.withProject(toolsProject) {
+                        echo 'Building Frontend'
+                        def buildFrontend = openshift.selector('bc', "frontend-${NAME_SUFFIX}")
+                        buildFrontend.startBuild('--wait').logs('-f')
+
+                        echo 'Building Static Frontend'
+                        def backendBuild = openshift.selector('bc', "frontend-static-${NAME_SUFFIX}")
+                        backendBuild.startBuild('--wait').logs('-f')
                     }
                 }
             }
