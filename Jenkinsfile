@@ -34,7 +34,7 @@ pipeline {
     stages {
         stage('Build Config') {
             steps {
-                git branch: 'feature/newpipe' url: "${SOURCE_REPO_URL}"
+                git branch: 'feature/newpipe', url: "${SOURCE_REPO_URL}"
 
                 echo "Print out all environment variables in this pipeline."
                 echo sh(returnStdout: true, script: 'env')
@@ -42,6 +42,8 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(devProject) {
+                            openshift.logLevel(5)
+
                             // Build Frontend
                             def buildTemplateFrontend = openshift.process("-f",
                                 "openshift/nr-get-token-frontend.build.yaml"
