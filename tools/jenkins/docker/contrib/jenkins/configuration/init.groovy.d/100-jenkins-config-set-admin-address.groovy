@@ -6,6 +6,7 @@
 // Url is already set up in the current jenkins image/build/scripts, so don't bother here.
 // Only update the admin address.
 //
+import jenkins.model.*
 
 jlc = JenkinsLocationConfiguration.get()
 println "Update Location Configuration: current settings...."
