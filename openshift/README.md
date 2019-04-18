@@ -17,7 +17,7 @@ sed -i '' -e 's/items:/objects:/g' openshift/frontend.bc.yaml
 ## Process and Apply Builder Template
 
 ```sh
-oc process -n k8vopl-tools -f openshift/frontend.bc.yaml -o yaml | oc create -f -
+oc process -n k8vopl-tools -f openshift/frontend.bc.yaml -o yaml | oc create -n k8vopl-tools -f -
 ```
 
 ## New Caddy Static Image Template
@@ -35,7 +35,7 @@ sed -i '' -e 's/items:/objects:/g' openshift/frontend-static.bc.yaml
 ## Process and Apply Static Image Template
 
 ```sh
-oc process -n k8vopl-tools -f openshift/frontend-static.bc.yaml -o yaml | oc create -f -
+oc process -n k8vopl-tools -f openshift/frontend-static.bc.yaml -o yaml | oc create -n k8vopl-tools -f -
 ```
 
 ## Tag the latest build and migrate it to the correct project namespace
@@ -52,10 +52,10 @@ oc tag -n k8vopl-dev k8vopl-tools/frontend-static:latest frontend-static:dev --r
 oc new-app -n k8vopl-dev --image-stream=frontend-static:dev --name=get-token-frontend --dry-run -o yaml > openshift/frontend-static.dc.yaml
 ```
 
-## Apply the Application Deployment
+## Process and Apply the Application Deployment
 
 ```sh
-oc create -n k8vopl-dev -f openshift/frontend-static.dc.yaml
+oc process -n k8vopl-dev -f openshift/frontend-static.dc.yaml -o yaml | oc create -n k8vopl-dev -f -
 oc create -n k8vopl-dev route edge frontend --service=frontend --port=2015-tcp
 ```
 

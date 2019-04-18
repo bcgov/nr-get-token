@@ -20,7 +20,7 @@ def label = "'app-name'=${appName}"
 def rawRepoBase = "https://raw.githubusercontent.com/${repoOwner}/${appRepo}/master"
 def devDomain = "${devProject}.${appDomain}-${nameSelector}"
 
-def doEcho = false
+def doEcho = true
 
 // --------------------
 // Declarative Pipeline
@@ -114,6 +114,26 @@ pipeline {
                                 openshift.selector('bc', "nr-get-token-frontend").delete()
                                 openshift.selector('bc', "nr-get-token-frontend-static").delete()
                             }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject(devProject) {
+                            // OC Tag
+                            openshift.tag("${toolsProject}/nr-get-token-frontend-static:latest", 'nr-get-token-frontend-static:dev')
+                            // Process application deployment
+                            def dcFrontend = openshift.process('-f',
+                                'openshift/frontend-static.dc.yaml'
+                            )
+                            // Apply deployment
+                            openshift.apply(dcFrontend)
+                            // Add route
                         }
                     }
                 }
