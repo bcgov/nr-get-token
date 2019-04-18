@@ -49,10 +49,10 @@ pipeline {
 
             echo "Using project: ${openshift.project()}"
             echo "----- Environment -----"
-            // echo "   Git"
-            // echo "      BRANCH_NAME = ${BRANCH_NAME}"
-            // echo "      GIT_BRANCH = ${GIT_BRANCH}"
-            // echo "      GIT_COMMIT = ${GIT_COMMIT}"
+            echo "   Git"
+            echo "      BRANCH_NAME = ${BRANCH_NAME}"
+            echo "      GIT_BRANCH = ${GIT_BRANCH}"
+            echo "      GIT_COMMIT = ${GIT_COMMIT}"
 
             echo "   NS Config"
             echo "      devProject = ${devProject}"
