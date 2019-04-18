@@ -11,7 +11,7 @@ items:
       app: nr-get-token-frontend
     name: nr-get-token-frontend
   spec:
-    replicas: 1
+    replicas: 2
     selector:
       app: nr-get-token-frontend
       deploymentconfig: nr-get-token-frontend

@@ -20,7 +20,7 @@ def label = "'app-name'=${appName}"
 def rawRepoBase = "https://raw.githubusercontent.com/${repoOwner}/${appRepo}/master"
 def devDomain = "${devProject}.${appDomain}-${nameSelector}"
 
-def doEcho = true
+def doEcho = false
 
 // --------------------
 // Declarative Pipeline
@@ -46,9 +46,9 @@ pipeline {
                 echo sh(returnStdout: true, script: 'env')
 
                 script {
-                    openshift.logLevel(5)
-
                     if (doEcho) {
+                        openshift.logLevel(1)
+
                         echo "Using project: ${openshift.project()}"
                         echo "----- Environment -----"
                         // echo "   Git"
@@ -78,10 +78,10 @@ pipeline {
             }
         }
 
-        stage('Create BuildConfigs') {
+        stage('Frontend') {
             steps {
-                echo 'Cancelling previous builds...'
                 timeout(10) {
+                    echo 'Cancelling previous builds...'
                     abortAllPreviousBuildInProgress(currentBuild)
                 }
 
@@ -89,35 +89,31 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject(toolsProject) {
                             echo 'Creating Frontend BuildConfig...'
-                            def buildTemplateFrontend = openshift.process('-f',
+                            def bcFrontend = openshift.process('-f',
                                 'openshift/frontend.bc.yaml'
                             )
-                            openshift.apply(buildTemplateFrontend)
+                            echo 'Building Frontend...'
+                            openshift.apply(bcFrontend).narrow('bc').logs('-f')
 
                             echo 'Creating Static Frontend BuildConfig...'
-                            def buildTemplateFrontendStatic = openshift.process('-f',
+                            def bcFrontendStatic = openshift.process('-f',
                                 'openshift/frontend-static.bc.yaml'
                             )
-                            openshift.apply(buildTemplateFrontendStatic)
+                            echo 'Building Static Frontend...'
+                            openshift.apply(bcFrontendStatic).narrow('bc').logs('-f')
                         }
                     }
                 }
             }
-        }
-
-        stage('Build & Test ImageStreams') {
-            steps {
-                script {
-                    openshift.withCluster() {
-                        openshift.withProject(toolsProject) {
-                            echo 'Building Frontend ImageStream...'
-                            def buildFrontend = openshift.selector("buildconfig/nr-get-token-frontend")
-                            println buildFrontend
-                            buildFrontend.startBuild('--wait').logs('-f')
-
-                            // echo 'Building Static Frontend ImageStream...'
-                            // def backendBuild = openshift.selector('bc', "nr-get-token-frontend-static")
-                            // backendBuild.startBuild('--wait').logs('-f')
+            post {
+                always {
+                    echo 'Cleanup Frontend BuildConfigs'
+                    script {
+                        openshift.withCluster() {
+                            openshift.withProject(toolsProject) {
+                                openshift.selector('bc', "nr-get-token-frontend").delete()
+                                openshift.selector('bc', "nr-get-token-frontend-static").delete()
+                            }
                         }
                     }
                 }
