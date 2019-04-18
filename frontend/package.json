@@ -1,26 +1,21 @@
 {
   "name": "nr-get-token",
   "version": "0.1.0",
-  "description": "Natural Resources Get Token",
   "private": true,
+  "description": "Natural Resources Get Token",
+  "author": "NR Common Service Showcase <NR.CommonServiceShowcase@gov.bc.ca>",
   "scripts": {
-    "build": "node_modules/.bin/vue-cli-service build",
-    "clean": "rm -rf coverage dist",
     "serve": "node_modules/.bin/vue-cli-service serve",
+    "build": "node_modules/.bin/vue-cli-service build",
+    "test": "node_modules/.bin/jest --passWithNoTests",
     "lint": "node_modules/.bin/vue-cli-service lint",
+    "clean": "rm -rf coverage dist",
     "prebuild": "npm run test",
     "pretest": "npm run lint",
     "purge": "rm -rf node_modules",
     "rebuild": "npm run clean && npm run build",
-    "reinstall": "npm run purge && npm install",
-    "test": "node_modules/.bin/jest --passWithNoTests"
+    "reinstall": "npm run purge && npm install"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/bcgov/nr-get-token.git"
-  },
-  "author": "NR Common Service Showcase <NR.CommonServiceShowcase@gov.bc.ca>",
-  "license": "Apache-2.0",
   "dependencies": {
     "core-js": "^2.6.5",
     "vue": "^2.6.6",
@@ -58,6 +53,16 @@
       "parser": "babel-eslint"
     }
   },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
   "jest": {
     "moduleFileExtensions": [
       "js",
@@ -68,14 +73,9 @@
       ".*\\.(vue)$": "vue-jest"
     }
   },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bcgov/nr-get-token.git"
+  }
 }
