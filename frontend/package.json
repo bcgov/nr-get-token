@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bcgov/nr-get-token.git"
+    "url": "git+https://github.com/bcgov/nr-get-token.git"
   },
   "author": "NR Common Service Showcase <NR.CommonServiceShowcase@gov.bc.ca>",
   "license": "Apache-2.0",
