@@ -125,15 +125,11 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(devProject) {
-                            // OC Tag
                             openshift.tag("${toolsProject}/nr-get-token-frontend-static:latest", 'nr-get-token-frontend-static:dev')
-                            // Process application deployment
                             def dcFrontend = openshift.process('-f',
                                 'openshift/frontend-static.dc.yaml'
                             )
-                            // Apply deployment
                             openshift.apply(dcFrontend)
-                            // Add route
                         }
                     }
                 }
