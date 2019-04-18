@@ -1,6 +1,6 @@
 ---
 apiVersion: v1
-items:
+objects:
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
@@ -11,7 +11,7 @@ items:
       app: nr-get-token-frontend
     name: nr-get-token-frontend
   spec:
-    replicas: 1
+    replicas: 2
     selector:
       app: nr-get-token-frontend
       deploymentconfig: nr-get-token-frontend
@@ -72,5 +72,25 @@ items:
       deploymentconfig: nr-get-token-frontend
   status:
     loadBalancer: {}
-kind: List
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: 'true'
+    labels:
+      app: nr-get-token-frontend
+    name: frontend
+  spec:
+    host: frontend-k8vopl-dev.pathfinder.gov.bc.ca
+    port:
+      targetPort: 2015-tcp
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+    to:
+      kind: Service
+      name: nr-get-token-frontend
+      weight: 100
+    wildcardPolicy: None
+kind: Template
 metadata: {}

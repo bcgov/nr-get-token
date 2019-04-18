@@ -8,22 +8,22 @@ objects:
       openshift.io/generated-by: OpenShiftNewBuild
     creationTimestamp: null
     labels:
-      build: nr-get-token-frontend
-    name: nodejs-8-rhel7
+      build: nr-get-token-frontend-static
+    name: s2i-caddy
   spec:
     lookupPolicy:
       local: false
     tags:
     - annotations:
-        openshift.io/imported-from: registry.access.redhat.com/rhscl/nodejs-8-rhel7:latest
+        openshift.io/imported-from: docker-registry.default.svc:5000/bcgov/s2i-caddy:v1-stable
       from:
         kind: DockerImage
-        name: registry.access.redhat.com/rhscl/nodejs-8-rhel7:latest
+        name: docker-registry.default.svc:5000/bcgov/s2i-caddy:v1-stable
       generation: null
       importPolicy: {}
-      name: latest
+      name: v1-stable
       referencePolicy:
-        type: local
+        type: Local
   status:
     dockerImageRepository: ""
 - apiVersion: v1
@@ -33,8 +33,8 @@ objects:
       openshift.io/generated-by: OpenShiftNewBuild
     creationTimestamp: null
     labels:
-      build: nr-get-token-frontend
-    name: nr-get-token-frontend
+      build: nr-get-token-frontend-static
+    name: nr-get-token-frontend-static
   spec:
     lookupPolicy:
       local: false
@@ -47,15 +47,14 @@ objects:
       openshift.io/generated-by: OpenShiftNewBuild
     creationTimestamp: null
     labels:
-      build: nr-get-token-frontend
-    name: nr-get-token-frontend
+      build: nr-get-token-frontend-static
+    name: nr-get-token-frontend-static
   spec:
-    completionDeadlineSeconds: 600
     nodeSelector: null
     output:
       to:
         kind: ImageStreamTag
-        name: nr-get-token-frontend:latest
+        name: nr-get-token-frontend-static:latest
     postCommit: {}
     resources:
       requests:
@@ -66,21 +65,33 @@ objects:
         memory: 2Gi
     runPolicy: SerialLatestOnly
     source:
-      contextDir: frontend
-      git:
-        ref: feature/imagestream
-        uri: https://github.com/jujaga/nr-get-token.git
-      type: Git
-    strategy:
-      sourceStrategy:
-        env:
-          - name: BUILD_LOGLEVEL
-            value: '2'
+      dockerfile: |-
+        FROM docker-registry.default.svc:5000/bcgov/s2i-caddy:v1-stable
+        COPY tmp/dist/ /var/www/html/
+        CMD /tmp/scripts/run
+      images:
+      - as: null
         from:
           kind: ImageStreamTag
-          name: nodejs-8-rhel7:latest
-      type: Source
+          name: nr-get-token-frontend:latest
+          namespace: k8vopl-tools
+        paths:
+        - destinationDir: tmp
+          sourcePath: /opt/app-root/src/dist
+      type: Dockerfile
+    strategy:
+      dockerStrategy:
+        from:
+          kind: ImageStreamTag
+          name: s2i-caddy:v1-stable
+      type: Docker
     triggers:
+    - imageChange:
+        from:
+          kind: ImageStreamTag
+          name: nr-get-token-frontend:latest
+          namespace: k8vopl-tools
+      type: ImageChange
     - type: ConfigChange
     - imageChange: {}
       type: ImageChange
