@@ -17,8 +17,8 @@
         </v-flex>
         <v-flex xs12 md6 offset-md1>
           <v-textarea
-            id="tokenResponse"
-            rows="10"
+            v-model="tokenResponse"
+            rows="1"
             placeholder="This field will be filled by the token"
             auto-grow
             readonly
@@ -39,39 +39,36 @@ export default {
       tokenResponse: ""
     };
   },
+  computed: {
+    test() {
+      return this.$store.state.token;
+    }
+  },
 
   methods: {
-    handleSubmit() {
-      const url = `https://i1api.nrs.gov.bc.ca/oauth2/v1/oauth/token?disableDeveloperFilter=true&grant_type=client_credentials&scope=WEBADE-REST.*`;
+    async handleSubmit() {
+      const fetchedToken = await this.fetchToken();
+      this.tokenResponse = JSON.stringify(fetchedToken, null, 2);
+      this.$store.commit("setToken", fetchedToken.access_token);
+    },
+    async fetchToken() {
+      try {
+        const url = `https://i1api.nrs.gov.bc.ca/oauth2/v1/oauth/token?disableDeveloperFilter=true&grant_type=client_credentials&scope=WEBADE-REST.*`;
 
-      const headers = new Headers();
-      headers.set(
-        "Authorization",
-        "Basic " + window.btoa("GETOK_SERVICE" + ":" + this.password)
-      );
+        const headers = new Headers();
+        headers.set(
+          "Authorization",
+          "Basic " + window.btoa("GETOK_SERVICE" + ":" + this.password)
+        );
+        const response = await fetch(url, { method: "get", headers: headers });
 
-      fetch(url, {
-        method: "get",
-        headers: headers
-      })
-        .then(resp => resp.json())
-        .then(function(data) {
-          // TODO: This is all hard JS. Should be moved to proper Vue
-          const tokenResponseField = document.querySelector("#tokenResponse");
-          const hiddenTokenField = document.querySelector("#hiddenToken");
-          tokenResponseField.value = JSON.stringify(data, null, 2);
-          if (data.access_token) {
-            hiddenTokenField.value = data.access_token;
-            const appSubmit = document.querySelector("#submitAppConfig");
-            appSubmit.disabled = false;
-            appSubmit.classList.remove("v-btn--disabled", "success--text");
-            appSubmit.classList.add("success");
-          }
-        })
-        .catch(function(error) {
-          console.log(`ERROR, caught error fetching from ${url}`); // eslint-disable-line no-console
-          console.log(error); // eslint-disable-line no-console
-        });
+        const body = await response.json();
+
+        return body;
+      } catch (e) {
+        console.log(`ERROR, caught error fetching from ${url}`); // eslint-disable-line no-console
+        console.log(e); // eslint-disable-line no-console
+      }
     }
   }
 };

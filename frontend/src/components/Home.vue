@@ -20,29 +20,17 @@
         <v-card class="sectionCard">
           <v-toolbar card color="grey lighten-3">
             <v-toolbar-title>Submit Application Configuration</v-toolbar-title>
+            <v-spacer></v-spacer>
+
+            <v-chip v-if="!token" color="red" text-color="white">
+              <v-icon left>lock</v-icon>No Valid Token
+            </v-chip>
+            <v-chip v-if="token" color="green" text-color="white">
+              <v-icon left>lock_open</v-icon>
+              Token: {{token}}
+            </v-chip>
           </v-toolbar>
-          <v-container>
-            <v-layout>
-              <v-flex xs12>
-                <v-form>
-                  <v-textarea
-                    rows="1"
-                    placeholder="Enter configuration JSON here"
-                    auto-grow
-                    label="WebADE Application Config"
-                    v-model="appConfig"
-                  ></v-textarea>
-                  <v-btn
-                    id="submitAppConfig"
-                    disabled
-                    color="success"
-                    @click="handleSubmitAppConfig"
-                  >Submit</v-btn>
-                  <input type="hidden" id="hiddenToken">
-                </v-form>
-              </v-flex>
-            </v-layout>
-          </v-container>
+          <ConfigForm></ConfigForm>
         </v-card>
       </v-flex>
     </v-layout>
@@ -51,49 +39,17 @@
 
 <script>
 import GetToken from "./GetToken";
+import ConfigForm from "./ConfigForm";
 
 export default {
   name: "home",
   components: {
-    GetToken
+    GetToken,
+    ConfigForm
   },
-  data() {
-    return {
-      hiddenToken: "",
-      appConfig: ""
-    };
-  },
-
-  methods: {
-    handleSubmitAppConfig() {
-      const token = document.querySelector("#hiddenToken").value;
-
-      const url = `https://i1api.nrs.gov.bc.ca/webade-api/v1/applicationConfigurations`;
-
-      const headers = new Headers();
-      headers.set("Authorization", `Bearer ${token}`);
-      headers.set("Content-Type", "application/json");
-
-      const config = JSON.parse(this.appConfig);
-
-      fetch(url, {
-        method: "POST",
-        body: this.appConfig,
-        headers: headers
-      })
-        .then(res => res.json())
-        .then(function(response) {
-          console.log("Success:", JSON.stringify(response)); // eslint-disable-line no-console
-          alert(
-            `SUCCESS, application configuration for ${
-              config.applicationAcronym
-            } updated in Integration`
-          );
-        })
-        .catch(function(error) {
-          console.error("Error:", error); // eslint-disable-line no-console
-          alert("ERROR, see console");
-        });
+  computed: {
+    token() {
+      return this.$store.state.token;
     }
   }
 };
