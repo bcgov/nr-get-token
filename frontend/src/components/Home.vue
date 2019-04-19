@@ -40,6 +40,7 @@
 <script>
 import GetToken from "./GetToken";
 import ConfigForm from "./ConfigForm";
+import { mapGetters } from "vuex";
 
 export default {
   name: "home",
@@ -47,11 +48,7 @@ export default {
     GetToken,
     ConfigForm
   },
-  computed: {
-    token() {
-      return this.$store.state.token;
-    }
-  }
+  computed: mapGetters(["token"])
 };
 </script>
 

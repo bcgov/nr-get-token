@@ -10,8 +10,11 @@
             label="WebADE Application Config"
             v-model="appConfig"
           ></v-textarea>
-          <v-btn id="submitAppConfig" disabled color="success" @click="handleSubmitAppConfig">Submit</v-btn>
-          <input type="hidden" id="hiddenToken">
+          <v-btn
+            disabled
+            color="success"
+            @click="handleSubmitAppConfig"
+          >Submit</v-btn>
         </v-form>
       </v-flex>
     </v-layout>
@@ -19,21 +22,22 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "configForm",
   data() {
     return {
-      hiddenToken: "",
       appConfig: ""
     };
   },
-
+  computed: mapGetters(["token"]),
   methods: {
     handleSubmitAppConfig() {
       const url = `https://i1api.nrs.gov.bc.ca/webade-api/v1/applicationConfigurations`;
 
       const headers = new Headers();
-      headers.set("Authorization", `Bearer ${token}`);
+      headers.set("Authorization", `Bearer ${this.token}`);
       headers.set("Content-Type", "application/json");
 
       const config = JSON.parse(this.appConfig);
