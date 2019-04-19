@@ -66,7 +66,7 @@ export default {
 
         return body;
       } catch (e) {
-        console.log(`ERROR, caught error fetching from ${url}`); // eslint-disable-line no-console
+        console.log(`ERROR, caught error fetching from WebADE Token endpoint`); // eslint-disable-line no-console
         console.log(e); // eslint-disable-line no-console
       }
     }
