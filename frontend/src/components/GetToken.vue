@@ -39,12 +39,6 @@ export default {
       tokenResponse: ""
     };
   },
-  computed: {
-    test() {
-      return this.$store.state.token;
-    }
-  },
-
   methods: {
     async handleSubmit() {
       const fetchedToken = await this.fetchToken();
