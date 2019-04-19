@@ -30,8 +30,6 @@ export default {
 
   methods: {
     handleSubmitAppConfig() {
-      const token = document.querySelector("#hiddenToken").value;
-
       const url = `https://i1api.nrs.gov.bc.ca/webade-api/v1/applicationConfigurations`;
 
       const headers = new Headers();
