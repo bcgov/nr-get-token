@@ -34,7 +34,7 @@ pipeline {
 
     // SOURCE_REPO_??? references the git repo url and reference
     SOURCE_REPO_REF="pull/${CHANGE_ID}/head"
-    SOURCE_REPO_URL="https://github.com/${repoOwner}/{appRepo}.git"
+    SOURCE_REPO_URL="https://github.com/${repoOwner}/${appRepo}.git"
   }
 
   stages {
@@ -96,10 +96,11 @@ pipeline {
               )
 
               echo 'Building Frontend...'
-              openshift.apply(bcFrontend).narrow('bc')
-                .cancelBuild().startBuild('-w').logs('-f')
-              openshift.tag("${APP_REPO}-frontend:latest",
-                "${APP_REPO}-frontend:${PR_NAME}"
+              openshift.apply(bcFrontend).narrow('bc').cancelBuild()
+              openshift.selector('bc', "${appRepo}-frontend-${PR_NAME}")
+                .startBuild('-w').logs('-f')
+              openshift.tag("${appRepo}-frontend:latest",
+                "${appRepo}-frontend:${PR_NAME}"
               )
 
               echo 'Creating Static Frontend BuildConfig...'
@@ -110,10 +111,11 @@ pipeline {
               )
 
               echo 'Building Static Frontend...'
-              openshift.apply(bcFrontendStatic).narrow('bc')
-                .cancelBuild().startBuild('-w').logs('-f')
-              openshift.tag("${APP_REPO}-frontend-static:latest",
-                "${APP_REPO}-frontend-static:${PR_NAME}"
+              openshift.apply(bcFrontendStatic).narrow('bc').cancelBuild()
+              openshift.selector('bc', "${appRepo}-frontend-static-${PR_NAME}")
+                .startBuild('-w').logs('-f')
+              openshift.tag("${appRepo}-frontend-static:latest",
+                "${appRepo}-frontend-static:${PR_NAME}"
               )
             }
           }
