@@ -1,14 +1,20 @@
 ---
 apiVersion: v1
+kind: Template
+labels:
+  template: "${APP_REPO}-template"
+metadata:
+  name: "${APP_REPO}-frontend-bc"
+  creationTimestamp:
 objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
     annotations:
       openshift.io/generated-by: OpenShiftNewBuild
-    creationTimestamp: null
+    creationTimestamp:
     labels:
-      build: nr-get-token-frontend
+      build: "${APP_REPO}-frontend"
     name: nodejs-8-rhel7
   spec:
     lookupPolicy:
@@ -19,43 +25,39 @@ objects:
       from:
         kind: DockerImage
         name: registry.access.redhat.com/rhscl/nodejs-8-rhel7:latest
-      generation: null
+      generation:
       importPolicy: {}
       name: latest
       referencePolicy:
         type: Local
-  status:
-    dockerImageRepository: ""
 - apiVersion: v1
   kind: ImageStream
   metadata:
     annotations:
       openshift.io/generated-by: OpenShiftNewBuild
-    creationTimestamp: null
+    creationTimestamp:
     labels:
-      build: nr-get-token-frontend
-    name: nr-get-token-frontend
+      build: "${APP_REPO}-frontend"
+    name: "${APP_REPO}-frontend"
   spec:
     lookupPolicy:
       local: false
-  status:
-    dockerImageRepository: ""
 - apiVersion: v1
   kind: BuildConfig
   metadata:
     annotations:
       openshift.io/generated-by: OpenShiftNewBuild
-    creationTimestamp: null
+    creationTimestamp:
     labels:
-      build: nr-get-token-frontend
-    name: nr-get-token-frontend
+      build: "${APP_REPO}-frontend"
+    name: "${APP_REPO}-frontend-${PR_NAME}"
   spec:
     completionDeadlineSeconds: 600
-    nodeSelector: null
+    nodeSelector:
     output:
       to:
         kind: ImageStreamTag
-        name: nr-get-token-frontend:latest
+        name: "${APP_REPO}-frontend:latest"
     postCommit: {}
     resources:
       requests:
@@ -68,14 +70,14 @@ objects:
     source:
       contextDir: frontend
       git:
-        ref: master
-        uri: https://github.com/bcgov/nr-get-token.git
+        ref: "${SOURCE_REPO_REF}"
+        uri: "${SOURCE_REPO_URL}"
       type: Git
     strategy:
       sourceStrategy:
         env:
-          - name: BUILD_LOGLEVEL
-            value: '2'
+        - name: BUILD_LOGLEVEL
+          value: '2'
         from:
           kind: ImageStreamTag
           name: nodejs-8-rhel7:latest
@@ -84,7 +86,16 @@ objects:
     - type: ConfigChange
     - imageChange: {}
       type: ImageChange
-  status:
-    lastVersion: 0
-kind: Template
-metadata: {}
+parameters:
+- name: APP_REPO
+  description: Application repository name
+  required: true
+- name: PR_NAME
+  description: Pull Request identifier (i.e. pr-5)
+  required: true
+- name: SOURCE_REPO_REF
+  description: Git Pull Request Reference (i.e. pull/CHANGE_ID/head)
+  required: true
+- name: SOURCE_REPO_URL
+  description: Git Repository URL
+  required: true
