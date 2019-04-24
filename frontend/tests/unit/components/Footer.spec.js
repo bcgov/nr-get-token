@@ -12,7 +12,6 @@ describe('Footer.vue', () => {
 
     wrapper = mount(Footer, {
       localVue: localVue
-
     });
   });
 
