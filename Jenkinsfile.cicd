@@ -93,11 +93,15 @@ pipeline {
         cleanup {
           echo 'Cleanup Frontend BuildConfigs'
           script {
-            openshift.withCluster() {
-              openshift.withProject(TOOLS_PROJECT) {
-                openshift.selector('bc', "${REPO_NAME}-frontend-${JOB_NAME}").delete()
-                openshift.selector('bc', "${REPO_NAME}-frontend-static-${JOB_NAME}").delete()
+            try {
+              openshift.withCluster() {
+                openshift.withProject(TOOLS_PROJECT) {
+                  openshift.selector('bc', "${REPO_NAME}-frontend-${JOB_NAME}").delete()
+                  openshift.selector('bc', "${REPO_NAME}-frontend-static-${JOB_NAME}").delete()
+                }
               }
+            } catch (err) {
+                echo err
             }
           }
         }
