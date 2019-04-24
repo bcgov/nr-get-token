@@ -22,12 +22,12 @@ pipeline {
     APP_NAME = new File('/var/run/configs/jobs/app.name').getText('UTF-8').trim()
     APP_DOMAIN = new File('/var/run/configs/jobs/app.domain').getText('UTF-8').trim()
 
-    // JOB_NAME should be the pull request identifier (i.e. 'pr-5')
+    // JOB_NAME should be the pull request/branch identifier (i.e. 'pr-5')
     JOB_NAME = "${JOB_BASE_NAME}".toLowerCase()
 
     // SOURCE_REPO_* references git repository resources
     SOURCE_REPO_RAW = "https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/master"
-    SOURCE_REPO_REF="pull/${CHANGE_ID}/head"
+    SOURCE_REPO_REF="master"
     SOURCE_REPO_URL="https://github.com/${REPO_OWNER}/${REPO_NAME}.git"
 
     // HOST_ROUTE is the full domain route endpoint (ie. 'appname-pr-5-k8vopl-dev.pathfinder.gov.bc.ca')
