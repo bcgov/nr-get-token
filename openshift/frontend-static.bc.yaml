@@ -1,14 +1,20 @@
 ---
 apiVersion: v1
+kind: Template
+labels:
+  template: "${REPO_NAME}-template"
+metadata:
+  name: "${REPO_NAME}-frontend-static-bc"
+  creationTimestamp:
 objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
     annotations:
       openshift.io/generated-by: OpenShiftNewBuild
-    creationTimestamp: null
+    creationTimestamp:
     labels:
-      build: nr-get-token-frontend-static
+      build: "${REPO_NAME}-frontend-static"
     name: s2i-caddy
   spec:
     lookupPolicy:
@@ -19,42 +25,39 @@ objects:
       from:
         kind: DockerImage
         name: docker-registry.default.svc:5000/bcgov/s2i-caddy:v1-stable
-      generation: null
+      generation:
       importPolicy: {}
       name: v1-stable
       referencePolicy:
         type: Local
-  status:
-    dockerImageRepository: ""
 - apiVersion: v1
   kind: ImageStream
   metadata:
     annotations:
       openshift.io/generated-by: OpenShiftNewBuild
-    creationTimestamp: null
+    creationTimestamp:
     labels:
-      build: nr-get-token-frontend-static
-    name: nr-get-token-frontend-static
+      build: "${REPO_NAME}-frontend-static"
+    name: "${REPO_NAME}-frontend-static"
   spec:
     lookupPolicy:
       local: false
-  status:
-    dockerImageRepository: ""
 - apiVersion: v1
   kind: BuildConfig
   metadata:
     annotations:
       openshift.io/generated-by: OpenShiftNewBuild
-    creationTimestamp: null
+    creationTimestamp:
     labels:
-      build: nr-get-token-frontend-static
-    name: nr-get-token-frontend-static
+      build: "${REPO_NAME}-frontend-static"
+    name: "${REPO_NAME}-frontend-static-${JOB_NAME}"
   spec:
-    nodeSelector: null
+    completionDeadlineSeconds: 600
+    nodeSelector:
     output:
       to:
         kind: ImageStreamTag
-        name: nr-get-token-frontend-static:latest
+        name: "${REPO_NAME}-frontend-static:latest"
     postCommit: {}
     resources:
       requests:
@@ -70,14 +73,14 @@ objects:
         COPY tmp/dist/ /var/www/html/
         CMD /tmp/scripts/run
       images:
-      - as: null
+      - as:
         from:
           kind: ImageStreamTag
-          name: nr-get-token-frontend:latest
-          namespace: k8vopl-tools
+          name: "${REPO_NAME}-frontend:${JOB_NAME}"
+          namespace: "${NAMESPACE}"
         paths:
         - destinationDir: tmp
-          sourcePath: /opt/app-root/src/dist
+          sourcePath: "/opt/app-root/src/dist"
       type: Dockerfile
     strategy:
       dockerStrategy:
@@ -85,17 +88,13 @@ objects:
           kind: ImageStreamTag
           name: s2i-caddy:v1-stable
       type: Docker
-    triggers:
-    - imageChange:
-        from:
-          kind: ImageStreamTag
-          name: nr-get-token-frontend:latest
-          namespace: k8vopl-tools
-      type: ImageChange
-    - type: ConfigChange
-    - imageChange: {}
-      type: ImageChange
-  status:
-    lastVersion: 0
-kind: Template
-metadata: {}
+parameters:
+- name: REPO_NAME
+  description: Application repository name
+  required: true
+- name: JOB_NAME
+  description: Job identifier (i.e. 'pr-5' OR 'master')
+  required: true
+- name: NAMESPACE
+  description: Target namespace reference (i.e. 'k8vopl-dev')
+  required: true

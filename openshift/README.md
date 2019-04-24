@@ -7,7 +7,7 @@ You will likely not need to run the new template generation sections as that the
 *If you are creating a new build configuration template, you will likely use the following commands:*
 
 ```sh
-oc new-build -n k8vopl-tools registry.access.redhat.com/rhscl/nodejs-8-rhel7:latest~https://github.com/jujaga/nr-get-token.git#feature/imagestream --context-dir=frontend --name=get-token-frontend --dry-run -o yaml > openshift/frontend.bc.yaml
+oc new-build -n k8vopl-tools registry.access.redhat.com/rhscl/nodejs-8-rhel7:latest~https://github.com/bcgov/nr-get-token.git#master --context-dir=frontend --name=get-token-frontend --dry-run -o yaml > openshift/frontend.bc.yaml
 sed -i '' -e 's/kind: List/kind: Template/g' openshift/frontend.bc.yaml
 sed -i '' -e 's/items:/objects:/g' openshift/frontend.bc.yaml
 ```

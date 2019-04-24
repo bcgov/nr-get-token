@@ -1,37 +1,62 @@
 ---
 apiVersion: v1
+kind: Template
+labels:
+  template: "${REPO_NAME}-template"
+metadata:
+  name: "${REPO_NAME}-frontend-dc"
+  creationTimestamp:
 objects:
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     annotations:
       openshift.io/generated-by: OpenShiftNewApp
-    creationTimestamp: null
+    creationTimestamp:
     labels:
-      app: nr-get-token-frontend
-    name: nr-get-token-frontend
+      app: "${APP_NAME}-${JOB_NAME}"
+    name: "${APP_NAME}-frontend-${JOB_NAME}"
   spec:
     replicas: 2
     selector:
-      app: nr-get-token-frontend
-      deploymentconfig: nr-get-token-frontend
+      app: "${APP_NAME}-${JOB_NAME}"
+      deploymentconfig: "${APP_NAME}-frontend-${JOB_NAME}"
     strategy:
       resources: {}
     template:
       metadata:
         annotations:
           openshift.io/generated-by: OpenShiftNewApp
-        creationTimestamp: null
+        creationTimestamp:
         labels:
-          app: nr-get-token-frontend
-          deploymentconfig: nr-get-token-frontend
+          app: "${APP_NAME}-${JOB_NAME}"
+          deploymentconfig: "${APP_NAME}-frontend-${JOB_NAME}"
       spec:
         containers:
-        - image: docker-registry.default.svc:5000/k8vopl-dev/nr-get-token-frontend-static:dev
-          name: nr-get-token-frontend
+        - image: docker-registry.default.svc:5000/${NAMESPACE}/${REPO_NAME}-frontend-static:dev
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: "/"
+              port: 2015
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: "${APP_NAME}-frontend-${JOB_NAME}"
           ports:
           - containerPort: 2015
             protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: "/"
+              port: 2015
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
           resources: {}
     test: false
     triggers:
@@ -39,28 +64,21 @@ objects:
     - imageChangeParams:
         automatic: true
         containerNames:
-        - nr-get-token-frontend
+        - "${APP_NAME}-frontend-${JOB_NAME}"
         from:
           kind: ImageStreamTag
-          name: nr-get-token-frontend-static:dev
-          namespace: k8vopl-dev
+          name: "${REPO_NAME}-frontend-static:${JOB_NAME}"
+          namespace: "${NAMESPACE}"
       type: ImageChange
-  status:
-    availableReplicas: 0
-    latestVersion: 0
-    observedGeneration: 0
-    replicas: 0
-    unavailableReplicas: 0
-    updatedReplicas: 0
 - apiVersion: v1
   kind: Service
   metadata:
     annotations:
       openshift.io/generated-by: OpenShiftNewApp
-    creationTimestamp: null
+    creationTimestamp:
     labels:
-      app: nr-get-token-frontend
-    name: nr-get-token-frontend
+      app: "${APP_NAME}-${JOB_NAME}"
+    name: "${APP_NAME}-frontend-${JOB_NAME}"
   spec:
     ports:
     - name: 2015-tcp
@@ -68,20 +86,18 @@ objects:
       protocol: TCP
       targetPort: 2015
     selector:
-      app: nr-get-token-frontend
-      deploymentconfig: nr-get-token-frontend
-  status:
-    loadBalancer: {}
+      app: "${APP_NAME}-${JOB_NAME}"
+      deploymentconfig: "${APP_NAME}-frontend-${JOB_NAME}"
 - apiVersion: v1
   kind: Route
   metadata:
     annotations:
       openshift.io/host.generated: 'true'
     labels:
-      app: nr-get-token-frontend
-    name: frontend
+      app: "${APP_NAME}-${JOB_NAME}"
+    name: "${APP_NAME}-frontend-${JOB_NAME}"
   spec:
-    host: frontend-k8vopl-dev.pathfinder.gov.bc.ca
+    host: "${HOST_ROUTE}"
     port:
       targetPort: 2015-tcp
     tls:
@@ -89,8 +105,22 @@ objects:
       termination: edge
     to:
       kind: Service
-      name: nr-get-token-frontend
+      name: "${APP_NAME}-frontend-${JOB_NAME}"
       weight: 100
     wildcardPolicy: None
-kind: Template
-metadata: {}
+parameters:
+- name: REPO_NAME
+  description: Application repository name
+  required: true
+- name: JOB_NAME
+  description: Job identifier (i.e. 'pr-5' OR 'master')
+  required: true
+- name: NAMESPACE
+  description: Target namespace reference (i.e. 'k8vopl-dev')
+  required: true
+- name: APP_NAME
+  description: Application name
+  required: true
+- name: HOST_ROUTE
+  description: The host the route will use to expose service outside cluster
+  required: true
