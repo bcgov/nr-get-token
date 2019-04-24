@@ -23,6 +23,7 @@ objects:
       deploymentconfig: "${APP_NAME}-frontend-${JOB_NAME}"
     strategy:
       resources: {}
+      type: Rolling
     template:
       metadata:
         annotations:

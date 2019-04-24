@@ -8,7 +8,7 @@ pipeline {
 
   environment {
     // Enable pipeline verbose debug output
-    DEBUG_OUTPUT = true
+    DEBUG_OUTPUT = false
 
     // Get projects/namespaces from config maps
     DEV_PROJECT = new File('/var/run/configs/ns/project.dev').getText('UTF-8').trim()
