@@ -22,7 +22,7 @@ pipeline {
     APP_NAME = new File('/var/run/configs/jobs/app.name').getText('UTF-8').trim()
     APP_DOMAIN = new File('/var/run/configs/jobs/app.domain').getText('UTF-8').trim()
 
-    // JOB_NAME should be the pull request identifier (i.e. 'pr-5')
+    // JOB_NAME should be the pull request/branch identifier (i.e. 'pr-5')
     JOB_NAME = "${JOB_BASE_NAME}".toLowerCase()
 
     // SOURCE_REPO_* references git repository resources
