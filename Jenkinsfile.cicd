@@ -4,23 +4,22 @@
 // Pipeline Variables
 // ------------------
 // Get projects/namespaces from config maps
-def devProject = new File('/var/run/configs/ns/project.dev').getText('UTF-8').trim()
-def testProject = new File('/var/run/configs/ns/project.test').getText('UTF-8').trim()
-def prodProject = new File('/var/run/configs/ns/project.prod').getText('UTF-8').trim()
-def toolsProject = new File('/var/run/configs/ns/project.tools').getText('UTF-8').trim()
+def DEV_PROJECT = new File('/var/run/configs/ns/project.dev').getText('UTF-8').trim()
+def TEST_PROJECT = new File('/var/run/configs/ns/project.test').getText('UTF-8').trim()
+def PROD_PROJECT = new File('/var/run/configs/ns/project.prod').getText('UTF-8').trim()
+def TOOLS_PROJECT = new File('/var/run/configs/ns/project.tools').getText('UTF-8').trim()
 
 // Get application config from config maps
-def repoOwner = new File('/var/run/configs/jobs/repo.owner').getText('UTF-8').trim()
-def appRepo = new File('/var/run/configs/jobs/repo.name').getText('UTF-8').trim()
-def appName = new File('/var/run/configs/jobs/app.name').getText('UTF-8').trim()
-def appDomain = new File('/var/run/configs/jobs/app.domain').getText('UTF-8').trim()
+def REPO_OWNER = new File('/var/run/configs/jobs/repo.owner').getText('UTF-8').trim()
+def REPO_NAME = new File('/var/run/configs/jobs/repo.name').getText('UTF-8').trim()
+def APP_NAME = new File('/var/run/configs/jobs/app.name').getText('UTF-8').trim()
+def APP_DOMAIN = new File('/var/run/configs/jobs/app.domain').getText('UTF-8').trim()
 
-def nameSelector = "${appName}"
-def label = "'app-name'=${appName}"
-def rawRepoBase = "https://raw.githubusercontent.com/${repoOwner}/${appRepo}/master"
-def devDomain = "${nameSelector}-${devProject}.${appDomain}"
+def label = "'app-name'=${APP_NAME}"
+def rawRepoBase = "https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/master"
+def devDomain = "${APP_NAME}-${DEV_PROJECT}.${APP_DOMAIN}"
 
-def doEcho = true
+def DEBUG_OUTPUT = true
 
 // --------------------
 // Declarative Pipeline
@@ -29,22 +28,20 @@ pipeline {
   agent any
 
   environment {
-    // PR_NAME is the pull request identifier e.g. 'pr-5'
-    PR_NAME = "${JOB_BASE_NAME}".toLowerCase()
+    // JOB_NAME should be the pull request identifier (i.e. 'pr-5')
+    JOB_NAME = "${JOB_BASE_NAME}".toLowerCase()
 
     // SOURCE_REPO_??? references the git repo url and reference
     SOURCE_REPO_REF="pull/${CHANGE_ID}/head"
-    SOURCE_REPO_URL="https://github.com/${repoOwner}/${appRepo}.git"
+    SOURCE_REPO_URL="https://github.com/${REPO_OWNER}/${REPO_NAME}.git"
   }
 
   stages {
     stage('Debug') {
       steps {
-        echo 'Print out all environment variables in this pipeline.'
-        echo sh(returnStdout: true, script: 'env')
-
         script {
-          if (doEcho) {
+          if (DEBUG_OUTPUT) {
+            // Force OpenShift Plugin directives to be verbose
             openshift.logLevel(1)
 
             echo "Using project: ${openshift.project()}"
@@ -53,24 +50,23 @@ pipeline {
             echo "      BRANCH_NAME = ${BRANCH_NAME}"
             echo "      GIT_BRANCH = ${GIT_BRANCH}"
             echo "      GIT_COMMIT = ${GIT_COMMIT}"
-
             echo "   NS Config"
-            echo "      devProject = ${devProject}"
-            echo "      testProject = ${testProject}"
-            echo "      prodProject = ${prodProject}"
-            echo "      toolsProject = ${toolsProject}"
-
+            echo "      DEV_PROJECT = ${DEV_PROJECT}"
+            echo "      TEST_PROJECT = ${TEST_PROJECT}"
+            echo "      PROD_PROJECT = ${PROD_PROJECT}"
+            echo "      TOOLS_PROJECT = ${TOOLS_PROJECT}"
             echo "   App ConfigMap"
-            echo "      repoOwner = ${repoOwner}"
-            echo "      appRepo = ${appRepo}"
-            echo "      appName = ${appName}"
-            echo "      appDomain = ${appDomain}"
-
+            echo "      REPO_OWNER = ${REPO_OWNER}"
+            echo "      REPO_NAME = ${REPO_NAME}"
+            echo "      APP_NAME = ${APP_NAME}"
+            echo "      APP_DOMAIN = ${APP_DOMAIN}"
             echo "   Global Variables"
-            echo "   nameSelector = ${nameSelector}"
             echo "   label = ${label}"
             echo "   devDomain = ${devDomain}"
             echo "   rawRepoBase = ${rawRepoBase}"
+
+            echo 'Print out all environment variables in this pipeline.'
+            echo sh(returnStdout: true, script: 'env')
           }
         }
       }
@@ -85,37 +81,37 @@ pipeline {
 
         script {
           openshift.withCluster() {
-            openshift.withProject(toolsProject) {
+            openshift.withProject(TOOLS_PROJECT) {
               echo 'Creating Frontend BuildConfig...'
               def bcFrontend = openshift.process('-f',
                 'openshift/frontend.bc.yaml',
-                "APP_REPO=${appRepo}",
-                "PR_NAME=${PR_NAME}",
+                "REPO_NAME=${REPO_NAME}",
+                "JOB_NAME=${JOB_NAME}",
                 "SOURCE_REPO_URL=${SOURCE_REPO_URL}",
                 "SOURCE_REPO_REF=${SOURCE_REPO_REF}"
               )
 
               echo 'Building Frontend...'
               openshift.apply(bcFrontend).narrow('bc').cancelBuild()
-              openshift.selector('bc', "${appRepo}-frontend-${PR_NAME}")
+              openshift.selector('bc', "${REPO_NAME}-frontend-${JOB_NAME}")
                 .startBuild('-w').logs('-f')
-              openshift.tag("${appRepo}-frontend:latest",
-                "${appRepo}-frontend:${PR_NAME}"
+              openshift.tag("${REPO_NAME}-frontend:latest",
+                "${REPO_NAME}-frontend:${JOB_NAME}"
               )
 
               echo 'Creating Static Frontend BuildConfig...'
               def bcFrontendStatic = openshift.process('-f',
                 'openshift/frontend-static.bc.yaml',
-                "APP_REPO=${appRepo}",
-                "PR_NAME=${PR_NAME}"
+                "REPO_NAME=${REPO_NAME}",
+                "JOB_NAME=${JOB_NAME}"
               )
 
               echo 'Building Static Frontend...'
               openshift.apply(bcFrontendStatic).narrow('bc').cancelBuild()
-              openshift.selector('bc', "${appRepo}-frontend-static-${PR_NAME}")
+              openshift.selector('bc', "${REPO_NAME}-frontend-static-${JOB_NAME}")
                 .startBuild('-w').logs('-f')
-              openshift.tag("${appRepo}-frontend-static:latest",
-                "${appRepo}-frontend-static:${PR_NAME}"
+              openshift.tag("${REPO_NAME}-frontend-static:latest",
+                "${REPO_NAME}-frontend-static:${JOB_NAME}"
               )
             }
           }
@@ -126,9 +122,9 @@ pipeline {
           echo 'Cleanup Frontend BuildConfigs'
           script {
             openshift.withCluster() {
-              openshift.withProject(toolsProject) {
-                openshift.selector('bc', "${appRepo}-frontend-${PR_NAME}").delete()
-                openshift.selector('bc', "${appRepo}-frontend-static-${PR_NAME}").delete()
+              openshift.withProject(TOOLS_PROJECT) {
+                openshift.selector('bc', "${REPO_NAME}-frontend-${JOB_NAME}").delete()
+                openshift.selector('bc', "${REPO_NAME}-frontend-static-${JOB_NAME}").delete()
               }
             }
           }
@@ -140,14 +136,12 @@ pipeline {
     //   steps {
     //     script {
     //       openshift.withCluster() {
-    //         openshift.withProject(devProject) {
-    //           openshift.tag("${toolsProject}/nr-get-token-frontend-static:latest", 'nr-get-token-frontend-static:dev')
+    //         openshift.withProject(DEV_PROJECT) {
+    //           openshift.tag("${TOOLS_PROJECT}/nr-get-token-frontend-static:latest", 'nr-get-token-frontend-static:dev')
     //           def dcFrontend = openshift.process('-f',
     //             'openshift/frontend-static.dc.yaml',
-    //             "APP_REPO=${appRepo}",
-    //             "PR_NAME=${PR_NAME}",
-    //             "SOURCE_REPO_URL=${SOURCE_REPO_URL}",
-    //             "SOURCE_REPO_REF=${SOURCE_REPO_REF}"
+    //             "REPO_NAME=${REPO_NAME}",
+    //             "JOB_NAME=${JOB_NAME}"
     //           )
     //           openshift.apply(dcFrontend)
     //         }
