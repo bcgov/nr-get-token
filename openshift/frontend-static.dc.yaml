@@ -14,13 +14,13 @@ objects:
       openshift.io/generated-by: OpenShiftNewApp
     creationTimestamp:
     labels:
-      app: "${REPO_NAME}-${JOB_NAME}"
-    name: "${REPO_NAME}-frontend-${JOB_NAME}"
+      app: "${APP_NAME}-${JOB_NAME}"
+    name: "${APP_NAME}-frontend-${JOB_NAME}"
   spec:
     replicas: 2
     selector:
-      app: "${REPO_NAME}-${JOB_NAME}"
-      deploymentconfig: "${REPO_NAME}-frontend-${JOB_NAME}"
+      app: "${APP_NAME}-${JOB_NAME}"
+      deploymentconfig: "${APP_NAME}-frontend-${JOB_NAME}"
     strategy:
       resources: {}
     template:
@@ -29,8 +29,8 @@ objects:
           openshift.io/generated-by: OpenShiftNewApp
         creationTimestamp:
         labels:
-          app: "${REPO_NAME}-${JOB_NAME}"
-          deploymentconfig: "${REPO_NAME}-frontend-${JOB_NAME}"
+          app: "${APP_NAME}-${JOB_NAME}"
+          deploymentconfig: "${APP_NAME}-frontend-${JOB_NAME}"
       spec:
         containers:
         - image: docker-registry.default.svc:5000/${NAMESPACE}/${REPO_NAME}-frontend-static:dev
@@ -44,7 +44,7 @@ objects:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
-          name: "${REPO_NAME}-frontend-${JOB_NAME}"
+          name: "${APP_NAME}-frontend-${JOB_NAME}"
           ports:
           - containerPort: 2015
             protocol: TCP
@@ -64,7 +64,7 @@ objects:
     - imageChangeParams:
         automatic: true
         containerNames:
-        - "${REPO_NAME}-frontend-${JOB_NAME}"
+        - "${APP_NAME}-frontend-${JOB_NAME}"
         from:
           kind: ImageStreamTag
           name: "${REPO_NAME}-frontend-static:${JOB_NAME}"
@@ -77,8 +77,8 @@ objects:
       openshift.io/generated-by: OpenShiftNewApp
     creationTimestamp:
     labels:
-      app: "${REPO_NAME}-${JOB_NAME}"
-    name: "${REPO_NAME}-frontend-${JOB_NAME}"
+      app: "${APP_NAME}-${JOB_NAME}"
+    name: "${APP_NAME}-frontend-${JOB_NAME}"
   spec:
     ports:
     - name: 2015-tcp
@@ -86,16 +86,16 @@ objects:
       protocol: TCP
       targetPort: 2015
     selector:
-      app: "${REPO_NAME}-${JOB_NAME}"
-      deploymentconfig: "${REPO_NAME}-frontend-${JOB_NAME}"
+      app: "${APP_NAME}-${JOB_NAME}"
+      deploymentconfig: "${APP_NAME}-frontend-${JOB_NAME}"
 - apiVersion: v1
   kind: Route
   metadata:
     annotations:
       openshift.io/host.generated: 'true'
     labels:
-      app: "${REPO_NAME}-${JOB_NAME}"
-    name: "${REPO_NAME}-frontend-${JOB_NAME}"
+      app: "${APP_NAME}-${JOB_NAME}"
+    name: "${APP_NAME}-frontend-${JOB_NAME}"
   spec:
     host: "${HOST_ROUTE}"
     port:
@@ -105,7 +105,7 @@ objects:
       termination: edge
     to:
       kind: Service
-      name: "${REPO_NAME}-frontend-${JOB_NAME}"
+      name: "${APP_NAME}-frontend-${JOB_NAME}"
       weight: 100
     wildcardPolicy: None
 parameters:
@@ -117,6 +117,9 @@ parameters:
   required: true
 - name: NAMESPACE
   description: Target namespace reference (i.e. 'k8vopl-dev')
+  required: true
+- name: APP_NAME
+  description: Application name
   required: true
 - name: HOST_ROUTE
   description: The host the route will use to expose service outside cluster
