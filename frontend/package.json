@@ -67,6 +67,9 @@
     "not ie <= 8"
   ],
   "jest": {
+    "setupFiles": [
+      "<rootDir>/tests/unit/globalSetup.js"
+    ],
     "moduleFileExtensions": [
       "js",
       "json",
