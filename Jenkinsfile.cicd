@@ -1,4 +1,5 @@
 #!groovy
+import bcgov.GitHubHelper
 
 // --------------------
 // Declarative Pipeline
@@ -37,8 +38,16 @@ pipeline {
   stages {
     stage('Frontend') {
       steps {
+        // Cancel any running builds in progress
+        timeout(10) {
+          echo 'Cancelling previous builds...'
+          abortAllPreviousBuildInProgress(currentBuild)
+        }
+
         script {
-          if (DEBUG_OUTPUT) {
+          notifyStageStatus('Frontend', 'PENDING')
+
+          if(DEBUG_OUTPUT) {
             // Force OpenShift Plugin directives to be verbose
             openshift.logLevel(1)
 
@@ -47,15 +56,7 @@ pipeline {
             echo 'DEBUG - All pipeline environment variables:'
             echo sh(returnStdout: true, script: 'env')
           }
-        }
 
-        // Cancel any running builds in progress
-        timeout(10) {
-          echo 'Cancelling previous builds...'
-          abortAllPreviousBuildInProgress(currentBuild)
-        }
-
-        script {
           openshift.withCluster() {
             openshift.withProject(TOOLS_PROJECT) {
               echo 'Creating Frontend BuildConfig...'
@@ -88,6 +89,8 @@ pipeline {
               )
             }
           }
+
+          notifyStageStatus('Frontend', 'SUCCESS')
         }
       }
       post {
@@ -112,6 +115,8 @@ pipeline {
     stage('Deploy') {
       steps {
         script {
+          notifyStageStatus('Deploy', 'PENDING')
+
           openshift.withCluster() {
             openshift.withProject(DEV_PROJECT) {
               openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-frontend-static:${JOB_NAME}", 'nr-get-token-frontend-static:${JOB_NAME}')
@@ -126,8 +131,26 @@ pipeline {
               openshift.apply(dcFrontend)
             }
           }
+
+          notifyStageStatus('Deploy', 'SUCCESS')
         }
       }
     }
   }
+}
+
+// --------------------
+// Supporting Functions
+// --------------------
+
+// Notify stage status and pass to Jenkins-GitHub library
+def notifyStageStatus(String name, String status) {
+  GitHubHelper.createCommitStatus(
+    this,
+    GitHubHelper.getPullRequestLastCommitId(this),
+    status,
+    "${env.BUILD_URL}",
+    "",
+    "Stage: ${name}"
+  )
 }
