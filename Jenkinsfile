@@ -114,7 +114,7 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject(DEV_PROJECT) {
-              openshift.tag("${TOOLS_PROJECT}/nr-get-token-frontend-static:${JOB_NAME}", 'nr-get-token-frontend-static:${JOB_NAME}')
+              openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-frontend-static:${JOB_NAME}", 'nr-get-token-frontend-static:${JOB_NAME}')
               def dcFrontend = openshift.process('-f',
                 'openshift/frontend-static.dc.yaml',
                 "REPO_NAME=${REPO_NAME}",

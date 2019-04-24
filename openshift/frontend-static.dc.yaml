@@ -14,12 +14,12 @@ objects:
       openshift.io/generated-by: OpenShiftNewApp
     creationTimestamp:
     labels:
-      app: "${REPO_NAME}-frontend-${JOB_NAME}"
+      app: "${REPO_NAME}-${JOB_NAME}"
     name: "${REPO_NAME}-frontend-${JOB_NAME}"
   spec:
     replicas: 2
     selector:
-      app: "${REPO_NAME}-frontend-${JOB_NAME}"
+      app: "${REPO_NAME}-${JOB_NAME}"
       deploymentconfig: "${REPO_NAME}-frontend-${JOB_NAME}"
     strategy:
       resources: {}
@@ -29,7 +29,7 @@ objects:
           openshift.io/generated-by: OpenShiftNewApp
         creationTimestamp:
         labels:
-          app: "${REPO_NAME}-frontend-${JOB_NAME}"
+          app: "${REPO_NAME}-${JOB_NAME}"
           deploymentconfig: "${REPO_NAME}-frontend-${JOB_NAME}"
       spec:
         containers:
@@ -77,7 +77,7 @@ objects:
       openshift.io/generated-by: OpenShiftNewApp
     creationTimestamp:
     labels:
-      app: "${REPO_NAME}-frontend-${JOB_NAME}"
+      app: "${REPO_NAME}-${JOB_NAME}"
     name: "${REPO_NAME}-frontend-${JOB_NAME}"
   spec:
     ports:
@@ -86,7 +86,7 @@ objects:
       protocol: TCP
       targetPort: 2015
     selector:
-      app: "${REPO_NAME}-frontend-${JOB_NAME}"
+      app: "${REPO_NAME}-${JOB_NAME}"
       deploymentconfig: "${REPO_NAME}-frontend-${JOB_NAME}"
 - apiVersion: v1
   kind: Route
@@ -94,7 +94,7 @@ objects:
     annotations:
       openshift.io/host.generated: 'true'
     labels:
-      app: "${REPO_NAME}-frontend-${JOB_NAME}"
+      app: "${REPO_NAME}-${JOB_NAME}"
     name: "${REPO_NAME}-frontend-${JOB_NAME}"
   spec:
     host: "${HOST_ROUTE}"
