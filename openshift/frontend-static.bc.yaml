@@ -88,14 +88,6 @@ objects:
           kind: ImageStreamTag
           name: s2i-caddy:v1-stable
       type: Docker
-    triggers:
-    - imageChange:
-        from:
-          kind: ImageStreamTag
-          name: "${REPO_NAME}-frontend:${JOB_NAME}"
-          namespace: k8vopl-tools
-      type: ImageChange
-    - type: ConfigChange
 parameters:
 - name: REPO_NAME
   description: Application repository name

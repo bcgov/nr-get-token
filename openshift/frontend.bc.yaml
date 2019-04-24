@@ -82,10 +82,6 @@ objects:
           kind: ImageStreamTag
           name: nodejs-8-rhel7:latest
       type: Source
-    triggers:
-    - type: ConfigChange
-    - imageChange: {}
-      type: ImageChange
 parameters:
 - name: REPO_NAME
   description: Application repository name
