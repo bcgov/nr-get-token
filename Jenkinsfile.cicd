@@ -77,7 +77,8 @@ pipeline {
               def bcFrontendStatic = openshift.process('-f',
                 'openshift/frontend-static.bc.yaml',
                 "REPO_NAME=${REPO_NAME}",
-                "JOB_NAME=${JOB_NAME}"
+                "JOB_NAME=${JOB_NAME}",
+                "NAMESPACE=${TOOLS_PROJECT}"
               )
 
               echo 'Building Static Frontend...'
@@ -118,6 +119,7 @@ pipeline {
                 'openshift/frontend-static.dc.yaml',
                 "REPO_NAME=${REPO_NAME}",
                 "JOB_NAME=${JOB_NAME}",
+                "NAMESPACE=${DEV_PROJECT}",
                 "HOST_ROUTE=${HOST_ROUTE}"
               )
               openshift.apply(dcFrontend)
