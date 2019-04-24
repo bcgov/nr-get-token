@@ -1,6 +1,12 @@
 #!groovy
 import bcgov.GitHubHelper
 
+// ------------------
+// Pipeline Variables
+// ------------------
+// Enable pipeline verbose debug output
+def DEBUG_OUTPUT = false
+
 // --------------------
 // Declarative Pipeline
 // --------------------
@@ -8,9 +14,6 @@ pipeline {
   agent any
 
   environment {
-    // Enable pipeline verbose debug output
-    DEBUG_OUTPUT = false
-
     // Get projects/namespaces from config maps
     DEV_PROJECT = new File('/var/run/configs/ns/project.dev').getText('UTF-8').trim()
     TEST_PROJECT = new File('/var/run/configs/ns/project.test').getText('UTF-8').trim()
@@ -119,6 +122,7 @@ pipeline {
 
           openshift.withCluster() {
             openshift.withProject(DEV_PROJECT) {
+              echo 'Deploying Frontend...'
               openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-frontend-static:${JOB_NAME}", 'nr-get-token-frontend-static:${JOB_NAME}')
               def dcFrontend = openshift.process('-f',
                 'openshift/frontend-static.dc.yaml',
