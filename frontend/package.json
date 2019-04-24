@@ -7,14 +7,14 @@
   "scripts": {
     "serve": "node_modules/.bin/vue-cli-service serve",
     "build": "node_modules/.bin/vue-cli-service build",
-    "test": "node_modules/.bin/jest --passWithNoTests",
     "lint": "node_modules/.bin/vue-cli-service lint",
     "clean": "rm -rf coverage dist",
-    "prebuild": "npm run test",
-    "pretest": "npm run lint",
+    "prebuild": "npm run test:unit",
+    "pretest:unit": "npm run lint",
     "purge": "rm -rf node_modules",
     "rebuild": "npm run clean && npm run build",
-    "reinstall": "npm run purge && npm install"
+    "reinstall": "npm run purge && npm install",
+    "test:unit": "node_modules/.bin/vue-cli-service test:unit"
   },
   "dependencies": {
     "core-js": "^2.6.5",
@@ -26,9 +26,12 @@
     "@vue/cli": "^3.6.2",
     "@vue/cli-plugin-babel": "^3.6.0",
     "@vue/cli-plugin-eslint": "^3.6.0",
+    "@vue/cli-plugin-unit-jest": "^3.6.3",
     "@vue/cli-service": "^3.6.0",
-    "@vue/test-utils": "^1.0.0-beta.29",
+    "@vue/test-utils": "1.0.0-beta.29",
+    "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
     "jest": "^24.7.1",
@@ -64,14 +67,38 @@
     "not ie <= 8"
   ],
   "jest": {
+    "setupFiles": [
+      "<rootDir>/tests/unit/globalSetup.js"
+    ],
     "moduleFileExtensions": [
       "js",
       "json",
-      "vue"
+      "vue",
+      "jsx"
     ],
     "transform": {
-      ".*\\.(vue)$": "vue-jest"
-    }
+      ".*\\.(vue)$": "vue-jest",
+      "^.+\\.vue$": "vue-jest",
+      ".+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$": "jest-transform-stub",
+      "^.+\\.jsx?$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    },
+    "snapshotSerializers": [
+      "jest-serializer-vue"
+    ],
+    "testMatch": [
+      "**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)"
+    ],
+    "testURL": "http://localhost/",
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
+    ]
   },
   "license": "Apache-2.0",
   "repository": {
