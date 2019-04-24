@@ -120,6 +120,7 @@ pipeline {
                 "REPO_NAME=${REPO_NAME}",
                 "JOB_NAME=${JOB_NAME}",
                 "NAMESPACE=${DEV_PROJECT}",
+                "APP_NAME=${APP_NAME}",
                 "HOST_ROUTE=${HOST_ROUTE}"
               )
               openshift.apply(dcFrontend)
