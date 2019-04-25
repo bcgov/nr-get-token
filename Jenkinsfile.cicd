@@ -1,4 +1,11 @@
 #!groovy
+import bcgov.GitHubHelper
+
+// ------------------
+// Pipeline Variables
+// ------------------
+// Enable pipeline verbose debug output
+def DEBUG_OUTPUT = false
 
 // --------------------
 // Declarative Pipeline
@@ -7,9 +14,6 @@ pipeline {
   agent any
 
   environment {
-    // Enable pipeline verbose debug output
-    DEBUG_OUTPUT = true
-
     // Get projects/namespaces from config maps
     DEV_PROJECT = new File('/var/run/configs/ns/project.dev').getText('UTF-8').trim()
     TEST_PROJECT = new File('/var/run/configs/ns/project.test').getText('UTF-8').trim()
@@ -37,8 +41,16 @@ pipeline {
   stages {
     stage('Frontend') {
       steps {
+        notifyStageStatus('Frontend', 'PENDING')
+
+        // Cancel any running builds in progress
+        timeout(10) {
+          echo "Cancelling previous ${APP_NAME}-${JOB_NAME} builds in progress..."
+          abortAllPreviousBuildInProgress(currentBuild)
+        }
+
         script {
-          if (DEBUG_OUTPUT) {
+          if(DEBUG_OUTPUT) {
             // Force OpenShift Plugin directives to be verbose
             openshift.logLevel(1)
 
@@ -47,18 +59,10 @@ pipeline {
             echo 'DEBUG - All pipeline environment variables:'
             echo sh(returnStdout: true, script: 'env')
           }
-        }
 
-        // Cancel any running builds in progress
-        timeout(10) {
-          echo 'Cancelling previous builds...'
-          abortAllPreviousBuildInProgress(currentBuild)
-        }
-
-        script {
           openshift.withCluster() {
             openshift.withProject(TOOLS_PROJECT) {
-              echo 'Creating Frontend BuildConfig...'
+              echo "Processing BuildConfig ${REPO_NAME}-frontend..."
               def bcFrontend = openshift.process('-f',
                 'openshift/frontend.bc.yaml',
                 "REPO_NAME=${REPO_NAME}",
@@ -67,13 +71,15 @@ pipeline {
                 "SOURCE_REPO_REF=${SOURCE_REPO_REF}"
               )
 
-              echo 'Building Frontend...'
+              echo "Building ImageStream ${REPO_NAME}-frontend..."
               openshift.apply(bcFrontend).narrow('bc').startBuild('-w').logs('-f')
+
+              echo "Tagging Image ${REPO_NAME}-frontend:${JOB_NAME}..."
               openshift.tag("${REPO_NAME}-frontend:latest",
                 "${REPO_NAME}-frontend:${JOB_NAME}"
               )
 
-              echo 'Creating Static Frontend BuildConfig...'
+              echo "Processing BuildConfig ${REPO_NAME}-frontend-static..."
               def bcFrontendStatic = openshift.process('-f',
                 'openshift/frontend-static.bc.yaml',
                 "REPO_NAME=${REPO_NAME}",
@@ -81,8 +87,10 @@ pipeline {
                 "NAMESPACE=${TOOLS_PROJECT}"
               )
 
-              echo 'Building Static Frontend...'
+              echo "Building ImageStream ${REPO_NAME}-frontend-static..."
               openshift.apply(bcFrontendStatic).narrow('bc').startBuild('-w').logs('-f')
+
+              echo "Tagging Image ${REPO_NAME}-frontend-static:${JOB_NAME}..."
               openshift.tag("${REPO_NAME}-frontend-static:latest",
                 "${REPO_NAME}-frontend-static:${JOB_NAME}"
               )
@@ -91,18 +99,31 @@ pipeline {
         }
       }
       post {
+        success {
+          echo 'Frontend build successful'
+          notifyStageStatus('Frontend', 'SUCCESS')
+        }
+        unsuccessful {
+          echo 'Frontend build failed'
+          notifyStageStatus('Frontend', 'FAILURE')
+        }
         cleanup {
-          echo 'Cleanup Frontend BuildConfigs'
+          echo 'Cleanup Frontend BuildConfigs...'
           script {
-            try {
-              openshift.withCluster() {
-                openshift.withProject(TOOLS_PROJECT) {
-                  openshift.selector('bc', "${REPO_NAME}-frontend-${JOB_NAME}").delete()
-                  openshift.selector('bc', "${REPO_NAME}-frontend-static-${JOB_NAME}").delete()
+            openshift.withCluster() {
+              openshift.withProject(TOOLS_PROJECT) {
+                def bcFrontend = openshift.selector('bc', "${REPO_NAME}-frontend-${JOB_NAME}")
+                def bcFrontendStatic = openshift.selector('bc', "${REPO_NAME}-frontend-static-${JOB_NAME}")
+
+                if(bcFrontend.exists()) {
+                  echo "Removing BuildConfig ${REPO_NAME}-frontend-${JOB_NAME}..."
+                  bcFrontend.delete()
+                }
+                if(bcFrontendStatic.exists()) {
+                  echo "Removing BuildConfig ${REPO_NAME}-frontend-static-${JOB_NAME}..."
+                  bcFrontendStatic.delete()
                 }
               }
-            } catch (err) {
-                echo err
             }
           }
         }
@@ -111,10 +132,15 @@ pipeline {
 
     stage('Deploy') {
       steps {
+        notifyStageStatus('Deploy', 'PENDING')
+
         script {
           openshift.withCluster() {
             openshift.withProject(DEV_PROJECT) {
-              openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-frontend-static:${JOB_NAME}", 'nr-get-token-frontend-static:${JOB_NAME}')
+              echo "Tagging Image ${REPO_NAME}-frontend-static:${JOB_NAME}..."
+              openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-frontend-static:${JOB_NAME}", "nr-get-token-frontend-static:${JOB_NAME}")
+
+              echo "Processing DeploymentConfig ${REPO_NAME}-frontend-static..."
               def dcFrontend = openshift.process('-f',
                 'openshift/frontend-static.dc.yaml',
                 "REPO_NAME=${REPO_NAME}",
@@ -123,11 +149,39 @@ pipeline {
                 "APP_NAME=${APP_NAME}",
                 "HOST_ROUTE=${HOST_ROUTE}"
               )
+
+              echo "Applying Deployment ${REPO_NAME}-frontend-static..."
               openshift.apply(dcFrontend)
             }
           }
         }
       }
+      post {
+        success {
+          echo "Successfully deployed to https://${HOST_ROUTE}"
+          notifyStageStatus('Deploy', 'SUCCESS')
+        }
+        unsuccessful {
+          echo 'Deploy failed'
+          notifyStageStatus('Deploy', 'FAILURE')
+        }
+      }
     }
   }
+}
+
+// --------------------
+// Supporting Functions
+// --------------------
+
+// Notify stage status and pass to Jenkins-GitHub library
+def notifyStageStatus(String name, String status) {
+  GitHubHelper.createCommitStatus(
+    this,
+    GitHubHelper.getPullRequestLastCommitId(this),
+    status,
+    BUILD_URL,
+    '',
+    "Stage: ${name}"
+  )
 }
