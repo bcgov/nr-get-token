@@ -157,13 +157,9 @@ pipeline {
         }
       }
       post {
-        changed {
-          script {
-            if(currentBuild.currentResult.equalsIgnoreCase('SUCCESS')) {
-              echo "Successfully deployed to https://${HOST_ROUTE}"
-              notifyStageStatus('Deploy', 'SUCCESS')
-            }
-          }
+        success {
+          echo "Successfully deployed to https://${HOST_ROUTE}"
+          notifyStageStatus('Deploy', 'SUCCESS')
         }
         unsuccessful {
           echo 'Deploy failed'

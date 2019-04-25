@@ -157,18 +157,24 @@ pipeline {
         }
       }
       post {
-        changed {
-          script {
-            if(currentBuild.currentResult.equalsIgnoreCase('SUCCESS')) {
-              echo "Successfully deployed to https://${HOST_ROUTE}"
-              commentOnPR("Deployed to https://${HOST_ROUTE}")
-              notifyStageStatus('Deploy', 'SUCCESS')
-            }
-          }
+        success {
+          echo "Successfully deployed to https://${HOST_ROUTE}"
+          notifyStageStatus('Deploy', 'SUCCESS')
         }
         unsuccessful {
           echo 'Deploy failed'
           notifyStageStatus('Deploy', 'FAILURE')
+        }
+      }
+    }
+  }
+  post {
+    changed {
+      script {
+        // Comment on Pull Request if build changes to successful
+        if(currentBuild.currentResult.equalsIgnoreCase('SUCCESS')) {
+          echo "Posting comment 'Deployed to https://${HOST_ROUTE}' to Pull Request..."
+          commentOnPR("Deployed to https://${HOST_ROUTE}")
         }
       }
     }
