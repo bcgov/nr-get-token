@@ -157,9 +157,14 @@ pipeline {
         }
       }
       post {
-        success {
-          echo "Successfully deployed to https://${HOST_ROUTE}"
-          notifyStageStatus('Deploy', 'SUCCESS')
+        changed {
+          script {
+            if(currentBuild.currentResult.equalsIgnoreCase('SUCCESS')) {
+              echo "Successfully deployed to https://${HOST_ROUTE}"
+              commentOnPR("Deployed to https://${HOST_ROUTE}")
+              notifyStageStatus('Deploy', 'SUCCESS')
+            }
+          }
         }
         unsuccessful {
           echo 'Deploy failed'
@@ -184,4 +189,9 @@ def notifyStageStatus(String name, String status) {
     '',
     "Stage: ${name}"
   )
+}
+
+// Creates a comment and pass to Jenkins-GitHub library
+def commentOnPR(String comment) {
+  GitHubHelper.commentOnPullRequest(this, comment)
 }
