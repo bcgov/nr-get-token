@@ -185,3 +185,8 @@ def notifyStageStatus(String name, String status) {
     "Stage: ${name}"
   )
 }
+
+// Creates a comment and pass to Jenkins-GitHub library
+def commentOnPR(String comment) {
+  GitHubHelper.commentOnPullRequest(this, comment)
+}
