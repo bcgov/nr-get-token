@@ -30,6 +30,8 @@
         multiple
         chips
         deletable-chips
+        :value="userAppCfg.commonServices"
+        v-on:change="updateField('commonServices', $event)"
       ></v-select>
 
       <v-btn color="primary" @click="appConfigStep = 2">Next</v-btn>
