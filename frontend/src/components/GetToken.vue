@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" v-model="valid">
+  <v-form ref="form">
     <v-container>
       <v-layout>
         <v-flex xs12 md5>
@@ -13,7 +13,7 @@
 
           <v-text-field v-model="password" type="password" label="Password" required></v-text-field>
 
-          <v-btn :disabled="!valid" color="success" @click="handleSubmit">Submit</v-btn>
+          <v-btn color="success" @click="handleSubmit">Submit</v-btn>
         </v-flex>
         <v-flex xs12 md6 offset-md1>
           <v-textarea
