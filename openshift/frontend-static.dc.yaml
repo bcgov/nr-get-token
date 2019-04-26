@@ -34,7 +34,7 @@ objects:
           deploymentconfig: "${APP_NAME}-frontend-${JOB_NAME}"
       spec:
         containers:
-        - image: docker-registry.default.svc:5000/${NAMESPACE}/${REPO_NAME}-frontend-static:dev
+        - image: docker-registry.default.svc:5000/${NAMESPACE}/${REPO_NAME}-frontend-static:${JOB_NAME}
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
