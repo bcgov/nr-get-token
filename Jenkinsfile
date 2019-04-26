@@ -138,7 +138,7 @@ pipeline {
           openshift.withCluster() {
             openshift.withProject(DEV_PROJECT) {
               echo "Tagging Image ${REPO_NAME}-frontend-static:${JOB_NAME}..."
-              openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-frontend-static:${JOB_NAME}", "nr-get-token-frontend-static:${JOB_NAME}")
+              openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-frontend-static:${JOB_NAME}", "${REPO_NAME}-frontend-static:${JOB_NAME}")
 
               echo "Processing DeploymentConfig ${REPO_NAME}-frontend-static..."
               def dcFrontend = openshift.process('-f',
