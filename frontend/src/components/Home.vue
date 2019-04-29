@@ -7,7 +7,7 @@
     </v-layout>
 
     <v-layout row wrap>
-      <v-flex xs112>
+      <v-flex xs12>
         <v-card class="sectionCard">
           <v-toolbar card color="grey lighten-3">
             <v-toolbar-title>Fetch GETOK Token</v-toolbar-title>
@@ -30,7 +30,14 @@
               Token: {{token}}
             </v-chip>
           </v-toolbar>
-          <ConfigForm></ConfigForm>
+          <v-layout row wrap>
+            <v-flex xs12 md5>
+              <ConfigForm></ConfigForm>
+            </v-flex>
+            <v-flex xs12 md6 offset-md1>
+              <ConfigGeneratedJson></ConfigGeneratedJson>
+            </v-flex>
+          </v-layout>
         </v-card>
       </v-flex>
     </v-layout>
@@ -40,13 +47,15 @@
 <script>
 import GetToken from "./GetToken";
 import ConfigForm from "./ConfigForm";
+import ConfigGeneratedJson from "./ConfigGeneratedJson";
 import { mapGetters } from "vuex";
 
 export default {
   name: "home",
   components: {
     GetToken,
-    ConfigForm
+    ConfigForm,
+    ConfigGeneratedJson
   },
   computed: mapGetters(["token"])
 };

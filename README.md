@@ -18,6 +18,7 @@ TBD - This will have build status and badges
     CODE-OF-CONDUCT.md         - Code of Conduct
     CONTRIBUTING.md            - Contributing Guidelines
     Jenkinsfile                - Top-level Pipeline
+    Jenkinsfile.cicd           - Pull-Request Pipeline
     LICENSE                    - License
 
 ## Documentation
