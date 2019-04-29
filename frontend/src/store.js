@@ -99,7 +99,6 @@ export default new Vuex.Store({
                   applicationCode: "CMSG",
                   name: "SENDER"
                 }
-
               ]
             }
           ];

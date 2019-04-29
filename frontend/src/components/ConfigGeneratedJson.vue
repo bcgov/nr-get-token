@@ -45,7 +45,7 @@ export default {
       snackbar: {
         on: false,
         text: "test",
-        color: ""
+        color: "info"
       }
     };
   },

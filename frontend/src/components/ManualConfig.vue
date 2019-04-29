@@ -10,11 +10,7 @@
             label="WebADE Application Config"
             v-model="appConfig"
           ></v-textarea>
-          <v-btn
-            disabled
-            color="success"
-            @click="handleSubmitAppConfig"
-          >Submit</v-btn>
+          <v-btn disabled color="success" @click="handleSubmitAppConfig">Submit</v-btn>
         </v-form>
       </v-flex>
     </v-layout>

@@ -18,10 +18,6 @@
   </header>
 </template>
 
-<script>
-export default {};
-</script>
-
 <style>
 .gov-header .title {
   color: #fff;
