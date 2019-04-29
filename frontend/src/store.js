@@ -6,14 +6,20 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     token: "",
+    configSubmissionSuccess: "",
+    configSubmissionError: "",
     userAppCfg: {
       applicationAcronym: "",
       applicationName: "",
       applicationDescription: "",
-      commonServices: []
+      commonServices: [],
+      userEnteredPassword: "",
+      deploymentMethod: ""
     }
   }, getters: {
     token: state => state.token,
+    configSubmissionSuccess: state => state.configSubmissionSuccess,
+    configSubmissionError: state => state.configSubmissionError,
     appConfigAsString: state => {
       // these are the hardcoded WebADE cfg values users do not enter
       const defaultAppCfg = {
@@ -51,6 +57,7 @@ export default new Vuex.Store({
       } else {
         newAppCfg.serviceClients = [{
           accountName: newAppCfg.applicationAcronym + "_SERVICE_CLIENT",
+          secret: "",
           oauthScopes: [],
           oauthGrantTypes: [],
           oauthRedirectUrls: [],
@@ -58,7 +65,15 @@ export default new Vuex.Store({
           oauthRefreshTokenValidity: null,
           oauthAdditionalInformation: "{\"autoapprove\":\"true\"}",
           authorizations: []
-        }]
+        }];
+
+        if (state.userAppCfg.deploymentMethod === "deploymentManual") {
+          newAppCfg.serviceClients[0].secret = "${" + newAppCfg.serviceClients[0].accountName + ".password}";
+        } else if (state.userAppCfg.deploymentMethod === "deploymentDirect") {
+          newAppCfg.serviceClients[0].secret = state.userAppCfg.userEnteredPassword;
+        } else {
+          newAppCfg.serviceClients[0].secret = "";
+        }
 
         if (!state.userAppCfg.commonServices || !state.userAppCfg.commonServices.length) {
           newAppCfg.serviceClients[0].authorizations = [];
@@ -127,6 +142,14 @@ export default new Vuex.Store({
     },
     updateUserAppCfg: function (state, userAppCfg) {
       Object.assign(state.userAppCfg, userAppCfg);
+    },
+    setConfigSubmissionSuccess: function (state, msg) {
+      state.configSubmissionSuccess = msg;
+      state.configSubmissionError = "";
+    },
+    setConfigSubmissionError: function (state, msg) {
+      state.configSubmissionSuccess = "";
+      state.configSubmissionError = msg;
     }
   },
   actions: {
