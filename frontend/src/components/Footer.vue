@@ -35,4 +35,7 @@
   .v-btn.footer:hover:before {
     background: none;
   }
+  .removeme {
+    color: white;
+  }
 </style>
