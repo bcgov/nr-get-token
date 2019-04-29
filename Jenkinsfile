@@ -117,18 +117,18 @@ pipeline {
               openshift.withProject(TOOLS_PROJECT) {
                 if(DEBUG_OUTPUT) {
                   echo "DEBUG - Using project: ${openshift.project()}"
-                }
+                } else {
+                  def bcFrontend = openshift.selector('bc', "${REPO_NAME}-frontend-${JOB_NAME}")
+                  def bcFrontendStatic = openshift.selector('bc', "${REPO_NAME}-frontend-static-${JOB_NAME}")
 
-                def bcFrontend = openshift.selector('bc', "${REPO_NAME}-frontend-${JOB_NAME}")
-                def bcFrontendStatic = openshift.selector('bc', "${REPO_NAME}-frontend-static-${JOB_NAME}")
-
-                if(bcFrontend.exists()) {
-                  echo "Removing BuildConfig ${REPO_NAME}-frontend-${JOB_NAME}..."
-                  bcFrontend.delete()
-                }
-                if(bcFrontendStatic.exists()) {
-                  echo "Removing BuildConfig ${REPO_NAME}-frontend-static-${JOB_NAME}..."
-                  bcFrontendStatic.delete()
+                  if(bcFrontend.exists()) {
+                    echo "Removing BuildConfig ${REPO_NAME}-frontend-${JOB_NAME}..."
+                    bcFrontend.delete()
+                  }
+                  if(bcFrontendStatic.exists()) {
+                    echo "Removing BuildConfig ${REPO_NAME}-frontend-static-${JOB_NAME}..."
+                    bcFrontendStatic.delete()
+                  }
                 }
               }
             }
