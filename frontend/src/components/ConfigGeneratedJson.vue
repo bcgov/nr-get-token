@@ -23,7 +23,7 @@
             flat
             icon
             color="primary"
-            v-clipboard="() => this.appConfigAsString"
+            v-clipboard="() => appConfigAsString"
             v-clipboard:success="clipboardSuccessHandler"
             v-clipboard:error="clipboardErrorHandler"
             v-on="on"
