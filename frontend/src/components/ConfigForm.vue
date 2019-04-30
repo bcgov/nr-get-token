@@ -66,17 +66,23 @@
         ></v-text-field>
       </v-radio-group>
 
-      <v-btn color="success" @click="submitConfig">Submit</v-btn>
-      <v-btn color="error" @click="submitConfigErr">Submit</v-btn>
+      <v-btn
+        v-if="userAppCfg.deploymentMethod === 'deploymentDirect'"
+        color="success"
+        @click="submitConfig"
+      >Submit</v-btn>
       <v-btn flat @click="appConfigStep = 1">Back</v-btn>
     </v-stepper-content>
   </v-stepper>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
+      appConfig: "",
       appConfigStep: 1,
       commonServices: [
         { text: "Common Messaging Service", value: "cmsg" },
@@ -86,13 +92,42 @@ export default {
       userAppCfg: this.$store.state.userAppCfg
     };
   },
+  computed: {
+    ...mapGetters(["token", "appConfigAsString"])
+  },
   methods: {
     submitConfig() {
-      if (this.userAppCfg.applicationAcronym !== 'MSSC' ) {
-        this.$store.commit("setConfigSubmissionError", "Temp: Only the application acronym MSSC is supported for now.");
+      if (this.userAppCfg.applicationAcronym !== "MSSC") {
+        this.$store.commit(
+          "setConfigSubmissionError",
+          "Temp: Only the application acronym MSSC is supported for now."
+        );
         return;
       }
-        this.$store.commit("setConfigSubmissionSuccess", "Success");
+      const url = `https://i1api.nrs.gov.bc.ca/webade-api/v1/applicationConfigurations`;
+
+      const headers = new Headers();
+      headers.set("Authorization", `Bearer ${this.token}`);
+      headers.set("Content-Type", "application/json");
+
+      fetch(url, {
+        method: "POST",
+        body: this.appConfigAsString,
+        headers: headers
+      })
+        .then(res => res.json())
+        .then(function(response) {
+          console.log("Success:", JSON.stringify(response)); // eslint-disable-line no-console
+          alert(
+            `SUCCESS, application configuration for ${
+              this.userAppCfg.applicationAcronym
+            } updated in Integration`
+          );
+        })
+        .catch(function(error) {
+          console.error("Error:", error); // eslint-disable-line no-console
+          alert("ERROR, see console");
+        });
     },
     submitConfigErr() {},
     updateAppCfgField(field, value) {

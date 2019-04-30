@@ -34,7 +34,7 @@
             <v-alert :value="configSubmissionSuccess" type="success" transition="scale-transition">{{configSubmissionSuccess}}</v-alert>
             <v-alert :value="configSubmissionError" type="error" transition="scale-transition">{{configSubmissionError}}</v-alert>
           </div>
-          <v-layout row wrap>
+          <v-layout row wrap v-if="token">
             <v-flex xs12 md5>
               <ConfigForm></ConfigForm>
             </v-flex>
