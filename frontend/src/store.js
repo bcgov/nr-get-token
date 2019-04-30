@@ -6,14 +6,20 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     token: "",
+    configSubmissionSuccess: "",
+    configSubmissionError: "",
     userAppCfg: {
       applicationAcronym: "",
       applicationName: "",
       applicationDescription: "",
-      commonServices: []
+      commonServices: [],
+      userEnteredPassword: "",
+      deploymentMethod: ""
     }
   }, getters: {
     token: state => state.token,
+    configSubmissionSuccess: state => state.configSubmissionSuccess,
+    configSubmissionError: state => state.configSubmissionError,
     appConfigAsString: state => {
       // these are the hardcoded WebADE cfg values users do not enter
       const defaultAppCfg = {
@@ -50,7 +56,8 @@ export default new Vuex.Store({
         newAppCfg.serviceClients = [];
       } else {
         newAppCfg.serviceClients = [{
-          accountName: newAppCfg.applicationAcronym + "_SERVICE_CLIENT",
+          accountName: `${newAppCfg.applicationAcronym}_SERVICE_CLIENT`,
+          secret: "",
           oauthScopes: [],
           oauthGrantTypes: [],
           oauthRedirectUrls: [],
@@ -58,7 +65,15 @@ export default new Vuex.Store({
           oauthRefreshTokenValidity: null,
           oauthAdditionalInformation: "{\"autoapprove\":\"true\"}",
           authorizations: []
-        }]
+        }];
+
+        if (state.userAppCfg.deploymentMethod === "deploymentManual") {
+          newAppCfg.serviceClients[0].secret = `$\{${newAppCfg.serviceClients[0].accountName}.password}`;
+        } else if (state.userAppCfg.deploymentMethod === "deploymentDirect") {
+          newAppCfg.serviceClients[0].secret = state.userAppCfg.userEnteredPassword;
+        } else {
+          newAppCfg.serviceClients[0].secret = "";
+        }
 
         if (!state.userAppCfg.commonServices || !state.userAppCfg.commonServices.length) {
           newAppCfg.serviceClients[0].authorizations = [];
@@ -82,7 +97,7 @@ export default new Vuex.Store({
 
           newAppCfg.profiles = [
             {
-              name: newAppCfg.applicationAcronym + "_PROFILE",
+              name: `${newAppCfg.applicationAcronym}_PROFILE`,
               description: `Can send an email with the ${newAppCfg.applicationAcronym} app`,
               secureByOrganization: false,
               availibleTo: [
@@ -93,7 +108,7 @@ export default new Vuex.Store({
               profileRoles: [
                 {
                   applicationCode: newAppCfg.applicationAcronym,
-                  name: newAppCfg.applicationAcronym + "_ROLE"
+                  name: `${newAppCfg.applicationAcronym}_ROLE`
                 },
                 {
                   applicationCode: "CMSG",
@@ -104,7 +119,7 @@ export default new Vuex.Store({
           ];
 
           newAppCfg.serviceClients[0].authorizations = [{
-            profileName: newAppCfg.applicationAcronym + "_PROFILE",
+            profileName: `${newAppCfg.applicationAcronym}_PROFILE`,
             profileDescription: "Test profile description",
             effectiveDate: 1506629523000,
             expiryDate: 253402243200000,
@@ -127,6 +142,14 @@ export default new Vuex.Store({
     },
     updateUserAppCfg: function (state, userAppCfg) {
       Object.assign(state.userAppCfg, userAppCfg);
+    },
+    setConfigSubmissionSuccess: function (state, msg) {
+      state.configSubmissionSuccess = msg;
+      state.configSubmissionError = "";
+    },
+    setConfigSubmissionError: function (state, msg) {
+      state.configSubmissionSuccess = "";
+      state.configSubmissionError = msg;
     }
   },
   actions: {

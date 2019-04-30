@@ -1,29 +1,41 @@
 <template>
   <v-container>
-    <v-textarea auto-grow readonly label="Application Configuration" v-model="appConfigAsString"></v-textarea>
+    <v-textarea
+      auto-grow
+      readonly
+      label="Application Configuration"
+      v-model="appConfigAsString"
+      class="jsonText"
+    ></v-textarea>
     <p class="text-xs-right">
-      <v-btn flat icon color="primary">
-        <v-icon>cloud_download</v-icon>
-      </v-btn>
-      <v-btn
-        flat
-        icon
-        color="primary"
-        v-clipboard="() => this.appConfigAsString"
-        v-clipboard:success="clipboardSuccessHandler"
-        v-clipboard:error="clipboardErrorHandler"
-      >
-        <v-icon>file_copy</v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn flat icon color="primary" v-on="on">
+            <v-icon>cloud_download</v-icon>
+          </v-btn>
+        </template>
+        <span>Download application configuration</span>
+      </v-tooltip>
+
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            flat
+            icon
+            color="primary"
+            v-clipboard="() => appConfigAsString"
+            v-clipboard:success="clipboardSuccessHandler"
+            v-clipboard:error="clipboardErrorHandler"
+            v-on="on"
+          >
+            <v-icon>file_copy</v-icon>
+          </v-btn>
+        </template>
+        <span>Copy application configuration to clipboard</span>
+      </v-tooltip>
     </p>
 
-    <v-snackbar
-      v-model="snackbar.on"
-      right="true"
-      top="true"
-      :timeout="6000"
-      :color="snackbar.color"
-    >
+    <v-snackbar v-model="snackbar.on" right top :timeout="6000" :color="snackbar.color">
       {{snackbar.text}}
       <v-btn color="white" flat @click="snackbar.on = false">
         <v-icon>close</v-icon>

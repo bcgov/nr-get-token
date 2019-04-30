@@ -30,7 +30,11 @@
               Token: {{token}}
             </v-chip>
           </v-toolbar>
-          <v-layout row wrap>
+          <div>
+            <v-alert :value="configSubmissionSuccess" type="success" transition="scale-transition">{{configSubmissionSuccess}}</v-alert>
+            <v-alert :value="configSubmissionError" type="error" transition="scale-transition">{{configSubmissionError}}</v-alert>
+          </div>
+          <v-layout row wrap v-if="token">
             <v-flex xs12 md5>
               <ConfigForm></ConfigForm>
             </v-flex>
@@ -57,12 +61,20 @@ export default {
     ConfigForm,
     ConfigGeneratedJson
   },
-  computed: mapGetters(["token"])
+  computed: mapGetters(["token", "configSubmissionSuccess", "configSubmissionError"])
 };
 </script>
 
 <style>
 .sectionCard {
   margin-bottom: 20px;
+}
+
+.jsonText textarea {
+  font-family: "Courier New", Courier, monospace;
+}
+
+.underRadioField {
+  padding-left: 32px;
 }
 </style>
