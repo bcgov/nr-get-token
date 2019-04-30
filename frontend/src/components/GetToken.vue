@@ -23,7 +23,7 @@
             auto-grow
             readonly
             label="Token Response"
-            :class=jsonTextClass
+            :class="jsonTextClass"
           ></v-textarea>
         </v-flex>
       </v-layout>
@@ -38,7 +38,7 @@ export default {
       serviceClient: "GETOK_SERVICE",
       password: "",
       tokenResponse: "",
-      jsonTextClass:""
+      jsonTextClass: ""
     };
   },
   methods: {
@@ -46,7 +46,7 @@ export default {
       const fetchedToken = await this.fetchToken();
       this.tokenResponse = JSON.stringify(fetchedToken, null, 2);
       this.$store.commit("setToken", fetchedToken.access_token);
-      this.jsonTextClass="jsonText";
+      this.jsonTextClass = "jsonText";
     },
     async fetchToken() {
       try {
