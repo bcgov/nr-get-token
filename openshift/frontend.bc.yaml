@@ -15,16 +15,16 @@ objects:
     creationTimestamp:
     labels:
       build: "${REPO_NAME}-frontend"
-    name: nodejs-8-rhel7
+    name: nodejs-10
   spec:
     lookupPolicy:
       local: false
     tags:
     - annotations:
-        openshift.io/imported-from: registry.access.redhat.com/rhscl/nodejs-8-rhel7:latest
+        openshift.io/imported-from: registry.access.redhat.com/rhoar-nodejs/nodejs-10:latest
       from:
         kind: DockerImage
-        name: registry.access.redhat.com/rhscl/nodejs-8-rhel7:latest
+        name: registry.access.redhat.com/rhoar-nodejs/nodejs-10:latest
       generation:
       importPolicy: {}
       name: latest
@@ -80,7 +80,7 @@ objects:
           value: '2'
         from:
           kind: ImageStreamTag
-          name: nodejs-8-rhel7:latest
+          name: nodejs-10:latest
       type: Source
 parameters:
 - name: REPO_NAME
