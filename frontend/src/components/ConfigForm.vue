@@ -118,11 +118,7 @@ export default {
         .then(res => res.json())
         .then(function(response) {
           console.log("Success:", JSON.stringify(response)); // eslint-disable-line no-console
-          alert(
-            `SUCCESS, application configuration for ${
-              this.userAppCfg.applicationAcronym
-            } updated in Integration`
-          );
+          alert(`SUCCESS, application configuration updated in Integration`);
         })
         .catch(function(error) {
           console.error("Error:", error); // eslint-disable-line no-console
