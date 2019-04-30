@@ -56,7 +56,7 @@ export default new Vuex.Store({
         newAppCfg.serviceClients = [];
       } else {
         newAppCfg.serviceClients = [{
-          accountName: newAppCfg.applicationAcronym + "_SERVICE_CLIENT",
+          accountName: `${newAppCfg.applicationAcronym}_SERVICE_CLIENT`,
           secret: "",
           oauthScopes: [],
           oauthGrantTypes: [],
@@ -68,7 +68,7 @@ export default new Vuex.Store({
         }];
 
         if (state.userAppCfg.deploymentMethod === "deploymentManual") {
-          newAppCfg.serviceClients[0].secret = "${" + newAppCfg.serviceClients[0].accountName + ".password}";
+          newAppCfg.serviceClients[0].secret = `$\{${newAppCfg.serviceClients[0].accountName}.password}`;
         } else if (state.userAppCfg.deploymentMethod === "deploymentDirect") {
           newAppCfg.serviceClients[0].secret = state.userAppCfg.userEnteredPassword;
         } else {
@@ -97,7 +97,7 @@ export default new Vuex.Store({
 
           newAppCfg.profiles = [
             {
-              name: newAppCfg.applicationAcronym + "_PROFILE",
+              name: `${newAppCfg.applicationAcronym}_PROFILE`,
               description: `Can send an email with the ${newAppCfg.applicationAcronym} app`,
               secureByOrganization: false,
               availibleTo: [
@@ -108,7 +108,7 @@ export default new Vuex.Store({
               profileRoles: [
                 {
                   applicationCode: newAppCfg.applicationAcronym,
-                  name: newAppCfg.applicationAcronym + "_ROLE"
+                  name: `${newAppCfg.applicationAcronym}_ROLE`
                 },
                 {
                   applicationCode: "CMSG",
@@ -119,7 +119,7 @@ export default new Vuex.Store({
           ];
 
           newAppCfg.serviceClients[0].authorizations = [{
-            profileName: newAppCfg.applicationAcronym + "_PROFILE",
+            profileName: `${newAppCfg.applicationAcronym}_PROFILE`,
             profileDescription: "Test profile description",
             effectiveDate: 1506629523000,
             expiryDate: 253402243200000,
