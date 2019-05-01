@@ -10,7 +10,7 @@
     <p class="text-xs-right">
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-btn flat icon color="primary" v-on="on">
+          <v-btn flat icon color="primary" v-on="on" @click="downloadFile">
             <v-icon>cloud_download</v-icon>
           </v-btn>
         </template>
@@ -70,11 +70,23 @@ export default {
       this.snackbar.text = "Application Configuration copied to clipboard";
       this.snackbar.color = "info";
     },
-
     clipboardErrorHandler() {
       this.snackbar.on = true;
       this.snackbar.text = "Error attempting to copy to clipboard";
       this.snackbar.color = "error";
+    },
+    downloadFile() {
+      var element = document.createElement("a");
+      element.setAttribute(
+        "href",
+        "data:text/plain;charset=utf-8," +
+          encodeURIComponent(this.appConfigAsString)
+      );
+      element.setAttribute("download", "applicationConfig.json");
+      element.style.display = "none";
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
     }
   }
 };
