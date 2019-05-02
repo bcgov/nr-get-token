@@ -3,17 +3,25 @@
     <v-container>
       <v-layout>
         <v-flex xs12 md5>
-          <v-text-field
-            v-model="serviceClient"
-            label="Service Client"
-            value="GETOK_SERVICE"
-            readonly
-            required
-          ></v-text-field>
+          <v-form v-model="tokenFormValid">
+            <v-text-field
+              v-model="serviceClient"
+              label="Service Client"
+              value="GETOK_SERVICE"
+              readonly
+              required
+            ></v-text-field>
 
-          <v-text-field v-model="password" type="password" label="Password" required></v-text-field>
+            <v-text-field
+              v-model="password"
+              type="password"
+              label="Password"
+              required
+              :rules="passwordRules"
+            ></v-text-field>
 
-          <v-btn color="success" @click="handleSubmit">Submit</v-btn>
+            <v-btn color="success" @click="handleSubmit" :disabled="!tokenFormValid">Submit</v-btn>
+          </v-form>
         </v-flex>
         <v-flex xs12 md6 offset-md1>
           <v-textarea
@@ -35,10 +43,12 @@
 export default {
   data() {
     return {
+      tokenFormValid: false,
       serviceClient: "GETOK_SERVICE",
       password: "",
       tokenResponse: "",
-      jsonTextClass: ""
+      jsonTextClass: "",
+      passwordRules: [v => !!v || "Password is required"]
     };
   },
   methods: {
