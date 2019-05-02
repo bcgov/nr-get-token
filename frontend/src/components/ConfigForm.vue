@@ -131,6 +131,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import {isValidJson} from "../utils/utils.js"
 
 export default {
   data() {
@@ -174,6 +175,7 @@ export default {
   },
   methods: {
     submitConfig() {
+      // this is temporary, only allow MSSC to be used at the moment
       if (this.userAppCfg.applicationAcronym !== "MSSC") {
         this.$store.commit(
           "setConfigSubmissionError",
@@ -181,6 +183,16 @@ export default {
         );
         return;
       }
+
+      // check json validity
+      if(!isValidJson(this.appConfigAsString)) {
+        this.$store.commit(
+          "setConfigSubmissionError",
+          "Unable to submit, Application Configuration is not valid JSON."
+        );
+        return;
+      }
+
       const url = `https://i1api.nrs.gov.bc.ca/webade-api/v1/applicationConfigurations`;
 
       const headers = new Headers();
@@ -202,7 +214,6 @@ export default {
           alert("ERROR, see console");
         });
     },
-    submitConfigErr() {},
     updateAppCfgField(field, value) {
       this.$store.commit("updateUserAppCfg", {
         [field]: value
