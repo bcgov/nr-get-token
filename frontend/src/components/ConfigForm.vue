@@ -149,7 +149,7 @@ export default {
       userAppCfg: this.$store.state.userAppCfg,
       applicationAcronymRules: [
         v => !!v || "Acroynm is required",
-        v => v.length <= 30 || "Acroynm must be 10 characters or less",
+        v => v.length <= 30 || "Acroynm must be 30 characters or less",
         v =>
           /^(?:[A-Z]{2,}[_]?)+[A-Z]{2,}$/g.test(v) ||
           "Incorrect format. Hover the ? for details."
