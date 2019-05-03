@@ -1,0 +1,67 @@
+{
+  "name": "nr-get-token-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Natural Resources Get Token",
+  "author": "NR Common Service Showcase <NR.CommonServiceShowcase@gov.bc.ca>",
+  "scripts": {
+    "build": "echo Nothing to build",
+    "start": "node ./bin/www",
+    "lint": "echo Error: no linter specified",
+    "test": "node_modules/.bin/jest --coverage",
+    "clean": "rm -rf coverage dist",
+    "prebuild": "npm run test",
+    "purge": "rm -rf node_modules",
+    "rebuild": "npm run clean && npm run build",
+    "reinstall": "npm run purge && npm install"
+  },
+  "homepage": "https://github.com/bcgov/nr-get-token",
+  "dependencies": {
+    "config": "^3.0.1",
+    "express": "^4.16.4",
+    "npmlog": "^4.1.2",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "jest": "^24.7.1"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "eslint:recommended"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json"
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    },
+    "testMatch": [
+      "**/tests/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)"
+    ],
+    "testURL": "http://localhost/"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bcgov/nr-get-token.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bcgov/nr-get-token/issues"
+  }
+}

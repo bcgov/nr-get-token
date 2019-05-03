@@ -1,5 +1,5 @@
 {
-  "name": "nr-get-token",
+  "name": "nr-get-token-frontend",
   "version": "0.1.0",
   "private": true,
   "description": "Natural Resources Get Token",
@@ -16,6 +16,7 @@
     "reinstall": "npm run purge && npm install",
     "test:unit": "node_modules/.bin/vue-cli-service test:unit"
   },
+  "homepage": "https://github.com/bcgov/nr-get-token",
   "dependencies": {
     "core-js": "^2.6.5",
     "v-clipboard": "^2.2.2",
@@ -105,5 +106,8 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bcgov/nr-get-token.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bcgov/nr-get-token/issues"
   }
 }
