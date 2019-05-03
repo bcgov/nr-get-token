@@ -14,7 +14,7 @@
               required
               :value="userAppCfg.applicationAcronym"
               v-on:keyup.stop="updateAppCfgField('applicationAcronym', $event.target.value)"
-              :counter="30"
+              :counter="fieldValidations.ACRONYM_MAX_LENGTH"
               :rules="applicationAcronymRules"
             >
               <template v-slot:append-outer>
@@ -27,7 +27,7 @@
                     <li>Uppercase letters only, no numbers</li>
                     <li>May include an _</li>
                     <li>Must begin and end with a letter</li>
-                    <li>At least 4 characters</li>
+                    <li>At least {{ fieldValidations.ACRONYM_MIN_LENGTH }} characters</li>
                     <li>
                       Examples:
                       <em>ABCD</em>,
@@ -46,7 +46,7 @@
               required
               :value="userAppCfg.applicationName"
               v-on:keyup.stop="updateAppCfgField('applicationName', $event.target.value)"
-              :counter="120"
+              :counter="fieldValidations.NAME_MAX_LENGTH"
               :rules="applicationNameRules"
             ></v-text-field>
           </v-flex>
@@ -56,7 +56,7 @@
           required
           :value="userAppCfg.applicationDescription"
           v-on:keyup.stop="updateAppCfgField('applicationDescription', $event.target.value)"
-          :counter="2000"
+          :counter="fieldValidations.DESCRIPTION_MAX_LENGTH"
           :rules="applicationDescriptionRules"
         ></v-text-field>
         <v-select
@@ -109,8 +109,7 @@
                 :rules="passwordRules"
                 :append-icon="showPw ? 'visibility' : 'visibility_off'"
                 :type="showPw ? 'text' : 'password'"
-                hint="At least 8 characters"
-                :counter="60"
+                :counter="fieldValidations.PASSWORD_MAX_LENGTH"
                 @click:append="showPw = !showPw"
               ></v-text-field>
             </v-flex>
@@ -132,10 +131,12 @@
 <script>
 import { mapGetters } from "vuex";
 import { isValidJson } from "@/utils/utils.js";
+import { FieldValidations } from "@/utils/constants.js";
 
 export default {
   data() {
     return {
+      fieldValidations: FieldValidations,
       appConfig: "",
       appConfigStep: 1,
       step1Valid: false,
@@ -149,24 +150,37 @@ export default {
       userAppCfg: this.$store.state.userAppCfg,
       applicationAcronymRules: [
         v => !!v || "Acroynm is required",
-        v => v.length <= 30 || "Acroynm must be 30 characters or less",
+        v =>
+          v.length <= FieldValidations.ACRONYM_MAX_LENGTH ||
+          `Acroynm must be ${
+            FieldValidations.ACRONYM_MAX_LENGTH
+          } characters or less`,
         v =>
           /^(?:[A-Z]{2,}[_]?)+[A-Z]{2,}$/g.test(v) ||
           "Incorrect format. Hover the ? for details."
       ],
       applicationNameRules: [
         v => !!v || "Name is required",
-        v => v.length <= 30 || "Name must be 30 characters or <b>less</b>"
+        v =>
+          v.length <= FieldValidations.NAME_MAX_LENGTH ||
+          `Name must be ${FieldValidations.NAME_MAX_LENGTH} characters or less`
       ],
       applicationDescriptionRules: [
         v => !!v || "Description is required",
-        v => v.length <= 2000 || "Description must be 2000 characters or less"
+        v =>
+          v.length <= FieldValidations.DESCRIPTION_MAX_LENGTH ||
+          `Description must be ${
+            FieldValidations.DESCRIPTION_MAX_LENGTH
+          } characters or less`
       ],
       passwordRules: [
         v => !!v || "Password is required",
         v =>
-          (v.length >= 8 && v.length <= 60) ||
-          "Password must be between 8 and 60 characters"
+          (v.length >= FieldValidations.PASSWORD_MIN_LENGTH &&
+            v.length <= FieldValidations.PASSWORD_MAX_LENGTH) ||
+          `Password must be between ${
+            FieldValidations.PASSWORD_MIN_LENGTH
+          } and ${FieldValidations.PASSWORD_MAX_LENGTH} characters`
       ]
     };
   },
