@@ -38,9 +38,9 @@ pipeline {
   }
 
   stages {
-    stage('Frontend') {
+    stage('Backend') {
       steps {
-        notifyStageStatus('Frontend', 'PENDING')
+        notifyStageStatus('Backend', 'PENDING')
 
         // Cancel any running builds in progress
         timeout(10) {
@@ -58,6 +58,68 @@ pipeline {
             echo sh(returnStdout: true, script: 'env')
           }
 
+          openshift.withCluster() {
+            openshift.withProject(TOOLS_PROJECT) {
+              if(DEBUG_OUTPUT.equalsIgnoreCase('true')) {
+                echo "DEBUG - Using project: ${openshift.project()}"
+              }
+
+              echo "Processing BuildConfig ${REPO_NAME}-backend..."
+              def bcBackend = openshift.process('-f',
+                'openshift/backend.bc.yaml',
+                "REPO_NAME=${REPO_NAME}",
+                "JOB_NAME=${JOB_NAME}",
+                "SOURCE_REPO_URL=${SOURCE_REPO_URL}",
+                "SOURCE_REPO_REF=${SOURCE_REPO_REF}"
+              )
+
+              echo "Building ImageStream ${REPO_NAME}-backend..."
+              openshift.apply(bcBackend).narrow('bc').startBuild('-w').logs('-f')
+
+              echo "Tagging Image ${REPO_NAME}-backend:${JOB_NAME}..."
+              openshift.tag("${REPO_NAME}-backend:latest",
+                "${REPO_NAME}-backend:${JOB_NAME}"
+              )
+            }
+          }
+        }
+      }
+      post {
+        success {
+          echo 'Backend build successful'
+          notifyStageStatus('Backend', 'SUCCESS')
+        }
+        unsuccessful {
+          echo 'Backend build failed'
+          notifyStageStatus('Backend', 'FAILURE')
+        }
+        cleanup {
+          echo 'Cleanup Backend BuildConfigs...'
+          script {
+            openshift.withCluster() {
+              openshift.withProject(TOOLS_PROJECT) {
+                if(DEBUG_OUTPUT.equalsIgnoreCase('true')) {
+                  echo "DEBUG - Using project: ${openshift.project()}"
+                } else {
+                  def bcBackend = openshift.selector('bc', "${REPO_NAME}-backend-${JOB_NAME}")
+
+                  if(bcBackend.exists()) {
+                    echo "Removing BuildConfig ${REPO_NAME}-backend-${JOB_NAME}..."
+                    bcBackend.delete()
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    stage('Frontend') {
+      steps {
+        notifyStageStatus('Frontend', 'PENDING')
+
+        script {
           openshift.withCluster() {
             openshift.withProject(TOOLS_PROJECT) {
               if(DEBUG_OUTPUT.equalsIgnoreCase('true')) {
@@ -210,11 +272,24 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
         echo "DEBUG - Using project: ${openshift.project()}"
       }
 
+      echo "Tagging Image ${REPO_NAME}-backend:${JOB_NAME}..."
+      openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-backend:${JOB_NAME}", "${REPO_NAME}-backend:${JOB_NAME}")
+
       echo "Tagging Image ${REPO_NAME}-frontend-static:${JOB_NAME}..."
       openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-frontend-static:${JOB_NAME}", "${REPO_NAME}-frontend-static:${JOB_NAME}")
 
+      echo "Processing DeploymentConfig ${REPO_NAME}-backend..."
+      def dcBackendTemplate = openshift.process('-f',
+        'openshift/backend.dc.yaml',
+        "REPO_NAME=${REPO_NAME}",
+        "JOB_NAME=${JOB_NAME}",
+        "NAMESPACE=${projectEnv}",
+        "APP_NAME=${APP_NAME}",
+        "HOST_ROUTE=${hostRouteEnv}"
+      )
+
       echo "Processing DeploymentConfig ${REPO_NAME}-frontend-static..."
-      def dcApp = openshift.process('-f',
+      def dcFrontendStaticTemplate = openshift.process('-f',
         'openshift/frontend-static.dc.yaml',
         "REPO_NAME=${REPO_NAME}",
         "JOB_NAME=${JOB_NAME}",
@@ -223,13 +298,22 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
         "HOST_ROUTE=${hostRouteEnv}"
       )
 
-      echo "Applying Deployment ${REPO_NAME}-frontend-static..."
       createDeploymentStatus(projectEnv, 'PENDING', hostRouteEnv)
-      def dc = openshift.apply(dcApp).narrow('dc')
 
-      // Wait for new deployment to roll out
+      echo "Applying Deployment ${REPO_NAME}-backend..."
+      def dcBackend = openshift.apply(dcBackendTemplate).narrow('dc')
+
+      echo "Applying Deployment ${REPO_NAME}-frontend-static..."
+      def dcFrontendStatic = openshift.apply(dcFrontendStaticTemplate).narrow('dc')
+
+      // Wait for new backend deployment to roll out
       timeout(5) {
-        dc.rollout().status('--watch=true')
+        dcBackend.rollout().status('--watch=true')
+      }
+
+      // Wait for new frontend deployment to roll out
+      timeout(5) {
+        dcFrontendStatic.rollout().status('--watch=true')
       }
     }
   }
