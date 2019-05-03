@@ -49,7 +49,7 @@ pipeline {
         }
 
         script {
-          if(DEBUG_OUTPUT) {
+          if(DEBUG_OUTPUT.equalsIgnoreCase('true')) {
             // Force OpenShift Plugin directives to be verbose
             openshift.logLevel(1)
 
@@ -60,7 +60,7 @@ pipeline {
 
           openshift.withCluster() {
             openshift.withProject(TOOLS_PROJECT) {
-              if(DEBUG_OUTPUT) {
+              if(DEBUG_OUTPUT.equalsIgnoreCase('true')) {
                 echo "DEBUG - Using project: ${openshift.project()}"
               }
 
@@ -114,7 +114,7 @@ pipeline {
           script {
             openshift.withCluster() {
               openshift.withProject(TOOLS_PROJECT) {
-                if(DEBUG_OUTPUT) {
+                if(DEBUG_OUTPUT.equalsIgnoreCase('true')) {
                   echo "DEBUG - Using project: ${openshift.project()}"
                 } else {
                   def bcFrontend = openshift.selector('bc', "${REPO_NAME}-frontend-${JOB_NAME}")
