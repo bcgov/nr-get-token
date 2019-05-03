@@ -5,6 +5,7 @@
         <v-flex xs12 md5>
           <v-form v-model="tokenFormValid">
             <v-text-field
+              outline
               v-model="serviceClient"
               label="Service Client"
               value="GETOK_SERVICE"
@@ -13,6 +14,7 @@
             ></v-text-field>
 
             <v-text-field
+              outline
               v-model="password"
               type="password"
               label="Password"
@@ -25,6 +27,7 @@
         </v-flex>
         <v-flex xs12 md6 offset-md1>
           <v-textarea
+            outline
             v-model="tokenResponse"
             rows="1"
             placeholder="This field will be filled by the token"

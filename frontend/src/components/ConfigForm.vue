@@ -10,6 +10,7 @@
         <v-layout row wrap>
           <v-flex xs12 md7>
             <v-text-field
+              outline
               label="Application Acronym"
               required
               :value="userAppCfg.applicationAcronym"
@@ -42,6 +43,7 @@
         <v-layout row wrap>
           <v-flex xs12 md9>
             <v-text-field
+              outline
               label="Application Name"
               required
               :value="userAppCfg.applicationName"
@@ -52,6 +54,7 @@
           </v-flex>
         </v-layout>
         <v-text-field
+          outline
           label="Application Description"
           required
           :value="userAppCfg.applicationDescription"
@@ -60,6 +63,7 @@
           :rules="applicationDescriptionRules"
         ></v-text-field>
         <v-select
+          outline
           :items="commonServices"
           label="Common Service(s) Required"
           multiple
@@ -100,6 +104,7 @@
           <v-layout row wrap>
             <v-flex xs12>
               <v-text-field
+                outline
                 v-if="userAppCfg.deploymentMethod === 'deploymentDirect'"
                 label="Password"
                 required
@@ -131,7 +136,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import {isValidJson} from "../utils/utils.js"
+import { isValidJson } from "../utils/utils.js";
 
 export default {
   data() {
@@ -185,7 +190,7 @@ export default {
       }
 
       // check json validity
-      if(!isValidJson(this.appConfigAsString)) {
+      if (!isValidJson(this.appConfigAsString)) {
         this.$store.commit(
           "setConfigSubmissionError",
           "Unable to submit, Application Configuration is not valid JSON."

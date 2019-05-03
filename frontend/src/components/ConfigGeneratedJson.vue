@@ -1,6 +1,7 @@
 <template>
   <v-container>
     <v-textarea
+      outline
       auto-grow
       readonly
       label="Application Configuration"
