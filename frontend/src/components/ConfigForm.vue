@@ -131,7 +131,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import {isValidJson} from "../utils/utils.js"
+import { isValidJson } from "@/utils/utils.js";
 
 export default {
   data() {
@@ -185,7 +185,7 @@ export default {
       }
 
       // check json validity
-      if(!isValidJson(this.appConfigAsString)) {
+      if (!isValidJson(this.appConfigAsString)) {
         this.$store.commit(
           "setConfigSubmissionError",
           "Unable to submit, Application Configuration is not valid JSON."
