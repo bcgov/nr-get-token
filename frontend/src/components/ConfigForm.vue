@@ -24,8 +24,8 @@
                   </template>
                   The Application Acronym must comply with the following format:
                   <ul>
-                    <li>Uppercase letters only, no numbers</li>
-                    <li>May include an _</li>
+                    <li>UPPERCASE LETTERS ONLY</li>
+                    <li>Underscores may be placed between letters</li>
                     <li>Must begin and end with a letter</li>
                     <li>At least {{ fieldValidations.ACRONYM_MIN_LENGTH }} characters</li>
                     <li>
