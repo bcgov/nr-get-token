@@ -1,12 +1,6 @@
 #!groovy
 import bcgov.GitHubHelper
 
-// ------------------
-// Pipeline Variables
-// ------------------
-// Enable pipeline verbose debug output
-def DEBUG_OUTPUT = false
-
 // --------------------
 // Declarative Pipeline
 // --------------------
@@ -14,6 +8,9 @@ pipeline {
   agent any
 
   environment {
+    // Enable pipeline verbose debug output if greater than 0
+    DEBUG_OUTPUT = 'false'
+
     // Get projects/namespaces from config maps
     DEV_PROJECT = new File('/var/run/configs/ns/project.dev').getText('UTF-8').trim()
     TEST_PROJECT = new File('/var/run/configs/ns/project.test').getText('UTF-8').trim()
@@ -27,15 +24,17 @@ pipeline {
     APP_DOMAIN = new File('/var/run/configs/jobs/app.domain').getText('UTF-8').trim()
 
     // JOB_NAME should be the pull request/branch identifier (i.e. 'pr-5')
-    JOB_NAME = "${JOB_BASE_NAME}".toLowerCase()
+    JOB_NAME = JOB_BASE_NAME.toLowerCase()
 
     // SOURCE_REPO_* references git repository resources
     SOURCE_REPO_RAW = "https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/master"
-    SOURCE_REPO_REF='master'
-    SOURCE_REPO_URL="https://github.com/${REPO_OWNER}/${REPO_NAME}.git"
+    SOURCE_REPO_REF = 'master'
+    SOURCE_REPO_URL = "https://github.com/${REPO_OWNER}/${REPO_NAME}.git"
 
     // HOST_ROUTE is the full domain route endpoint (ie. 'appname-pr-5-k8vopl-dev.pathfinder.gov.bc.ca')
-    HOST_ROUTE = "${APP_NAME}-${JOB_NAME}-${DEV_PROJECT}.${APP_DOMAIN}"
+    DEV_HOST_ROUTE = "${APP_NAME}-${JOB_NAME}-${DEV_PROJECT}.${APP_DOMAIN}"
+    TEST_HOST_ROUTE = "${APP_NAME}-${JOB_NAME}-${TEST_PROJECT}.${APP_DOMAIN}"
+    PROD_HOST_ROUTE = "${APP_NAME}-${JOB_NAME}-${PROD_PROJECT}.${APP_DOMAIN}"
   }
 
   stages {
@@ -137,45 +136,100 @@ pipeline {
       }
     }
 
-    stage('Deploy') {
+    stage('Deploy - Dev') {
       steps {
-        notifyStageStatus('Deploy', 'PENDING')
-
         script {
-          openshift.withCluster() {
-            openshift.withProject(DEV_PROJECT) {
-              if(DEBUG_OUTPUT) {
-                echo "DEBUG - Using project: ${openshift.project()}"
-              }
-
-              echo "Tagging Image ${REPO_NAME}-frontend-static:${JOB_NAME}..."
-              openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-frontend-static:${JOB_NAME}", "${REPO_NAME}-frontend-static:${JOB_NAME}")
-
-              echo "Processing DeploymentConfig ${REPO_NAME}-frontend-static..."
-              def dcFrontend = openshift.process('-f',
-                'openshift/frontend-static.dc.yaml',
-                "REPO_NAME=${REPO_NAME}",
-                "JOB_NAME=${JOB_NAME}",
-                "NAMESPACE=${DEV_PROJECT}",
-                "APP_NAME=${APP_NAME}",
-                "HOST_ROUTE=${HOST_ROUTE}"
-              )
-
-              echo "Applying Deployment ${REPO_NAME}-frontend-static..."
-              openshift.apply(dcFrontend)
-            }
-          }
+          deployStage('Dev', DEV_PROJECT, DEV_HOST_ROUTE)
         }
       }
       post {
         success {
-          echo "Successfully deployed to https://${HOST_ROUTE}"
-          notifyStageStatus('Deploy', 'SUCCESS')
+          createDeploymentStatus(DEV_PROJECT, 'SUCCESS', DEV_HOST_ROUTE)
+          notifyStageStatus('Deploy - Dev', 'SUCCESS')
         }
         unsuccessful {
-          echo 'Deploy failed'
-          notifyStageStatus('Deploy', 'FAILURE')
+          createDeploymentStatus(DEV_PROJECT, 'FAILURE', DEV_HOST_ROUTE)
+          notifyStageStatus('Deploy - Dev', 'FAILURE')
         }
+      }
+    }
+
+    stage('Deploy - Test') {
+      steps {
+        script {
+          deployStage('Test', TEST_PROJECT, TEST_HOST_ROUTE)
+        }
+      }
+      post {
+        success {
+          createDeploymentStatus(TEST_PROJECT, 'SUCCESS', TEST_HOST_ROUTE)
+          notifyStageStatus('Deploy - Test', 'SUCCESS')
+        }
+        unsuccessful {
+          createDeploymentStatus(TEST_PROJECT, 'FAILURE', TEST_HOST_ROUTE)
+          notifyStageStatus('Deploy - Test', 'FAILURE')
+        }
+      }
+    }
+
+    stage('Deploy - Prod') {
+      steps {
+        script {
+          deployStage('Prod', PROD_PROJECT, PROD_HOST_ROUTE)
+        }
+      }
+      post {
+        success {
+          createDeploymentStatus(PROD_PROJECT, 'SUCCESS', PROD_HOST_ROUTE)
+          notifyStageStatus('Deploy - Prod', 'SUCCESS')
+        }
+        unsuccessful {
+          createDeploymentStatus(PROD_PROJECT, 'FAILURE', PROD_HOST_ROUTE)
+          notifyStageStatus('Deploy - Prod', 'FAILURE')
+        }
+      }
+    }
+  }
+}
+
+// ------------------
+// Pipeline Functions
+// ------------------
+
+// Parameterized deploy stage
+def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
+  if (!stageEnv.equalsIgnoreCase('Dev')) {
+    input("Deploy to ${projectEnv}?")
+  }
+
+  notifyStageStatus("Deploy - ${stageEnv}", 'PENDING')
+
+  openshift.withCluster() {
+    openshift.withProject(projectEnv) {
+      if(DEBUG_OUTPUT.equalsIgnoreCase('true')) {
+        echo "DEBUG - Using project: ${openshift.project()}"
+      }
+
+      echo "Tagging Image ${REPO_NAME}-frontend-static:${JOB_NAME}..."
+      openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-frontend-static:${JOB_NAME}", "${REPO_NAME}-frontend-static:${JOB_NAME}")
+
+      echo "Processing DeploymentConfig ${REPO_NAME}-frontend-static..."
+      def dcApp = openshift.process('-f',
+        'openshift/frontend-static.dc.yaml',
+        "REPO_NAME=${REPO_NAME}",
+        "JOB_NAME=${JOB_NAME}",
+        "NAMESPACE=${projectEnv}",
+        "APP_NAME=${APP_NAME}",
+        "HOST_ROUTE=${hostRouteEnv}"
+      )
+
+      echo "Applying Deployment ${REPO_NAME}-frontend-static..."
+      createDeploymentStatus(projectEnv, 'PENDING', hostRouteEnv)
+      def dc = openshift.apply(dcApp).narrow('dc')
+
+      // Wait for new deployment to roll out
+      timeout(5) {
+        dc.rollout().status('--watch=true')
       }
     }
   }
@@ -195,6 +249,33 @@ def notifyStageStatus(String name, String status) {
   GitHubHelper.createCommitStatus(
     this, sha1, status, BUILD_URL, '', "Stage: ${name}"
   )
+}
+
+// Create deployment status and pass to Jenkins-GitHub library
+def createDeploymentStatus (String environment, String status, String hostUrl) {
+  def ghDeploymentId = new GitHubHelper().createDeployment(
+    this,
+    SOURCE_REPO_REF,
+    [
+      'environment': environment,
+      'task': "deploy:master"
+    ]
+  )
+
+  new GitHubHelper().createDeploymentStatus(
+    this,
+    ghDeploymentId,
+    status,
+    ['targetUrl': "https://${hostUrl}"]
+  )
+
+  if (status.equalsIgnoreCase('SUCCESS')) {
+    echo "${environment} deployment successful at https://${hostUrl}"
+  } else if (status.equalsIgnoreCase('PENDING')) {
+    echo "${environment} deployment pending..."
+  } else if (status.equalsIgnoreCase('FAILURE')) {
+    echo "${environment} deployment failed"
+  }
 }
 
 // Creates a comment and pass to Jenkins-GitHub library
