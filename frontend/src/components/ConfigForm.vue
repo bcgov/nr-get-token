@@ -116,15 +116,16 @@
           </v-layout>
         </v-radio-group>
 
-        <v-dialog v-model="dialog" persistent max-width="400">
+        <v-btn flat @click="appConfigStep = 1">Back</v-btn>
+
+        <v-dialog
+          v-model="dialog"
+          persistent
+          max-width="400"
+          v-if="userAppCfg.deploymentMethod === 'deploymentDirect'"
+        >
           <template v-slot:activator="{ on }">
-            <v-btn
-              v-if="userAppCfg.deploymentMethod === 'deploymentDirect'"
-              color="success"
-              @click="submitConfig"
-              :disabled="!step2Valid"
-              v-on="on"
-            >Submit</v-btn>
+            <v-btn color="success" :disabled="!step2Valid" v-on="on">Submit</v-btn>
           </template>
           <v-card>
             <v-card-title class="headline">Are you sure?</v-card-title>
@@ -139,7 +140,6 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-btn flat @click="appConfigStep = 1">Back</v-btn>
       </v-form>
     </v-stepper-content>
   </v-stepper>
@@ -207,6 +207,8 @@ export default {
   },
   methods: {
     submitConfig() {
+      this.$store.commit("clearConfigSubmissionMsgs");
+
       // this is temporary, only allow MSSC to be used at the moment
       if (this.userAppCfg.applicationAcronym !== "MSSC") {
         this.$store.commit(
@@ -225,8 +227,6 @@ export default {
         return;
       }
 
-      return;
-      /*
       const url = `https://i1api.nrs.gov.bc.ca/webade-api/v1/applicationConfigurations`;
 
       const headers = new Headers();
@@ -247,7 +247,6 @@ export default {
           console.error("Error:", error); // eslint-disable-line no-console
           alert("ERROR, see console");
         });
-        */
     },
     updateAppCfgField(field, value) {
       this.$store.commit("updateUserAppCfg", {

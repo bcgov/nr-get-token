@@ -150,6 +150,10 @@ export default new Vuex.Store({
     setConfigSubmissionError: function (state, msg) {
       state.configSubmissionSuccess = "";
       state.configSubmissionError = msg;
+    },
+    clearConfigSubmissionMsgs: function (state) {
+      state.configSubmissionSuccess = "";
+      state.configSubmissionError = "";
     }
   },
   actions: {
