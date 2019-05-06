@@ -8,8 +8,20 @@ app.use(express.static('static'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Temporary Hello World
 app.get('/index.html', function (_, res) {
   res.sendFile(__dirname + '/static/index.html');
+});
+
+// Temporary OpenAPI Endpoint
+app.use('/v1/docs', function (_, res) {
+  const docs = require('./docs/docs');
+  res.send(docs.getDocHTML('v1'));
+});
+
+// Temporary OpenAPI YAML File
+app.get('/v1/api-spec.yaml', function (_, res) {
+  res.sendFile(__dirname + '/static/v1.api-spec.yaml');
 });
 
 // Handle 500
