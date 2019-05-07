@@ -1,0 +1,344 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: GetOK API
+  description: >-
+    This API automates the process for getting setup to use common services
+    published on https://apistore.nrs.gov.bc.ca/store/
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+  contact:
+    name: NR Common Service Showcase
+    email: NR.CommonServiceShowcase@gov.bc.ca
+servers:
+  - url: /v1
+    description: This Server
+security:
+  - bearerAuth: []
+  - OpenID: []
+paths:
+  /checks/health:
+    get:
+      summary: Returns status of API
+      security: []
+      operationId: checkHealth
+      tags:
+        - Checks
+      responses:
+        '200':
+          description: Responds if the API endpoint is healthy
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /checks/status:
+    get:
+      summary: Returns status of correspondent APIs
+      operationId: checkStatus
+      tags:
+        - Checks
+      responses:
+        '200':
+          description: Responds if the API endpoint is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndpointList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/appConfig/{acronym}':
+    get:
+      summary: Returns WebADE JSON response for the specified acronym
+      operationId: appConfigGetAcronym
+      tags:
+        - Application Configuration
+      parameters:
+        - name: acronym
+          in: path
+          description: Name of the project
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: WebADE JSON response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppConfig'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /appConfigs:
+    get:
+      summary: Returns WebADE JSON response for all defined acronyms
+      operationId: appConfigGetAll
+      tags:
+        - Application Configuration
+      parameters:
+        - name: acronym
+          in: path
+          description: Name of the project
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: WebADE JSON response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppConfigList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /appConfigForm:
+    post:
+      summary: Submit a proposed application
+      operationId: appConfigFormPost
+      tags:
+        - Application Configuration
+      requestBody:
+        description: Form fields required to generate a minimal Application Configuration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppConfigForm'
+      responses:
+        '200':
+          description: WebADE JSON response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /validations/rules:
+    post:
+      summary: Returns status of correspondent APIs
+      operationId: validateFields
+      tags:
+        - Validation
+      responses:
+        '200':
+          description: Responds if the API endpoint is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndpointList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    OpenID:
+      type: openIdConnect
+      openIdConnectUrl: 'https://example.com/.well-known/openid-configuration'
+  schemas:
+    AppConfig:
+      type: object
+      properties:
+        '@type':
+          type: string
+          example: 'http://webade.gov.bc.ca/applicationConfiguration'
+        applicationAcronym:
+          type: string
+          example: MSSC
+        custodianNumber:
+          type: integer
+          minimum: 0
+        applicationName:
+          type: string
+          example: Application Name
+        applicationDescription:
+          type: string
+          example: Application Description
+        applicationObjectPrefix:
+          type: string
+          example: null
+        enabledInd:
+          type: boolean
+          example: true
+        distributeTypeCd:
+          type: string
+          example: null
+        managementEnabledInd:
+          type: boolean
+          example: false
+        applicationVersion:
+          type: string
+          example: null
+        reportedWebadeVersion:
+          type: string
+          example: null
+        actions:
+          type: array
+          items:
+            type: object
+          example: []
+        roles:
+          type: array
+          items:
+            type: object
+          example: []
+        wdePreferences:
+          type: array
+          items:
+            type: object
+          example: []
+        applicationPreferences:
+          type: array
+          items:
+            type: object
+          example: []
+        globalPreferences:
+          type: array
+          items:
+            type: object
+          example: []
+        defaultUserPreferences:
+          type: array
+          items:
+            type: object
+          example: []
+        profiles:
+          type: array
+          items:
+            type: object
+          example: []
+        serviceClients:
+          type: array
+          items:
+            type: object
+          example: []
+        groupAuthorizations:
+          type: array
+          items:
+            type: object
+          example: []
+    AppConfigForm:
+      type: object
+      required:
+        - applicationAcronym
+        - applicationName
+        - applicationDescription
+      properties:
+        applicationAcronym:
+          type: string
+          example: MSSC
+        applicationName:
+          type: string
+          example: Application Name
+        applicationDescription:
+          type: string
+          example: Application Description
+        commonServices:
+          type: array
+          items:
+            type: string
+            example: CMSG
+          description: An array of applicationAcronyms
+    AppConfigList:
+      type: array
+      items:
+        $ref: '#/components/schemas/AppConfig'
+      description: A list of Application Configurations
+    EndpointStatus:
+      type: object
+      required:
+        - endpoint
+        - healthCheck
+        - authenticated
+        - authorized
+      properties:
+        endpoint:
+          type: string
+          description: Base endpoint URL
+          example: 'https://example.com/v1/'
+        healthCheck:
+          type: boolean
+          description: Is the endpoint reachable
+        authenticated:
+          type: boolean
+          description: Are credentials valid to access endpoint
+        authorized:
+          type: boolean
+          description: Do the credentials have the right permissions
+    EndpointList:
+      type: object
+      required:
+        - endpoints
+      properties:
+        endpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/EndpointStatus'
+          description: A list of Endpoint Statuses
+    Error:
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: contains a message about the failure
+          example: Something errored
+    Success:
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: 'Contains message about the success, normally "Written successfully"'
+          example: Written successfully
+  responses:
+    Forbidden:
+      description: Lack required role to perform action
+    NotFound:
+      description: Not found
+    UnauthorizedError:
+      description: Access token is missing or invalid
