@@ -1,8 +1,17 @@
 <template>
   <v-container>
-    <v-layout text-xs-center wrap>
-      <v-flex xs12>
-        <v-img :src="require('@/assets/images/Get-Token_md.png')" class="my-3" contain height="150"></v-img>
+    <v-layout wrap>
+      <v-flex xs4>
+        <v-img :src="require('@/assets/images/tokey.svg')" contain height="180" position="right"></v-img>
+      </v-flex>
+      <v-flex xs8>
+        <v-img
+          :src="require('@/assets/images/Get-Token_md.png')"
+          class="my-3"
+          contain
+          height="150"
+          position="left"
+        ></v-img>
       </v-flex>
     </v-layout>
 
@@ -31,8 +40,16 @@
             </v-chip>
           </v-toolbar>
           <div>
-            <v-alert :value="configSubmissionSuccess" type="success" transition="scale-transition">{{configSubmissionSuccess}}</v-alert>
-            <v-alert :value="configSubmissionError" type="error" transition="scale-transition">{{configSubmissionError}}</v-alert>
+            <v-alert
+              :value="configSubmissionSuccess"
+              type="success"
+              transition="scale-transition"
+            >{{configSubmissionSuccess}}</v-alert>
+            <v-alert
+              :value="configSubmissionError"
+              type="error"
+              transition="scale-transition"
+            >{{configSubmissionError}}</v-alert>
           </div>
           <v-layout row wrap v-if="token">
             <v-flex xs12 md5>
@@ -61,7 +78,11 @@ export default {
     ConfigForm,
     ConfigGeneratedJson
   },
-  computed: mapGetters(["token", "configSubmissionSuccess", "configSubmissionError"])
+  computed: mapGetters([
+    "token",
+    "configSubmissionSuccess",
+    "configSubmissionError"
+  ])
 };
 </script>
 

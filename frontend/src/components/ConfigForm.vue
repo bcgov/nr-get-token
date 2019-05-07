@@ -116,13 +116,30 @@
           </v-layout>
         </v-radio-group>
 
-        <v-btn
-          v-if="userAppCfg.deploymentMethod === 'deploymentDirect'"
-          color="success"
-          @click="submitConfig"
-          :disabled="!step2Valid"
-        >Submit</v-btn>
         <v-btn flat @click="appConfigStep = 1">Back</v-btn>
+
+        <v-dialog
+          v-model="dialog"
+          persistent
+          max-width="400"
+          v-if="userAppCfg.deploymentMethod === 'deploymentDirect'"
+        >
+          <template v-slot:activator="{ on }">
+            <v-btn color="success" :disabled="!step2Valid" v-on="on">Submit</v-btn>
+          </template>
+          <v-card>
+            <v-card-title class="headline">Are you sure?</v-card-title>
+            <v-card-text>
+              This will overwrite any existing WebADE configuration for the
+              <strong>{{ userAppCfg.applicationAcronym }}</strong> application. Are you sure you want to proceed?
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn flat @click="dialog = false">CANCEL</v-btn>
+              <v-btn color="green darken-1" flat @click="dialog = false; submitConfig()">CONTINUE</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-form>
     </v-stepper-content>
   </v-stepper>
@@ -136,6 +153,7 @@ import { FieldValidations } from "@/utils/constants.js";
 export default {
   data() {
     return {
+      dialog: false,
       fieldValidations: FieldValidations,
       appConfig: "",
       appConfigStep: 1,
@@ -189,6 +207,8 @@ export default {
   },
   methods: {
     submitConfig() {
+      this.$store.commit("clearConfigSubmissionMsgs");
+
       // this is temporary, only allow MSSC to be used at the moment
       if (this.userAppCfg.applicationAcronym !== "MSSC") {
         this.$store.commit(
