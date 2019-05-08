@@ -19,7 +19,7 @@ const docs = {
       </style>
     </head>
     <body>
-      <redoc spec-url='/${version}/api-spec.yaml'></redoc>
+      <redoc spec-url='/api/${version}/api-spec.yaml'></redoc>
       <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"> </script>
     </body>
   </html>`

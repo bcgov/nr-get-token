@@ -53,6 +53,8 @@ objects:
     name: "${REPO_NAME}-frontend-static-${JOB_NAME}"
   spec:
     completionDeadlineSeconds: 600
+    successfulBuildsHistoryLimit: 3
+    failedBuildsHistoryLimit: 3
     nodeSelector:
     output:
       to:
@@ -70,7 +72,7 @@ objects:
     source:
       dockerfile: |-
         FROM docker-registry.default.svc:5000/bcgov/s2i-caddy:v1-stable
-        COPY tmp/dist/ /var/www/html/
+        COPY /tmp/dist /var/www/html
         CMD /tmp/scripts/run
       images:
       - as:

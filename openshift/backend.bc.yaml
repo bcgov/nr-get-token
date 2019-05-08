@@ -53,6 +53,8 @@ objects:
     name: "${REPO_NAME}-backend-${JOB_NAME}"
   spec:
     completionDeadlineSeconds: 600
+    successfulBuildsHistoryLimit: 3
+    failedBuildsHistoryLimit: 3
     nodeSelector:
     output:
       to:
@@ -77,7 +79,7 @@ objects:
       sourceStrategy:
         env:
         - name: BUILD_LOGLEVEL
-          value: '2'
+          value: '1'
         from:
           kind: ImageStreamTag
           name: nodejs-10:latest
