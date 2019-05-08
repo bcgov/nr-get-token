@@ -53,6 +53,8 @@ objects:
     name: "${REPO_NAME}-frontend-${JOB_NAME}"
   spec:
     completionDeadlineSeconds: 600
+    successfulBuildsHistoryLimit: 3
+    failedBuildsHistoryLimit: 3
     nodeSelector:
     output:
       to:
