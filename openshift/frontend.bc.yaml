@@ -79,7 +79,7 @@ objects:
       sourceStrategy:
         env:
         - name: BUILD_LOGLEVEL
-          value: '1'
+          value: '2'
         from:
           kind: ImageStreamTag
           name: nodejs-10:latest
