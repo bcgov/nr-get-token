@@ -11,6 +11,7 @@
     "test": "node_modules/.bin/jest --coverage",
     "clean": "rm -rf coverage dist",
     "prebuild": "npm run test",
+    "pretest": "npm run lint",
     "purge": "rm -rf node_modules",
     "rebuild": "npm run clean && npm run build",
     "reinstall": "npm run purge && npm install"

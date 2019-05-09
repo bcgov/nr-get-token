@@ -1,43 +1,37 @@
-const express = require('express');
+global.__basedir = __dirname;
+
 // const config = require('config');
-
+const express = require('express');
 const log = require('npmlog');
-const app = express();
+const path = require('path');
 
+const v1Router = require(path.join(__basedir, 'routes/v1/v1'));
+
+const app = express();
 app.use(express.static('static'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Temporary Hello World
-app.get('/api', function (_, res) {
-  res.sendFile(__dirname + '/static/index.html');
+app.get('/api', (_req, res) => {
+  res.sendFile(path.join(__basedir, '/static/index.html'));
 });
 
-// Temporary OpenAPI Endpoint
-app.use('/api/v1/docs', function (_, res) {
-  const docs = require('./docs/docs');
-  res.send(docs.getDocHTML('v1'));
-});
-
-// Temporary OpenAPI YAML File
-app.get('/api/v1/api-spec.yaml', function (_, res) {
-  res.sendFile(__dirname + '/static/v1.api-spec.yaml');
-});
+// v1 Router
+app.use('/api/v1', v1Router);
 
 // Handle 500
-app.use(function (err, _, res, _) {
+app.use((err, _req, res, _next) => {
   log.error(err.stack)
-  res.status(500);
-  res.json({
+  res.status(500).json({
     status: 500,
     message: 'Internal Server Error: ' + err.stack.split('\n', 1)[0]
   });
 });
 
 // Handle 404
-app.use(function (_, res) {
-  res.status(404);
-  res.json({
+app.use((_req, res) => {
+  res.status(404).json({
     status: 404,
     message: 'Page Not Found'
   });
