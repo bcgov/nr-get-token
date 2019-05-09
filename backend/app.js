@@ -9,6 +9,18 @@ app.use(express.static('static'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Handle root api discovery
+app.get(['/', '/api'], (_req, res) => {
+  res.status(200).json({
+    endpoints: [
+      '/api/v1'
+    ],
+    versions: [
+      1
+    ]
+  });
+});
+
 // v1 Router
 app.use('/api/v1', v1Router);
 
