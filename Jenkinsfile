@@ -291,7 +291,7 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
       def dcFrontendStatic = openshift.apply(dcFrontendStaticTemplate).narrow('dc')
 
       // Wait for deployments to roll out
-      timeout(5) {
+      timeout(10) {
         parallel(
           Backend: {
             dcBackend.rollout().status('--watch=true')
