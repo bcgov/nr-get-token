@@ -20,6 +20,6 @@ describe('Header.vue', () => {
   })
 
   it('has the app title', () => {
-    expect(wrapper.html()).toContain('Natural Resources Get Token')
+    expect(wrapper.html()).toContain('NATURAL RESOURCES GET TOKEN')
   })
 })

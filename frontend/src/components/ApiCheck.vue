@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 export default {
   data: function() {
     return {
@@ -43,13 +42,14 @@ export default {
     },
     async callApi() {
       try {
-        const response = await fetch(this.testRoute, { method: "get" });
-
+        const response = await fetch(this.testRoute, {
+          method: "get",
+          mode: "no-cors"
+        });
         const body = await response.json();
 
         return body;
       } catch (e) {
-        debugger
         console.log(`ERROR, caught error fetching from API endpoint`); // eslint-disable-line no-console
         console.log(e); // eslint-disable-line no-console
         return "ERROR, see console";
