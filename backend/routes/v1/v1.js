@@ -6,13 +6,13 @@ const checksRouter = require('./routes/checks');
 
 // OpenAPI Docs
 router.use('/docs', (_req, res) => {
-  const docs = require('../../docs/docs');
+  const docs = require(path.join(__basedir, '/docs/docs'));
   res.send(docs.getDocHTML('v1'));
 });
 
 // OpenAPI YAML Spec
 router.use('/api-spec.yaml', (_req, res) => {
-  res.sendFile(path.join(__basedir, '/static/v1.api-spec.yaml'));
+  res.sendFile(path.join(__basedir, '/docs/v1.api-spec.yaml'));
 });
 
 // Checks

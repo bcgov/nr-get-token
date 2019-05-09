@@ -12,11 +12,6 @@ app.use(express.static('static'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Temporary Hello World
-app.get('/api', (_req, res) => {
-  res.sendFile(path.join(__basedir, '/static/index.html'));
-});
-
 // v1 Router
 app.use('/api/v1', v1Router);
 
