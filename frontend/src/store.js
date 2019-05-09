@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    apiEndpoint: process.env.VUE_APP_API_ENDPOINT,
     token: "",
     configSubmissionSuccess: "",
     configSubmissionError: "",
@@ -17,6 +18,15 @@ export default new Vuex.Store({
       deploymentMethod: ""
     }
   }, getters: {
+    rootApi: state => {
+      // If there's a specified API root (likely in dev mode), use that
+      // Otherwise use the URL with the api endpoint on it
+      if (process.env.VUE_APP_API_ROOT) {
+        return process.env.VUE_APP_API_ROOT + state.apiEndpoint;
+      } else {
+        return window.location.origin + state.apiEndpoint;
+      }
+    },
     token: state => state.token,
     configSubmissionSuccess: state => state.configSubmissionSuccess,
     configSubmissionError: state => state.configSubmissionError,
