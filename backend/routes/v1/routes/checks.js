@@ -1,17 +1,13 @@
-// Path /v1/permissions/
 const checks = require('express').Router();
 // const log = require('npmlog');
 
-// returns the health of this api
-checks.get('/health', (_req, res) => {
-  res.status(200).end();
-});
+const checkComponent = require('../../../components/checks');
 
 // returns the status of correspondent apis
 checks.get('/status', (_req, res) => {
-  // TODO: Migrate json object to component level
+  const statuses = checkComponent.getStatus('test');
   res.status(200).json({
-    endpoints: []
+    endpoints: statuses
   });
 });
 

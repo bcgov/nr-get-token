@@ -7,7 +7,8 @@
   "scripts": {
     "build": "echo Nothing to build",
     "start": "node ./bin/www",
-    "lint": "node_modules/.bin/eslint . --ignore-pattern 'node_modules' --ext .js",
+    "lint": "node_modules/.bin/eslint . --no-fix --ignore-pattern 'node_modules' --ext .js",
+    "lint:fix": "node_modules/.bin/eslint . --fix --ignore-pattern 'node_modules' --ext .js",
     "test": "node_modules/.bin/jest --coverage",
     "clean": "rm -rf coverage dist",
     "prebuild": "npm run test",
