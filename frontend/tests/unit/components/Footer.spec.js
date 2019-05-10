@@ -1,6 +1,6 @@
-import { mount, createLocalVue } from '@vue/test-utils'
+import { mount, createLocalVue } from '@vue/test-utils';
 import Vuetify from 'vuetify';
-import Footer from '@/components/Footer.vue'
+import Footer from '@/components/Footer.vue';
 
 describe('Footer.vue', () => {
   let wrapper;
@@ -16,6 +16,6 @@ describe('Footer.vue', () => {
   });
 
   it('renders the correct markup', () => {
-    expect(wrapper.html()).toContain('<a href="https://www.gov.bc.ca/" class="v-btn v-btn--flat theme--light" id="footer-home"><div class="v-btn__content">Home</div></a>')
-  })
-})
+    expect(wrapper.html()).toContain('<a href="https://www.gov.bc.ca/" class="v-btn v-btn--flat theme--light" id="footer-home"><div class="v-btn__content">Home</div></a>');
+  });
+});

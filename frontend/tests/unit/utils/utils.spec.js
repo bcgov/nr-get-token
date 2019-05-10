@@ -1,4 +1,4 @@
-import { isValidJson } from '@/utils/utils.js'
+import { isValidJson } from '@/utils/utils.js';
 
 describe('utils.js', () => {
   const validJson = `{
@@ -109,12 +109,12 @@ describe('utils.js', () => {
 
   it('validates correct json', () => {
     expect(isValidJson('{}')).toBeTruthy(),
-    expect(isValidJson(validJson)).toBeTruthy()
-  })
+    expect(isValidJson(validJson)).toBeTruthy();
+  });
 
   it('fails bad json', () => {
     expect(isValidJson('abc')).toBeFalsy(),
     expect(isValidJson(badJsonMissingQuote)).toBeFalsy(),
-    expect(isValidJson(badJsonMissingBracket)).toBeFalsy()
-  })
-})
+    expect(isValidJson(badJsonMissingBracket)).toBeFalsy();
+  });
+});

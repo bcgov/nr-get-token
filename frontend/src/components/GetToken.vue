@@ -44,36 +44,36 @@ export default {
   data() {
     return {
       tokenFormValid: false,
-      serviceClient: "GETOK_SERVICE",
-      password: "",
-      tokenResponse: "",
-      jsonTextClass: "",
-      passwordRules: [v => !!v || "Password is required"]
+      serviceClient: 'GETOK_SERVICE',
+      password: '',
+      tokenResponse: '',
+      jsonTextClass: '',
+      passwordRules: [v => !!v || 'Password is required']
     };
   },
   methods: {
     async handleSubmit() {
       const fetchedToken = await this.fetchToken();
       this.tokenResponse = JSON.stringify(fetchedToken, null, 2);
-      this.$store.commit("setToken", fetchedToken.access_token);
-      this.jsonTextClass = "jsonText";
+      this.$store.commit('setToken', fetchedToken.access_token);
+      this.jsonTextClass = 'jsonText';
     },
     async fetchToken() {
       try {
-        const url = `https://i1api.nrs.gov.bc.ca/oauth2/v1/oauth/token?disableDeveloperFilter=true&grant_type=client_credentials&scope=WEBADE-REST.*`;
+        const url = 'https://i1api.nrs.gov.bc.ca/oauth2/v1/oauth/token?disableDeveloperFilter=true&grant_type=client_credentials&scope=WEBADE-REST.*';
 
         const headers = new Headers();
         headers.set(
-          "Authorization",
-          "Basic " + window.btoa("GETOK_SERVICE" + ":" + this.password)
+          'Authorization',
+          'Basic ' + window.btoa('GETOK_SERVICE' + ':' + this.password)
         );
-        const response = await fetch(url, { method: "get", headers: headers });
+        const response = await fetch(url, { method: 'get', headers: headers });
 
         const body = await response.json();
 
         return body;
       } catch (e) {
-        console.log(`ERROR, caught error fetching from WebADE Token endpoint`); // eslint-disable-line no-console
+        console.log('ERROR, caught error fetching from WebADE Token endpoint'); // eslint-disable-line no-console
         console.log(e); // eslint-disable-line no-console
       }
     }

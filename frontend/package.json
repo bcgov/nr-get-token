@@ -7,7 +7,8 @@
   "scripts": {
     "serve": "node_modules/.bin/vue-cli-service serve",
     "build": "node_modules/.bin/vue-cli-service build",
-    "lint": "node_modules/.bin/vue-cli-service lint",
+    "lint": "node_modules/.bin/vue-cli-service lint --no-fix",
+    "lint:fix": "node_modules/.bin/vue-cli-service lint --fix",
     "clean": "rm -rf coverage dist",
     "prebuild": "npm run test:unit",
     "pretest:unit": "npm run lint",
@@ -47,15 +48,44 @@
   "eslintConfig": {
     "root": true,
     "env": {
+      "es6": true,
+      "jest": true,
       "node": true
     },
     "extends": [
       "plugin:vue/essential",
       "eslint:recommended"
     ],
-    "rules": {},
+    "globals": {
+      "Atomics": "readonly",
+      "SharedArrayBuffer": "readonly",
+      "_": false
+    },
     "parserOptions": {
-      "parser": "babel-eslint"
+      "parser": "babel-eslint",
+      "ecmaVersion": 7
+    },
+    "rules": {
+      "eol-last": [
+        "error",
+        "always"
+      ],
+      "indent": [
+        "error",
+        2
+      ],
+      "linebreak-style": [
+        "error",
+        "unix"
+      ],
+      "quotes": [
+        "error",
+        "single"
+      ],
+      "semi": [
+        "error",
+        "always"
+      ]
     }
   },
   "postcss": {
