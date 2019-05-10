@@ -9,6 +9,7 @@ checks.get('/health', (_req, res) => {
 
 // returns the status of correspondent apis
 checks.get('/status', (_req, res) => {
+  console.log("In status endpoint. SDLKJDFSDFKB")
   // TODO: Migrate json object to component level
   res.status(200).json({
     endpoints: []
