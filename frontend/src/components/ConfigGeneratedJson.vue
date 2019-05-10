@@ -45,9 +45,9 @@
 </template>
 
 <script>
-import Vue from "vue";
-import { mapGetters } from "vuex";
-import Clipboard from "v-clipboard";
+import Vue from 'vue';
+import { mapGetters } from 'vuex';
+import Clipboard from 'v-clipboard';
 
 Vue.use(Clipboard);
 
@@ -56,34 +56,34 @@ export default {
     return {
       snackbar: {
         on: false,
-        text: "test",
-        color: "info"
+        text: 'test',
+        color: 'info'
       }
     };
   },
   computed: {
-    ...mapGetters(["appConfigAsString"])
+    ...mapGetters(['appConfigAsString'])
   },
   methods: {
     clipboardSuccessHandler() {
       this.snackbar.on = true;
-      this.snackbar.text = "Application Configuration copied to clipboard";
-      this.snackbar.color = "info";
+      this.snackbar.text = 'Application Configuration copied to clipboard';
+      this.snackbar.color = 'info';
     },
     clipboardErrorHandler() {
       this.snackbar.on = true;
-      this.snackbar.text = "Error attempting to copy to clipboard";
-      this.snackbar.color = "error";
+      this.snackbar.text = 'Error attempting to copy to clipboard';
+      this.snackbar.color = 'error';
     },
     downloadFile() {
-      var element = document.createElement("a");
+      var element = document.createElement('a');
       element.setAttribute(
-        "href",
-        "data:text/plain;charset=utf-8," +
+        'href',
+        'data:text/plain;charset=utf-8,' +
           encodeURIComponent(this.appConfigAsString)
       );
-      element.setAttribute("download", "applicationConfig.json");
-      element.style.display = "none";
+      element.setAttribute('download', 'applicationConfig.json');
+      element.style.display = 'none';
       document.body.appendChild(element);
       element.click();
       document.body.removeChild(element);

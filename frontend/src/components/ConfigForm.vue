@@ -146,28 +146,28 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { isValidJson } from "@/utils/utils.js";
-import { FieldValidations } from "@/utils/constants.js";
+import { mapGetters } from 'vuex';
+import { isValidJson } from '@/utils/utils.js';
+import { FieldValidations } from '@/utils/constants.js';
 
 export default {
   data() {
     return {
       dialog: false,
       fieldValidations: FieldValidations,
-      appConfig: "",
+      appConfig: '',
       appConfigStep: 1,
       step1Valid: false,
       step2Valid: false,
       showPw: false,
       commonServices: [
-        { text: "Common Messaging Service", value: "cmsg" },
-        { text: "Document Management Service", value: "dms" },
-        { text: "Document Generation Service", value: "dgen", disabled: true }
+        { text: 'Common Messaging Service', value: 'cmsg' },
+        { text: 'Document Management Service', value: 'dms' },
+        { text: 'Document Generation Service', value: 'dgen', disabled: true }
       ],
       userAppCfg: this.$store.state.userAppCfg,
       applicationAcronymRules: [
-        v => !!v || "Acroynm is required",
+        v => !!v || 'Acroynm is required',
         v =>
           v.length <= FieldValidations.ACRONYM_MAX_LENGTH ||
           `Acroynm must be ${
@@ -175,16 +175,16 @@ export default {
           } characters or less`,
         v =>
           /^(?:[A-Z]{2,}[_]?)+[A-Z]{2,}$/g.test(v) ||
-          "Incorrect format. Hover the ? for details."
+          'Incorrect format. Hover the ? for details.'
       ],
       applicationNameRules: [
-        v => !!v || "Name is required",
+        v => !!v || 'Name is required',
         v =>
           v.length <= FieldValidations.NAME_MAX_LENGTH ||
           `Name must be ${FieldValidations.NAME_MAX_LENGTH} characters or less`
       ],
       applicationDescriptionRules: [
-        v => !!v || "Description is required",
+        v => !!v || 'Description is required',
         v =>
           v.length <= FieldValidations.DESCRIPTION_MAX_LENGTH ||
           `Description must be ${
@@ -192,7 +192,7 @@ export default {
           } characters or less`
       ],
       passwordRules: [
-        v => !!v || "Password is required",
+        v => !!v || 'Password is required',
         v =>
           (v.length >= FieldValidations.PASSWORD_MIN_LENGTH &&
             v.length <= FieldValidations.PASSWORD_MAX_LENGTH) ||
@@ -203,17 +203,17 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["token", "appConfigAsString"])
+    ...mapGetters(['token', 'appConfigAsString'])
   },
   methods: {
     submitConfig() {
-      this.$store.commit("clearConfigSubmissionMsgs");
+      this.$store.commit('clearConfigSubmissionMsgs');
 
       // this is temporary, only allow MSSC to be used at the moment
-      if (this.userAppCfg.applicationAcronym !== "MSSC") {
+      if (this.userAppCfg.applicationAcronym !== 'MSSC') {
         this.$store.commit(
-          "setConfigSubmissionError",
-          "Temp: Only the application acronym MSSC is supported for now."
+          'setConfigSubmissionError',
+          'Temp: Only the application acronym MSSC is supported for now.'
         );
         return;
       }
@@ -221,35 +221,35 @@ export default {
       // check json validity
       if (!isValidJson(this.appConfigAsString)) {
         this.$store.commit(
-          "setConfigSubmissionError",
-          "Unable to submit, Application Configuration is not valid JSON."
+          'setConfigSubmissionError',
+          'Unable to submit, Application Configuration is not valid JSON.'
         );
         return;
       }
 
-      const url = `https://i1api.nrs.gov.bc.ca/webade-api/v1/applicationConfigurations`;
+      const url = 'https://i1api.nrs.gov.bc.ca/webade-api/v1/applicationConfigurations';
 
       const headers = new Headers();
-      headers.set("Authorization", `Bearer ${this.token}`);
-      headers.set("Content-Type", "application/json");
+      headers.set('Authorization', `Bearer ${this.token}`);
+      headers.set('Content-Type', 'application/json');
 
       fetch(url, {
-        method: "POST",
+        method: 'POST',
         body: this.appConfigAsString,
         headers: headers
       })
         .then(res => res.json())
         .then(function(response) {
-          console.log("Success:", JSON.stringify(response)); // eslint-disable-line no-console
-          alert(`SUCCESS, application configuration updated in Integration`);
+          console.log('Success:', JSON.stringify(response)); // eslint-disable-line no-console
+          alert('SUCCESS, application configuration updated in Integration');
         })
         .catch(function(error) {
-          console.error("Error:", error); // eslint-disable-line no-console
-          alert("ERROR, see console");
+          console.error('Error:', error); // eslint-disable-line no-console
+          alert('ERROR, see console');
         });
     },
     updateAppCfgField(field, value) {
-      this.$store.commit("updateUserAppCfg", {
+      this.$store.commit('updateUserAppCfg', {
         [field]: value
       });
     }

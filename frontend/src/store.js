@@ -1,20 +1,20 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    token: "",
-    configSubmissionSuccess: "",
-    configSubmissionError: "",
+    token: '',
+    configSubmissionSuccess: '',
+    configSubmissionError: '',
     userAppCfg: {
-      applicationAcronym: "",
-      applicationName: "",
-      applicationDescription: "",
+      applicationAcronym: '',
+      applicationName: '',
+      applicationDescription: '',
       commonServices: [],
-      userEnteredPassword: "",
-      deploymentMethod: ""
+      userEnteredPassword: '',
+      deploymentMethod: ''
     }
   }, getters: {
     token: state => state.token,
@@ -23,11 +23,11 @@ export default new Vuex.Store({
     appConfigAsString: state => {
       // these are the hardcoded WebADE cfg values users do not enter
       const defaultAppCfg = {
-        "@type": "http://webade.gov.bc.ca/applicationConfiguration",
-        applicationAcronym: "",
+        '@type': 'http://webade.gov.bc.ca/applicationConfiguration',
+        applicationAcronym: '',
         custodianNumber: 0,
-        applicationName: "",
-        applicationDescription: "",
+        applicationName: '',
+        applicationDescription: '',
         applicationObjectPrefix: null,
         enabledInd: true,
         distributeTypeCd: null,
@@ -57,22 +57,22 @@ export default new Vuex.Store({
       } else {
         newAppCfg.serviceClients = [{
           accountName: `${newAppCfg.applicationAcronym}_SERVICE_CLIENT`,
-          secret: "",
+          secret: '',
           oauthScopes: [],
           oauthGrantTypes: [],
           oauthRedirectUrls: [],
           oauthAccessTokenValidity: null,
           oauthRefreshTokenValidity: null,
-          oauthAdditionalInformation: "{\"autoapprove\":\"true\"}",
+          oauthAdditionalInformation: '{"autoapprove":"true"}',
           authorizations: []
         }];
 
-        if (state.userAppCfg.deploymentMethod === "deploymentManual") {
+        if (state.userAppCfg.deploymentMethod === 'deploymentManual') {
           newAppCfg.serviceClients[0].secret = `$\{${newAppCfg.serviceClients[0].accountName}.password}`;
-        } else if (state.userAppCfg.deploymentMethod === "deploymentDirect") {
+        } else if (state.userAppCfg.deploymentMethod === 'deploymentDirect') {
           newAppCfg.serviceClients[0].secret = state.userAppCfg.userEnteredPassword;
         } else {
-          newAppCfg.serviceClients[0].secret = "";
+          newAppCfg.serviceClients[0].secret = '';
         }
 
         if (!state.userAppCfg.commonServices || !state.userAppCfg.commonServices.length) {
@@ -101,7 +101,7 @@ export default new Vuex.Store({
               description: `Can send an email with the ${newAppCfg.applicationAcronym} app`,
               secureByOrganization: false,
               availibleTo: [
-                "SCL"
+                'SCL'
               ],
               effectiveDate: 1506582000000,
               expiryDate: 253402243200000,
@@ -111,8 +111,8 @@ export default new Vuex.Store({
                   name: `${newAppCfg.applicationAcronym}_ROLE`
                 },
                 {
-                  applicationCode: "CMSG",
-                  name: "SENDER"
+                  applicationCode: 'CMSG',
+                  name: 'SENDER'
                 }
               ]
             }
@@ -120,7 +120,7 @@ export default new Vuex.Store({
 
           newAppCfg.serviceClients[0].authorizations = [{
             profileName: `${newAppCfg.applicationAcronym}_PROFILE`,
-            profileDescription: "Test profile description",
+            profileDescription: 'Test profile description',
             effectiveDate: 1506629523000,
             expiryDate: 253402243200000,
             enabled: true
@@ -145,18 +145,18 @@ export default new Vuex.Store({
     },
     setConfigSubmissionSuccess: function (state, msg) {
       state.configSubmissionSuccess = msg;
-      state.configSubmissionError = "";
+      state.configSubmissionError = '';
     },
     setConfigSubmissionError: function (state, msg) {
-      state.configSubmissionSuccess = "";
+      state.configSubmissionSuccess = '';
       state.configSubmissionError = msg;
     },
     clearConfigSubmissionMsgs: function (state) {
-      state.configSubmissionSuccess = "";
-      state.configSubmissionError = "";
+      state.configSubmissionSuccess = '';
+      state.configSubmissionError = '';
     }
   },
   actions: {
 
   }
-})
+});

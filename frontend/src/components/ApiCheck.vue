@@ -25,13 +25,13 @@
 </template>
 
 <script>
-import { ApiRoutes } from "@/utils/constants.js";
+import { ApiRoutes } from '@/utils/constants.js';
 
 export default {
   data: function() {
     return {
       testRoute: ApiRoutes.STATUS,
-      apiResponse: ""
+      apiResponse: ''
     };
   },
   methods: {
@@ -41,15 +41,15 @@ export default {
     async callApi() {
       try {
         const response = await fetch(this.testRoute, {
-          method: "get"
+          method: 'get'
         });
         const body = await response.text();
 
         return body;
       } catch (e) {
-        console.log(`ERROR, caught error fetching from API endpoint`); // eslint-disable-line no-console
+        console.log('ERROR, caught error fetching from API endpoint'); // eslint-disable-line no-console
         console.log(e); // eslint-disable-line no-console
-        return "ERROR, see console";
+        return 'ERROR, see console';
       }
     }
   }

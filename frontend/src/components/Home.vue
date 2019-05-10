@@ -76,14 +76,14 @@
 </template>
 
 <script>
-import GetToken from "./GetToken";
-import ConfigForm from "./ConfigForm";
-import ConfigGeneratedJson from "./ConfigGeneratedJson";
-import ApiCheck from "./ApiCheck";
-import { mapGetters } from "vuex";
+import GetToken from './GetToken';
+import ConfigForm from './ConfigForm';
+import ConfigGeneratedJson from './ConfigGeneratedJson';
+import ApiCheck from './ApiCheck';
+import { mapGetters } from 'vuex';
 
 export default {
-  name: "home",
+  name: 'home',
   components: {
     GetToken,
     ConfigForm,
@@ -91,9 +91,9 @@ export default {
     ApiCheck
   },
   computed: mapGetters([
-    "token",
-    "configSubmissionSuccess",
-    "configSubmissionError"
+    'token',
+    'configSubmissionSuccess',
+    'configSubmissionError'
   ])
 };
 </script>

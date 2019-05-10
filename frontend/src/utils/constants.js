@@ -7,7 +7,7 @@ export const FieldValidations = Object.freeze({
   PASSWORD_MAX_LENGTH: 60
 });
 
-const topLevel = "/api/v1";
+const topLevel = '/api/v1';
 export const ApiRoutes = Object.freeze({
   STATUS: `${topLevel}/checks/status`,
   HEALTH: `${topLevel}/checks/health`,
