@@ -6,14 +6,10 @@
   },
   "serviceClient": {
     "getok": {
-      "endpoint": "https://i1api.nrs.gov.bc.ca/webade-api/v1",
-      "user": "SC_GETOK_USER",
-      "password": "SC_GETOK_PASSWORD"
+      "endpoint": "https://i1api.nrs.gov.bc.ca/webade-api/v1"
     },
     "mssc": {
-      "endpoint": "https://i1api.nrs.gov.bc.ca/cmsg-messaging-api/v1",
-      "user": "SC_MSSC_USER",
-      "password": "SC_MSSC_PASSWORD"
+      "endpoint": "https://i1api.nrs.gov.bc.ca/cmsg-messaging-api/v1"
     }
   }
 }

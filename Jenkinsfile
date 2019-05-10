@@ -284,11 +284,11 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
 
       createDeploymentStatus(projectEnv, 'PENDING', hostRouteEnv)
 
-      echo "Applying Deployment ${REPO_NAME}-backend..."
-      def dcBackend = openshift.apply(dcBackendTemplate).narrow('dc')
-
       echo "Applying Deployment ${REPO_NAME}-frontend-static..."
       def dcFrontendStatic = openshift.apply(dcFrontendStaticTemplate).narrow('dc')
+
+      echo "Applying Deployment ${REPO_NAME}-backend..."
+      def dcBackend = openshift.apply(dcBackendTemplate).narrow('dc')
 
       // Wait for deployments to roll out
       timeout(10) {

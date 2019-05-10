@@ -3,6 +3,7 @@ const express = require('express');
 const log = require('npmlog');
 const morgan = require('morgan');
 
+const utils = require('./components/utils');
 const v1Router = require('./routes/v1');
 
 const app = express();
@@ -15,7 +16,7 @@ log.level = config.get('server.logLevel');
 log.addLevel('debug', 1500, { fg: 'green' });
 
 // Print out configuration settings in verbose startup
-log.verbose(JSON.stringify(config, null, 2));
+log.verbose(utils.prettyStringify(config));
 
 // Handle root api discovery
 app.get(['/', '/api'], (_req, res) => {
@@ -50,7 +51,7 @@ app.use((_req, res) => {
   });
 });
 
-// Prevent unhandled errors from crashing applicatoin
+// Prevent unhandled errors from crashing application
 process.on('unhandledRejection', err => {
   log.error(err.stack);
 });
