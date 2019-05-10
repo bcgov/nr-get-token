@@ -62,6 +62,16 @@
         </v-card>
       </v-flex>
     </v-layout>
+    <v-layout>
+      <v-flex xs12>
+        <v-card class="sectionCard">
+          <v-toolbar card color="grey lighten-3">
+            <v-toolbar-title>TEMP API Tester</v-toolbar-title>
+          </v-toolbar>
+          <ApiCheck></ApiCheck>
+        </v-card>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 
@@ -69,6 +79,7 @@
 import GetToken from "./GetToken";
 import ConfigForm from "./ConfigForm";
 import ConfigGeneratedJson from "./ConfigGeneratedJson";
+import ApiCheck from "./ApiCheck";
 import { mapGetters } from "vuex";
 
 export default {
@@ -76,7 +87,8 @@ export default {
   components: {
     GetToken,
     ConfigForm,
-    ConfigGeneratedJson
+    ConfigGeneratedJson,
+    ApiCheck
   },
   computed: mapGetters([
     "token",

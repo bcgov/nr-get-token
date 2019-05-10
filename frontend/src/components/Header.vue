@@ -12,11 +12,22 @@
       </a>
 
       <v-toolbar-title>
-        <v-btn class="title hidden-sm-and-down" color="text" flat>Natural Resources Get Token</v-btn>
+        <v-btn class="title hidden-sm-and-down" color="text" flat>{{ appTitle }}</v-btn>
       </v-toolbar-title>
     </v-toolbar>
   </header>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      appTitle: process.env.VUE_APP_TITLE
+    };
+  }
+};
+</script>
+
 
 <style>
 .gov-header .title {
