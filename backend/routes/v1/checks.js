@@ -1,7 +1,6 @@
 const checks = require('express').Router();
-// const log = require('npmlog');
 
-const checkComponent = require('../../../components/checks');
+const checkComponent = require('../../components/checks');
 
 // returns the status of correspondent apis
 checks.get('/status', (_req, res) => {

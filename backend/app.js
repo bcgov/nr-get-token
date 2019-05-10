@@ -1,13 +1,21 @@
-// const config = require('config');
+const config = require('config');
 const express = require('express');
 const log = require('npmlog');
+const morgan = require('morgan');
 
-const v1Router = require('./routes/v1/v1');
+const v1Router = require('./routes/v1');
 
 const app = express();
-app.use(express.static('static'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.use(morgan(config.get('server.morganFormat')));
+
+log.level = config.get('server.logLevel');
+log.addLevel('debug', 1500, { fg: 'green' });
+
+// Print out configuration settings in verbose startup
+log.verbose(JSON.stringify(config, null, 2));
 
 // Handle root api discovery
 app.get(['/', '/api'], (_req, res) => {
