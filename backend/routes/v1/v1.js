@@ -4,6 +4,7 @@ const path = require('path');
 // const auth = require('./auth/auth');
 const checksRouter = require('./routes/checks');
 
+// Base v1 Responder
 router.get('/', (_req, res) => {
   res.status(200).json({
     endpoints: [

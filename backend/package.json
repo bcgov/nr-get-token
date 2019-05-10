@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/bcgov/nr-get-token",
   "dependencies": {
+    "axios": "^0.18.0",
     "config": "^3.0.1",
     "express": "^4.16.4",
     "npmlog": "^4.1.2",
@@ -45,7 +46,7 @@
       "_": false
     },
     "parserOptions": {
-      "ecmaVersion": 7
+      "ecmaVersion": 8
     },
     "rules": {
       "eol-last": [

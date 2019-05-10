@@ -42,4 +42,9 @@ app.use((_req, res) => {
   });
 });
 
+// Prevent unhandled errors from crashing applicatoin
+process.on('unhandledRejection', err => {
+  log.error(err.stack);
+});
+
 module.exports = app;
