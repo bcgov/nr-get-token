@@ -7,10 +7,11 @@
   "scripts": {
     "build": "echo Nothing to build",
     "start": "node ./bin/www",
-    "lint": "echo Error: no linter specified",
+    "lint": "node_modules/.bin/eslint . --ignore-pattern 'node_modules' --ext .js",
     "test": "node_modules/.bin/jest --coverage",
     "clean": "rm -rf coverage dist",
     "prebuild": "npm run test",
+    "pretest": "npm run lint",
     "purge": "rm -rf node_modules",
     "rebuild": "npm run clean && npm run build",
     "reinstall": "npm run purge && npm install"
@@ -23,19 +24,49 @@
     "request": "^2.88.0"
   },
   "devDependencies": {
+    "eslint": "^5.16.0",
     "jest": "^24.7.1"
   },
   "eslintConfig": {
     "root": true,
     "env": {
+      "commonjs": true,
+      "es6": true,
+      "jest": true,
       "node": true
     },
     "extends": [
       "eslint:recommended"
     ],
-    "rules": {},
+    "globals": {
+      "Atomics": "readonly",
+      "SharedArrayBuffer": "readonly",
+      "_": false
+    },
     "parserOptions": {
-      "parser": "babel-eslint"
+      "ecmaVersion": 7
+    },
+    "rules": {
+      "eol-last": [
+        "error",
+        "always"
+      ],
+      "indent": [
+        "error",
+        2
+      ],
+      "linebreak-style": [
+        "error",
+        "unix"
+      ],
+      "quotes": [
+        "error",
+        "single"
+      ],
+      "semi": [
+        "error",
+        "always"
+      ]
     }
   },
   "browserslist": [
