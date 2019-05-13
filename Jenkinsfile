@@ -256,6 +256,15 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
         echo "DEBUG - Using project: ${openshift.project()}"
       }
 
+      echo "Checking for ConfigMaps and Secrets in project ${openshift.project()}..."
+      if(!(openshift.selector('cm', "getok-sc-config").exists() &&
+      openshift.selector('cm', "getok-server-config").exists() &&
+      openshift.selector('secret', "getok-sc-getok-secret").exists() &&
+      openshift.selector('secret', "getok-sc-mssc-secret").exists())) {
+        echo 'Some ConfigMaps and/or Secrets are missing. Please consult the openshift readme for details.'
+        throw e
+      }
+
       echo "Tagging Image ${REPO_NAME}-backend:${JOB_NAME}..."
       openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-backend:${JOB_NAME}", "${REPO_NAME}-backend:${JOB_NAME}")
 
