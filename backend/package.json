@@ -6,6 +6,7 @@
   "author": "NR Common Service Showcase <NR.CommonServiceShowcase@gov.bc.ca>",
   "scripts": {
     "build": "echo Nothing to build",
+    "serve": "nodemon ./bin/www",
     "start": "node ./bin/www",
     "lint": "node_modules/.bin/eslint . --no-fix --ignore-pattern 'node_modules' --ext .js",
     "lint:fix": "node_modules/.bin/eslint . --fix --ignore-pattern 'node_modules' --ext .js",
@@ -22,12 +23,14 @@
     "axios": "^0.18.0",
     "config": "^3.0.1",
     "express": "^4.16.4",
+    "express-validator": "^5.3.1",
     "morgan": "^1.9.1",
     "npmlog": "^4.1.2"
   },
   "devDependencies": {
     "eslint": "^5.16.0",
-    "jest": "^24.7.1"
+    "jest": "^24.7.1",
+    "nodemon": "^1.19.0"
   },
   "eslintConfig": {
     "root": true,

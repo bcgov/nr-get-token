@@ -2,6 +2,7 @@ const router = require('express').Router();
 const path = require('path');
 
 // const auth = require('./auth/auth');
+const appConfigFormRouter = require('./v1/appConfigForm');
 const checksRouter = require('./v1/checks');
 
 // Base v1 Responder
@@ -25,6 +26,9 @@ router.get('/docs', (_req, res) => {
 router.get('/api-spec.yaml', (_req, res) => {
   res.sendFile(path.join(__dirname, '../docs/v1.api-spec.yaml'));
 });
+
+// Application Configuration Form
+router.use('/appConfigForm', appConfigFormRouter);
 
 // Checks
 router.use('/checks', checksRouter);
