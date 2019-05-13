@@ -12,4 +12,5 @@ export const ApiRoutes = Object.freeze({
   STATUS: `${topLevel}/checks/status`,
   HEALTH: `${topLevel}/checks/health`,
   DOCS: `${topLevel}/docs`,
+  APPCONFIG: `${topLevel}/appConfigForm`
 });

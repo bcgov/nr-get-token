@@ -148,11 +148,12 @@
 <script>
 import { mapGetters } from 'vuex';
 import { isValidJson } from '@/utils/utils.js';
-import { FieldValidations } from '@/utils/constants.js';
+import { FieldValidations, ApiRoutes } from '@/utils/constants.js';
 
 export default {
   data() {
     return {
+      apiEndpoint: ApiRoutes.APPCONFIG,
       dialog: false,
       fieldValidations: FieldValidations,
       appConfig: '',
@@ -203,16 +204,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['token', 'appConfigAsString'])
+    ...mapGetters(['appConfigAsString'])
   },
   methods: {
-    submitConfig() {
+    async submitConfig() {
       this.$store.commit('clearConfigSubmissionMsgs');
 
       // this is temporary, only allow MSSC to be used at the moment
       if (this.userAppCfg.applicationAcronym !== 'MSSC') {
-        this.$store.commit(
-          'setConfigSubmissionError',
+        this.displayMessage(
+          false,
           'Temp: Only the application acronym MSSC is supported for now.'
         );
         return;
@@ -220,38 +221,53 @@ export default {
 
       // check json validity
       if (!isValidJson(this.appConfigAsString)) {
-        this.$store.commit(
-          'setConfigSubmissionError',
+        this.displayMessage(
+          false,
           'Unable to submit, Application Configuration is not valid JSON.'
         );
         return;
       }
 
-      const url = 'https://i1api.nrs.gov.bc.ca/webade-api/v1/applicationConfigurations';
-
+      const url = this.apiEndpoint;
       const headers = new Headers();
-      headers.set('Authorization', `Bearer ${this.token}`);
       headers.set('Content-Type', 'application/json');
 
-      fetch(url, {
-        method: 'POST',
-        body: this.appConfigAsString,
-        headers: headers
-      })
-        .then(res => res.json())
-        .then(function(response) {
-          console.log('Success:', JSON.stringify(response)); // eslint-disable-line no-console
-          alert('SUCCESS, application configuration updated in Integration');
-        })
-        .catch(function(error) {
-          console.error('Error:', error); // eslint-disable-line no-console
-          alert('ERROR, see console');
+      try {
+        const response = await fetch(url, {
+          method: 'post',
+          headers: headers,
+          body: this.appConfigAsString
         });
+        if (response.ok) {
+          this.displayMessage(
+            true,
+            `SUCCESS, application configuration for ${
+              this.userAppCfg.applicationAcronym
+            } updated in Integration.`
+          );
+        } else {
+          this.displayMessage(
+            false,
+            'An error occurred while attempting to update the application configuration in WebADE.'
+          );
+        }
+      } catch (error) {
+        this.displayMessage(
+          false,
+          'An error occurred while attempting to update the application configuration in WebADE.'
+        );
+      }
     },
     updateAppCfgField(field, value) {
       this.$store.commit('updateUserAppCfg', {
         [field]: value
       });
+    },
+    displayMessage(success, msg) {
+      this.$store.commit(
+        `setConfigSubmission${success ? 'Success' : 'Error'}`,
+        msg
+      );
     }
   }
 };

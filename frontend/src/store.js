@@ -5,7 +5,6 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    token: '',
     configSubmissionSuccess: '',
     configSubmissionError: '',
     userAppCfg: {
@@ -17,7 +16,6 @@ export default new Vuex.Store({
       deploymentMethod: ''
     }
   }, getters: {
-    token: state => state.token,
     configSubmissionSuccess: state => state.configSubmissionSuccess,
     configSubmissionError: state => state.configSubmissionError,
     appConfigAsString: state => {
@@ -137,9 +135,6 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    setToken(state, token) {
-      state.token = token;
-    },
     updateUserAppCfg: function (state, userAppCfg) {
       Object.assign(state.userAppCfg, userAppCfg);
     },
