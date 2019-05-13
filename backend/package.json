@@ -7,7 +7,8 @@
   "scripts": {
     "build": "echo Nothing to build",
     "start": "node ./bin/www",
-    "lint": "node_modules/.bin/eslint . --ignore-pattern 'node_modules' --ext .js",
+    "lint": "node_modules/.bin/eslint . --no-fix --ignore-pattern 'node_modules' --ext .js",
+    "lint:fix": "node_modules/.bin/eslint . --fix --ignore-pattern 'node_modules' --ext .js",
     "test": "node_modules/.bin/jest --coverage",
     "clean": "rm -rf coverage dist",
     "prebuild": "npm run test",
@@ -18,10 +19,11 @@
   },
   "homepage": "https://github.com/bcgov/nr-get-token",
   "dependencies": {
+    "axios": "^0.18.0",
     "config": "^3.0.1",
     "express": "^4.16.4",
-    "npmlog": "^4.1.2",
-    "request": "^2.88.0"
+    "morgan": "^1.9.1",
+    "npmlog": "^4.1.2"
   },
   "devDependencies": {
     "eslint": "^5.16.0",
@@ -44,7 +46,7 @@
       "_": false
     },
     "parserOptions": {
-      "ecmaVersion": 7
+      "ecmaVersion": 8
     },
     "rules": {
       "eol-last": [

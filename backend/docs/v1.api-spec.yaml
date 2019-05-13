@@ -18,22 +18,6 @@ security:
   - bearerAuth: []
   - OpenID: []
 paths:
-  /checks/health:
-    get:
-      summary: Returns status of API
-      security: []
-      operationId: checkHealth
-      tags:
-        - Checks
-      responses:
-        '200':
-          description: Responds if the API endpoint is healthy
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
   /checks/status:
     get:
       summary: Returns status of correspondent APIs
@@ -42,7 +26,7 @@ paths:
         - Checks
       responses:
         '200':
-          description: Responds if the API endpoint is healthy
+          description: Responds if the correspondent API endpoint(s) are healthy
           content:
             application/json:
               schema:

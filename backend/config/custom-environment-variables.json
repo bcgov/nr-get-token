@@ -1,0 +1,19 @@
+{
+  "server": {
+    "logLevel": "SERVER_LOGLEVEL",
+    "morganFormat": "SERVER_MORGANFORMAT",
+    "port": "SERVER_PORT"
+  },
+  "serviceClient": {
+    "getok": {
+      "endpoint": "SC_GETOK_ENDPOINT",
+      "username": "SC_GETOK_USERNAME",
+      "password": "SC_GETOK_PASSWORD"
+    },
+    "mssc": {
+      "endpoint": "SC_MSSC_ENDPOINT",
+      "username": "SC_MSSC_USERNAME",
+      "password": "SC_MSSC_PASSWORD"
+    }
+  }
+}
