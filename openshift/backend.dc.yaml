@@ -60,51 +60,31 @@ objects:
             timeoutSeconds: 1
           resources: {}
           env:
-          - name: SERVER_LOGLEVEL
-            valueFrom:
-              configMapKeyRef:
-                key: logLevel
-                name: getok-server
-          - name: SERVER_MORGANFORMAT
-            valueFrom:
-              configMapKeyRef:
-                key: morganFormat
-                name: getok-server
-          - name: SERVER_PORT
-            valueFrom:
-              configMapKeyRef:
-                key: port
-                name: getok-server
-          - name: SC_GETOK_ENDPOINT
-            valueFrom:
-              configMapKeyRef:
-                key: getok.endpoint
-                name: getok-sc
-          - name: SC_GETOK_USER
+          - name: SC_GETOK_USERNAME
             valueFrom:
               secretKeyRef:
                 key: username
-                name: getok-sc-getok
+                name: getok-sc-getok-secret
           - name: SC_GETOK_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: password
-                name: getok-sc-getok
-          - name: SC_MSSC_ENDPOINT
-            valueFrom:
-              configMapKeyRef:
-                key: mssc.endpoint
-                name: getok-sc
-          - name: SC_MSSC_USER
+                name: getok-sc-getok-secret
+          - name: SC_MSSC_USERNAME
             valueFrom:
               secretKeyRef:
                 key: username
-                name: getok-sc-mssc
+                name: getok-sc-mssc-secret
           - name: SC_MSSC_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: password
-                name: getok-sc-mssc
+                name: getok-sc-mssc-secret
+          envFrom:
+          - configMapRef:
+              name: getok-sc-config
+          - configMapRef:
+              name: getok-server-config
     test: false
     triggers:
     - type: ConfigChange
