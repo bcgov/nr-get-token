@@ -2,6 +2,7 @@ const axios = require('axios');
 const log = require('npmlog');
 
 const utils = {
+  // Returns the response body of a webade oauth token request
   getWebAdeToken: async (username, password, scope) => {
     const url = 'https://i1api.nrs.gov.bc.ca/oauth2/v1/oauth/token';
 
@@ -19,12 +20,14 @@ const utils = {
       });
 
       log.verbose(utils.prettyStringify(response.data));
-      return response.data.access_token;
+      return response.data;
     } catch (error) {
       log.error(error);
+      return null;
     }
   },
 
+  // Returns a pretty JSON representation of an object
   prettyStringify: obj => JSON.stringify(obj, null, 2)
 };
 

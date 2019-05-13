@@ -23,6 +23,7 @@ TBD - This will have build status and badges
 
 ## Documentation
 
+* [Backend Readme](backend/README.md)
 * [Frontend Readme](frontend/README.md)
 * [Openshift Readme](openshift/README.md)
 * [Get Token Wiki](https://github.com/bcgov/nr-get-token/wiki)

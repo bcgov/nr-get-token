@@ -8,7 +8,7 @@ async function checkWebAdeOauth2() {
   const password = config.get('serviceClient.getok.password');
 
   const token = await utils.getWebAdeToken(username, password, 'WEBADE-REST');
-  log.debug(`GetOK Token: ${token}`);
+  log.debug(`GetOK Token: ${token.access_token}`);
 }
 
 const checks = {
