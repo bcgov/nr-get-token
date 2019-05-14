@@ -45,6 +45,9 @@
     "vue-template-compiler": "^2.5.21",
     "vuetify-loader": "^1.2.2"
   },
+  "prettier": {
+    "singleQuote": true
+  },
   "eslintConfig": {
     "root": true,
     "env": {
