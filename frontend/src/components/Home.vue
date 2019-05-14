@@ -19,25 +19,8 @@
       <v-flex xs12>
         <v-card class="sectionCard">
           <v-toolbar card color="grey lighten-3">
-            <v-toolbar-title>Fetch GETOK Token</v-toolbar-title>
-          </v-toolbar>
-          <GetToken></GetToken>
-        </v-card>
-      </v-flex>
-
-      <v-flex xs12>
-        <v-card class="sectionCard">
-          <v-toolbar card color="grey lighten-3">
             <v-toolbar-title>Submit Application Configuration</v-toolbar-title>
             <v-spacer></v-spacer>
-
-            <v-chip v-if="!token" color="red" text-color="white">
-              <v-icon left>lock</v-icon>No Valid Token
-            </v-chip>
-            <v-chip v-if="token" color="green" text-color="white">
-              <v-icon left>lock_open</v-icon>
-              Token: {{token}}
-            </v-chip>
           </v-toolbar>
           <div>
             <v-alert
@@ -51,7 +34,7 @@
               transition="scale-transition"
             >{{configSubmissionError}}</v-alert>
           </div>
-          <v-layout row wrap v-if="token">
+          <v-layout row wrap>
             <v-flex xs12 md5>
               <ConfigForm></ConfigForm>
             </v-flex>
@@ -76,7 +59,6 @@
 </template>
 
 <script>
-import GetToken from './GetToken';
 import ConfigForm from './ConfigForm';
 import ConfigGeneratedJson from './ConfigGeneratedJson';
 import ApiCheck from './ApiCheck';
@@ -85,16 +67,11 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'home',
   components: {
-    GetToken,
     ConfigForm,
     ConfigGeneratedJson,
     ApiCheck
   },
-  computed: mapGetters([
-    'token',
-    'configSubmissionSuccess',
-    'configSubmissionError'
-  ])
+  computed: mapGetters(['configSubmissionSuccess', 'configSubmissionError'])
 };
 </script>
 
