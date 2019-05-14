@@ -3,26 +3,35 @@ const log = require('npmlog');
 
 const utils = require('./utils');
 
-async function checkWebAdeOauth2() {
+async function getWebAdeOauth2Status() {
   const username = config.get('serviceClient.getok.username');
   const password = config.get('serviceClient.getok.password');
 
-  const token = await utils.getWebAdeToken(username, password, 'WEBADE-REST');
-  log.debug(`GetOK Token: ${token.access_token}`);
+  const result = {
+    endpoint: config.get('serviceClient.getok.endpoint'),
+    healthCheck: false,
+    authenticated: false,
+    authorized: false
+  };
+
+  try {
+    const response = await utils.getWebAdeToken(username, password, 'WEBADE-REST');
+    result.healthCheck = !!response;
+    result.authenticated = 'access_token' in response;
+    result.authorized = 'scope' in response && response.scope.includes('WEBADE-REST.UPDATEAPPLICATIONS');
+
+    return result;
+  } catch (error) {
+    log.error(error);
+    return result;
+  }
 }
 
 const checks = {
-  getStatus: () => {
+  getStatus: async () => {
     const statuses = [];
 
-    checkWebAdeOauth2();
-
-    statuses.push({
-      'endpoint': 'https://i1api.nrs.gov.bc.ca/webade-api/v1',
-      'healthCheck': true,
-      'authenticated': true,
-      'authorized': true
-    });
+    statuses.push(await getWebAdeOauth2Status());
 
     return statuses;
   }
