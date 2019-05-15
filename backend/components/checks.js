@@ -1,3 +1,4 @@
+const axios = require('axios');
 const config = require('config');
 const log = require('npmlog');
 
@@ -15,26 +16,66 @@ async function getWebAdeOauth2Status() {
   };
 
   try {
-    const response = await utils.getWebAdeToken(username, password, 'WEBADE-REST');
-    result.healthCheck = !!response;
-    result.authenticated = 'access_token' in response;
-    result.authorized = 'scope' in response && response.scope.includes('WEBADE-REST.UPDATEAPPLICATIONS');
+    const webAdeResponse = await utils.getWebAdeToken(username, password, 'WEBADE-REST');
+    result.healthCheck = !!webAdeResponse;
+    result.authenticated = 'access_token' in webAdeResponse;
+    result.authorized = 'scope' in webAdeResponse && webAdeResponse.scope.includes('WEBADE-REST.UPDATEAPPLICATIONS');
 
     return result;
   } catch (error) {
-    log.error(error);
+    log.error('Checks', error);
+    return result;
+  }
+}
+
+async function getMsscStatus() {
+  const username = config.get('serviceClient.mssc.username');
+  const password = config.get('serviceClient.mssc.password');
+
+  const result = {
+    endpoint: config.get('serviceClient.mssc.endpoint'),
+    healthCheck: false,
+    authenticated: false,
+    authorized: false
+  };
+
+
+  try {
+    const webAdeResponse = await utils.getWebAdeToken(username, password, 'CMSG');
+
+    result.authorized = 'scope' in webAdeResponse &&
+      webAdeResponse.scope.includes('CMSG.CREATEMESSAGE');
+
+    if ('access_token' in webAdeResponse) {
+      result.authenticated = true;
+
+      try {
+        const endpointResult = await axios.get(result.endpoint, {
+          headers: {
+            'Authorization': `Bearer ${webAdeResponse.access_token}`
+          }
+        });
+
+        if (endpointResult.status === 200) {
+          result.healthCheck = true;
+        }
+      } catch (error) {
+        log.error('Checks', error);
+      }
+    }
+
+    return result;
+  } catch (error) {
+    log.error('Checks', error);
     return result;
   }
 }
 
 const checks = {
-  getStatus: async () => {
-    const statuses = [];
-
-    statuses.push(await getWebAdeOauth2Status());
-
-    return statuses;
-  }
+  getStatus: () => Promise.all([
+    getWebAdeOauth2Status(),
+    getMsscStatus()
+  ])
 };
 
 module.exports = checks;

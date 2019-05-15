@@ -5,9 +5,17 @@ const checkComponent = require('../../components/checks');
 // returns the status of correspondent apis
 checks.get('/status', async (_req, res) => {
   const statuses = await checkComponent.getStatus();
-  res.status(200).json({
-    endpoints: statuses
-  });
+
+  if(statuses instanceof Array) {
+    res.status(200).json({
+      endpoints: statuses
+    });
+  } else {
+    res.status(500).json({
+      error: 500,
+      message: 'Unable to get api status list'
+    });
+  }
 });
 
 // TEMPORARY - returns a valid webade token
