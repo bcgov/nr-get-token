@@ -19,11 +19,11 @@ const utils = {
         }
       });
 
-      log.verbose(utils.prettyStringify(response.data));
+      log.verbose('Utils', `WebAde Token: ${utils.prettyStringify(response.data)}`);
       return response.data;
     } catch (error) {
       log.error(error);
-      return null;
+      return error.response.data;
     }
   },
 
