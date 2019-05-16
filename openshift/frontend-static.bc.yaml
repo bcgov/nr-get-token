@@ -72,6 +72,7 @@ objects:
     source:
       dockerfile: |-
         FROM docker-registry.default.svc:5000/bcgov/s2i-caddy:v1-stable
+        COPY /tmp/Caddyfile /etc
         COPY /tmp/dist /var/www/html
         CMD /tmp/scripts/run
       images:
