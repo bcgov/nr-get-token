@@ -3,5 +3,8 @@ module.exports = {
   // To override, see .env.development file
   devServer: {
     proxy: process.env.VUE_APP_API_ROOT
-  }
+  },
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/getok/'
+    : '/'
 };
