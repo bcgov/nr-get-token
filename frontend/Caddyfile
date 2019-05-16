@@ -1,0 +1,12 @@
+*:2015 {
+    root /var/www/html
+
+    rewrite /getok /
+
+    # Uncomment if you are running Caddy locally
+    # proxy /api http://{$HOSTNAME}:8080
+
+    log stdout
+
+    errors stdout
+}

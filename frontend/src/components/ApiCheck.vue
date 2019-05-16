@@ -4,7 +4,7 @@
       <v-layout>
         <v-flex xs12 md5>
           <v-form>
-            <v-text-field :value="testRoute" label="Endpoint" required></v-text-field>
+            <v-text-field v-model="testRoute" label="Endpoint" required></v-text-field>
 
             <v-btn color="success" @click="testApi">Test</v-btn>
           </v-form>
