@@ -72,8 +72,8 @@ objects:
     source:
       dockerfile: |-
         FROM docker-registry.default.svc:5000/bcgov/s2i-caddy:v1-stable
-        COPY /tmp/Caddyfile /etc
-        COPY /tmp/dist /var/www/html
+        COPY /tmp/src/dist /var/www/html
+        COPY /tmp/src/Caddyfile /etc/Caddyfile
         CMD /tmp/scripts/run
       images:
       - as:
@@ -83,7 +83,7 @@ objects:
           namespace: "${NAMESPACE}"
         paths:
         - destinationDir: tmp
-          sourcePath: "/opt/app-root/src/dist"
+          sourcePath: /opt/app-root/src
       type: Dockerfile
     strategy:
       dockerStrategy:
