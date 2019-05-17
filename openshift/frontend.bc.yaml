@@ -80,6 +80,8 @@ objects:
         env:
         - name: BUILD_LOGLEVEL
           value: '2'
+        - name: NPM_CONFIG_LOGLEVEL
+          value: notice
         from:
           kind: ImageStreamTag
           name: nodejs-10:latest
