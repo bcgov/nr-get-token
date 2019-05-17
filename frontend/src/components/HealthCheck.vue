@@ -12,9 +12,24 @@
           <v-flex xs12>
             <div>
               <h3 class="headline mb-0">WebADE API</h3>
+              {{healthCheck.endpoints[0].endpoint}}
               <v-layout row>
-                <v-flex xs6></v-flex>
-                <v-flex xs6></v-flex>
+                <v-flex xs6>Service Client access</v-flex>
+                <v-flex xs6>
+                  <span v-html="this.getStatus(healthCheck.endpoints[0].authenticated)"></span>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex xs6>Has expected scope</v-flex>
+                <v-flex xs6>
+                  <span v-html="this.getStatus(healthCheck.endpoints[0].authorized)"></span>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex xs6>Top level endpoint return</v-flex>
+                <v-flex xs6>
+                  <span v-html="this.getStatus(healthCheck.endpoints[0].healthCheck)"></span>
+                </v-flex>
               </v-layout>
             </div>
           </v-flex>
@@ -22,7 +37,25 @@
           <v-flex xs12>
             <div>
               <h3 class="headline mb-0">Common Messaging API</h3>
-              <div>Lorem ipsum dolor sit amet, brute iriure accusata ne mea. Eos suavitate referrentur ad, te duo agam libris qualisque, utroque quaestio accommodare no qui. Et percipit laboramus usu, no invidunt verterem nominati mel. Dolorem ancillae an mei, ut putant invenire splendide mel, ea nec propriae adipisci. Ignota salutandi accusamus in sed, et per malis fuisset, qui id ludus appareat.</div>
+              {{healthCheck.endpoints[1].endpoint}}
+              <v-layout row>
+                <v-flex xs6>Service Client access</v-flex>
+                <v-flex xs6>
+                  <span v-html="this.getStatus(healthCheck.endpoints[1].authenticated)"></span>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex xs6>Has expected scope</v-flex>
+                <v-flex xs6>
+                  <span v-html="this.getStatus(healthCheck.endpoints[1].authorized)"></span>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex xs6>Top level endpoint return</v-flex>
+                <v-flex xs6>
+                  <span v-html="this.getStatus(healthCheck.endpoints[1].healthCheck)"></span>
+                </v-flex>
+              </v-layout>
             </div>
           </v-flex>
         </v-layout>
@@ -35,7 +68,14 @@
 import { mapState } from 'vuex';
 
 export default {
-  computed: mapState(['healthCheck'])
+  computed: mapState(['healthCheck']),
+  methods: {
+    getStatus(status) {
+      return status
+        ? '<i aria-hidden="true" class="v-icon material-icons theme--light success--text">thumb_up</i>'
+        : '<i aria-hidden="true" class="v-icon material-icons theme--light error--text">thumb_down</i>';
+    }
+  }
 };
 </script>
 
