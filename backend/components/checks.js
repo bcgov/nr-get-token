@@ -9,6 +9,7 @@ async function getWebAdeOauth2Status() {
   const password = config.get('serviceClient.getok.password');
 
   const result = {
+    name: 'WebADE API',
     endpoint: config.get('serviceClient.getok.endpoint'),
     healthCheck: false,
     authenticated: false,
@@ -33,6 +34,7 @@ async function getMsscStatus() {
   const password = config.get('serviceClient.mssc.password');
 
   const result = {
+    name: 'Common Messaging API',
     endpoint: config.get('serviceClient.mssc.endpoint'),
     healthCheck: false,
     authenticated: false,
