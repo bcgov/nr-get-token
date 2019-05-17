@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-layout>
+    <v-layout row wrap>
       <v-flex xs12 md5>
         <v-form @submit.prevent="testApi">
           <v-text-field v-model="testRoute" label="Endpoint" required></v-text-field>
