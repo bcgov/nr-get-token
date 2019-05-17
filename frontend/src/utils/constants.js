@@ -9,8 +9,7 @@ export const FieldValidations = Object.freeze({
 
 const topLevel = '/api/v1';
 export const ApiRoutes = Object.freeze({
-  STATUS: `${topLevel}/checks/status`,
-  HEALTH: `${topLevel}/checks/health`,
+  HEALTH: `${topLevel}/checks/status`,
   DOCS: `${topLevel}/docs`,
-  APPCONFIG: `${topLevel}/appConfigForm`
+  APPCONFIG: `${topLevel}/appConfigForm`,
 });

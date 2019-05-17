@@ -1,56 +1,41 @@
 <template>
-  <v-form ref="form">
-    <v-container>
-      <v-layout>
-        <v-flex xs12 md5>
-          <v-form>
-            <v-text-field v-model="testRoute" label="Endpoint" required></v-text-field>
-
-            <v-btn color="success" @click="testApi">Test</v-btn>
-          </v-form>
-        </v-flex>
-        <v-flex xs12 md6 offset-md1>
-          <v-textarea
-            v-model="apiResponse"
-            rows="1"
-            placeholder="The response from the api test"
-            auto-grow
-            readonly
-            label="Api Response"
-          ></v-textarea>
-        </v-flex>
-      </v-layout>
-    </v-container>
-  </v-form>
+  <v-container>
+    <v-layout row wrap>
+      <v-flex xs12 md5>
+        <v-form @submit.prevent="testApi">
+          <v-text-field v-model="testRoute" label="Endpoint" required></v-text-field>
+          <v-btn color="success" @click="testApi">Test</v-btn>
+        </v-form>
+      </v-flex>
+      <v-flex xs12 md6 offset-md1>
+        <v-textarea
+          v-model="apiCheckResponse"
+          rows="1"
+          placeholder="The response from the api test"
+          auto-grow
+          readonly
+          label="Api Response"
+        ></v-textarea>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
 import { ApiRoutes } from '@/utils/constants.js';
+import { mapState } from 'vuex';
 
 export default {
   data: function() {
     return {
-      testRoute: ApiRoutes.APPCONFIG,
+      testRoute: ApiRoutes.HEALTH,
       apiResponse: ''
     };
   },
+  computed: mapState(['apiCheckResponse']),
   methods: {
-    async testApi() {
-      this.apiResponse = await this.callApi();
-    },
-    async callApi() {
-      try {
-        const response = await fetch(this.testRoute, {
-          method: 'get'
-        });
-        const body = await response.text();
-
-        return body;
-      } catch (e) {
-        console.log('ERROR, caught error fetching from API endpoint'); // eslint-disable-line no-console
-        console.log(e); // eslint-disable-line no-console
-        return 'ERROR, see console';
-      }
+    testApi() {
+      this.$store.dispatch('getApiCheck', this.testRoute);
     }
   }
 };
