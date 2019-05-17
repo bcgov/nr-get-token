@@ -1,12 +1,14 @@
 <template>
   <v-container>
-    <v-textarea
-      auto-grow
-      readonly
-      label="Application Configuration"
-      v-model="appConfigAsString"
-      class="jsonText"
-    ></v-textarea>
+    <div class="">
+      <v-textarea
+        auto-grow
+        readonly
+        label="Application Configuration"
+        v-model="appConfigAsString"
+        class="jsonText"
+      ></v-textarea>
+    </div>
     <p class="text-xs-right">
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">

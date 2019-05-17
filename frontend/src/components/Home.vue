@@ -21,6 +21,50 @@
           <v-toolbar card color="grey lighten-3">
             <v-toolbar-title>Submit Application Configuration</v-toolbar-title>
             <v-spacer></v-spacer>
+
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  fab
+                  small
+                  color="primary"
+                  v-on="on"
+                  @click.stop="dialog = true"
+                  @click="getHealthCheck"
+                >
+                  <v-icon>healing</v-icon>
+                </v-btn>
+              </template>
+              <span>API Health Check</span>
+            </v-tooltip>
+
+            <v-dialog v-model="dialog" width="600">
+              <v-card>
+                <v-card-title class="headline primary white--text" primary-title>
+                  <v-icon dark right>healing</v-icon>&nbsp; API Health Check
+                  <v-spacer></v-spacer>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                      <v-btn flat icon color="white" v-on="on" @click="getHealthCheck">
+                        <v-icon>cached</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Refresh</span>
+                  </v-tooltip>
+                </v-card-title>
+
+                <v-card>
+                  <HealthCheck/>
+                </v-card>
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" flat @click="dialog = false">Close</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-toolbar>
           <div>
             <v-alert
@@ -62,6 +106,7 @@
 import ConfigForm from './ConfigForm';
 import ConfigGeneratedJson from './ConfigGeneratedJson';
 import ApiCheck from './ApiCheck';
+import HealthCheck from './HealthCheck';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -69,9 +114,20 @@ export default {
   components: {
     ConfigForm,
     ConfigGeneratedJson,
-    ApiCheck
+    ApiCheck,
+    HealthCheck
   },
-  computed: mapGetters(['configSubmissionSuccess', 'configSubmissionError'])
+  data() {
+    return {
+      dialog: false
+    };
+  },
+  computed: mapGetters(['configSubmissionSuccess', 'configSubmissionError']),
+  methods: {
+    getHealthCheck() {
+      this.$store.dispatch('getHealthCheckStatus');
+    }
+  }
 };
 </script>
 
@@ -81,7 +137,7 @@ export default {
 }
 
 .jsonText textarea {
-  font-family: "Courier New", Courier, monospace;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .underRadioField {

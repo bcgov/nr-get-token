@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { ApiService } from '@/common/apiService';
 
 Vue.use(Vuex);
 
@@ -14,7 +15,9 @@ export default new Vuex.Store({
       commonServices: [],
       userEnteredPassword: '',
       deploymentMethod: ''
-    }
+    },
+    healthCheck: null,
+    apiCheckResponse: ''
   }, getters: {
     configSubmissionSuccess: state => state.configSubmissionSuccess,
     configSubmissionError: state => state.configSubmissionError,
@@ -149,9 +152,34 @@ export default new Vuex.Store({
     clearConfigSubmissionMsgs: function (state) {
       state.configSubmissionSuccess = '';
       state.configSubmissionError = '';
+    },
+    setHealthCheck: function (state, health) {
+      state.healthCheck = health;
+    },
+    setApiCheckResponse: function (state, val) {
+      state.apiCheckResponse = val;
     }
   },
   actions: {
-
+    async getHealthCheckStatus(context) {
+      context.commit('setHealthCheck', null);
+      try {
+        const response = await ApiService.getHealthCheck();
+        context.commit('setHealthCheck', response);
+      }
+      catch (e) {
+        context.commit('setHealthCheck', 'error');
+      }
+    },
+    async getApiCheck(context, route) {
+      context.commit('setApiCheckResponse', '');
+      try {
+        const response = await ApiService.getApiCheck(route);
+        context.commit('setApiCheckResponse', response);
+      }
+      catch (e) {
+        context.commit('setApiCheckResponse', e);
+      }
+    }
   }
 });
