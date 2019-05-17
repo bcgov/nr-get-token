@@ -6,6 +6,8 @@ const morgan = require('morgan');
 const utils = require('./components/utils');
 const v1Router = require('./routes/v1');
 
+const apiRouter = express.Router();
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -18,8 +20,8 @@ log.addLevel('debug', 1500, { fg: 'green' });
 // Print out configuration settings in verbose startup
 log.verbose(utils.prettyStringify(config));
 
-// Handle root api discovery
-app.get(['/', '/api'], (_req, res) => {
+// GetOK Base API Directory
+apiRouter.get('/', (_req, res) => {
   res.status(200).json({
     endpoints: [
       '/api/v1'
@@ -31,7 +33,10 @@ app.get(['/', '/api'], (_req, res) => {
 });
 
 // v1 Router
-app.use('/api/v1', v1Router);
+apiRouter.use('/v1', v1Router);
+
+// Root level Router
+app.use([/(\/getok)?\/api/], apiRouter);
 
 // Handle 500
 // eslint-disable-next-line no-unused-vars
