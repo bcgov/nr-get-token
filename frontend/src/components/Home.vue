@@ -41,7 +41,7 @@
             <v-dialog v-model="dialog" width="600">
               <v-card>
                 <v-card-title class="headline primary white--text" primary-title>
-                  <v-icon dark right>healing</v-icon>&nbsp; API Health Check
+                  <v-icon dark right class="mr-2">healing</v-icon> API Health Check
                   <v-spacer></v-spacer>
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">

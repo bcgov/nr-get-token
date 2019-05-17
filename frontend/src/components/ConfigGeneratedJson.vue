@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <div class="">
+    <div>
       <v-textarea
         auto-grow
         readonly
