@@ -8,57 +8,30 @@
     </div>
     <div v-else>
       <v-container fluid grid-list-lg>
-        <v-layout row wrap>
-          <v-flex xs12>
-            <div>
-              <h3 class="headline mb-0">WebADE API</h3>
-              {{healthCheck.endpoints[0].endpoint}}
-              <v-layout row>
-                <v-flex xs6>Service Client access</v-flex>
-                <v-flex xs6>
-                  <span v-html="this.getStatus(healthCheck.endpoints[0].authenticated)"></span>
-                </v-flex>
-              </v-layout>
-              <v-layout row>
-                <v-flex xs6>Has expected scope</v-flex>
-                <v-flex xs6>
-                  <span v-html="this.getStatus(healthCheck.endpoints[0].authorized)"></span>
-                </v-flex>
-              </v-layout>
-              <v-layout row>
-                <v-flex xs6>Top level endpoint return</v-flex>
-                <v-flex xs6>
-                  <span v-html="this.getStatus(healthCheck.endpoints[0].healthCheck)"></span>
-                </v-flex>
-              </v-layout>
-            </div>
-          </v-flex>
+        <v-list subheader v-for="endpoint in healthCheck.endpoints" v-bind:key="endpoint.endpoint">
+          <v-subheader>{{ endpoint.name }}</v-subheader>
+          <v-list-tile>
+            <v-list-tile-content>
+              <v-list-tile-title>Service Client access</v-list-tile-title>
+            </v-list-tile-content>
 
-          <v-flex xs12>
-            <div>
-              <h3 class="headline mb-0">Common Messaging API</h3>
-              {{healthCheck.endpoints[1].endpoint}}
-              <v-layout row>
-                <v-flex xs6>Service Client access</v-flex>
-                <v-flex xs6>
-                  <span v-html="this.getStatus(healthCheck.endpoints[1].authenticated)"></span>
-                </v-flex>
-              </v-layout>
-              <v-layout row>
-                <v-flex xs6>Has expected scope</v-flex>
-                <v-flex xs6>
-                  <span v-html="this.getStatus(healthCheck.endpoints[1].authorized)"></span>
-                </v-flex>
-              </v-layout>
-              <v-layout row>
-                <v-flex xs6>Top level endpoint return</v-flex>
-                <v-flex xs6>
-                  <span v-html="this.getStatus(healthCheck.endpoints[1].healthCheck)"></span>
-                </v-flex>
-              </v-layout>
-            </div>
-          </v-flex>
-        </v-layout>
+            <v-list-tile-action v-html="getStatus(endpoint.authenticated)"></v-list-tile-action>
+          </v-list-tile>
+          <v-list-tile>
+            <v-list-tile-content>
+              <v-list-tile-title>Has expected scope</v-list-tile-title>
+            </v-list-tile-content>
+
+            <v-list-tile-action v-html="getStatus(endpoint.authorized)"></v-list-tile-action>
+          </v-list-tile>
+          <v-list-tile>
+            <v-list-tile-content>
+              <v-list-tile-title>Top level endpoint return</v-list-tile-title>
+            </v-list-tile-content>
+
+            <v-list-tile-action v-html="getStatus(endpoint.healthCheck)"></v-list-tile-action>
+          </v-list-tile>
+        </v-list>
       </v-container>
     </div>
   </div>
@@ -80,4 +53,7 @@ export default {
 </script>
 
 <style>
+.v-list__tile__content {
+  padding-left: 15px;
+}
 </style>
