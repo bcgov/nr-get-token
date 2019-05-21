@@ -275,11 +275,16 @@ components:
     EndpointStatus:
       type: object
       required:
+        - name
         - endpoint
         - healthCheck
         - authenticated
         - authorized
       properties:
+        name:
+          type: string
+          description: The name of the endpoint
+          example: 'WebADE API'
         endpoint:
           type: string
           description: Base endpoint URL
