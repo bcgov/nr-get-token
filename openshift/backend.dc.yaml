@@ -60,6 +60,16 @@ objects:
             timeoutSeconds: 1
           resources: {}
           env:
+          - name: OIDC_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: getok-oidc-secret
+          - name: OIDC_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: getok-oidc-secret
           - name: SC_GETOK_USERNAME
             valueFrom:
               secretKeyRef:
@@ -81,6 +91,8 @@ objects:
                 key: password
                 name: getok-sc-mssc-secret
           envFrom:
+          - configMapRef:
+              name: getok-oidc-config
           - configMapRef:
               name: getok-sc-config
           - configMapRef:

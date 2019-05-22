@@ -3,7 +3,7 @@ const log = require('npmlog');
 
 const utils = {
   // Returns the response body of a webade oauth token request
-  getWebAdeToken: async function getWebAdeToken(username, password, scope) {
+  async getWebAdeToken(username, password, scope) {
     const url = 'https://i1api.nrs.gov.bc.ca/oauth2/v1/oauth/token';
 
     try {

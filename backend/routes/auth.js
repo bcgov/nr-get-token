@@ -18,7 +18,7 @@ auth.use('/error', (_req, res) => {
 });
 
 auth.use('/login', passport.authenticate('oidc', {
-  failureRedirect: 'login'
+  failureRedirect: 'error'
 }));
 
 
