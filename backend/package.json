@@ -49,7 +49,7 @@
       "_": false
     },
     "parserOptions": {
-      "ecmaVersion": 8
+      "ecmaVersion": 9
     },
     "rules": {
       "eol-last": [
