@@ -80,6 +80,7 @@ passport.deserializeUser((obj, next) => next(null, obj));
 apiRouter.get('/', (_req, res) => {
   res.status(200).json({
     endpoints: [
+      '/api/auth',
       '/api/v1'
     ],
     versions: [
@@ -89,7 +90,7 @@ apiRouter.get('/', (_req, res) => {
 });
 
 // Root level Router
-app.use(/(\/getok)?\/api/, apiRouter);
+app.use(/(\/getok)?(\/api)?/, apiRouter);
 
 // Auth Router
 apiRouter.use('/auth', authRouter);

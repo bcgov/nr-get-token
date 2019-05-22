@@ -1,6 +1,16 @@
 const auth = require('express').Router();
 const passport = require('passport');
 
+auth.get('/', (_req, res) => {
+  res.status(200).json({
+    endpoints: [
+      '/login',
+      '/logout',
+      '/token'
+    ]
+  });
+});
+
 auth.use('/callback',
   passport.authenticate('oidc', {
     failureRedirect: 'error'
@@ -17,12 +27,12 @@ auth.use('/error', (_req, res) => {
   });
 });
 
-auth.use('/login', passport.authenticate('oidc', {
+auth.get('/login', passport.authenticate('oidc', {
   failureRedirect: 'error'
 }));
 
 
-auth.use('/logout', (req, res) => {
+auth.get('/logout', (req, res) => {
   req.logout();
   res.redirect('/getok');
 });
@@ -31,6 +41,17 @@ auth.use('/profile', (req, res) => {
   res.status(200).json({
     user: req.session
   });
+});
+
+auth.use('/token', (req, res) => {
+  if (req.user && req.user.jwt && req.user.refreshToken) {
+    res.status(200).json(req.user);
+  } else {
+    res.status(401).json({
+      status: 401,
+      message: 'Not logged in'
+    });
+  }
 });
 
 module.exports = auth;
