@@ -1,27 +1,86 @@
+const axios = require('axios');
 const config = require('config');
 const express = require('express');
 const log = require('npmlog');
 const morgan = require('morgan');
+const passport = require('passport');
+const session = require('express-session');
+const OidcStrategy = require('passport-openidconnect').Strategy;
 
 const utils = require('./components/utils');
+const authRouter = require('./routes/auth');
 const v1Router = require('./routes/v1');
+
+const apiRouter = express.Router();
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+  extended: false
+}));
 
 app.use(morgan(config.get('server.morganFormat')));
 
+app.use(session({
+  secret: config.get('oidc.clientSecret'),
+  resave: false,
+  saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Logging Setup
 log.level = config.get('server.logLevel');
-log.addLevel('debug', 1500, { fg: 'green' });
+log.addLevel('debug', 1500, {
+  fg: 'green'
+});
 
 // Print out configuration settings in verbose startup
-log.verbose(utils.prettyStringify(config));
+log.verbose('Config', utils.prettyStringify(config));
 
-// Handle root api discovery
-app.get(['/', '/api'], (_req, res) => {
+// Resolves OIDC Discovery values and returns an OIDC Strategy Config
+async function getOidcDiscovery() {
+  try {
+    const response = await axios.get(config.get('oidc.discovery'));
+
+    log.verbose(arguments.callee.name, utils.prettyStringify(response.data));
+    return {
+      issuer: response.data.issuer,
+      authorizationURL: response.data.authorization_endpoint,
+      tokenURL: response.data.token_endpoint,
+      userInfoURL: response.data.userinfo_endpoint,
+      clientID: config.get('oidc.clientID'),
+      clientSecret: config.get('oidc.clientSecret'),
+      callbackURL: '/getok/api/auth/callback',
+      scope: response.data.scopes_supported
+    };
+  } catch (error) {
+    log.error(arguments.callee.name, `OIDC Discovery failed - ${error.message}`);
+    process.exit(1);
+  }
+}
+
+getOidcDiscovery().then(oidcConfig => {
+  passport.use('oidc', new OidcStrategy(oidcConfig, (_issuer, _sub, profile, accessToken, refreshToken, done) => {
+    if ((typeof (accessToken) === 'undefined') || (accessToken === null) ||
+      (typeof (refreshToken) === 'undefined') || (refreshToken === null)) {
+      return done('No access token', null);
+    }
+
+    profile.jwt = accessToken;
+    profile.refreshToken = refreshToken;
+    return done(null, profile);
+  }));
+});
+
+passport.serializeUser((user, next) => next(null, user));
+passport.deserializeUser((obj, next) => next(null, obj));
+
+// GetOK Base API Directory
+apiRouter.get('/', (_req, res) => {
   res.status(200).json({
     endpoints: [
+      '/api/auth',
       '/api/v1'
     ],
     versions: [
@@ -30,8 +89,14 @@ app.get(['/', '/api'], (_req, res) => {
   });
 });
 
+// Root level Router
+app.use(/(\/getok)?(\/api)?/, apiRouter);
+
+// Auth Router
+apiRouter.use('/auth', authRouter);
+
 // v1 Router
-app.use('/api/v1', v1Router);
+apiRouter.use('/v1', v1Router);
 
 // Handle 500
 // eslint-disable-next-line no-unused-vars

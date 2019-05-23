@@ -1,4 +1,9 @@
 {
+  "oidc": {
+    "discovery": "OIDC_DISCOVERY",
+    "clientID": "OIDC_USERNAME",
+    "clientSecret": "OIDC_PASSWORD"
+  },
   "server": {
     "logLevel": "SERVER_LOGLEVEL",
     "morganFormat": "SERVER_MORGANFORMAT",

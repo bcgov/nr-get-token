@@ -13,6 +13,11 @@ The following commands must be run by an administrator for *each* of the target 
 *Note: Replace anything in angle brackets with the appropriate value!*
 
 ```sh
+oc create -n k8vopl-<env> configmap getok-oidc-config \
+  --from-literal=OIDC_DISCOVERY=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/vehizw2t/.well-known/openid-configuration
+```
+
+```sh
 oc create -n k8vopl-<env> configmap getok-server-config \
   --from-literal=SERVER_LOGLEVEL=info \
   --from-literal=SERVER_MORGANFORMAT=combined \
@@ -28,6 +33,13 @@ oc create -n k8vopl-<env> configmap getok-sc-config \
 ### Secrets
 
 *Note: Replace anything in angle brackets with the appropriate value!*
+
+```sh
+oc create -n k8vopl-<env> secret generic getok-oidc-secret \
+  --type=kubernetes.io/basic-auth \
+  --from-literal=username=<username> \
+  --from-literal=password=<password>
+```
 
 ```sh
 oc create -n k8vopl-<env> secret generic getok-sc-getok-secret \

@@ -24,7 +24,7 @@ async function getWebAdeOauth2Status() {
 
     return result;
   } catch (error) {
-    log.error('Checks', error);
+    log.error(arguments.callee.name, error.message);
     return result;
   }
 }
@@ -62,13 +62,13 @@ async function getMsscStatus() {
           result.healthCheck = true;
         }
       } catch (error) {
-        log.error('Checks', error);
+        log.error(arguments.callee.name, error.message);
       }
     }
 
     return result;
   } catch (error) {
-    log.error('Checks', error);
+    log.error(arguments.callee.name, error.message);
     return result;
   }
 }
