@@ -43,7 +43,7 @@ async function getOidcDiscovery() {
   try {
     const response = await axios.get(config.get('oidc.discovery'));
 
-    log.verbose(arguments.callee.name, `WebAde Token: ${utils.prettyStringify(response.data)}`);
+    log.verbose(arguments.callee.name, utils.prettyStringify(response.data));
     return {
       issuer: response.data.issuer,
       authorizationURL: response.data.authorization_endpoint,

@@ -323,7 +323,7 @@ def createDeploymentStatus (String environment, String status, String hostUrl) {
     this,
     ghDeploymentId,
     status,
-    ['targetUrl': "https://${hostUrl}/getok"]
+    ['targetUrl': "https://${hostUrl}"]
   )
 
   if (status.equalsIgnoreCase('SUCCESS')) {

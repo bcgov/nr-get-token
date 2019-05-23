@@ -102,7 +102,6 @@ objects:
     name: "${APP_NAME}-frontend-${JOB_NAME}"
   spec:
     host: "${HOST_ROUTE}"
-    path: /getok
     port:
       targetPort: 2015-tcp
     tls:

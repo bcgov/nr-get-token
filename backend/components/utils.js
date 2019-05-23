@@ -19,7 +19,7 @@ const utils = {
         }
       });
 
-      log.verbose(arguments.callee.name, `WebAde Token: ${utils.prettyStringify(response.data)}`);
+      log.verbose(arguments.callee.name, utils.prettyStringify(response.data));
       return response.data;
     } catch (error) {
       log.error(arguments.callee.name, error.message);
