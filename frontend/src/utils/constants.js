@@ -7,7 +7,7 @@ export const FieldValidations = Object.freeze({
   PASSWORD_MAX_LENGTH: 60
 });
 
-const topLevel = '/api/v1';
+const topLevel = '/getok/api/v1';
 export const ApiRoutes = Object.freeze({
   HEALTH: `${topLevel}/checks/status`,
   DOCS: `${topLevel}/docs`,

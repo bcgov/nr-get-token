@@ -22,7 +22,7 @@ export default {
 </script>
 
 <style>
-  .v-card--flat{
-    background-color: transparent !important;
-  }
+.v-card--flat {
+  background-color: transparent !important;
+}
 </style>
