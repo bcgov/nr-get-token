@@ -1,5 +1,6 @@
 <template>
-  <v-container>
+  <h1 v-if="!isAuthenticated">Not Logged In</h1>
+  <v-container v-else>
     <v-layout wrap>
       <v-flex xs4>
         <v-img :src="require('@/assets/images/tokey.svg')" contain height="180" position="right"></v-img>

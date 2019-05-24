@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { ApiService } from '@/common/apiService';
+import { AuthRoutes } from '@/utils/constants';
 
 Vue.use(Vuex);
 
@@ -18,8 +19,11 @@ export default new Vuex.Store({
     generatedPassword: '',
     healthCheck: null,
     apiCheckResponse: '',
-    ephemeralPasswordRSAKey: null
-  }, getters: {
+    ephemeralPasswordRSAKey: null,
+    token: localStorage.getItem('jwt') || ''
+  },
+  getters: {
+    isAuthenticated: state => !!state.token,
     configSubmissionSuccess: state => state.configSubmissionSuccess,
     configSubmissionError: state => state.configSubmissionError,
     generatedPassword: state => state.generatedPassword,
@@ -80,45 +84,37 @@ export default new Vuex.Store({
         if (!state.userAppCfg.commonServices || !state.userAppCfg.commonServices.length) {
           newAppCfg.serviceClients[0].authorizations = [];
         } else {
-          newAppCfg.actions = [
-            {
-              name: `${newAppCfg.applicationAcronym}_ACTION`,
-              description: `${newAppCfg.applicationAcronym} action`,
-              privilegedInd: false
-            }
-          ];
-          newAppCfg.roles = [
-            {
-              name: `${newAppCfg.applicationAcronym}_ROLE`,
-              description: `${newAppCfg.applicationAcronym} Role`,
-              actionNames: [
-                `${newAppCfg.applicationAcronym}_ACTION`
-              ]
-            }
-          ];
+          newAppCfg.actions = [{
+            name: `${newAppCfg.applicationAcronym}_ACTION`,
+            description: `${newAppCfg.applicationAcronym} action`,
+            privilegedInd: false
+          }];
+          newAppCfg.roles = [{
+            name: `${newAppCfg.applicationAcronym}_ROLE`,
+            description: `${newAppCfg.applicationAcronym} Role`,
+            actionNames: [
+              `${newAppCfg.applicationAcronym}_ACTION`
+            ]
+          }];
 
-          newAppCfg.profiles = [
+          newAppCfg.profiles = [{
+            name: `${newAppCfg.applicationAcronym}_PROFILE`,
+            description: `Can send an email with the ${newAppCfg.applicationAcronym} app`,
+            secureByOrganization: false,
+            availibleTo: [
+              'SCL'
+            ],
+            effectiveDate: 1506582000000,
+            expiryDate: 253402243200000,
+            profileRoles: [{
+              applicationCode: newAppCfg.applicationAcronym,
+              name: `${newAppCfg.applicationAcronym}_ROLE`
+            },
             {
-              name: `${newAppCfg.applicationAcronym}_PROFILE`,
-              description: `Can send an email with the ${newAppCfg.applicationAcronym} app`,
-              secureByOrganization: false,
-              availibleTo: [
-                'SCL'
-              ],
-              effectiveDate: 1506582000000,
-              expiryDate: 253402243200000,
-              profileRoles: [
-                {
-                  applicationCode: newAppCfg.applicationAcronym,
-                  name: `${newAppCfg.applicationAcronym}_ROLE`
-                },
-                {
-                  applicationCode: 'CMSG',
-                  name: 'SENDER'
-                }
-              ]
-            }
-          ];
+              applicationCode: 'CMSG',
+              name: 'SENDER'
+            }]
+          }];
 
           newAppCfg.serviceClients[0].authorizations = [{
             profileName: `${newAppCfg.applicationAcronym}_PROFILE`,
@@ -139,25 +135,25 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    updateUserAppCfg: function (state, userAppCfg) {
+    updateUserAppCfg: (state, userAppCfg) => {
       Object.assign(state.userAppCfg, userAppCfg);
     },
-    setConfigSubmissionSuccess: function (state, msg) {
+    setConfigSubmissionSuccess: (state, msg) => {
       state.configSubmissionSuccess = msg;
       state.configSubmissionError = '';
     },
-    setConfigSubmissionError: function (state, msg) {
+    setConfigSubmissionError: (state, msg) => {
       state.configSubmissionSuccess = '';
       state.configSubmissionError = msg;
     },
-    clearConfigSubmissionMsgs: function (state) {
+    clearConfigSubmissionMsgs: (state) => {
       state.configSubmissionSuccess = '';
       state.configSubmissionError = '';
     },
-    setHealthCheck: function (state, health) {
+    setHealthCheck: (state, health) => {
       state.healthCheck = health;
     },
-    setApiCheckResponse: function (state, val) {
+    setApiCheckResponse: (state, val) => {
       state.apiCheckResponse = val;
     },
     setGeneratedPassword: function (state, val) {
@@ -165,6 +161,9 @@ export default new Vuex.Store({
     },
     setEphemeralPasswordRSAKey: function (state, ephemeralPasswordRSAKey) {
       state.ephemeralPasswordRSAKey = ephemeralPasswordRSAKey;
+    },
+    setJwtToken: (state, jwt) => {
+      state.token = jwt;
     }
   },
   actions: {
@@ -173,8 +172,7 @@ export default new Vuex.Store({
       try {
         const response = await ApiService.getHealthCheck();
         context.commit('setHealthCheck', response);
-      }
-      catch (e) {
+      } catch (e) {
         context.commit('setHealthCheck', 'error');
       }
     },
@@ -183,10 +181,28 @@ export default new Vuex.Store({
       try {
         const response = await ApiService.getApiCheck(route);
         context.commit('setApiCheckResponse', response);
-      }
-      catch (e) {
+      } catch (e) {
         context.commit('setApiCheckResponse', e);
       }
-    }
+    },
+    async getJwtToken(context) {
+      try {
+        const response = await fetch(AuthRoutes.TOKEN, {
+          method: 'GET'
+        });
+        const body = await response.json();
+
+        if (body.jwt) {
+          localStorage.setItem('jwt', body.jwt);
+          context.commit('setJwtToken', body.jwt);
+        }
+
+        // TODO: Figure out refresh token process
+      } catch (e) {
+        localStorage.removeItem('jwt');
+        context.commit('setJwtToken', '');
+        throw e;
+      }
+    },
   }
 });

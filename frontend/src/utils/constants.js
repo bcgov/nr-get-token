@@ -7,9 +7,16 @@ export const FieldValidations = Object.freeze({
   PASSWORD_MAX_LENGTH: 60
 });
 
-const topLevel = '/getok/api/v1';
+const apiRoot = '/getok/api/v1';
 export const ApiRoutes = Object.freeze({
-  HEALTH: `${topLevel}/checks/status`,
-  DOCS: `${topLevel}/docs`,
-  APPCONFIG: `${topLevel}/appConfigForm`,
+  HEALTH: `${apiRoot}/checks/status`,
+  DOCS: `${apiRoot}/docs`,
+  APPCONFIG: `${apiRoot}/appConfigForm`,
+});
+
+const authRoot = '/getok/api/auth';
+export const AuthRoutes = Object.freeze({
+  LOGIN: `${authRoot}/login`,
+  LOGOUT: `${authRoot}/logout`,
+  TOKEN: `${authRoot}/token`,
 });
