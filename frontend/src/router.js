@@ -2,7 +2,6 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import store from './store';
 import App from './App.vue';
-import { AuthRoutes } from '@/utils/constants.js';
 
 Vue.use(VueRouter);
 
@@ -11,21 +10,18 @@ const router = new VueRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: App,
-      meta: {
-        requiresAuth: true
-      }
+      name: 'app',
+      component: App
     },
     {
-      path: '/login',
-      name: 'login',
-      rewrite: AuthRoutes.LOGIN
+      path: '*',
+      name: 'notfound',
+      redirect: '/'
     }
   ]
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!store.getters.isAuthenticated) {
       next('login');

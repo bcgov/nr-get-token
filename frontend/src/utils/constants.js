@@ -18,5 +18,6 @@ const authRoot = '/getok/api/auth';
 export const AuthRoutes = Object.freeze({
   LOGIN: `${authRoot}/login`,
   LOGOUT: `${authRoot}/logout`,
+  PROFILE: `${authRoot}/profile`,
   TOKEN: `${authRoot}/token`,
 });
