@@ -251,6 +251,7 @@ components:
         - applicationAcronym
         - applicationName
         - applicationDescription
+        - commonServices
       properties:
         applicationAcronym:
           type: string

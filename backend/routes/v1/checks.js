@@ -6,7 +6,7 @@ const checkComponent = require('../../components/checks');
 checks.get('/status', async (_req, res) => {
   const statuses = await checkComponent.getStatus();
 
-  if(statuses instanceof Array) {
+  if (statuses instanceof Array) {
     res.status(200).json({
       endpoints: statuses
     });
@@ -27,7 +27,7 @@ checks.get('/gettoken', async (_req, res) => {
   const password = config.get('serviceClient.getok.password');
 
   const token = await utils.getWebAdeToken(username, password, 'WEBADE-REST');
-  if('access_token' in token) {
+  if ('access_token' in token) {
     res.status(200).json(token.access_token);
   } else {
     res.status(500).json({
