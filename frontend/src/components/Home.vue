@@ -1,5 +1,8 @@
 <template>
-  <h1 v-if="!isAuthenticated">Not Logged In</h1>
+  <v-container v-if="!isAuthenticated">
+    <h1>Not Logged In</h1>
+  </v-container>
+
   <v-container v-else>
     <v-layout wrap>
       <v-flex xs4>

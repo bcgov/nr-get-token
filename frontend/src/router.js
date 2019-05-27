@@ -1,8 +1,8 @@
 // TODO: Refer to Vue CLI scaffolding for lazy-load support
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import Home from '@/components/Home.vue';
 import store from './store';
-import App from './App.vue';
 
 Vue.use(VueRouter);
 
@@ -12,8 +12,8 @@ const router = new VueRouter({
   routes: [
     {
       path: '/',
-      name: 'app',
-      component: App
+      name: 'home',
+      component: Home
     },
     {
       path: '*',
