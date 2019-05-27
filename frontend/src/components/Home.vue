@@ -105,11 +105,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import ApiCheck from './ApiCheck';
 import ConfigForm from './ConfigForm';
 import ConfigGeneratedJson from './ConfigGeneratedJson';
-import ApiCheck from './ApiCheck';
 import HealthCheck from './HealthCheck';
-import { mapGetters } from 'vuex';
 
 export default {
   name: 'home',
@@ -124,7 +124,13 @@ export default {
       dialog: false
     };
   },
-  computed: mapGetters(['configSubmissionSuccess', 'configSubmissionError']),
+  computed: {
+    ...mapGetters([
+      'configSubmissionSuccess',
+      'configSubmissionError',
+      'isAuthenticated'
+    ])
+  },
   methods: {
     getHealthCheck() {
       this.$store.dispatch('getHealthCheckStatus');

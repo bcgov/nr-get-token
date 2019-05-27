@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import { AuthRoutes } from '@/utils/constants.js';
 
 export default {
@@ -35,6 +36,9 @@ export default {
       authRoutes: AuthRoutes,
       appTitle: process.env.VUE_APP_TITLE
     };
+  },
+  computed: {
+    ...mapGetters(['isAuthenticated'])
   }
 };
 </script>

@@ -1,7 +1,8 @@
-const auth = require('express').Router();
+const config = require('config');
 const passport = require('passport');
+const router = require('express').Router();
 
-auth.get('/', (_req, res) => {
+router.get('/', (_req, res) => {
   res.status(200).json({
     endpoints: [
       '/login',
@@ -11,39 +12,39 @@ auth.get('/', (_req, res) => {
   });
 });
 
-auth.use('/callback',
+router.use('/callback',
   passport.authenticate('oidc', {
     failureRedirect: 'error'
   }),
   (_req, res) => {
-    res.redirect('profile');
+    res.redirect(config.get('server.frontend'));
   }
 );
 
-auth.use('/error', (_req, res) => {
+router.use('/error', (_req, res) => {
   res.status(401).json({
     status: 401,
     message: 'Error: Unable to authenticate'
   });
 });
 
-auth.get('/login', passport.authenticate('oidc', {
+router.get('/login', passport.authenticate('oidc', {
   failureRedirect: 'error'
 }));
 
 
-auth.get('/logout', (req, res) => {
+router.get('/logout', (req, res) => {
   req.logout();
-  res.redirect('/getok');
+  res.redirect(config.get('server.frontend'));
 });
 
-auth.use('/profile', (req, res) => {
+router.use('/profile', (req, res) => {
   res.status(200).json({
     user: req.session
   });
 });
 
-auth.use('/token', (req, res) => {
+router.use('/token', (req, res) => {
   if (req.user && req.user.jwt && req.user.refreshToken) {
     res.status(200).json(req.user);
   } else {
@@ -54,4 +55,4 @@ auth.use('/token', (req, res) => {
   }
 });
 
-module.exports = auth;
+module.exports = router;

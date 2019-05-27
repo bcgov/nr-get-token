@@ -5,6 +5,7 @@
     "clientSecret": "OIDC_PASSWORD"
   },
   "server": {
+    "frontend": "SERVER_FRONTEND",
     "logLevel": "SERVER_LOGLEVEL",
     "morganFormat": "SERVER_MORGANFORMAT",
     "port": "SERVER_PORT"

@@ -3,6 +3,7 @@
     "discovery": "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/vehizw2t/.well-known/openid-configuration"
   },
   "server": {
+    "frontend": "http://localhost:8080",
     "logLevel": "debug",
     "morganFormat": "dev",
     "port": "8080"
