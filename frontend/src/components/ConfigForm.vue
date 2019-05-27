@@ -96,30 +96,12 @@
             >Instructions for manual deployment</a>
           </p>
           <v-radio label="Direct Deploy" value="deploymentDirect"></v-radio>
-
-          <v-layout row wrap>
-            <v-flex xs12>
-              <v-text-field
-                v-if="userAppCfg.deploymentMethod === 'deploymentDirect'"
-                label="Password"
-                required
-                :value="userAppCfg.userEnteredPassword"
-                v-on:keyup.stop="updateAppCfgField('userEnteredPassword', $event.target.value)"
-                class="underRadioField"
-                :rules="passwordRules"
-                :append-icon="showPw ? 'visibility' : 'visibility_off'"
-                :type="showPw ? 'text' : 'password'"
-                :counter="fieldValidations.PASSWORD_MAX_LENGTH"
-                @click:append="showPw = !showPw"
-              ></v-text-field>
-            </v-flex>
-          </v-layout>
         </v-radio-group>
 
         <v-btn flat @click="appConfigStep = 1">Back</v-btn>
 
         <v-dialog
-          v-model="dialog"
+          v-model="confirmationDialog"
           persistent
           max-width="400"
           v-if="userAppCfg.deploymentMethod === 'deploymentDirect'"
@@ -135,8 +117,22 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn flat @click="dialog = false">CANCEL</v-btn>
-              <v-btn color="green darken-1" flat @click="dialog = false; submitConfig()">CONTINUE</v-btn>
+              <v-btn flat @click="confirmationDialog = false">CANCEL</v-btn>
+              <v-btn
+                color="green darken-1"
+                flat
+                @click="confirmationDialog = false; submitConfig()"
+              >CONTINUE</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="passwordDialog" persistent max-width="600">
+          <v-card>
+            <v-card-title class="headline">Application Submitted</v-card-title>
+            <v-card-text>Updated. Password is {{generatedPassword}}</v-card-text>
+            <v-card-actions>
+              <v-btn color="green darken-1" flat @click="passwordDialog = false">FINISHED</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -147,20 +143,20 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { isValidJson } from '@/utils/utils.js';
 import { FieldValidations, ApiRoutes } from '@/utils/constants.js';
+import cryptico from 'cryptico-js';
 
 export default {
   data() {
     return {
       apiEndpoint: ApiRoutes.APPCONFIG,
-      dialog: false,
+      confirmationDialog: false,
+      passwordDialog: false,
       fieldValidations: FieldValidations,
       appConfig: '',
       appConfigStep: 1,
       step1Valid: false,
       step2Valid: false,
-      showPw: false,
       commonServices: [
         { text: 'Common Messaging Service', value: 'cmsg' },
         { text: 'Document Management Service', value: 'dms' },
@@ -191,27 +187,21 @@ export default {
           `Description must be ${
             FieldValidations.DESCRIPTION_MAX_LENGTH
           } characters or less`
-      ],
-      passwordRules: [
-        v => !!v || 'Password is required',
-        v =>
-          (v.length >= FieldValidations.PASSWORD_MIN_LENGTH &&
-            v.length <= FieldValidations.PASSWORD_MAX_LENGTH) ||
-          `Password must be between ${
-            FieldValidations.PASSWORD_MIN_LENGTH
-          } and ${FieldValidations.PASSWORD_MAX_LENGTH} characters`
       ]
     };
   },
   computed: {
-    ...mapGetters(['appConfigAsString'])
+    ...mapGetters(['appConfigAsString', 'generatedPassword'])
   },
   methods: {
     async submitConfig() {
       this.$store.commit('clearConfigSubmissionMsgs');
 
       // this is temporary, only allow MSSC to be used at the moment
-      if (this.userAppCfg.applicationAcronym !== 'MSSC') {
+      if (
+        this.userAppCfg.applicationAcronym !== 'MSSC' &&
+        this.userAppCfg.applicationAcronym !== 'DOMO'
+      ) {
         this.displayMessage(
           false,
           'Temp: Only the application acronym MSSC is supported for now.'
@@ -219,32 +209,34 @@ export default {
         return;
       }
 
-      // check json validity
-      if (!isValidJson(this.appConfigAsString)) {
-        this.displayMessage(
-          false,
-          'Unable to submit, Application Configuration is not valid JSON.'
-        );
-        return;
-      }
+      // The passphrase used to repeatably generate this RSA key.
+      const ephemeralRSAKey = cryptico.generateRSAKey('The Moon is a Harsh Mistress.', 1024);
+      this.$store.commit('setEphemeralPasswordRSAKey', ephemeralRSAKey);
 
       const url = this.apiEndpoint;
       const headers = new Headers();
       headers.set('Content-Type', 'application/json');
 
+      const body = {
+        configForm: this.userAppCfg,
+        passwordPublicKey: cryptico.publicKeyString(ephemeralRSAKey)
+      };
       try {
         const response = await fetch(url, {
           method: 'post',
           headers: headers,
-          body: this.appConfigAsString
+          body: JSON.stringify(body)
         });
         if (response.ok) {
+          const resBody = await response.json();
           this.displayMessage(
             true,
             `SUCCESS, application configuration for ${
               this.userAppCfg.applicationAcronym
             } updated in Integration.`
           );
+          this.$store.commit('setGeneratedPassword', resBody.generatedPassword);
+          this.passwordDialog = true;
         } else {
           this.displayMessage(
             false,

@@ -10,8 +10,8 @@ const appConfigComponent = require('../../components/appConfig');
 
 // submits a webade application configuration
 appConfig.post('/', [
-  // Temporarily block submissions to just MSSC acronym
-  body('applicationAcronym').equals('MSSC')
+  // Temporarily block submissions to just MSSC or DOMO acronym
+  body('configForm.applicationAcronym').isIn(['MSSC', 'DOMO'])
 ], async (req, res) => {
   const errors = validationResult(req);
 

@@ -14,14 +14,14 @@ async function postAppConfig(body) {
   }
 
   // Build the app config
-  const webAdeCfg = utils.buildWebAdeCfg(body);
+  const generatedConfig = utils.buildWebAdeCfg(body);
 
   // Submit the app config to webade
   const endpoint = config.get('serviceClient.getok.endpoint');
   const path = '/applicationConfigurations';
   const webAdeUrl = endpoint + path;
   try {
-    const webAdeResponse = await axios.post(webAdeUrl, webAdeCfg, {
+    const webAdeResponse = await axios.post(webAdeUrl, generatedConfig.webAdeCfg, {
       headers: {
         'Authorization': `Bearer ${token.access_token}`,
         'Content-Type': 'application/json; charset=utf-8'
@@ -31,15 +31,13 @@ async function postAppConfig(body) {
 
     const reponse = {
       webAdeResponse: webAdeResponse.data,
-      generatedPassword: webAdeCfg.serviceClients ? webAdeCfg.serviceClients[0].secret : ''
+      generatedPassword: generatedConfig.webAdeCfg.serviceClients ? generatedConfig.encyptedPassword : ''
     };
     return reponse;
 
   } catch (e) {
     throw new Error(`WebADE ${path} returned an error. ${JSON.stringify(e.response.data)}`);
   }
-
-
 }
 
 const appConfig = {

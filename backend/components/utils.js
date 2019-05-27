@@ -1,5 +1,6 @@
 const axios = require('axios');
 const log = require('npmlog');
+const cryptico = require('cryptico-js');
 
 const utils = {
   // Returns the response body of a webade oauth token request
@@ -26,8 +27,9 @@ const utils = {
       return error.response.data;
     }
   },
-  buildWebAdeCfg: (configForm) => {
-    const generatedPassword = utils.generatePassword();
+  buildWebAdeCfg: (requestBody) => {
+    const configForm = requestBody.configForm;
+    const generatedPassword = utils.generatePassword(requestBody.passwordPublicKey);
     const defaultAppCfg = {
       '@type': 'http://webade.gov.bc.ca/applicationConfiguration',
       applicationAcronym: '',
@@ -74,7 +76,7 @@ const utils = {
       }];
 
       // Set up password
-      newAppCfg.serviceClients[0].secret = generatedPassword;
+      newAppCfg.serviceClients[0].secret = generatedPassword.password;
 
       if (!configForm.commonServices || !configForm.commonServices.length) {
         newAppCfg.serviceClients[0].authorizations = [];
@@ -131,10 +133,19 @@ const utils = {
 
     const finalCfg = { ...defaultAppCfg, ...newAppCfg };
 
-    return finalCfg;
+    const ret = {
+      webAdeCfg: finalCfg,
+      encyptedPassword: generatedPassword.encyptedPassword
+    };
+    return ret;
   },
-  generatePassword: () => {
-    return 'password123';
+  generatePassword: (key) => {
+    const pw = 'password1234';
+    const result = {
+      password: pw,
+      encyptedPassword: cryptico.encrypt(pw, key).cipher
+    };
+    return result;
   },
 
   // Returns a pretty JSON representation of an object
