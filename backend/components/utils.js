@@ -140,7 +140,7 @@ const utils = {
     return ret;
   },
   generatePassword: (key) => {
-    const pw = 'password1234';
+    const pw = 'thisworked';
     const result = {
       password: pw,
       encyptedPassword: cryptico.encrypt(pw, key).cipher

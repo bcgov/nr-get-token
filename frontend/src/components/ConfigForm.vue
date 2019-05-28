@@ -129,10 +129,27 @@
 
         <v-dialog v-model="passwordDialog" persistent max-width="600">
           <v-card>
-            <v-card-title class="headline">Application Submitted</v-card-title>
-            <v-card-text>Updated. Password is {{generatedPassword}}</v-card-text>
+            <v-card-title class="headline">Application Configuration Updated</v-card-title>
+            <v-card-text>
+              <p>
+                You application configuration for
+                <strong>{{userAppCfg.applicationAcronym}}</strong> has been updated in the WebADE system.
+                <br>
+                <br>A password for the service client created is shown below. Keep this password secure and do not lose it as you will be unable to fetch it again.
+              </p>
+
+              <v-layout row wrap>
+                <v-flex xs12 sm8>
+                  <v-text-field v-model="shownPassword" readonly label="Password"></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm4>
+                  <v-btn color="success" @click="decryptPassword()">DECRYPT</v-btn>
+                </v-flex>
+              </v-layout>
+            </v-card-text>
             <v-card-actions>
-              <v-btn color="green darken-1" flat @click="passwordDialog = false">FINISHED</v-btn>
+              <v-spacer></v-spacer>
+              <v-btn color="info darken-1" flat @click="passwordDialog = false">FINISHED</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -149,6 +166,7 @@ import cryptico from 'cryptico-js';
 export default {
   data() {
     return {
+      shownPassword: '••••••••',
       apiEndpoint: ApiRoutes.APPCONFIG,
       confirmationDialog: false,
       passwordDialog: false,
@@ -191,10 +209,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['appConfigAsString', 'generatedPassword'])
+    ...mapGetters(['appConfigAsString', 'generatedPassword', 'ephemeralPasswordRSAKey'])
   },
   methods: {
     async submitConfig() {
+      window.scrollTo(0,0);
+      this.shownPassword = '••••••••';
       this.$store.commit('clearConfigSubmissionMsgs');
 
       // this is temporary, only allow MSSC to be used at the moment
@@ -210,7 +230,10 @@ export default {
       }
 
       // The passphrase used to repeatably generate this RSA key.
-      const ephemeralRSAKey = cryptico.generateRSAKey('The Moon is a Harsh Mistress.', 1024);
+      const ephemeralRSAKey = cryptico.generateRSAKey(
+        'The Moon is a Harsh Mistress.',
+        1024
+      );
       this.$store.commit('setEphemeralPasswordRSAKey', ephemeralRSAKey);
 
       const url = this.apiEndpoint;
@@ -260,6 +283,10 @@ export default {
         `setConfigSubmission${success ? 'Success' : 'Error'}`,
         msg
       );
+    },
+    decryptPassword() {
+      const DecryptionResult = cryptico.decrypt(this.generatedPassword, this.ephemeralPasswordRSAKey);
+      this.shownPassword = DecryptionResult.plaintext;
     }
   }
 };
