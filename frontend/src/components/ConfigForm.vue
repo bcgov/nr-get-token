@@ -138,18 +138,29 @@
                 <br>A password for the service client created is shown below. Keep this password secure and do not lose it as you will be unable to fetch it again.
               </p>
 
+              <v-checkbox v-model="passwordAgree" label="I agree to password securement text here required ... ..."></v-checkbox>
+
               <v-layout row wrap>
                 <v-flex xs12 sm8>
                   <v-text-field v-model="shownPassword" readonly label="Password"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm4>
-                  <v-btn color="success" @click="decryptPassword()">DECRYPT</v-btn>
+                  <v-btn
+                    color="success"
+                    :disabled="!passwordAgree"
+                    @click="decryptPassword()"
+                  >DECRYPT</v-btn>
                 </v-flex>
               </v-layout>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="info darken-1" flat @click="passwordDialog = false">FINISHED</v-btn>
+              <v-btn
+                color="info darken-1"
+                flat
+                :disabled="!passwordAgree"
+                @click="passwordDialog = false"
+              >FINISHED</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -170,6 +181,7 @@ export default {
       apiEndpoint: ApiRoutes.APPCONFIG,
       confirmationDialog: false,
       passwordDialog: false,
+      passwordAgree: false,
       fieldValidations: FieldValidations,
       appConfig: '',
       appConfigStep: 1,
@@ -209,11 +221,15 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['appConfigAsString', 'generatedPassword', 'ephemeralPasswordRSAKey'])
+    ...mapGetters([
+      'appConfigAsString',
+      'generatedPassword',
+      'ephemeralPasswordRSAKey'
+    ])
   },
   methods: {
     async submitConfig() {
-      window.scrollTo(0,0);
+      window.scrollTo(0, 0);
       this.shownPassword = '••••••••';
       this.$store.commit('clearConfigSubmissionMsgs');
 
@@ -229,11 +245,11 @@ export default {
         return;
       }
 
-      // The passphrase used to repeatably generate this RSA key.
-      const ephemeralRSAKey = cryptico.generateRSAKey(
-        'The Moon is a Harsh Mistress.',
-        1024
-      );
+      const uniqueSeed =
+        Math.random()
+          .toString(36)
+          .substring(2) + new Date().getTime().toString(36);
+      const ephemeralRSAKey = cryptico.generateRSAKey(uniqueSeed, 1024);
       this.$store.commit('setEphemeralPasswordRSAKey', ephemeralRSAKey);
 
       const url = this.apiEndpoint;
@@ -285,7 +301,10 @@ export default {
       );
     },
     decryptPassword() {
-      const DecryptionResult = cryptico.decrypt(this.generatedPassword, this.ephemeralPasswordRSAKey);
+      const DecryptionResult = cryptico.decrypt(
+        this.generatedPassword,
+        this.ephemeralPasswordRSAKey
+      );
       this.shownPassword = DecryptionResult.plaintext;
     }
   }
