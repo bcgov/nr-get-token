@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { ApiService } from '@/common/apiService';
-import { AuthRoutes } from '@/utils/constants';
 
 Vue.use(Vuex);
 
@@ -20,10 +19,14 @@ export default new Vuex.Store({
     healthCheck: null,
     apiCheckResponse: '',
     ephemeralPasswordRSAKey: null,
-    token: localStorage.getItem('jwt') || ''
+    jwtToken: localStorage.getItem('jwt') || '',
+    refreshToken: localStorage.getItem('refresh') || ''
   },
   getters: {
-    isAuthenticated: state => !!state.token,
+    isAuthenticated: state => !!state.jwtToken,
+    jwtToken: state => state.jwtToken,
+    refreshToken: state => state.refreshToken,
+
     configSubmissionSuccess: state => state.configSubmissionSuccess,
     configSubmissionError: state => state.configSubmissionError,
     generatedPassword: state => state.generatedPassword,
@@ -106,14 +109,16 @@ export default new Vuex.Store({
             ],
             effectiveDate: 1506582000000,
             expiryDate: 253402243200000,
-            profileRoles: [{
-              applicationCode: newAppCfg.applicationAcronym,
-              name: `${newAppCfg.applicationAcronym}_ROLE`
-            },
-            {
-              applicationCode: 'CMSG',
-              name: 'SENDER'
-            }]
+            profileRoles: [
+              {
+                applicationCode: newAppCfg.applicationAcronym,
+                name: `${newAppCfg.applicationAcronym}_ROLE`
+              },
+              {
+                applicationCode: 'CMSG',
+                name: 'SENDER'
+              }
+            ]
           }];
 
           newAppCfg.serviceClients[0].authorizations = [{
@@ -163,7 +168,10 @@ export default new Vuex.Store({
       state.ephemeralPasswordRSAKey = ephemeralPasswordRSAKey;
     },
     setJwtToken: (state, jwt) => {
-      state.token = jwt;
+      state.jwtToken = jwt;
+    },
+    setRefreshToken: (state, refresh) => {
+      state.refreshToken = refresh;
     }
   },
   actions: {
@@ -187,22 +195,42 @@ export default new Vuex.Store({
     },
     async getJwtToken(context) {
       try {
-        const response = await fetch(AuthRoutes.TOKEN, {
-          method: 'GET'
-        });
-        const body = await response.json();
+        if (context.getters.isAuthenticated) {
+          const now = Date.now().valueOf() / 1000;
+          const jwtPayload = context.state.jwtToken.split('.')[1];
+          const payload = JSON.parse(window.atob(jwtPayload));
 
-        if (body.jwt) {
-          localStorage.setItem('jwt', body.jwt);
-          context.commit('setJwtToken', body.jwt);
+          if ( payload.exp > now ) {
+            const response = await ApiService.getAuthToken();
+
+            if (response.jwt) {
+              context.commit('setJwtToken', response.jwt);
+              localStorage.setItem('jwtToken', response.jwt);
+            }
+            // TODO: Add refresh token support
+            if (response.refreshToken) {
+              context.commit('setRefreshToken', response.refreshToken);
+              localStorage.setItem('refreshToken', response.refreshToken);
+            }
+          }
+        } else {
+          const response = await ApiService.getAuthToken();
+
+          if (response.jwt) {
+            context.commit('setJwtToken', response.jwt);
+            localStorage.setItem('jwtToken', response.jwt);
+          }
+          // TODO: Add refresh token support
+          if (response.refreshToken) {
+            context.commit('setRefreshToken', response.refreshToken);
+            localStorage.setItem('refreshToken', response.refreshToken);
+          }
         }
-
-        // TODO: Figure out refresh token process
       } catch (e) {
-        localStorage.removeItem('jwt');
-        context.commit('setJwtToken', '');
+        console.log('ERROR, caught error while getting JWT token'); // eslint-disable-line no-console
+        console.log(e); // eslint-disable-line no-console
         throw e;
       }
-    },
+    }
   }
 });
