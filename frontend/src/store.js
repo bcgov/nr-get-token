@@ -18,8 +18,15 @@ export default new Vuex.Store({
     generatedPassword: '',
     healthCheck: null,
     apiCheckResponse: '',
-    ephemeralPasswordRSAKey: null
-  }, getters: {
+    ephemeralPasswordRSAKey: null,
+    jwtToken: localStorage.getItem('jwt') || '',
+    refreshToken: localStorage.getItem('refresh') || ''
+  },
+  getters: {
+    isAuthenticated: state => !!state.jwtToken,
+    jwtToken: state => state.jwtToken,
+    refreshToken: state => state.refreshToken,
+
     configSubmissionSuccess: state => state.configSubmissionSuccess,
     configSubmissionError: state => state.configSubmissionError,
     generatedPassword: state => state.generatedPassword,
@@ -80,45 +87,39 @@ export default new Vuex.Store({
         if (!state.userAppCfg.commonServices || !state.userAppCfg.commonServices.length) {
           newAppCfg.serviceClients[0].authorizations = [];
         } else {
-          newAppCfg.actions = [
-            {
-              name: `${newAppCfg.applicationAcronym}_ACTION`,
-              description: `${newAppCfg.applicationAcronym} action`,
-              privilegedInd: false
-            }
-          ];
-          newAppCfg.roles = [
-            {
-              name: `${newAppCfg.applicationAcronym}_ROLE`,
-              description: `${newAppCfg.applicationAcronym} Role`,
-              actionNames: [
-                `${newAppCfg.applicationAcronym}_ACTION`
-              ]
-            }
-          ];
+          newAppCfg.actions = [{
+            name: `${newAppCfg.applicationAcronym}_ACTION`,
+            description: `${newAppCfg.applicationAcronym} action`,
+            privilegedInd: false
+          }];
+          newAppCfg.roles = [{
+            name: `${newAppCfg.applicationAcronym}_ROLE`,
+            description: `${newAppCfg.applicationAcronym} Role`,
+            actionNames: [
+              `${newAppCfg.applicationAcronym}_ACTION`
+            ]
+          }];
 
-          newAppCfg.profiles = [
-            {
-              name: `${newAppCfg.applicationAcronym}_PROFILE`,
-              description: `Can send an email with the ${newAppCfg.applicationAcronym} app`,
-              secureByOrganization: false,
-              availibleTo: [
-                'SCL'
-              ],
-              effectiveDate: 1506582000000,
-              expiryDate: 253402243200000,
-              profileRoles: [
-                {
-                  applicationCode: newAppCfg.applicationAcronym,
-                  name: `${newAppCfg.applicationAcronym}_ROLE`
-                },
-                {
-                  applicationCode: 'CMSG',
-                  name: 'SENDER'
-                }
-              ]
-            }
-          ];
+          newAppCfg.profiles = [{
+            name: `${newAppCfg.applicationAcronym}_PROFILE`,
+            description: `Can send an email with the ${newAppCfg.applicationAcronym} app`,
+            secureByOrganization: false,
+            availibleTo: [
+              'SCL'
+            ],
+            effectiveDate: 1506582000000,
+            expiryDate: 253402243200000,
+            profileRoles: [
+              {
+                applicationCode: newAppCfg.applicationAcronym,
+                name: `${newAppCfg.applicationAcronym}_ROLE`
+              },
+              {
+                applicationCode: 'CMSG',
+                name: 'SENDER'
+              }
+            ]
+          }];
 
           newAppCfg.serviceClients[0].authorizations = [{
             profileName: `${newAppCfg.applicationAcronym}_PROFILE`,
@@ -139,25 +140,25 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    updateUserAppCfg: function (state, userAppCfg) {
+    updateUserAppCfg: (state, userAppCfg) => {
       Object.assign(state.userAppCfg, userAppCfg);
     },
-    setConfigSubmissionSuccess: function (state, msg) {
+    setConfigSubmissionSuccess: (state, msg) => {
       state.configSubmissionSuccess = msg;
       state.configSubmissionError = '';
     },
-    setConfigSubmissionError: function (state, msg) {
+    setConfigSubmissionError: (state, msg) => {
       state.configSubmissionSuccess = '';
       state.configSubmissionError = msg;
     },
-    clearConfigSubmissionMsgs: function (state) {
+    clearConfigSubmissionMsgs: (state) => {
       state.configSubmissionSuccess = '';
       state.configSubmissionError = '';
     },
-    setHealthCheck: function (state, health) {
+    setHealthCheck: (state, health) => {
       state.healthCheck = health;
     },
-    setApiCheckResponse: function (state, val) {
+    setApiCheckResponse: (state, val) => {
       state.apiCheckResponse = val;
     },
     setGeneratedPassword: function (state, val) {
@@ -165,6 +166,12 @@ export default new Vuex.Store({
     },
     setEphemeralPasswordRSAKey: function (state, ephemeralPasswordRSAKey) {
       state.ephemeralPasswordRSAKey = ephemeralPasswordRSAKey;
+    },
+    setJwtToken: (state, jwt) => {
+      state.jwtToken = jwt;
+    },
+    setRefreshToken: (state, refresh) => {
+      state.refreshToken = refresh;
     }
   },
   actions: {
@@ -173,8 +180,7 @@ export default new Vuex.Store({
       try {
         const response = await ApiService.getHealthCheck();
         context.commit('setHealthCheck', response);
-      }
-      catch (e) {
+      } catch (e) {
         context.commit('setHealthCheck', 'error');
       }
     },
@@ -183,9 +189,47 @@ export default new Vuex.Store({
       try {
         const response = await ApiService.getApiCheck(route);
         context.commit('setApiCheckResponse', response);
-      }
-      catch (e) {
+      } catch (e) {
         context.commit('setApiCheckResponse', e);
+      }
+    },
+    async getJwtToken(context) {
+      try {
+        if (context.getters.isAuthenticated) {
+          const now = Date.now().valueOf() / 1000;
+          const jwtPayload = context.state.jwtToken.split('.')[1];
+          const payload = JSON.parse(window.atob(jwtPayload));
+
+          if ( payload.exp > now ) {
+            const response = await ApiService.getAuthToken();
+
+            if (response.jwt) {
+              context.commit('setJwtToken', response.jwt);
+              localStorage.setItem('jwtToken', response.jwt);
+            }
+            // TODO: Add refresh token support
+            if (response.refreshToken) {
+              context.commit('setRefreshToken', response.refreshToken);
+              localStorage.setItem('refreshToken', response.refreshToken);
+            }
+          }
+        } else {
+          const response = await ApiService.getAuthToken();
+
+          if (response.jwt) {
+            context.commit('setJwtToken', response.jwt);
+            localStorage.setItem('jwtToken', response.jwt);
+          }
+          // TODO: Add refresh token support
+          if (response.refreshToken) {
+            context.commit('setRefreshToken', response.refreshToken);
+            localStorage.setItem('refreshToken', response.refreshToken);
+          }
+        }
+      } catch (e) {
+        console.log('ERROR, caught error while getting JWT token'); // eslint-disable-line no-console
+        console.log(e); // eslint-disable-line no-console
+        throw e;
       }
     }
   }

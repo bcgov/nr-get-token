@@ -3,7 +3,11 @@
     root /var/www/html
 
     # Ensure API calls are reaching the right service
-    redir /getok/api /api
+    # 307 must be passed to preserve the same method and post data call
+    # https://softwareengineering.stackexchange.com/a/99966
+    redir 307 {
+        /getok/api /api
+    }
 
     rewrite /getok {
         r (.*)
@@ -13,7 +17,7 @@
     # Use the following if you are running Caddy locally
     # proxy /api localhost:8080
 
-    # Use the following for non-local deployments
+    # Use the following for production deployments
     proxy /api {$HOST_ROUTE}
 
     log stdout

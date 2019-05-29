@@ -1,5 +1,9 @@
 <template>
-  <v-container>
+  <v-container v-if="!isAuthenticated">
+    <h1>Not Logged In</h1>
+  </v-container>
+
+  <v-container v-else>
     <v-layout wrap>
       <v-flex xs4>
         <v-img :src="require('@/assets/images/tokey.svg')" contain height="180" position="right"></v-img>
@@ -104,11 +108,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import ApiCheck from './ApiCheck';
 import ConfigForm from './ConfigForm';
 import ConfigGeneratedJson from './ConfigGeneratedJson';
-import ApiCheck from './ApiCheck';
 import HealthCheck from './HealthCheck';
-import { mapGetters } from 'vuex';
 
 export default {
   name: 'home',
@@ -123,7 +127,13 @@ export default {
       dialog: false
     };
   },
-  computed: mapGetters(['configSubmissionSuccess', 'configSubmissionError']),
+  computed: {
+    ...mapGetters([
+      'configSubmissionSuccess',
+      'configSubmissionError',
+      'isAuthenticated'
+    ])
+  },
   methods: {
     getHealthCheck() {
       this.$store.dispatch('getHealthCheckStatus');

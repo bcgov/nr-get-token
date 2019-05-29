@@ -14,17 +14,42 @@
       <v-toolbar-title>
         <v-btn class="title hidden-sm-and-down" color="text" flat>{{ appTitle }}</v-btn>
       </v-toolbar-title>
+
+      <v-spacer></v-spacer>
+
+      <div v-if="isAuthenticated">
+        <v-btn flat id="nav-profile" :href="authRoutes.PROFILE">Profle</v-btn>
+        <v-btn flat id="nav-logout" @click="logout" :href="authRoutes.LOGOUT">Logout</v-btn>
+      </div>
+      <v-btn v-else flat id="nav-login" @click="clearStorage" :href="authRoutes.LOGIN">Login</v-btn>
     </v-toolbar>
   </header>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import { AuthRoutes } from '@/utils/constants.js';
+
 export default {
   data() {
     return {
+      authRoutes: AuthRoutes,
       appTitle: process.env.VUE_APP_TITLE
     };
-  }
+  },
+  computed: {
+    ...mapGetters(['isAuthenticated'])
+  },
+  methods: {
+    clearStorage() {
+      localStorage.removeItem('jwtToken');
+      localStorage.removeItem('refreshToken');
+    },
+    logout() {
+      this.clearStorage();
+      window.location.href = AuthRoutes.LOGOUT;
+    }
+  },
 };
 </script>
 

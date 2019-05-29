@@ -150,7 +150,7 @@ pipeline {
         }
       }
       post {
-        cleanup {
+        success {
           echo 'Cleanup Backend BuildConfigs...'
           script {
             openshift.withCluster() {
