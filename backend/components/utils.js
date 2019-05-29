@@ -89,6 +89,7 @@ const utils = {
             privilegedInd: false
           }
         ];
+
         newAppCfg.roles = [
           {
             name: `${newAppCfg.applicationAcronym}_ROLE`,

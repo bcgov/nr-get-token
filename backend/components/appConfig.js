@@ -27,7 +27,7 @@ async function postAppConfig(body) {
         'Content-Type': 'application/json; charset=utf-8'
       }
     });
-    log.verbose(utils.prettyStringify(webAdeResponse.data));
+    log.verbose(arguments.callee.name, utils.prettyStringify(webAdeResponse.data));
 
     const reponse = {
       webAdeResponse: webAdeResponse.data,

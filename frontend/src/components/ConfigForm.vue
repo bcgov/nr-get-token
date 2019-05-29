@@ -132,7 +132,7 @@
             <v-card-title class="headline">Application Configuration Updated</v-card-title>
             <v-card-text>
               <p>
-                You application configuration for
+                Your application configuration for
                 <strong>{{userAppCfg.applicationAcronym}}</strong> has been updated in the WebADE system.
                 <br>
                 <br>A password for the service client created is shown below. Keep this password secure and do not lose it as you will be unable to fetch it again.
@@ -240,7 +240,7 @@ export default {
       ) {
         this.displayMessage(
           false,
-          'Temp: Only the application acronym MSSC is supported for now.'
+          'Temp: Only the application acronyms MSSC and DOMO are supported for now.'
         );
         return;
       }
