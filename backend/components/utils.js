@@ -1,6 +1,7 @@
 const axios = require('axios');
 const log = require('npmlog');
 const cryptico = require('cryptico-js');
+const generator = require('generate-password');
 
 const utils = {
   // Returns the response body of a webade oauth token request
@@ -140,7 +141,10 @@ const utils = {
     return ret;
   },
   generatePassword: (key) => {
-    const pw = 'thisworked';
+    const pw = generator.generate({
+      length: 12,
+      numbers: true
+    });
     const result = {
       password: pw,
       encyptedPassword: cryptico.encrypt(pw, key).cipher
