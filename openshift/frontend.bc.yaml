@@ -76,16 +76,13 @@ objects:
         uri: "${SOURCE_REPO_URL}"
       type: Git
     strategy:
-      sourceStrategy:
+      dockerStrategy:
         env:
         - name: BUILD_LOGLEVEL
           value: '2'
         - name: NPM_CONFIG_LOGLEVEL
           value: notice
-        from:
-          kind: ImageStreamTag
-          name: nodejs-10:latest
-      type: Source
+      type: Docker
 parameters:
 - name: REPO_NAME
   description: Application repository name

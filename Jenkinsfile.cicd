@@ -147,37 +147,37 @@ pipeline {
           }
         }
       }
-      // post {
-      //   cleanup {
-      //     echo 'Cleanup Backend BuildConfigs...'
-      //     script {
-      //       openshift.withCluster() {
-      //         openshift.withProject(TOOLS_PROJECT) {
-      //           if(DEBUG_OUTPUT.equalsIgnoreCase('true')) {
-      //             echo "DEBUG - Using project: ${openshift.project()}"
-      //           } else {
-      //             def bcBackend = openshift.selector('bc', "${REPO_NAME}-backend-${JOB_NAME}")
-      //             def bcFrontend = openshift.selector('bc', "${REPO_NAME}-frontend-${JOB_NAME}")
-      //             def bcFrontendStatic = openshift.selector('bc', "${REPO_NAME}-frontend-static-${JOB_NAME}")
+      post {
+        success {
+          echo 'Cleanup Backend BuildConfigs...'
+          script {
+            openshift.withCluster() {
+              openshift.withProject(TOOLS_PROJECT) {
+                if(DEBUG_OUTPUT.equalsIgnoreCase('true')) {
+                  echo "DEBUG - Using project: ${openshift.project()}"
+                } else {
+                  def bcBackend = openshift.selector('bc', "${REPO_NAME}-backend-${JOB_NAME}")
+                  def bcFrontend = openshift.selector('bc', "${REPO_NAME}-frontend-${JOB_NAME}")
+                  def bcFrontendStatic = openshift.selector('bc', "${REPO_NAME}-frontend-static-${JOB_NAME}")
 
-      //             if(bcBackend.exists()) {
-      //               echo "Removing BuildConfig ${REPO_NAME}-backend-${JOB_NAME}..."
-      //               bcBackend.delete()
-      //             }
-      //             if(bcFrontend.exists()) {
-      //               echo "Removing BuildConfig ${REPO_NAME}-frontend-${JOB_NAME}..."
-      //               bcFrontend.delete()
-      //             }
-      //             if(bcFrontendStatic.exists()) {
-      //               echo "Removing BuildConfig ${REPO_NAME}-frontend-static-${JOB_NAME}..."
-      //               bcFrontendStatic.delete()
-      //             }
-      //           }
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
+                  if(bcBackend.exists()) {
+                    echo "Removing BuildConfig ${REPO_NAME}-backend-${JOB_NAME}..."
+                    bcBackend.delete()
+                  }
+                  if(bcFrontend.exists()) {
+                    echo "Removing BuildConfig ${REPO_NAME}-frontend-${JOB_NAME}..."
+                    bcFrontend.delete()
+                  }
+                  if(bcFrontendStatic.exists()) {
+                    echo "Removing BuildConfig ${REPO_NAME}-frontend-static-${JOB_NAME}..."
+                    bcFrontendStatic.delete()
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
 
     stage('Deploy - Dev') {
