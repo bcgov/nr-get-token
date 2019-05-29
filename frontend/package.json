@@ -20,6 +20,7 @@
   "homepage": "https://github.com/bcgov/nr-get-token",
   "dependencies": {
     "core-js": "^2.6.5",
+    "cryptico-js": "^1.1.0",
     "v-clipboard": "^2.2.2",
     "vue": "^2.6.6",
     "vuetify": "^1.5.11",
@@ -66,7 +67,7 @@
     },
     "parserOptions": {
       "parser": "babel-eslint",
-      "ecmaVersion": 7
+      "ecmaVersion": 8
     },
     "rules": {
       "eol-last": [

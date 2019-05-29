@@ -22,9 +22,11 @@
   "dependencies": {
     "axios": "^0.18.0",
     "config": "^3.0.1",
+    "cryptico-js": "^1.1.0",
     "express": "^4.16.4",
     "express-session": "^1.16.1",
     "express-validator": "^5.3.1",
+    "generate-password": "^1.4.1",
     "morgan": "^1.9.1",
     "npmlog": "^4.1.2",
     "passport": "^0.4.0",
@@ -52,7 +54,7 @@
       "_": false
     },
     "parserOptions": {
-      "ecmaVersion": 8
+      "ecmaVersion": 9
     },
     "rules": {
       "eol-last": [

@@ -13,14 +13,17 @@ export default new Vuex.Store({
       applicationName: '',
       applicationDescription: '',
       commonServices: [],
-      userEnteredPassword: '',
       deploymentMethod: ''
     },
+    generatedPassword: '',
     healthCheck: null,
-    apiCheckResponse: ''
+    apiCheckResponse: '',
+    ephemeralPasswordRSAKey: null
   }, getters: {
     configSubmissionSuccess: state => state.configSubmissionSuccess,
     configSubmissionError: state => state.configSubmissionError,
+    generatedPassword: state => state.generatedPassword,
+    ephemeralPasswordRSAKey: state => state.ephemeralPasswordRSAKey,
     appConfigAsString: state => {
       // these are the hardcoded WebADE cfg values users do not enter
       const defaultAppCfg = {
@@ -46,7 +49,7 @@ export default new Vuex.Store({
         groupAuthorizations: []
       };
 
-      // Set up the conditional JSON structure based on user entry 
+      // Set up the conditional JSON structure based on user entry
       const newAppCfg = {
         applicationAcronym: state.userAppCfg.applicationAcronym,
         applicationName: state.userAppCfg.applicationName,
@@ -70,10 +73,8 @@ export default new Vuex.Store({
 
         if (state.userAppCfg.deploymentMethod === 'deploymentManual') {
           newAppCfg.serviceClients[0].secret = `$\{${newAppCfg.serviceClients[0].accountName}.password}`;
-        } else if (state.userAppCfg.deploymentMethod === 'deploymentDirect') {
-          newAppCfg.serviceClients[0].secret = state.userAppCfg.userEnteredPassword;
         } else {
-          newAppCfg.serviceClients[0].secret = '';
+          newAppCfg.serviceClients[0].secret = '••••••••';
         }
 
         if (!state.userAppCfg.commonServices || !state.userAppCfg.commonServices.length) {
@@ -158,6 +159,12 @@ export default new Vuex.Store({
     },
     setApiCheckResponse: function (state, val) {
       state.apiCheckResponse = val;
+    },
+    setGeneratedPassword: function (state, val) {
+      state.generatedPassword = val;
+    },
+    setEphemeralPasswordRSAKey: function (state, ephemeralPasswordRSAKey) {
+      state.ephemeralPasswordRSAKey = ephemeralPasswordRSAKey;
     }
   },
   actions: {
