@@ -74,7 +74,7 @@ export default new Vuex.Store({
         if (state.userAppCfg.deploymentMethod === 'deploymentManual') {
           newAppCfg.serviceClients[0].secret = `$\{${newAppCfg.serviceClients[0].accountName}.password}`;
         } else {
-          newAppCfg.serviceClients[0].secret = 'XXXXXXXX';
+          newAppCfg.serviceClients[0].secret = '••••••••';
         }
 
         if (!state.userAppCfg.commonServices || !state.userAppCfg.commonServices.length) {
