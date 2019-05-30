@@ -1,10 +1,5 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import { ApiService } from '@/common/apiService';
-
-Vue.use(Vuex);
-
-export default new Vuex.Store({
+export default {
+  namespaced: true,
   state: {
     configSubmissionSuccess: '',
     configSubmissionError: '',
@@ -16,17 +11,9 @@ export default new Vuex.Store({
       deploymentMethod: ''
     },
     generatedPassword: '',
-    healthCheck: null,
-    apiCheckResponse: '',
-    ephemeralPasswordRSAKey: null,
-    jwtToken: localStorage.getItem('jwt') || '',
-    refreshToken: localStorage.getItem('refresh') || ''
+    ephemeralPasswordRSAKey: null
   },
   getters: {
-    isAuthenticated: state => !!state.jwtToken,
-    jwtToken: state => state.jwtToken,
-    refreshToken: state => state.refreshToken,
-
     configSubmissionSuccess: state => state.configSubmissionSuccess,
     configSubmissionError: state => state.configSubmissionError,
     generatedPassword: state => state.generatedPassword,
@@ -155,82 +142,13 @@ export default new Vuex.Store({
       state.configSubmissionSuccess = '';
       state.configSubmissionError = '';
     },
-    setHealthCheck: (state, health) => {
-      state.healthCheck = health;
-    },
-    setApiCheckResponse: (state, val) => {
-      state.apiCheckResponse = val;
-    },
     setGeneratedPassword: function (state, val) {
       state.generatedPassword = val;
     },
     setEphemeralPasswordRSAKey: function (state, ephemeralPasswordRSAKey) {
       state.ephemeralPasswordRSAKey = ephemeralPasswordRSAKey;
-    },
-    setJwtToken: (state, jwt) => {
-      state.jwtToken = jwt;
-    },
-    setRefreshToken: (state, refresh) => {
-      state.refreshToken = refresh;
     }
   },
   actions: {
-    async getHealthCheckStatus(context) {
-      context.commit('setHealthCheck', null);
-      try {
-        const response = await ApiService.getHealthCheck();
-        context.commit('setHealthCheck', response);
-      } catch (e) {
-        context.commit('setHealthCheck', 'error');
-      }
-    },
-    async getApiCheck(context, route) {
-      context.commit('setApiCheckResponse', '');
-      try {
-        const response = await ApiService.getApiCheck(route);
-        context.commit('setApiCheckResponse', response);
-      } catch (e) {
-        context.commit('setApiCheckResponse', e);
-      }
-    },
-    async getJwtToken(context) {
-      try {
-        if (context.getters.isAuthenticated) {
-          const now = Date.now().valueOf() / 1000;
-          const jwtPayload = context.state.jwtToken.split('.')[1];
-          const payload = JSON.parse(window.atob(jwtPayload));
-
-          if ( payload.exp > now ) {
-            const response = await ApiService.getAuthToken();
-
-            if (response.jwt) {
-              context.commit('setJwtToken', response.jwt);
-              localStorage.setItem('jwtToken', response.jwt);
-            }
-            // TODO: Add refresh token support
-            if (response.refreshToken) {
-              context.commit('setRefreshToken', response.refreshToken);
-              localStorage.setItem('refreshToken', response.refreshToken);
-            }
-          }
-        } else {
-          const response = await ApiService.getAuthToken();
-
-          if (response.jwt) {
-            context.commit('setJwtToken', response.jwt);
-            localStorage.setItem('jwtToken', response.jwt);
-          }
-          // TODO: Add refresh token support
-          if (response.refreshToken) {
-            context.commit('setRefreshToken', response.refreshToken);
-            localStorage.setItem('refreshToken', response.refreshToken);
-          }
-        }
-      } catch (e) {
-        console.log('ERROR, caught error while getting JWT token'); // eslint-disable-line no-console
-        console.log(e); // eslint-disable-line no-console
-        throw e;
-      }
-    }
   }
-});
+};
