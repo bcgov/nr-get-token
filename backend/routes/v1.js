@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const path = require('path');
+const passport = require('passport');
 
 // const auth = require('./auth/auth');
 const appConfigFormRouter = require('./v1/appConfigForm');
@@ -28,9 +29,13 @@ router.get('/api-spec.yaml', (_req, res) => {
 });
 
 // Application Configuration Form
-router.use('/appConfigForm', appConfigFormRouter);
+router.use('/appConfigForm', passport.authenticate('jwt', {
+  session: false
+}), appConfigFormRouter);
 
 // Checks
-router.use('/checks', checksRouter);
+router.use('/checks', passport.authenticate('jwt', {
+  session: false
+}), checksRouter);
 
 module.exports = router;

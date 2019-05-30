@@ -1,10 +1,13 @@
 const axios = require('axios');
 const config = require('config');
 const express = require('express');
+const session = require('express-session');
 const log = require('npmlog');
 const morgan = require('morgan');
 const passport = require('passport');
-const session = require('express-session');
+
+const JWTStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
 const OidcStrategy = require('passport-openidconnect').Strategy;
 
 const utils = require('./components/utils');
@@ -61,6 +64,7 @@ async function getOidcDiscovery() {
 }
 
 getOidcDiscovery().then(oidcConfig => {
+  // Add Passport OIDC Strategy
   passport.use('oidc', new OidcStrategy(oidcConfig, (_issuer, _sub, profile, accessToken, refreshToken, done) => {
     if ((typeof (accessToken) === 'undefined') || (accessToken === null) ||
       (typeof (refreshToken) === 'undefined') || (refreshToken === null)) {
@@ -70,6 +74,27 @@ getOidcDiscovery().then(oidcConfig => {
     profile.jwt = accessToken;
     profile.refreshToken = refreshToken;
     return done(null, profile);
+  }));
+
+  // Add Passport JWT Strategy
+  passport.use('jwt', new JWTStrategy({
+    audience: config.get('oidc.clientID'),
+    issuer: oidcConfig.issuer,
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: config.get('oidc.clientSecret')
+  }, (jwtPayload, done) => {
+    if ((typeof (jwtPayload) === 'undefined') || (jwtPayload === null)) {
+      return done('No JWT token', null);
+    }
+
+    done(null, {
+      email: jwtPayload.email,
+      familyName: jwtPayload.familyName,
+      givenName: jwtPayload.givenName,
+      jwt: jwtPayload,
+      name: jwtPayload.name,
+      preferredUsername: jwtPayload.preferredUsername,
+    });
   }));
 });
 
