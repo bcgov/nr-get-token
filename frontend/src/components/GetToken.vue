@@ -55,7 +55,7 @@ export default {
     async handleSubmit() {
       const fetchedToken = await this.fetchToken();
       this.tokenResponse = JSON.stringify(fetchedToken, null, 2);
-      this.$store.commit('setToken', fetchedToken.access_token);
+      this.$store.commit('auth/setToken', fetchedToken.access_token);
       this.jsonTextClass = 'jsonText';
     },
     async fetchToken() {

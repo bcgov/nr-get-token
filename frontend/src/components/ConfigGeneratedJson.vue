@@ -64,7 +64,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['appConfigAsString'])
+    ...mapGetters('configForm', ['appConfigAsString'])
   },
   methods: {
     clipboardSuccessHandler() {

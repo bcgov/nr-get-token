@@ -128,15 +128,15 @@ export default {
     };
   },
   computed: {
-    ...mapGetters([
+    ...mapGetters('configForm', [
       'configSubmissionSuccess',
-      'configSubmissionError',
-      'isAuthenticated'
-    ])
+      'configSubmissionError'
+    ]),
+    ...mapGetters('auth', ['isAuthenticated'])
   },
   methods: {
     getHealthCheck() {
-      this.$store.dispatch('getHealthCheckStatus');
+      this.$store.dispatch('checks/getHealthCheckStatus');
     }
   }
 };

@@ -138,7 +138,10 @@
                 <br>A password for the service client created is shown below. Keep this password secure and do not lose it as you will be unable to fetch it again.
               </p>
 
-              <v-checkbox v-model="passwordAgree" label="I agree to password securement text here required ... ..."></v-checkbox>
+              <v-checkbox
+                v-model="passwordAgree"
+                label="I agree to password securement text here required ... ..."
+              ></v-checkbox>
 
               <v-layout row wrap>
                 <v-flex xs12 sm8>
@@ -192,7 +195,7 @@ export default {
         { text: 'Document Management Service', value: 'dms' },
         { text: 'Document Generation Service', value: 'dgen', disabled: true }
       ],
-      userAppCfg: this.$store.state.userAppCfg,
+      userAppCfg: this.$store.state.configForm.userAppCfg,
       applicationAcronymRules: [
         v => !!v || 'Acroynm is required',
         v =>
@@ -221,7 +224,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters([
+    ...mapGetters('configForm', [
       'appConfigAsString',
       'generatedPassword',
       'ephemeralPasswordRSAKey'
@@ -231,7 +234,7 @@ export default {
     async submitConfig() {
       window.scrollTo(0, 0);
       this.shownPassword = '••••••••';
-      this.$store.commit('clearConfigSubmissionMsgs');
+      this.$store.commit('configForm/clearConfigSubmissionMsgs');
 
       // this is temporary, only allow MSSC to be used at the moment
       if (
@@ -250,7 +253,10 @@ export default {
           .toString(36)
           .substring(2) + new Date().getTime().toString(36);
       const ephemeralRSAKey = cryptico.generateRSAKey(uniqueSeed, 1024);
-      this.$store.commit('setEphemeralPasswordRSAKey', ephemeralRSAKey);
+      this.$store.commit(
+        'configForm/setEphemeralPasswordRSAKey',
+        ephemeralRSAKey
+      );
 
       const url = this.apiEndpoint;
       const headers = new Headers();
@@ -274,7 +280,10 @@ export default {
               this.userAppCfg.applicationAcronym
             } updated in Integration.`
           );
-          this.$store.commit('setGeneratedPassword', resBody.generatedPassword);
+          this.$store.commit(
+            'configForm/setGeneratedPassword',
+            resBody.generatedPassword
+          );
           this.passwordDialog = true;
         } else {
           this.displayMessage(
@@ -290,13 +299,13 @@ export default {
       }
     },
     updateAppCfgField(field, value) {
-      this.$store.commit('updateUserAppCfg', {
+      this.$store.commit('configForm/updateUserAppCfg', {
         [field]: value
       });
     },
     displayMessage(success, msg) {
       this.$store.commit(
-        `setConfigSubmission${success ? 'Success' : 'Error'}`,
+        `configForm/setConfigSubmission${success ? 'Success' : 'Error'}`,
         msg
       );
     },
