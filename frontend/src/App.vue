@@ -18,10 +18,10 @@ export default {
     Footer
   },
   computed: {
-    ...mapGetters('authModule', ['getJwtToken'])
+    ...mapGetters('auth', ['getJwtToken'])
   },
   created() {
-    this.$store.dispatch('authModule/getJwtToken');
+    this.$store.dispatch('auth/getJwtToken');
   }
 };
 </script>

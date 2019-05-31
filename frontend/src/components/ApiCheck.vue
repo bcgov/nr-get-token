@@ -32,7 +32,7 @@ export default {
       apiResponse: ''
     };
   },
-  computed: mapState(['apiCheckResponse']),
+  computed: mapState('checks', ['apiCheckResponse']),
   methods: {
     testApi() {
       this.$store.dispatch('getApiCheck', this.testRoute);
