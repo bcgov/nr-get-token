@@ -81,7 +81,7 @@ getOidcDiscovery().then(oidcConfig => {
     audience: config.get('oidc.clientID'),
     issuer: oidcConfig.issuer,
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: config.get('oidc.clientSecret')
+    secretOrKey: config.get('oidc.publicKey')
   }, (jwtPayload, done) => {
     if ((typeof (jwtPayload) === 'undefined') || (jwtPayload === null)) {
       return done('No JWT token', null);
@@ -89,11 +89,11 @@ getOidcDiscovery().then(oidcConfig => {
 
     done(null, {
       email: jwtPayload.email,
-      familyName: jwtPayload.familyName,
-      givenName: jwtPayload.givenName,
+      familyName: jwtPayload.family_name,
+      givenName: jwtPayload.given_name,
       jwt: jwtPayload,
       name: jwtPayload.name,
-      preferredUsername: jwtPayload.preferredUsername,
+      preferredUsername: jwtPayload.preferred_username,
     });
   }));
 });

@@ -20,7 +20,7 @@ export default {
     async getHealthCheckStatus(context) {
       context.commit('setHealthCheck', null);
       try {
-        const response = await ApiService.getHealthCheck();
+        const response = await ApiService.getHealthCheck(context.state.jwtToken);
         context.commit('setHealthCheck', response);
       } catch (e) {
         context.commit('setHealthCheck', 'error');
@@ -29,7 +29,7 @@ export default {
     async getApiCheck(context, route) {
       context.commit('setApiCheckResponse', '');
       try {
-        const response = await ApiService.getApiCheck(route);
+        const response = await ApiService.getApiCheck(context.state.jwtToken, route);
         context.commit('setApiCheckResponse', response);
       } catch (e) {
         context.commit('setApiCheckResponse', e);

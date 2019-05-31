@@ -1,10 +1,13 @@
 import { ApiRoutes, AuthRoutes } from '@/utils/constants.js';
 
 export const ApiService = {
-  async getHealthCheck() {
+  async getHealthCheck(jwtToken) {
     try {
       const response = await fetch(ApiRoutes.HEALTH, {
-        method: 'GET'
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${jwtToken}`
+        }
       });
       const body = await response.json();
 
@@ -13,10 +16,13 @@ export const ApiService = {
       throw e;
     }
   },
-  async getApiCheck(route) {
+  async getApiCheck(jwtToken, route) {
     try {
       const response = await fetch(route, {
-        method: 'GET'
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${jwtToken}`
+        }
       });
       const body = await response.text();
       return `URL: ${response.url}
