@@ -1,4 +1,3 @@
-const axios = require('axios');
 const config = require('config');
 const express = require('express');
 const session = require('express-session');
@@ -22,6 +21,7 @@ app.use(express.urlencoded({
   extended: false
 }));
 
+// Add Morgan endpoint logging
 app.use(morgan(config.get('server.morganFormat')));
 
 app.use(session({
@@ -41,31 +41,19 @@ log.addLevel('debug', 1500, {
 // Print out configuration settings in verbose startup
 log.verbose('Config', utils.prettyStringify(config));
 
-// Resolves OIDC Discovery values and returns an OIDC Strategy Config
-async function getOidcDiscovery() {
-  try {
-    const response = await axios.get(config.get('oidc.discovery'));
-
-    log.verbose(arguments.callee.name, utils.prettyStringify(response.data));
-    return {
-      issuer: response.data.issuer,
-      authorizationURL: response.data.authorization_endpoint,
-      tokenURL: response.data.token_endpoint,
-      userInfoURL: response.data.userinfo_endpoint,
-      clientID: config.get('oidc.clientID'),
-      clientSecret: config.get('oidc.clientSecret'),
-      callbackURL: '/getok/api/auth/callback',
-      scope: response.data.scopes_supported
-    };
-  } catch (error) {
-    log.error(arguments.callee.name, `OIDC Discovery failed - ${error.message}`);
-    process.exit(1);
-  }
-}
-
-getOidcDiscovery().then(oidcConfig => {
+// Resolves OIDC Discovery values and sets up passport strategies
+utils.getOidcDiscovery().then(discovery => {
   // Add Passport OIDC Strategy
-  passport.use('oidc', new OidcStrategy(oidcConfig, (_issuer, _sub, profile, accessToken, refreshToken, done) => {
+  passport.use('oidc', new OidcStrategy({
+    issuer: discovery.issuer,
+    authorizationURL: discovery.authorization_endpoint,
+    tokenURL: discovery.token_endpoint,
+    userInfoURL: discovery.userinfo_endpoint,
+    clientID: config.get('oidc.clientID'),
+    clientSecret: config.get('oidc.clientSecret'),
+    callbackURL: '/getok/api/auth/callback',
+    scope: discovery.scopes_supported
+  }, (_issuer, _sub, profile, accessToken, refreshToken, done) => {
     if ((typeof (accessToken) === 'undefined') || (accessToken === null) ||
       (typeof (refreshToken) === 'undefined') || (refreshToken === null)) {
       return done('No access token', null);
@@ -78,8 +66,9 @@ getOidcDiscovery().then(oidcConfig => {
 
   // Add Passport JWT Strategy
   passport.use('jwt', new JWTStrategy({
+    algorithms: discovery.token_endpoint_auth_signing_alg_values_supported,
     audience: config.get('oidc.clientID'),
-    issuer: oidcConfig.issuer,
+    issuer: discovery.issuer,
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: config.get('oidc.publicKey')
   }, (jwtPayload, done) => {
