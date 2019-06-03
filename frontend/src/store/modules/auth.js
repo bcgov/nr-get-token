@@ -3,20 +3,29 @@ import { ApiService } from '@/common/apiService';
 export default {
   namespaced: true,
   state: {
-    jwtToken: localStorage.getItem('jwt') || '',
-    refreshToken: localStorage.getItem('refresh') || ''
+    isAuthenticated: !!localStorage.getItem('jwtToken')
   },
   getters: {
-    isAuthenticated: state => !!state.jwtToken,
-    jwtToken: state => state.jwtToken,
-    refreshToken: state => state.refreshToken,
+    isAuthenticated: state => state.isAuthenticated,
+    jwtToken: () => localStorage.getItem('jwtToken'),
+    refreshToken: () => localStorage.getItem('refreshToken'),
   },
   mutations: {
-    setJwtToken: (state, jwt) => {
-      state.jwtToken = jwt;
+    setJwtToken: (state, token) => {
+      if (token) {
+        state.isAuthenticated = true;
+        localStorage.setItem('jwtToken', token);
+      } else {
+        state.isAuthenticated = false;
+        localStorage.removeItem('jwtToken');
+      }
     },
-    setRefreshToken: (state, refresh) => {
-      state.refreshToken = refresh;
+    setRefreshToken: (_state, token) => {
+      if (token) {
+        localStorage.setItem('refreshToken', token);
+      } else {
+        localStorage.removeItem('refreshToken');
+      }
     }
   },
   actions: {
@@ -24,7 +33,7 @@ export default {
       try {
         if (context.getters.isAuthenticated) {
           const now = Date.now().valueOf() / 1000;
-          const jwtPayload = context.state.jwtToken.split('.')[1];
+          const jwtPayload = localStorage.getItem('jwtToken').split('.')[1];
           const payload = JSON.parse(window.atob(jwtPayload));
 
           if (payload.exp > now) {
@@ -32,7 +41,6 @@ export default {
 
             if (response.jwt) {
               context.commit('setJwtToken', response.jwt);
-              localStorage.setItem('jwtToken', response.jwt);
             }
             // TODO: Add refresh token support
             if (response.refreshToken) {

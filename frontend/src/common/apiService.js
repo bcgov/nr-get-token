@@ -1,25 +1,30 @@
+import axios from 'axios';
 import { ApiRoutes, AuthRoutes } from '@/utils/constants.js';
+
+// Create new non-global axios instance
+const apiAxios = axios.create();
+
+apiAxios.interceptors.response.use(response => response, error => {
+  console.log(error); // eslint-disable-line no-console
+});
 
 export const ApiService = {
   async getHealthCheck(jwtToken) {
     try {
-      const response = await fetch(ApiRoutes.HEALTH, {
-        method: 'GET',
+      const response = await axios.get(ApiRoutes.HEALTH, {
         headers: {
           'Authorization': `Bearer ${jwtToken}`
         }
       });
-      const body = await response.json();
-
-      return body;
+      return response.data;
     } catch (e) {
       throw e;
     }
   },
+
   async getApiCheck(jwtToken, route) {
     try {
-      const response = await fetch(route, {
-        method: 'GET',
+      const response = await axios.get(route, {
         headers: {
           'Authorization': `Bearer ${jwtToken}`
         }
@@ -34,15 +39,16 @@ Body: ${body}`;
       throw e;
     }
   },
+
   async getAuthToken() {
     try {
-      const response = await fetch(AuthRoutes.TOKEN, {
-        method: 'GET'
-      });
-      const body = await response.json();
-      return body;
+      const response = await axios.get(AuthRoutes.TOKEN);
+      return response.data;
     } catch (e) {
-      throw e;
+      // eslint-disable-next-line no-console
+      console.log(`Failed to get JWT: ${e.response.data.message}`);
+      // throw e;
+      return {};
     }
   }
 };
