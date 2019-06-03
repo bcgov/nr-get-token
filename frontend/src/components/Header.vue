@@ -18,7 +18,7 @@
       <v-spacer></v-spacer>
 
       <div v-if="isAuthenticated">
-        <v-btn flat id="nav-profile" :href="authRoutes.PROFILE">Profle</v-btn>
+        <v-btn flat id="nav-profile" :href="authRoutes.TOKEN">Token</v-btn>
         <v-btn flat id="nav-logout" @click="logout" :href="authRoutes.LOGOUT">Logout</v-btn>
       </div>
       <v-btn v-else flat id="nav-login" @click="clearStorage" :href="authRoutes.LOGIN">Login</v-btn>

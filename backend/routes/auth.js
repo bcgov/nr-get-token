@@ -40,13 +40,6 @@ router.get('/logout', (req, res) => {
   res.redirect(config.get('server.frontend'));
 });
 
-// TODO: Remove this debug endpoint
-router.use('/profile', (req, res) => {
-  res.status(200).json({
-    user: req.session
-  });
-});
-
 router.use('/token', auth.removeExpired, (req, res) => {
   if (req.user && req.user.jwt && req.user.refreshToken) {
     res.status(200).json(req.user);

@@ -63,6 +63,7 @@ const auth = {
     return result;
   },
 
+  // Update or remove token based on JWT and user state
   async removeExpired(req, _res, next) {
     try {
       if (!!req.user && !!req.user.jwt) {
