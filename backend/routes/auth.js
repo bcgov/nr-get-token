@@ -2,6 +2,8 @@ const config = require('config');
 const passport = require('passport');
 const router = require('express').Router();
 
+const auth = require('../components/auth');
+
 router.get('/', (_req, res) => {
   res.status(200).json({
     endpoints: [
@@ -38,13 +40,14 @@ router.get('/logout', (req, res) => {
   res.redirect(config.get('server.frontend'));
 });
 
+// TODO: Remove this debug endpoint
 router.use('/profile', (req, res) => {
   res.status(200).json({
     user: req.session
   });
 });
 
-router.use('/token', (req, res) => {
+router.use('/token', auth.removeExpired, (req, res) => {
   if (req.user && req.user.jwt && req.user.refreshToken) {
     res.status(200).json(req.user);
   } else {

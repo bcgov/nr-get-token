@@ -35,11 +35,11 @@ app.use(passport.session());
 // Logging Setup
 log.level = config.get('server.logLevel');
 log.addLevel('debug', 1500, {
-  fg: 'green'
+  fg: 'cyan'
 });
 
 // Print out configuration settings in verbose startup
-log.verbose('Config', utils.prettyStringify(config));
+log.debug('Config', utils.prettyStringify(config));
 
 // Resolves OIDC Discovery values and sets up passport strategies
 utils.getOidcDiscovery().then(discovery => {
