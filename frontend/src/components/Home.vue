@@ -128,11 +128,11 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('auth', ['isAuthenticated']),
     ...mapGetters('configForm', [
       'configSubmissionSuccess',
       'configSubmissionError'
     ]),
-    ...mapGetters('auth', ['isAuthenticated'])
   },
   methods: {
     getHealthCheck() {

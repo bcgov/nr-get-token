@@ -45,7 +45,6 @@ export default {
             // TODO: Add refresh token support
             if (response.refreshToken) {
               context.commit('setRefreshToken', response.refreshToken);
-              localStorage.setItem('refreshToken', response.refreshToken);
             }
           }
         } else {
@@ -53,12 +52,10 @@ export default {
 
           if (response.jwt) {
             context.commit('setJwtToken', response.jwt);
-            localStorage.setItem('jwtToken', response.jwt);
           }
           // TODO: Add refresh token support
           if (response.refreshToken) {
             context.commit('setRefreshToken', response.refreshToken);
-            localStorage.setItem('refreshToken', response.refreshToken);
           }
         }
       } catch (e) {
