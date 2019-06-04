@@ -105,6 +105,7 @@
     "not ie <= 8"
   ],
   "jest": {
+    "clearMocks": true,
     "setupFiles": [
       "<rootDir>/tests/unit/globalSetup.js"
     ],

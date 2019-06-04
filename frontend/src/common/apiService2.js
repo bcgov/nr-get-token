@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ApiRoutes } from '@/utils/constants.js';
 
-export const ApiService2 = {
+export const apiService2 = {
   async getHealthCheck() {
     try {
       const response = await axios.get(ApiRoutes.HEALTH);
@@ -14,6 +14,8 @@ export const ApiService2 = {
   async getApiCheck(route) {
     try {
       const response = await axios.get(route);
+
+      console.log(response); // eslint-disable-line no-console
       return `URL: ${response.request.url}
 Status: ${response.status} - ${response.statusText}
 Body: ${JSON.stringify(response.data, null, 2)}`;
