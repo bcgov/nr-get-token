@@ -11,7 +11,7 @@ export default {
     refreshToken: () => localStorage.getItem('refreshToken'),
   },
   mutations: {
-    setJwtToken: (state, token) => {
+    setJwtToken: (state, token = null) => {
       if (token) {
         state.isAuthenticated = true;
         localStorage.setItem('jwtToken', token);
@@ -20,7 +20,7 @@ export default {
         localStorage.removeItem('jwtToken');
       }
     },
-    setRefreshToken: (_state, token) => {
+    setRefreshToken: (_state, token = null) => {
       if (token) {
         localStorage.setItem('refreshToken', token);
       } else {
@@ -42,7 +42,6 @@ export default {
             if (response.jwt) {
               context.commit('setJwtToken', response.jwt);
             }
-            // TODO: Add refresh token support
             if (response.refreshToken) {
               context.commit('setRefreshToken', response.refreshToken);
             }
@@ -53,14 +52,12 @@ export default {
           if (response.jwt) {
             context.commit('setJwtToken', response.jwt);
           }
-          // TODO: Add refresh token support
           if (response.refreshToken) {
             context.commit('setRefreshToken', response.refreshToken);
           }
         }
       } catch (e) {
-        console.log('ERROR, caught error while getting JWT token'); // eslint-disable-line no-console
-        console.log(e); // eslint-disable-line no-console
+        console.log(`Errored while getting JWT token ${e}`); // eslint-disable-line no-console
         throw e;
       }
     }

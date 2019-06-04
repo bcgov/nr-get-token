@@ -38,14 +38,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('auth',['isAuthenticated'])
+    ...mapGetters('auth', ['isAuthenticated'])
   },
   methods: {
     clearStorage() {
       localStorage.removeItem('jwtToken');
       localStorage.removeItem('refreshToken');
     }
-  },
+  }
 };
 </script>
 

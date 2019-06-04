@@ -20,16 +20,17 @@ export default {
     async getHealthCheckStatus(context) {
       context.commit('setHealthCheck', null);
       try {
-        const response = await ApiService.getHealthCheck(context.rootGetters['auth/jwtToken']);
+        const response = await ApiService.getHealthCheck();
         context.commit('setHealthCheck', response);
       } catch (e) {
         context.commit('setHealthCheck', 'error');
       }
     },
+
     async getApiCheck(context, route) {
       context.commit('setApiCheckResponse', '');
       try {
-        const response = await ApiService.getApiCheck(context.rootGetters['auth/jwtToken'], route);
+        const response = await ApiService.getApiCheck(route);
         context.commit('setApiCheckResponse', response);
       } catch (e) {
         context.commit('setApiCheckResponse', e);

@@ -28,13 +28,22 @@ router.get('/api-spec.yaml', (_req, res) => {
   res.sendFile(path.join(__dirname, '../docs/v1.api-spec.yaml'));
 });
 
+router.use('/error', (_req, res) => {
+  res.status(401).json({
+    status: 401,
+    message: 'Unauthorized'
+  });
+});
+
 // Application Configuration Form
 router.use('/appConfigForm', passport.authenticate('jwt', {
+  failureRedirect: '../error',
   session: false
 }), appConfigFormRouter);
 
 // Checks
 router.use('/checks', passport.authenticate('jwt', {
+  failureRedirect: '../error',
   session: false
 }), checksRouter);
 
