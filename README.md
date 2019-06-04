@@ -3,7 +3,7 @@
 Natural Resources Get Token (GETOK) will automate the process for Development teams to get setup to use the common services published on [https://apistore.nrs.gov.bc.ca/store/](https://apistore.nrs.gov.bc.ca/store/).   
 
 GETOK has a service client GETOK_SERVICE which is granted the WEBADE-REST "profileRole" of APPLICATION_ADMINISTRATOR. This allows the GETOK_SERVICE to create new WebADE service Clients.   
-> The first deployment of this webade-cfg information had to be done manually using the process we are replacing. see [Bitbucket GETOK Repo](https://apps.nrs.gov.bc.ca/int/stash/projects/GETOK/repos/getok-webade-cfg/browse) for the package that was used for the first deployment. Subsequent deployment to modify this can be done through the WEBADE-REST-API endpoints.
+> The first deployment of this webade-cfg information had to be done manually using the process we are replacing. See [Bitbucket GETOK Repo](https://apps.nrs.gov.bc.ca/int/stash/projects/GETOK/repos/getok-webade-cfg/browse) for the package that was used for the first deployment. Subsequent deployment to modify this can be done through the WEBADE-REST-API endpoints.
 
 GETOK will be a front end access point for authorized IDIR users to request the ability to create and update their application's WebADE service Client. GETOK will allow authorized IDIR users to grant Developers that ability for their app and for a common service. Once approved a developer will be able to create and deploy WebADE service client application configuration instantly to gain access to common service APIs like email notifications, document management, or document generation.  
 
