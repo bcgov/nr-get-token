@@ -9,12 +9,9 @@ jest.mock('axios');
 describe('getAPICheck()', () => {
   it('calls `getAPICheck() endpoint with a route', async () => {
     axios.get.mockResolvedValueOnce(apiCheckFixture.response);
-    //const check = await apiService2.getHealthCheck(apiCheckFixture.request);
-    console.log(apiCheckFixture.route); // eslint-disable-line no-console
-
     const res = await apiService2.getApiCheck(apiCheckFixture.route);
 
-    expect(res).toEqual(apiCheckFixture.formattedResult);
+    expect(res).toContain(`URL: ${apiCheckFixture.route}`);
     expect(axios.get).toHaveBeenCalledWith(apiCheckFixture.route);
     expect(axios.get).toHaveBeenCalledTimes(1);
   });
