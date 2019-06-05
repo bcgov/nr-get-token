@@ -1,5 +1,4 @@
 import cryptico from 'cryptico-js';
-import { ApiRoutes } from '@/utils/constants.js';
 import { ApiService } from '@/common/apiService';
 
 export default {
