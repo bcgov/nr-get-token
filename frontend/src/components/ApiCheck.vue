@@ -35,7 +35,7 @@ export default {
   computed: mapState('checks', ['apiCheckResponse']),
   methods: {
     testApi() {
-      this.$store.dispatch('getApiCheck', this.testRoute);
+      this.$store.dispatch('checks/getApiCheck', this.testRoute);
     }
   }
 };

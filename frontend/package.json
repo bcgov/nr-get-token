@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/bcgov/nr-get-token",
   "dependencies": {
+    "axios": "^0.19.0",
     "core-js": "^2.6.5",
     "cryptico-js": "^1.1.0",
     "v-clipboard": "^2.2.2",
@@ -104,6 +105,7 @@
     "not ie <= 8"
   ],
   "jest": {
+    "clearMocks": true,
     "setupFiles": [
       "<rootDir>/tests/unit/globalSetup.js"
     ],
