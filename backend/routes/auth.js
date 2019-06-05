@@ -35,7 +35,7 @@ router.use('/error', (_req, res) => {
 });
 
 router.get('/login', passport.authenticate('oidc', {
-  failureRedirect: 'error'
+  failureRedirect: '../error'
 }));
 
 

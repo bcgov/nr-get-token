@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { ApiRoutes, AuthRoutes } from '@/utils/constants.js';
+import AuthService from '@/common/authService';
+import { ApiRoutes } from '@/utils/constants';
 
 // Buffer concurrent requests while refresh token is being acquired
 let isRefreshing = false;
@@ -17,9 +18,9 @@ function processQueue(error, token = null) {
   failedQueue = [];
 }
 
-// Create new non-global axios instance
+// Create new non-global axios instance and intercept strategy
 const apiAxios = axios.create();
-apiAxios.interceptors.response.use(response => response, error => {
+apiAxios.interceptors.response.use(config => config, error => {
   const originalRequest = error.config;
   if (error.response.status === 401 && !originalRequest._retry) {
     if (isRefreshing) {
@@ -39,7 +40,7 @@ apiAxios.interceptors.response.use(response => response, error => {
 
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await ApiService.refreshAuthToken(localStorage.getItem('refreshToken'));
+        const response = await AuthService.refreshAuthToken(localStorage.getItem('refreshToken'));
 
         if (response.jwt) {
           localStorage.setItem('jwtToken', response.jwt);
@@ -66,26 +67,12 @@ apiAxios.interceptors.response.use(response => response, error => {
   return Promise.reject(error);
 });
 
-export const ApiService = {
-  async getAuthToken() {
-    try {
-      const response = await axios.get(AuthRoutes.TOKEN);
-      return response.data;
-    } catch (e) {
-      console.log(`Failed to acquire JWT token - ${e}`); // eslint-disable-line no-console
-      throw e;
-    }
-  },
-
-  async refreshAuthToken(token) {
-    try {
-      const response = await axios.post(AuthRoutes.REFRESH, {
-        refreshToken: token
-      });
-      return response.data;
-    } catch (e) {
-      console.log(`Failed to refresh JWT token - ${e}`); // eslint-disable-line no-console
-      throw e;
+export default {
+  setAuthHeader(token) {
+    if (token) {
+      apiAxios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    } else {
+      delete apiAxios.defaults.headers.common['Authorization'];
     }
   },
 

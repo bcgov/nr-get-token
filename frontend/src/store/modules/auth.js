@@ -1,4 +1,5 @@
-import { ApiService } from '@/common/apiService';
+import ApiService from '@/common/apiService';
+import AuthService from '@/common/authService';
 
 export default {
   namespaced: true,
@@ -37,7 +38,7 @@ export default {
           const payload = JSON.parse(window.atob(jwtPayload));
 
           if (payload.exp > now) {
-            const response = await ApiService.refreshAuthToken(context.getters.refreshToken);
+            const response = await AuthService.refreshAuthToken(context.getters.refreshToken);
 
             if (response.jwt) {
               context.commit('setJwtToken', response.jwt);
@@ -45,9 +46,10 @@ export default {
             if (response.refreshToken) {
               context.commit('setRefreshToken', response.refreshToken);
             }
+            ApiService.setAuthHeader(response.jwt);
           }
         } else {
-          const response = await ApiService.getAuthToken();
+          const response = await AuthService.getAuthToken();
 
           if (response.jwt) {
             context.commit('setJwtToken', response.jwt);
@@ -55,6 +57,7 @@ export default {
           if (response.refreshToken) {
             context.commit('setRefreshToken', response.refreshToken);
           }
+          ApiService.setAuthHeader(response.jwt);
         }
       } catch (e) {
         // Remove tokens from localStorage and update state
