@@ -1,6 +1,30 @@
-import { AuthRoutes } from '@/utils/constants.js';
+import { ApiRoutes, AuthRoutes } from '@/utils/constants.js';
+import axios from 'axios';
 
 export const ApiService = {
+  async getHealthCheck() {
+    try {
+      const response = await axios.get(ApiRoutes.HEALTH);
+
+      return response.data;
+    } catch (e) {
+      throw e;
+    }
+  },
+  async getApiCheck(route) {
+    try {
+      const response = await axios.get(route);
+
+      console.log(response); // eslint-disable-line no-console
+      return `URL: ${response.request.url}
+Status: ${response.status} - ${response.statusText}
+Body: ${JSON.stringify(response.data, null, 2)}`;
+    } catch (e) {
+      console.log('ERROR, caught error fetching from API endpoint'); // eslint-disable-line no-console
+      console.log(e); // eslint-disable-line no-console
+      throw e;
+    }
+  },
   async getAuthToken() {
     try {
       const response = await fetch(AuthRoutes.TOKEN, {
