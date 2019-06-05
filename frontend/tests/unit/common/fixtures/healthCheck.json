@@ -1,0 +1,18 @@
+{
+  "endpoints": [
+    {
+      "name": "WebADE API",
+      "endpoint": "https://i1api.nrs.gov.bc.ca/webade-api/v1",
+      "healthCheck": true,
+      "authenticated": true,
+      "authorized": true
+    },
+    {
+      "name": "Common Messaging API",
+      "endpoint": "https://i1api.nrs.gov.bc.ca/cmsg-messaging-api/v1",
+      "healthCheck": true,
+      "authenticated": true,
+      "authorized": true
+    }
+  ]
+}

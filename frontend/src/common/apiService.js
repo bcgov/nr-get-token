@@ -91,9 +91,23 @@ export default {
       const response = await apiAxios.get(route);
       return `URL: ${response.request.responseURL}
 Status: ${response.status} - ${response.statusText}
-Body: ${response.request.responseText}`;
+Body: ${JSON.stringify(response.data, null, 2)}`;
     } catch (e) {
       console.log(`Failed to fetch from API - ${e}`); // eslint-disable-line no-console
+      throw e;
+    }
+  },
+
+  async postConfigForm(configFormBody) {
+    try {
+      const response = await apiAxios.post(ApiRoutes.APPCONFIG, configFormBody, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      return response.data;
+    } catch (e) {
+      console.log(`Failed to post app config form - ${e}`); // eslint-disable-line no-console
       throw e;
     }
   }

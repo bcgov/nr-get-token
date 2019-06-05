@@ -1,8 +1,12 @@
+import cryptico from 'cryptico-js';
+import ApiService from '@/common/apiService';
+
 export default {
   namespaced: true,
   state: {
     configSubmissionSuccess: '',
     configSubmissionError: '',
+    submitting: false,
     userAppCfg: {
       applicationAcronym: '',
       applicationName: '',
@@ -150,5 +154,35 @@ export default {
     }
   },
   actions: {
+    async submitConfigForm(context) {
+
+      const uniqueSeed =
+        Math.random()
+          .toString(36)
+          .substring(2) + new Date().getTime().toString(36);
+      const ephemeralRSAKey = cryptico.generateRSAKey(uniqueSeed, 1024);
+      context.commit('setEphemeralPasswordRSAKey', ephemeralRSAKey);
+
+      const body = {
+        configForm: context.state.userAppCfg,
+        passwordPublicKey: cryptico.publicKeyString(ephemeralRSAKey)
+      };
+      try {
+        const response = await ApiService.postConfigForm(body);
+        if (!response || !response.generatedPassword) {
+          throw new Error('Config form POST response is blank or does not include the password');
+        }
+        context.commit(
+          'setConfigSubmissionSuccess',
+          `SUCCESS, application configuration for ${context.state.userAppCfg.applicationAcronym} updated in Integration.`
+        );
+        context.commit('setGeneratedPassword', response.generatedPassword);
+      } catch (error) {
+        context.commit(
+          'setConfigSubmissionError',
+          'An error occurred while attempting to update the application configuration in WebADE.'
+        );
+      }
+    }
   }
 };

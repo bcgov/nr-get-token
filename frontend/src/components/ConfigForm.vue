@@ -174,14 +174,13 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { FieldValidations, ApiRoutes } from '@/utils/constants.js';
+import { FieldValidations } from '@/utils/constants.js';
 import cryptico from 'cryptico-js';
 
 export default {
   data() {
     return {
       shownPassword: '••••••••',
-      apiEndpoint: ApiRoutes.APPCONFIG,
       confirmationDialog: false,
       passwordDialog: false,
       passwordAgree: false,
@@ -227,7 +226,9 @@ export default {
     ...mapGetters('configForm', [
       'appConfigAsString',
       'generatedPassword',
-      'ephemeralPasswordRSAKey'
+      'ephemeralPasswordRSAKey',
+      'configSubmissionSuccess',
+      'configSubmissionError'
     ])
   },
   methods: {
@@ -241,61 +242,15 @@ export default {
         this.userAppCfg.applicationAcronym !== 'MSSC' &&
         this.userAppCfg.applicationAcronym !== 'DOMO'
       ) {
-        this.displayMessage(
-          false,
+        this.$store.commit(
+          'configForm/setConfigSubmissionError',
           'Temp: Only the application acronyms MSSC and DOMO are supported for now.'
         );
         return;
       }
-
-      const uniqueSeed =
-        Math.random()
-          .toString(36)
-          .substring(2) + new Date().getTime().toString(36);
-      const ephemeralRSAKey = cryptico.generateRSAKey(uniqueSeed, 1024);
-      this.$store.commit(
-        'configForm/setEphemeralPasswordRSAKey',
-        ephemeralRSAKey
-      );
-
-      const url = this.apiEndpoint;
-      const headers = new Headers();
-      headers.set('Content-Type', 'application/json');
-
-      const body = {
-        configForm: this.userAppCfg,
-        passwordPublicKey: cryptico.publicKeyString(ephemeralRSAKey)
-      };
-      try {
-        const response = await fetch(url, {
-          method: 'post',
-          headers: headers,
-          body: JSON.stringify(body)
-        });
-        if (response.ok) {
-          const resBody = await response.json();
-          this.displayMessage(
-            true,
-            `SUCCESS, application configuration for ${
-              this.userAppCfg.applicationAcronym
-            } updated in Integration.`
-          );
-          this.$store.commit(
-            'configForm/setGeneratedPassword',
-            resBody.generatedPassword
-          );
-          this.passwordDialog = true;
-        } else {
-          this.displayMessage(
-            false,
-            'An error occurred while attempting to update the application configuration in WebADE.'
-          );
-        }
-      } catch (error) {
-        this.displayMessage(
-          false,
-          'An error occurred while attempting to update the application configuration in WebADE.'
-        );
+      await this.$store.dispatch('configForm/submitConfigForm');
+      if (this.configSubmissionSuccess) {
+        this.passwordDialog = true;
       }
     },
     updateAppCfgField(field, value) {

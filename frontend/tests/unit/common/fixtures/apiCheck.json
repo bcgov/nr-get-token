@@ -1,0 +1,9 @@
+{
+  "route": "/api/v1/someendpoint",
+  "response": {
+    "request": {
+      "url": "/api/v1/someendpoint"
+    }
+  },
+  "formattedResult": ""
+}
