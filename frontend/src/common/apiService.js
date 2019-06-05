@@ -25,6 +25,19 @@ Body: ${JSON.stringify(response.data, null, 2)}`;
       throw e;
     }
   },
+  async postConfigForm(configFormBody) {
+    try {
+      const headers = new Headers();
+      headers.set('Content-Type', 'application/json');
+
+      const response = await axios.post(ApiRoutes.APPCONFIG, configFormBody, headers);
+      return response.data;
+    } catch (e) {
+      console.log('ERROR, caught error posting app config form'); // eslint-disable-line no-console
+      console.log(e); // eslint-disable-line no-console
+      throw e;
+    }
+  },
   async getAuthToken() {
     try {
       const response = await fetch(AuthRoutes.TOKEN, {
