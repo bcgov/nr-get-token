@@ -1,6 +1,10 @@
 const config = require('config');
 const passport = require('passport');
 const router = require('express').Router();
+const {
+  body,
+  validationResult
+} = require('express-validator/check');
 
 const auth = require('../components/auth');
 
@@ -38,6 +42,21 @@ router.get('/login', passport.authenticate('oidc', {
 router.get('/logout', (req, res) => {
   req.logout();
   res.redirect(config.get('server.frontend'));
+});
+
+router.post('/refresh', [
+  body('refreshToken').exists()
+], async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array()
+    });
+  }
+
+  const refresh = await auth.renew(req.body.refreshToken);
+  return res.status(200).json(refresh);
 });
 
 router.use('/token', auth.removeExpired, (req, res) => {

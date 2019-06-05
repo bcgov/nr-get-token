@@ -39,12 +39,16 @@ apiAxios.interceptors.response.use(response => response, error => {
 
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await ApiService.getAuthToken();
+        const response = await ApiService.refreshAuthToken(localStorage.getItem('refreshToken'));
 
-        localStorage.setItem('jwtToken', response.jwt);
-        localStorage.setItem('refreshToken', response.refreshToken);
-        apiAxios.defaults.headers.common['Authorization'] = `Bearer ${response.jwt}`;
-        originalRequest.headers['Authorization'] = `Bearer ${response.jwt}`;
+        if (response.jwt) {
+          localStorage.setItem('jwtToken', response.jwt);
+          apiAxios.defaults.headers.common['Authorization'] = `Bearer ${response.jwt}`;
+          originalRequest.headers['Authorization'] = `Bearer ${response.jwt}`;
+        }
+        if (response.refreshToken) {
+          localStorage.setItem('refreshToken', response.refreshToken);
+        }
 
         processQueue(null, response.jwt);
         resolve(axios(originalRequest));
@@ -68,8 +72,20 @@ export const ApiService = {
       const response = await axios.get(AuthRoutes.TOKEN);
       return response.data;
     } catch (e) {
-      console.log(`Failed to get JWT: ${e.response.data.message}`); // eslint-disable-line no-console
-      return {};
+      console.log(`Failed to acquire JWT token - ${e}`); // eslint-disable-line no-console
+      throw e;
+    }
+  },
+
+  async refreshAuthToken(token) {
+    try {
+      const response = await axios.post(AuthRoutes.REFRESH, {
+        refreshToken: token
+      });
+      return response.data;
+    } catch (e) {
+      console.log(`Failed to refresh JWT token - ${e}`); // eslint-disable-line no-console
+      throw e;
     }
   },
 
@@ -78,7 +94,7 @@ export const ApiService = {
       const response = await apiAxios.get(ApiRoutes.HEALTH);
       return response.data;
     } catch (e) {
-      console.log(`ERROR fetching from API: ${e}`); // eslint-disable-line no-console
+      console.log(`Failed to fetch from API - ${e}`); // eslint-disable-line no-console
       throw e;
     }
   },
@@ -90,7 +106,7 @@ export const ApiService = {
 Status: ${response.status} - ${response.statusText}
 Body: ${response.request.responseText}`;
     } catch (e) {
-      console.log(`ERROR fetching from API: ${e}`); // eslint-disable-line no-console
+      console.log(`Failed to fetch from API - ${e}`); // eslint-disable-line no-console
       throw e;
     }
   }

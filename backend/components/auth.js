@@ -28,11 +28,8 @@ const auth = {
   },
 
   // Get new JWT and Refresh tokens
-  async renew(jwt, token) {
-    const result = {
-      jwtToken: null,
-      refreshToken: null
-    };
+  async renew(refreshToken) {
+    let result = {};
 
     try {
       const discovery = await utils.getOidcDiscovery();
@@ -41,12 +38,11 @@ const auth = {
           client_id: config.get('oidc.clientID'),
           client_secret: config.get('oidc.clientSecret'),
           grant_type: 'refresh_token',
-          refresh_token: token,
+          refresh_token: refreshToken,
           scope: discovery.scopes_supported
         }), {
           headers: {
             Accept: 'application/json',
-            Authentication: `Bearer ${jwt}`,
             'Cache-Control': 'no-cache',
             'Content-Type': 'application/x-www-form-urlencoded',
           }
@@ -54,10 +50,11 @@ const auth = {
       );
 
       log.verbose(arguments.callee.name, utils.prettyStringify(response.data));
-      result.jwtToken = response.data.access_token;
+      result.jwt = response.data.access_token;
       result.refreshToken = response.data.refresh_token;
     } catch (error) {
       log.error(arguments.callee.name, error.message);
+      result = error.response.data;
     }
 
     return result;
@@ -76,16 +73,19 @@ const auth = {
             log.verbose(arguments.callee.name, 'Can refresh JWT token');
 
             // Get new JWT and Refresh Tokens and update the request
-            const { jwtToken, refreshToken } = await auth.renew(req.user.jwt, req.user.refreshToken);
-            req.user.jwt = jwtToken;
+            const {
+              jwt,
+              refreshToken
+            } = await auth.renew(req.user.refreshToken);
+            req.user.jwt = jwt;
             req.user.refreshToken = refreshToken;
           } else {
-            log.verbose(arguments.callee.name, 'Cannot refresh JWT token - cleaning up user');
+            log.verbose(arguments.callee.name, 'Cannot refresh JWT token');
             delete req.user;
           }
         }
       } else {
-        log.verbose(arguments.callee.name, 'No existing User or JWT - cleaning up user');
+        log.verbose(arguments.callee.name, 'No existing User or JWT');
         delete req.user;
       }
     } catch (error) {

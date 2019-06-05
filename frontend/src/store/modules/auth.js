@@ -3,7 +3,7 @@ import { ApiService } from '@/common/apiService';
 export default {
   namespaced: true,
   state: {
-    isAuthenticated: !!localStorage.getItem('jwtToken')
+    isAuthenticated: localStorage.getItem('jwtToken') !== null
   },
   getters: {
     isAuthenticated: state => state.isAuthenticated,
@@ -31,13 +31,13 @@ export default {
   actions: {
     async getJwtToken(context) {
       try {
-        if (context.getters.isAuthenticated) {
+        if (context.getters.isAuthenticated && !!context.getters.refreshToken) {
           const now = Date.now().valueOf() / 1000;
           const jwtPayload = localStorage.getItem('jwtToken').split('.')[1];
           const payload = JSON.parse(window.atob(jwtPayload));
 
           if (payload.exp > now) {
-            const response = await ApiService.getAuthToken();
+            const response = await ApiService.refreshAuthToken(context.getters.refreshToken);
 
             if (response.jwt) {
               context.commit('setJwtToken', response.jwt);
@@ -57,8 +57,9 @@ export default {
           }
         }
       } catch (e) {
-        console.log(`Errored while getting JWT token ${e}`); // eslint-disable-line no-console
-        throw e;
+        // Remove tokens from localStorage and update state
+        context.commit('setJwtToken');
+        context.commit('setRefreshToken');
       }
     }
   }
