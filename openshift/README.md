@@ -34,7 +34,7 @@ oc create -n k8vopl-<env> configmap getok-sc-config \
 
 Replace anything in angle brackets with the appropriate value!
 
-_Note: Publickey should be a PEM-encoded value with newlines encoded as \n and encapsulated in double quotes in the argument._
+_Note: Publickey should be a PEM-encoded value encapsulated in double quotes in the argument. Newlines should not be re-encoded when using this command._
 
 ```sh
 oc create -n k8vopl-<env> secret generic getok-oidc-secret \
