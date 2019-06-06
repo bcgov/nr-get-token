@@ -127,9 +127,9 @@
           </v-card>
         </v-dialog>
 
-        <v-dialog v-model="passwordDialog" persistent max-width="600">
+        <v-dialog v-model="passwordDialog" persistent max-width="700">
           <v-card>
-            <v-card-title class="headline">Application Configuration Updated</v-card-title>
+            <v-card-title class="headline"><v-icon color="success">check_circle</v-icon> Application Configuration Updated</v-card-title>
             <v-card-text>
               <p>
                 Your application configuration for
@@ -155,6 +155,20 @@
                   >DECRYPT</v-btn>
                 </v-flex>
               </v-layout>
+              <p>A sample token for the service client that has been created for you is shown below</p>
+              <pre>{{displayToken}}</pre>
+              <div v-if="userAppCfg.commonServices.length > 0">
+                <br>
+                <p>
+                  This token can be used to test out the common services you have specified by trying them out in the API Store.
+                  <br>Fill in the token above in the Access Token field at the top of the API Console tab for the common service(s) linked below:
+                </p>
+                <ul>
+                  <li v-for="item in storeLinks" v-bind:key="item">
+                    <a :href="item">{{item}}</a>
+                  </li>
+                </ul>
+              </div>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -225,11 +239,21 @@ export default {
   computed: {
     ...mapGetters('configForm', [
       'appConfigAsString',
-      'generatedPassword',
+      'configFormSubmissionResult',
       'ephemeralPasswordRSAKey',
       'configSubmissionSuccess',
       'configSubmissionError'
-    ])
+    ]),
+    displayToken: function() {
+      return this.configFormSubmissionResult
+        ? this.configFormSubmissionResult.generatedToken
+        : '';
+    },
+    storeLinks: function() {
+      return this.configFormSubmissionResult
+        ? this.configFormSubmissionResult.apiStoreLinks
+        : [];
+    }
   },
   methods: {
     async submitConfig() {
@@ -266,7 +290,7 @@ export default {
     },
     decryptPassword() {
       const DecryptionResult = cryptico.decrypt(
-        this.generatedPassword,
+        this.configFormSubmissionResult.generatedPassword,
         this.ephemeralPasswordRSAKey
       );
       this.shownPassword = DecryptionResult.plaintext;
