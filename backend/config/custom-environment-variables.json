@@ -2,7 +2,8 @@
   "oidc": {
     "discovery": "OIDC_DISCOVERY",
     "clientID": "OIDC_USERNAME",
-    "clientSecret": "OIDC_PASSWORD"
+    "clientSecret": "OIDC_PASSWORD",
+    "publicKey": "OIDC_PUBLICKEY"
   },
   "server": {
     "frontend": "SERVER_FRONTEND",

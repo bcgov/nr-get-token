@@ -1,7 +1,10 @@
 const axios = require('axios');
+const config = require('config');
 const log = require('npmlog');
 const cryptico = require('cryptico-js');
 const generator = require('generate-password');
+
+const discovery = null;
 
 const utils = {
   // Returns the response body of a webade oauth token request
@@ -26,6 +29,22 @@ const utils = {
     } catch (error) {
       log.error(arguments.callee.name, error.message);
       return error.response.data;
+    }
+  },
+  // Returns OIDC Discovery values
+  async getOidcDiscovery() {
+    if (discovery) {
+      return discovery;
+    } else {
+      try {
+        const response = await axios.get(config.get('oidc.discovery'));
+
+        log.verbose(arguments.callee.name, utils.prettyStringify(response.data));
+        return response.data;
+      } catch (error) {
+        log.error(arguments.callee.name, `OIDC Discovery failed - ${error.message}`);
+        return error.response.data;
+      }
     }
   },
   buildWebAdeCfg: (requestBody) => {

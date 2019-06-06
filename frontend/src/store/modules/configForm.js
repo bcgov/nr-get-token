@@ -1,5 +1,5 @@
 import cryptico from 'cryptico-js';
-import { ApiService } from '@/common/apiService';
+import ApiService from '@/common/apiService';
 
 export default {
   namespaced: true,

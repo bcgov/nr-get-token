@@ -98,7 +98,7 @@
       <v-flex xs12>
         <v-card class="sectionCard">
           <v-toolbar card color="grey lighten-3">
-            <v-toolbar-title>TEMP API Tester</v-toolbar-title>
+            <v-toolbar-title>DEBUG API Tester</v-toolbar-title>
           </v-toolbar>
           <ApiCheck></ApiCheck>
         </v-card>
@@ -128,11 +128,11 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('auth', ['isAuthenticated']),
     ...mapGetters('configForm', [
       'configSubmissionSuccess',
       'configSubmissionError'
     ]),
-    ...mapGetters('auth', ['isAuthenticated'])
   },
   methods: {
     getHealthCheck() {

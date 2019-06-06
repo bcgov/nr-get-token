@@ -1,62 +1,68 @@
-import { ApiService } from '@/common/apiService';
+import ApiService from '@/common/apiService';
+import AuthService from '@/common/authService';
 
 export default {
   namespaced: true,
   state: {
-    jwtToken: localStorage.getItem('jwt') || '',
-    refreshToken: localStorage.getItem('refresh') || ''
+    isAuthenticated: localStorage.getItem('jwtToken') !== null
   },
   getters: {
-    isAuthenticated: state => !!state.jwtToken,
-    jwtToken: state => state.jwtToken,
-    refreshToken: state => state.refreshToken,
+    isAuthenticated: state => state.isAuthenticated,
+    jwtToken: () => localStorage.getItem('jwtToken'),
+    refreshToken: () => localStorage.getItem('refreshToken'),
   },
   mutations: {
-    setJwtToken: (state, jwt) => {
-      state.jwtToken = jwt;
+    setJwtToken: (state, token = null) => {
+      if (token) {
+        state.isAuthenticated = true;
+        localStorage.setItem('jwtToken', token);
+      } else {
+        state.isAuthenticated = false;
+        localStorage.removeItem('jwtToken');
+      }
     },
-    setRefreshToken: (state, refresh) => {
-      state.refreshToken = refresh;
+    setRefreshToken: (_state, token = null) => {
+      if (token) {
+        localStorage.setItem('refreshToken', token);
+      } else {
+        localStorage.removeItem('refreshToken');
+      }
     }
   },
   actions: {
     async getJwtToken(context) {
       try {
-        if (context.getters.isAuthenticated) {
+        if (context.getters.isAuthenticated && !!context.getters.refreshToken) {
           const now = Date.now().valueOf() / 1000;
-          const jwtPayload = context.state.jwtToken.split('.')[1];
+          const jwtPayload = localStorage.getItem('jwtToken').split('.')[1];
           const payload = JSON.parse(window.atob(jwtPayload));
 
           if (payload.exp > now) {
-            const response = await ApiService.getAuthToken();
+            const response = await AuthService.refreshAuthToken(context.getters.refreshToken);
 
             if (response.jwt) {
               context.commit('setJwtToken', response.jwt);
-              localStorage.setItem('jwtToken', response.jwt);
             }
-            // TODO: Add refresh token support
             if (response.refreshToken) {
               context.commit('setRefreshToken', response.refreshToken);
-              localStorage.setItem('refreshToken', response.refreshToken);
             }
+            ApiService.setAuthHeader(response.jwt);
           }
         } else {
-          const response = await ApiService.getAuthToken();
+          const response = await AuthService.getAuthToken();
 
           if (response.jwt) {
             context.commit('setJwtToken', response.jwt);
-            localStorage.setItem('jwtToken', response.jwt);
           }
-          // TODO: Add refresh token support
           if (response.refreshToken) {
             context.commit('setRefreshToken', response.refreshToken);
-            localStorage.setItem('refreshToken', response.refreshToken);
           }
+          ApiService.setAuthHeader(response.jwt);
         }
       } catch (e) {
-        console.log('ERROR, caught error while getting JWT token'); // eslint-disable-line no-console
-        console.log(e); // eslint-disable-line no-console
-        throw e;
+        // Remove tokens from localStorage and update state
+        context.commit('setJwtToken');
+        context.commit('setRefreshToken');
       }
     }
   }

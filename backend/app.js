@@ -1,10 +1,12 @@
-const axios = require('axios');
 const config = require('config');
 const express = require('express');
+const session = require('express-session');
 const log = require('npmlog');
 const morgan = require('morgan');
 const passport = require('passport');
-const session = require('express-session');
+
+const JWTStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
 const OidcStrategy = require('passport-openidconnect').Strategy;
 
 const utils = require('./components/utils');
@@ -19,6 +21,7 @@ app.use(express.urlencoded({
   extended: false
 }));
 
+// Add Morgan endpoint logging
 app.use(morgan(config.get('server.morganFormat')));
 
 app.use(session({
@@ -32,36 +35,25 @@ app.use(passport.session());
 // Logging Setup
 log.level = config.get('server.logLevel');
 log.addLevel('debug', 1500, {
-  fg: 'green'
+  fg: 'cyan'
 });
 
 // Print out configuration settings in verbose startup
-log.verbose('Config', utils.prettyStringify(config));
+log.debug('Config', utils.prettyStringify(config));
 
-// Resolves OIDC Discovery values and returns an OIDC Strategy Config
-async function getOidcDiscovery() {
-  try {
-    const response = await axios.get(config.get('oidc.discovery'));
-
-    log.verbose(arguments.callee.name, utils.prettyStringify(response.data));
-    return {
-      issuer: response.data.issuer,
-      authorizationURL: response.data.authorization_endpoint,
-      tokenURL: response.data.token_endpoint,
-      userInfoURL: response.data.userinfo_endpoint,
-      clientID: config.get('oidc.clientID'),
-      clientSecret: config.get('oidc.clientSecret'),
-      callbackURL: '/getok/api/auth/callback',
-      scope: response.data.scopes_supported
-    };
-  } catch (error) {
-    log.error(arguments.callee.name, `OIDC Discovery failed - ${error.message}`);
-    process.exit(1);
-  }
-}
-
-getOidcDiscovery().then(oidcConfig => {
-  passport.use('oidc', new OidcStrategy(oidcConfig, (_issuer, _sub, profile, accessToken, refreshToken, done) => {
+// Resolves OIDC Discovery values and sets up passport strategies
+utils.getOidcDiscovery().then(discovery => {
+  // Add Passport OIDC Strategy
+  passport.use('oidc', new OidcStrategy({
+    issuer: discovery.issuer,
+    authorizationURL: discovery.authorization_endpoint,
+    tokenURL: discovery.token_endpoint,
+    userInfoURL: discovery.userinfo_endpoint,
+    clientID: config.get('oidc.clientID'),
+    clientSecret: config.get('oidc.clientSecret'),
+    callbackURL: '/getok/api/auth/callback',
+    scope: discovery.scopes_supported
+  }, (_issuer, _sub, profile, accessToken, refreshToken, done) => {
     if ((typeof (accessToken) === 'undefined') || (accessToken === null) ||
       (typeof (refreshToken) === 'undefined') || (refreshToken === null)) {
       return done('No access token', null);
@@ -70,6 +62,28 @@ getOidcDiscovery().then(oidcConfig => {
     profile.jwt = accessToken;
     profile.refreshToken = refreshToken;
     return done(null, profile);
+  }));
+
+  // Add Passport JWT Strategy
+  passport.use('jwt', new JWTStrategy({
+    algorithms: discovery.token_endpoint_auth_signing_alg_values_supported,
+    audience: config.get('oidc.clientID'),
+    issuer: discovery.issuer,
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: config.get('oidc.publicKey')
+  }, (jwtPayload, done) => {
+    if ((typeof (jwtPayload) === 'undefined') || (jwtPayload === null)) {
+      return done('No JWT token', null);
+    }
+
+    done(null, {
+      email: jwtPayload.email,
+      familyName: jwtPayload.family_name,
+      givenName: jwtPayload.given_name,
+      jwt: jwtPayload,
+      name: jwtPayload.name,
+      preferredUsername: jwtPayload.preferred_username,
+    });
   }));
 });
 
@@ -99,13 +113,13 @@ apiRouter.use('/auth', authRouter);
 apiRouter.use('/v1', v1Router);
 
 // Handle 500
-// eslint-disable-next-line no-unused-vars
-app.use((err, _req, res, _next) => {
+app.use((err, _req, res, next) => {
   log.error(err.stack);
   res.status(500).json({
     status: 500,
     message: 'Internal Server Error: ' + err.stack.split('\n', 1)[0]
   });
+  next();
 });
 
 // Handle 404

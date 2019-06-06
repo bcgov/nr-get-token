@@ -11,7 +11,7 @@ const authRoot = `${baseRoot}/auth`;
 export const AuthRoutes = Object.freeze({
   LOGIN: `${authRoot}/login`,
   LOGOUT: `${authRoot}/logout`,
-  PROFILE: `${authRoot}/profile`,
+  REFRESH: `${authRoot}/refresh`,
   TOKEN: `${authRoot}/token`,
 });
 

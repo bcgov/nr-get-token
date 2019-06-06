@@ -1,4 +1,4 @@
-import { ApiService } from '@/common/apiService';
+import ApiService from '@/common/apiService';
 
 export default {
   namespaced: true,
@@ -23,9 +23,10 @@ export default {
         const response = await ApiService.getHealthCheck();
         context.commit('setHealthCheck', response);
       } catch (e) {
-        context.commit('setHealthCheck', 'error');
+        context.commit('setHealthCheck', e);
       }
     },
+
     async getApiCheck(context, route) {
       context.commit('setApiCheckResponse', '');
       try {

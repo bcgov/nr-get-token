@@ -70,6 +70,11 @@ objects:
               secretKeyRef:
                 key: password
                 name: getok-oidc-secret
+          - name: OIDC_PUBLICKEY
+            valueFrom:
+              secretKeyRef:
+                key: publickey
+                name: getok-oidc-secret
           - name: SERVER_FRONTEND
             value: "http://${HOST_ROUTE}"
           - name: SC_GETOK_USERNAME
