@@ -161,7 +161,7 @@
                 <br>
                 <p>
                   This token can be used to test out the common services you have specified by trying them out in the API Store.
-                  <br>Fill in the token above in the Access Token field at the top of the API Console tab for the common service(s) linked below:
+                  <br>Fill in the token above into the Access Token field at the top of the API Console tab for the common service(s) linked below:
                 </p>
                 <ul>
                   <li v-for="item in storeLinks" v-bind:key="item">
