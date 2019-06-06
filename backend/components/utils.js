@@ -9,7 +9,6 @@ const discovery = null;
 const utils = {
   // Returns the response body of a webade oauth token request
   async getWebAdeToken(username, password, scope) {
-    log.verbose("Here " + username + " " + password);
     const url = 'https://i1api.nrs.gov.bc.ca/oauth2/v1/oauth/token';
 
     try {
