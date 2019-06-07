@@ -155,10 +155,10 @@ export default {
       state.configSubmissionSuccess = '';
       state.configSubmissionError = '';
     },
-    setConfigFormSubmissionResult: function (state, val) {
+    setConfigFormSubmissionResult: (state, val) => {
       state.configFormSubmissionResult = val;
     },
-    setEphemeralPasswordRSAKey: function (state, ephemeralPasswordRSAKey) {
+    setEphemeralPasswordRSAKey: (state, ephemeralPasswordRSAKey) => {
       state.ephemeralPasswordRSAKey = ephemeralPasswordRSAKey;
     }
   },

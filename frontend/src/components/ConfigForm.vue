@@ -142,7 +142,7 @@
 
               <v-checkbox
                 v-model="passwordAgree"
-                label="I agree to securly store this password in an OpenShift Secret."
+                label="I agree to securely store this password in an OpenShift Secret."
               ></v-checkbox>
 
               <v-card color="green lighten-5" class="pl-3 pt-3 mb-3">
@@ -183,51 +183,53 @@
                 </v-layout>
               </v-card>
 
-              <h2>2. API Access Token</h2>
-              <p>You can fetch a token with this new service client to test out in the API store or through any REST client</p>
-              <v-layout row wrap align-center>
-                <v-flex xs12 sm2>
-                  <v-btn small color="primary" dark @click="getToken()">Get Token</v-btn>
-                </v-flex>
-                <v-flex xs12 sm8 v-if="generatedToken">{{generatedToken}}</v-flex>
-                <v-flex xs12 sm8 v-if="generatedTokenError" error>{{generatedTokenError}}</v-flex>
-                <v-flex xs6 sm2 v-if="generatedToken">
-                  <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                      <v-btn
-                        flat
-                        icon
-                        color="primary"
-                        v-clipboard:copy="generatedToken"
-                        v-clipboard:success="clipboardSuccessHandler"
-                        v-clipboard:error="clipboardErrorHandler"
-                        v-on="on"
-                      >
-                        <v-icon>file_copy</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>Copy token to clipboard</span>
-                  </v-tooltip>
-                </v-flex>
-              </v-layout>
-              <br>
+              <div v-if="passwordDecrypted">
+                <h2>2. API Access Token</h2>
+                <p>You can fetch a token with this new service client to test out in the API store or through any REST client</p>
+                <v-layout row wrap align-center>
+                  <v-flex xs12 sm2>
+                    <v-btn small color="primary" dark @click="getToken()">Get Token</v-btn>
+                  </v-flex>
+                  <v-flex xs12 sm8 v-if="generatedToken">{{generatedToken}}</v-flex>
+                  <v-flex xs12 sm8 v-if="generatedTokenError" error>{{generatedTokenError}}</v-flex>
+                  <v-flex xs6 sm2 v-if="generatedToken">
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on }">
+                        <v-btn
+                          flat
+                          icon
+                          color="primary"
+                          v-clipboard:copy="generatedToken"
+                          v-clipboard:success="clipboardSuccessHandler"
+                          v-clipboard:error="clipboardErrorHandler"
+                          v-on="on"
+                        >
+                          <v-icon>file_copy</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>Copy token to clipboard</span>
+                    </v-tooltip>
+                  </v-flex>
+                </v-layout>
+                <br>
 
-              <div v-if="userAppCfg.commonServices.length > 0">
-                <h2>3. API Store Swagger</h2>
-                <p>
-                  This token can be used to test out the common services you have specified by trying them out in the API Store.
-                  <br>Fill in the token above into the Access Token field at the top of the
-                  <strong>API Console</strong> tab for the common service(s) linked below:
-                </p>
-                <ul>
-                  <li v-for="item in storeLinks" v-bind:key="item.name">
-                    {{item.name}}
-                    <v-btn small color="primary" dark :href="item.apiStoreLink" target="_blank">
-                      Try it out
-                      <v-icon right dark>open_in_new</v-icon>
-                    </v-btn>
-                  </li>
-                </ul>
+                <div v-if="userAppCfg.commonServices.length > 0">
+                  <h2>3. API Store Swagger</h2>
+                  <p>
+                    This token can be used to test out the common services you have specified by trying them out in the API Store.
+                    <br>Fill in the token above into the Access Token field at the top of the
+                    <strong>API Console</strong> tab for the common service(s) linked below:
+                  </p>
+                  <ul>
+                    <li v-for="item in storeLinks" v-bind:key="item.name">
+                      {{item.name}}
+                      <v-btn small color="primary" dark :href="item.apiStoreLink" target="_blank">
+                        Try it out
+                        <v-icon right dark>open_in_new</v-icon>
+                      </v-btn>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </v-card-text>
             <v-card-actions>
@@ -235,7 +237,7 @@
               <v-btn
                 color="info darken-1"
                 flat
-                :disabled="!passwordAgree"
+                :disabled="!passwordAgree || !passwordDecrypted"
                 @click="passwordDialog = false"
               >FINISHED</v-btn>
             </v-card-actions>
@@ -253,13 +255,13 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import { mapGetters } from 'vuex';
-import { FieldValidations, CommonServiceRoutes } from '@/utils/constants.js';
-import commonServiceList from '@/utils/commonServices.js';
-import cryptico from 'cryptico-js';
-import VueClipboard from 'vue-clipboard2';
 import axios from 'axios';
+import commonServiceList from '@/utils/commonServices.js';
+import { FieldValidations, CommonServiceRoutes } from '@/utils/constants.js';
+import cryptico from 'cryptico-js';
+import Vue from 'vue';
+import VueClipboard from 'vue-clipboard2';
+import { mapGetters } from 'vuex';
 
 VueClipboard.config.autoSetContainer = true;
 Vue.use(VueClipboard);
@@ -271,6 +273,7 @@ export default {
       confirmationDialog: false,
       passwordDialog: false,
       passwordAgree: false,
+      passwordDecrypted: false,
       fieldValidations: FieldValidations,
       appConfig: '',
       appConfigStep: 1,
@@ -343,10 +346,7 @@ export default {
       this.$store.commit('configForm/clearConfigSubmissionMsgs');
 
       // this is temporary, only allow MSSC and DOMO to be used at the moment
-      if (
-        this.userAppCfg.applicationAcronym !== 'MSSC' &&
-        this.userAppCfg.applicationAcronym !== 'DOMO'
-      ) {
+      if (!['MSSC', 'DOMO'].includes(this.userAppCfg.applicationAcronym)) {
         this.$store.commit(
           'configForm/setConfigSubmissionError',
           'Temp: Only the application acronyms MSSC and DOMO are supported for now.'
@@ -403,6 +403,7 @@ export default {
       );
     },
     decryptPassword() {
+      this.passwordDecrypted = true;
       const DecryptionResult = cryptico.decrypt(
         this.configFormSubmissionResult.generatedPassword,
         this.ephemeralPasswordRSAKey

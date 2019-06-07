@@ -283,7 +283,7 @@ components:
           $ref: '#/components/schemas/AppConfig'
         generatedPassword:
           type: string
-          description: 'Contains the generated password, ecrypted with the user-supplied public key'
+          description: 'Contains the generated password, encrypted with the user-supplied public key'
           example: ABC123XYZ
         generatedServiceClient:
           type: string
