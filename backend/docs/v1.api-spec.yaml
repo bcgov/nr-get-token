@@ -319,12 +319,22 @@ components:
           example: Something errored
     Success:
       required:
-        - message
+        - webAdeResponse
+        - generatedPassword
+        - generatedServiceClient
       properties:
-        message:
+        webAdeResponse:
           type: string
-          description: 'Contains message about the success, normally "Written successfully"'
+          description: 'Contains the application config that was writted to WebADE successfully'
           example: Written successfully
+        generatedPassword:
+          type: string
+          description: 'Contains the generated password, ecrypted with the user-supplied public key'
+          example: ABC123XYZ
+        generatedServiceClient:
+          type: string
+          description: 'Contains the service client name that was written to WebADE'
+          example: DOMO_SERVICE_CLIENT
   responses:
     Forbidden:
       description: Lack required role to perform action
