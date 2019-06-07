@@ -14,9 +14,9 @@ The Get Token Service (GETOK) is used to securely generate or modify new service
 
 ### Getting Started
 
-* [Learn more about the GETOK-API](README.md)
+* [Learn more about the GETOK-API](../README.md)
 * [Check the DevHub for other NRM Common Services](https://developer.gov.bc.ca) - Coming Soon
-* Use this [Developer Guide](/developer-guide.md) to learn how to build your own application that connects to CMSG-Messaging-API.
+* Use this [Developer Guide](developer-guide.md) to learn how to build your own application that connects to CMSG-Messaging-API.
 
 ## Additional Resources
 

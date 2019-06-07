@@ -5,20 +5,14 @@ Natural Resources Get Token (GETOK) will automate the process for Development te
 GETOK has a service client GETOK_SERVICE which is granted the WEBADE-REST "profileRole" of APPLICATION_ADMINISTRATOR. This allows the GETOK_SERVICE to create new WebADE service Clients.
 > The first deployment of this webade-cfg information had to be done manually using the process we are replacing. See [Bitbucket GETOK Repo](https://apps.nrs.gov.bc.ca/int/stash/projects/GETOK/repos/getok-webade-cfg/browse) for the package that was used for the first deployment. Subsequent deployment to modify this can be done through the WEBADE-REST-API endpoints.
 
-GETOK will be a front end access point for authorized IDIR users to request the ability to create and update their application's WebADE service Client. GETOK will allow authorized IDIR users to grant Developers that ability for their app and for a common service. Once approved a developer will be able to create and deploy WebADE service client application configuration instantly to gain access to common service APIs like email notifications, document management, or document generation.
-
-## Project Status
-
-[Showcase Team Roadmap](https://github.com/bcgov/nr-get-token/wiki/Product-Roadmap)
-
-TBD - This will have build status and badges
+Natural Resources Get Token (GETOK will be a front end access point for authorized IDIR users to request the ability to create and update their application's WebADE service Client. GETOK will allow authorized IDIR users to grant Developers that ability for their app and for a common service. Once approved a developer will be able to create and deploy WebADE service client application configuration instantly to gain access to common service APIs like email notifications, document management, or document generation.
 
 ## Directory Structure
 
     .github/                   - PR and Issue templates
-    backend/                   - Backend codebase
+    backend/                   - Node.js Backend codebase
     docs/                      - Documentation
-    frontend/                  - Frontend codebase
+    frontend/                  - Vue.js Frontend codebase
     openshift/                 - OpenShift-deployment specific files
     tools/                     - Devops utilities
     └── jenkins                - Jenkins standup
@@ -34,6 +28,7 @@ TBD - This will have build status and badges
 * [Frontend Readme](frontend/README.md)
 * [Openshift Readme](openshift/README.md)
 * [Get Token Wiki](https://github.com/bcgov/nr-get-token/wiki)
+* [Showcase Team Roadmap](https://github.com/bcgov/nr-get-token/wiki/Product-Roadmap)
 
 ## Getting Help or Reporting an Issue
 
