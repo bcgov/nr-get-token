@@ -324,9 +324,8 @@ components:
         - generatedServiceClient
       properties:
         webAdeResponse:
-          type: string
+          type: object
           description: 'Contains the application config that was writted to WebADE successfully'
-          example: Written successfully
         generatedPassword:
           type: string
           description: 'Contains the generated password, ecrypted with the user-supplied public key'
