@@ -268,6 +268,11 @@ components:
             type: string
             example: CMSG
           description: An array of applicationAcronyms
+    AppConfigList:
+      type: array
+      items:
+        $ref: '#/components/schemas/AppConfig'
+      description: A list of Application Configurations
     AppConfigResponse:
       required:
         - webAdeResponse
@@ -275,8 +280,7 @@ components:
         - generatedServiceClient
       properties:
         webAdeResponse:
-          type: object
-          description: 'Contains the application config that was writted to WebADE successfully'
+          $ref: '#/components/schemas/AppConfig'
         generatedPassword:
           type: string
           description: 'Contains the generated password, ecrypted with the user-supplied public key'
@@ -285,11 +289,6 @@ components:
           type: string
           description: 'Contains the service client name that was written to WebADE'
           example: DOMO_SERVICE_CLIENT
-    AppConfigList:
-      type: array
-      items:
-        $ref: '#/components/schemas/AppConfig'
-      description: A list of Application Configurations
     EndpointStatus:
       type: object
       required:
