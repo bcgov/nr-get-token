@@ -25,7 +25,7 @@
             flat
             icon
             color="primary"
-            v-clipboard="() => appConfigAsString"
+            v-clipboard:copy="appConfigAsString"
             v-clipboard:success="clipboardSuccessHandler"
             v-clipboard:error="clipboardErrorHandler"
             v-on="on"
@@ -49,9 +49,10 @@
 <script>
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
-import Clipboard from 'v-clipboard';
+import VueClipboard from 'vue-clipboard2';
 
-Vue.use(Clipboard);
+VueClipboard.config.autoSetContainer = true;
+Vue.use(VueClipboard);
 
 export default {
   data() {

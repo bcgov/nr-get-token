@@ -13,16 +13,6 @@ async function postAppConfig(body) {
     throw new Error('Unable to acquire access_token');
   }
 
-  // Filter only the supported common services (and build up the links to the swagger api store)
-  const storeLinks = body.configForm.commonServices.map(item => {
-    if (item === 'cmsg') {
-      return 'https://i1apistore.nrs.gov.bc.ca/store/apis/info?name=cmsg-messaging-api&version=v1&provider=admin';
-    } else if (item === 'dms') {
-      return 'https://i1apistore.nrs.gov.bc.ca/store/apis/info?name=dms-api&version=v1&provider=admin';
-    }
-    throw new Error(`Unsupported common service type: ${item}`);
-  });
-
   // Build the app config
   const generatedConfig = utils.buildWebAdeCfg(body);
 
@@ -39,17 +29,10 @@ async function postAppConfig(body) {
     });
     log.verbose(arguments.callee.name, utils.prettyStringify(webAdeResponse.data));
 
-    // Get a token for the newly created service client
-    const tokenForNewClient = await utils.getWebAdeToken(generatedConfig.webAdeCfg.serviceClients[0].accountName, generatedConfig.unencryptedPassword, 'WEBADE-REST');
-    if (!token || token.error) {
-      throw new Error('Unable to acquire access_token for new service client');
-    }
-
     const reponse = {
       webAdeResponse: webAdeResponse.data,
       generatedPassword: generatedConfig.webAdeCfg.serviceClients ? generatedConfig.encyptedPassword : '',
-      generatedToken: tokenForNewClient.access_token,
-      apiStoreLinks: storeLinks
+      generatedServiceClient: generatedConfig.webAdeCfg.serviceClients ? generatedConfig.webAdeCfg.serviceClients[0].accountName : ''
     };
     return reponse;
 

@@ -185,8 +185,7 @@ export default {
 
         const configFormSubmissionResult = {
           generatedPassword: response.generatedPassword,
-          generatedToken: response.generatedToken,
-          apiStoreLinks: response.apiStoreLinks
+          generatedServiceClient: response.generatedServiceClient
         };
 
         context.commit(
