@@ -4,7 +4,7 @@ const apiRoot = `${baseRoot}/v1`;
 export const ApiRoutes = Object.freeze({
   APPCONFIG: `${apiRoot}/appConfigForm`,
   DOCS: `${apiRoot}/docs`,
-  HEALTH: `${apiRoot}/checks/status`,
+  HEALTH: `${apiRoot}/checks/status`
 });
 
 const authRoot = `${baseRoot}/auth`;
@@ -13,6 +13,11 @@ export const AuthRoutes = Object.freeze({
   LOGOUT: `${authRoot}/logout`,
   REFRESH: `${authRoot}/refresh`,
   TOKEN: `${authRoot}/token`,
+});
+
+const apiStore = 'https://i1api.nrs.gov.bc.ca';
+export const CommonServiceRoutes = Object.freeze({
+  TOKEN: `${apiStore}/oauth2/v1/oauth/token?disableDeveloperFilter=true&grant_type=client_credentials&scope=`,
 });
 
 export const FieldValidations = Object.freeze({

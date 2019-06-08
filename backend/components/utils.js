@@ -156,6 +156,7 @@ const utils = {
 
     const ret = {
       webAdeCfg: finalCfg,
+      unencryptedPassword: generatedPassword.password,
       encyptedPassword: generatedPassword.encyptedPassword
     };
     return ret;

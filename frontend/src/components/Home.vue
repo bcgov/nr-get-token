@@ -72,6 +72,7 @@
             </v-dialog>
           </v-toolbar>
           <div>
+            <v-progress-linear v-if="configSubmissionInProgress" :indeterminate="true"></v-progress-linear>
             <v-alert
               :value="configSubmissionSuccess"
               type="success"
@@ -131,7 +132,8 @@ export default {
     ...mapGetters('auth', ['isAuthenticated']),
     ...mapGetters('configForm', [
       'configSubmissionSuccess',
-      'configSubmissionError'
+      'configSubmissionError',
+      'configSubmissionInProgress'
     ]),
   },
   methods: {

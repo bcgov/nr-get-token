@@ -127,55 +127,144 @@
           </v-card>
         </v-dialog>
 
-        <v-dialog v-model="passwordDialog" persistent max-width="600">
+        <v-dialog v-model="passwordDialog" persistent max-width="700">
           <v-card>
-            <v-card-title class="headline">Application Configuration Updated</v-card-title>
+            <v-card-title class="headline success" primary-title>
+              <v-icon class="mr-2">check_circle</v-icon>Application Configuration Updated
+            </v-card-title>
             <v-card-text>
               <p>
                 Your application configuration for
                 <strong>{{userAppCfg.applicationAcronym}}</strong> has been updated in the WebADE system.
-                <br>
-                <br>A password for the service client created is shown below. Keep this password secure and do not lose it as you will be unable to fetch it again.
               </p>
+              <h2>1. Service Client</h2>
+              <p>A password for the service client created is shown below. Keep this password secure and do not lose it as you will be unable to fetch it again.</p>
 
               <v-checkbox
                 v-model="passwordAgree"
-                label="I agree to password securement text here required ... ..."
+                label="I agree to securely store this password in an OpenShift Secret."
               ></v-checkbox>
 
-              <v-layout row wrap>
-                <v-flex xs12 sm8>
-                  <v-text-field v-model="shownPassword" readonly label="Password"></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm4>
-                  <v-btn
-                    color="success"
-                    :disabled="!passwordAgree"
-                    @click="decryptPassword()"
-                  >DECRYPT</v-btn>
-                </v-flex>
-              </v-layout>
+              <v-card color="green lighten-5" class="pl-3 pt-3 mb-3">
+                <v-layout row wrap>
+                  <v-flex xs12 sm6>
+                    <v-text-field v-model="displayClient" readonly label="Service Client"></v-text-field>
+                  </v-flex>
+                </v-layout>
+                <v-layout row wrap>
+                  <v-flex xs12 sm6>
+                    <v-text-field v-model="shownPassword" readonly label="Password"></v-text-field>
+                  </v-flex>
+                  <v-flex xs6 sm4>
+                    <v-btn
+                      color="success"
+                      :disabled="!passwordAgree"
+                      @click="decryptPassword()"
+                    >DECRYPT PASSWORD</v-btn>
+                  </v-flex>
+                  <v-flex xs6 sm2>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on }">
+                        <v-btn
+                          flat
+                          icon
+                          color="primary"
+                          v-clipboard:copy="shownPassword"
+                          v-clipboard:success="clipboardSuccessHandler"
+                          v-clipboard:error="clipboardErrorHandler"
+                          v-on="on"
+                        >
+                          <v-icon>file_copy</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>Copy password to clipboard</span>
+                    </v-tooltip>
+                  </v-flex>
+                </v-layout>
+              </v-card>
+
+              <div v-if="passwordDecrypted">
+                <h2>2. API Access Token</h2>
+                <p>You can fetch a token with this new service client to test out in the API store or through any REST client</p>
+                <v-layout row wrap align-center>
+                  <v-flex xs12 sm2>
+                    <v-btn small color="primary" dark @click="getToken()">Get Token</v-btn>
+                  </v-flex>
+                  <v-flex xs12 sm8 v-if="generatedToken">{{generatedToken}}</v-flex>
+                  <v-flex xs12 sm8 v-if="generatedTokenError" error>{{generatedTokenError}}</v-flex>
+                  <v-flex xs6 sm2 v-if="generatedToken">
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on }">
+                        <v-btn
+                          flat
+                          icon
+                          color="primary"
+                          v-clipboard:copy="generatedToken"
+                          v-clipboard:success="clipboardSuccessHandler"
+                          v-clipboard:error="clipboardErrorHandler"
+                          v-on="on"
+                        >
+                          <v-icon>file_copy</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>Copy token to clipboard</span>
+                    </v-tooltip>
+                  </v-flex>
+                </v-layout>
+                <br>
+
+                <div v-if="userAppCfg.commonServices.length > 0">
+                  <h2>3. API Store Swagger</h2>
+                  <p>
+                    This token can be used to test out the common services you have specified by trying them out in the API Store.
+                    <br>Fill in the token above into the Access Token field at the top of the
+                    <strong>API Console</strong> tab for the common service(s) linked below:
+                  </p>
+                  <ul>
+                    <li v-for="item in storeLinks" v-bind:key="item.name">
+                      {{item.name}}
+                      <v-btn small color="primary" dark :href="item.apiStoreLink" target="_blank">
+                        Try it out
+                        <v-icon right dark>open_in_new</v-icon>
+                      </v-btn>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
                 color="info darken-1"
                 flat
-                :disabled="!passwordAgree"
+                :disabled="!passwordAgree || !passwordDecrypted"
                 @click="passwordDialog = false"
               >FINISHED</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
       </v-form>
+      <v-snackbar v-model="snackbar.on" right top :timeout="6000" :color="snackbar.color">
+        {{snackbar.text}}
+        <v-btn color="white" flat @click="snackbar.on = false">
+          <v-icon>close</v-icon>
+        </v-btn>
+      </v-snackbar>
     </v-stepper-content>
   </v-stepper>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { FieldValidations } from '@/utils/constants.js';
+import axios from 'axios';
+import commonServiceList from '@/utils/commonServices.js';
+import { FieldValidations, CommonServiceRoutes } from '@/utils/constants.js';
 import cryptico from 'cryptico-js';
+import Vue from 'vue';
+import VueClipboard from 'vue-clipboard2';
+import { mapGetters } from 'vuex';
+
+VueClipboard.config.autoSetContainer = true;
+Vue.use(VueClipboard);
 
 export default {
   data() {
@@ -184,16 +273,17 @@ export default {
       confirmationDialog: false,
       passwordDialog: false,
       passwordAgree: false,
+      passwordDecrypted: false,
       fieldValidations: FieldValidations,
       appConfig: '',
       appConfigStep: 1,
       step1Valid: false,
       step2Valid: false,
-      commonServices: [
-        { text: 'Common Messaging Service', value: 'cmsg' },
-        { text: 'Document Management Service', value: 'dms' },
-        { text: 'Document Generation Service', value: 'dgen', disabled: true }
-      ],
+      commonServices: commonServiceList.map(serv => ({
+        text: serv.name,
+        value: serv.abbreviation,
+        disabled: serv.disabled
+      })),
       userAppCfg: this.$store.state.configForm.userAppCfg,
       applicationAcronymRules: [
         v => !!v || 'Acroynm is required',
@@ -219,29 +309,44 @@ export default {
           `Description must be ${
             FieldValidations.DESCRIPTION_MAX_LENGTH
           } characters or less`
-      ]
+      ],
+      snackbar: {
+        on: false,
+        text: 'test',
+        color: 'info'
+      },
+      generatedToken: '',
+      generatedTokenError: ''
     };
   },
   computed: {
     ...mapGetters('configForm', [
       'appConfigAsString',
-      'generatedPassword',
+      'configFormSubmissionResult',
       'ephemeralPasswordRSAKey',
       'configSubmissionSuccess',
       'configSubmissionError'
-    ])
+    ]),
+    displayClient: function() {
+      return this.configFormSubmissionResult
+        ? this.configFormSubmissionResult.generatedServiceClient
+        : '';
+    },
+    storeLinks: function() {
+      return this.userAppCfg.commonServices.map(item =>
+        commonServiceList.find(service => service.abbreviation === item)
+      );
+    }
   },
   methods: {
     async submitConfig() {
+      this.generatedToken = '';
       window.scrollTo(0, 0);
       this.shownPassword = '••••••••';
       this.$store.commit('configForm/clearConfigSubmissionMsgs');
 
-      // this is temporary, only allow MSSC to be used at the moment
-      if (
-        this.userAppCfg.applicationAcronym !== 'MSSC' &&
-        this.userAppCfg.applicationAcronym !== 'DOMO'
-      ) {
+      // this is temporary, only allow MSSC and DOMO to be used at the moment
+      if (!['MSSC', 'DOMO'].includes(this.userAppCfg.applicationAcronym)) {
         this.$store.commit(
           'configForm/setConfigSubmissionError',
           'Temp: Only the application acronyms MSSC and DOMO are supported for now.'
@@ -251,6 +356,39 @@ export default {
       await this.$store.dispatch('configForm/submitConfigForm');
       if (this.configSubmissionSuccess) {
         this.passwordDialog = true;
+      }
+    },
+    async getToken() {
+      this.generatedToken = '';
+      this.generatedTokenError = '';
+      try {
+        let url = CommonServiceRoutes.TOKEN;
+        if (this.userAppCfg.commonServices.length > 0) {
+          url = url + this.userAppCfg.commonServices.map(i => i.toUpperCase());
+        } else {
+          url = url + 'WEBADE-REST';
+        }
+        const response = await axios.get(url, {
+          auth: {
+            username: this.displayClient,
+            password: this.shownPassword
+          }
+        });
+        const body = response.data;
+
+        if (!body) {
+          throw new Error('no body in the response');
+        }
+        if (body.error) {
+          throw new Error(body.error);
+        }
+
+        this.generatedToken = body.access_token;
+      } catch (e) {
+        console.log('ERROR, caught error fetching from WebADE Token endpoint'); // eslint-disable-line no-console
+        console.log(e); // eslint-disable-line no-console
+        this.generatedTokenError =
+          'Error fetching token. The service client can take a moment to register, you can try again in a few seconds.';
       }
     },
     updateAppCfgField(field, value) {
@@ -265,11 +403,22 @@ export default {
       );
     },
     decryptPassword() {
+      this.passwordDecrypted = true;
       const DecryptionResult = cryptico.decrypt(
-        this.generatedPassword,
+        this.configFormSubmissionResult.generatedPassword,
         this.ephemeralPasswordRSAKey
       );
       this.shownPassword = DecryptionResult.plaintext;
+    },
+    clipboardSuccessHandler() {
+      this.snackbar.on = true;
+      this.snackbar.text = ' copied to clipboard';
+      this.snackbar.color = 'info';
+    },
+    clipboardErrorHandler() {
+      this.snackbar.on = true;
+      this.snackbar.text = 'attempting to copy to clipboard';
+      this.snackbar.color = 'error';
     }
   }
 };

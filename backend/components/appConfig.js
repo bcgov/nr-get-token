@@ -31,7 +31,8 @@ async function postAppConfig(body) {
 
     const reponse = {
       webAdeResponse: webAdeResponse.data,
-      generatedPassword: generatedConfig.webAdeCfg.serviceClients ? generatedConfig.encyptedPassword : ''
+      generatedPassword: generatedConfig.webAdeCfg.serviceClients ? generatedConfig.encyptedPassword : '',
+      generatedServiceClient: generatedConfig.webAdeCfg.serviceClients ? generatedConfig.webAdeCfg.serviceClients[0].accountName : ''
     };
     return reponse;
 

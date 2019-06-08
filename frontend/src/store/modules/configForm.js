@@ -6,6 +6,7 @@ export default {
   state: {
     configSubmissionSuccess: '',
     configSubmissionError: '',
+    configSubmissionInProgress: false,
     submitting: false,
     userAppCfg: {
       applicationAcronym: '',
@@ -14,13 +15,14 @@ export default {
       commonServices: [],
       deploymentMethod: ''
     },
-    generatedPassword: '',
+    configFormSubmissionResult: null,
     ephemeralPasswordRSAKey: null
   },
   getters: {
     configSubmissionSuccess: state => state.configSubmissionSuccess,
     configSubmissionError: state => state.configSubmissionError,
-    generatedPassword: state => state.generatedPassword,
+    configSubmissionInProgress: state => state.configSubmissionInProgress,
+    configFormSubmissionResult: state => state.configFormSubmissionResult,
     ephemeralPasswordRSAKey: state => state.ephemeralPasswordRSAKey,
     appConfigAsString: state => {
       // these are the hardcoded WebADE cfg values users do not enter
@@ -134,27 +136,35 @@ export default {
     updateUserAppCfg: (state, userAppCfg) => {
       Object.assign(state.userAppCfg, userAppCfg);
     },
+    setConfigSubmissionInProgress: (state) => {
+      state.configSubmissionSuccess = '';
+      state.configSubmissionError = '';
+      state.configSubmissionInProgress = true;
+    },
     setConfigSubmissionSuccess: (state, msg) => {
       state.configSubmissionSuccess = msg;
       state.configSubmissionError = '';
+      state.configSubmissionInProgress = false;
     },
     setConfigSubmissionError: (state, msg) => {
       state.configSubmissionSuccess = '';
       state.configSubmissionError = msg;
+      state.configSubmissionInProgress = false;
     },
     clearConfigSubmissionMsgs: (state) => {
       state.configSubmissionSuccess = '';
       state.configSubmissionError = '';
     },
-    setGeneratedPassword: function (state, val) {
-      state.generatedPassword = val;
+    setConfigFormSubmissionResult: (state, val) => {
+      state.configFormSubmissionResult = val;
     },
-    setEphemeralPasswordRSAKey: function (state, ephemeralPasswordRSAKey) {
+    setEphemeralPasswordRSAKey: (state, ephemeralPasswordRSAKey) => {
       state.ephemeralPasswordRSAKey = ephemeralPasswordRSAKey;
     }
   },
   actions: {
     async submitConfigForm(context) {
+      context.commit('setConfigSubmissionInProgress');
 
       const uniqueSeed =
         Math.random()
@@ -172,11 +182,17 @@ export default {
         if (!response || !response.generatedPassword) {
           throw new Error('Config form POST response is blank or does not include the password');
         }
+
+        const configFormSubmissionResult = {
+          generatedPassword: response.generatedPassword,
+          generatedServiceClient: response.generatedServiceClient
+        };
+
         context.commit(
           'setConfigSubmissionSuccess',
           `SUCCESS, application configuration for ${context.state.userAppCfg.applicationAcronym} updated in Integration.`
         );
-        context.commit('setGeneratedPassword', response.generatedPassword);
+        context.commit('setConfigFormSubmissionResult', configFormSubmissionResult);
       } catch (error) {
         context.commit(
           'setConfigSubmissionError',
