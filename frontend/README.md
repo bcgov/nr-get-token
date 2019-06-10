@@ -10,7 +10,7 @@ The frontend of the application allows users to fill in the appropriate info req
 ### Vue Archetecture
 
 #### Vue CLI
-The frontend application is scaffolded with Vue CLI to set up the project structure and Webpack configuration. See the [Vue CLI docs]() for more information.
+The frontend application is scaffolded with Vue CLI to set up the project structure and Webpack configuration. See the [Vue CLI docs](https://cli.vuejs.org/) for more information.
 If additional Vue structural components are to be added they should be added with the **vue add** command (see CLI docs) rather than manually
 
 #### Vuetify
@@ -26,7 +26,7 @@ Vue Router is used for the Single Page App routing. See the [Vue Router docs](ht
 Other imported libraries used in the application include:
 
 * [axios](https://github.com/axios/axios) for REST calls
-* [cryptioc-js](https://github.com/wwwtyro/cryptico) for password decryption
+* [cryptico-js](https://github.com/wwwtyro/cryptico) for password decryption
 
 
 See `/frontend/package.json` for more
