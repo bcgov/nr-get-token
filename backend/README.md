@@ -4,7 +4,24 @@ Natural Resources Get Token (GETOK) will automate the process for Development te
 
 ## Backend
 
-The backend is a node server which serves the GETOK API used by the frontend.
+The backend is a node server which serves the GETOK API used by the frontend. It uses the following dependencies from NPM:
+
+Password Management & Authentication
+
+* `cryptico-js` - Asymmetric key encryption
+* `generate-password` - Password generator
+* `passportjs` - JWT and OIDC strategies
+
+Networking
+
+* `axios` - Standard network caller
+* `express` - Server middleware
+* `express-validator` - Call validation
+
+Logging
+
+* `morgan` - HTTP request logger
+* `npmlog` - General log framework
 
 ## Quickstart Guide
 
