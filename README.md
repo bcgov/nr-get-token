@@ -24,6 +24,8 @@ Natural Resources Get Token (GETOK will be a front end access point for authoriz
 
 ## Documentation
 
+* [Overview](docs/overview.md)
+* [Developer Guide](docs/developer-guide.md)
 * [Backend Readme](backend/README.md)
 * [Frontend Readme](frontend/README.md)
 * [Openshift Readme](openshift/README.md)
