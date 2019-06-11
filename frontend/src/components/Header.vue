@@ -12,7 +12,7 @@
       </a>
 
       <v-toolbar-title>
-        <v-btn class="title hidden-sm-and-down" color="text" flat>{{ appTitle }}</v-btn>
+        <v-btn class="title hidden-sm-and-down" color="text" flat>{{ appTitle }} - PULL REQUEST DEMO</v-btn>
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
@@ -57,7 +57,7 @@ export default {
 }
 
 .gov-header .v-toolbar {
-  background-color: rgb(0, 51, 102);
+  background-color: rgb(44, 88, 22);
   border-bottom: 2px solid rgb(252, 186, 25);
 }
 
