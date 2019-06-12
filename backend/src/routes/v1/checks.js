@@ -12,7 +12,6 @@ checks.get('/status', async (_req, res) => {
     });
   } else {
     res.status(500).json({
-      error: 500,
       message: 'Unable to get api status list'
     });
   }
@@ -31,7 +30,6 @@ checks.get('/gettoken', async (_req, res) => {
     res.status(200).json(token.access_token);
   } else {
     res.status(500).json({
-      error: 500,
       message: 'Unable to acquire access_token'
     });
   }
