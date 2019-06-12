@@ -345,7 +345,7 @@ export default {
       this.shownPassword = '••••••••';
       this.$store.commit('configForm/clearConfigSubmissionMsgs');
 
-      // this is temporary, only allow MSSC and DOMO to be used at the moment
+      // this is temporary, only allow MSSC and DOMO and MDS to be used at the moment
       if (!['MSSC', 'DOMO', 'MDS'].includes(this.userAppCfg.applicationAcronym)) {
         this.$store.commit(
           'configForm/setConfigSubmissionError',
