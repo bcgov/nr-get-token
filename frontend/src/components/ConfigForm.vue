@@ -345,14 +345,6 @@ export default {
       this.shownPassword = '••••••••';
       this.$store.commit('configForm/clearConfigSubmissionMsgs');
 
-      // this is temporary, only allow MSSC and DOMO to be used at the moment
-      if (!['MSSC', 'DOMO'].includes(this.userAppCfg.applicationAcronym)) {
-        this.$store.commit(
-          'configForm/setConfigSubmissionError',
-          'Temp: Only the application acronyms MSSC and DOMO are supported for now.'
-        );
-        return;
-      }
       await this.$store.dispatch('configForm/submitConfigForm');
       if (this.configSubmissionSuccess) {
         this.passwordDialog = true;
