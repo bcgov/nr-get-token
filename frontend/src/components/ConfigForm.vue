@@ -293,7 +293,7 @@ export default {
             FieldValidations.ACRONYM_MAX_LENGTH
           } characters or less`,
         v =>
-          /^(?:[A-Z]{2,}[_]?)+[A-Z]{2,}$/g.test(v) ||
+          /^(?:[A-Z]{2,}[_]?)+[A-Z]{1,}$/g.test(v) ||
           'Incorrect format. Hover the ? for details.'
       ],
       applicationNameRules: [

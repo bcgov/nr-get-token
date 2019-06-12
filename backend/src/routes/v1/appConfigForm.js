@@ -13,7 +13,8 @@ appConfig.post('/', [
   body('configForm.applicationAcronym').exists(),
   body('configForm.applicationName').exists(),
   body('configForm.applicationDescription').exists(),
-  body('configForm.commonServices').exists()
+  body('configForm.commonServices').exists(),
+  body('passwordPublicKey').exists()
 ], async (req, res) => {
   // Validate for Bad Requests
   const errors = validationResult(req);
