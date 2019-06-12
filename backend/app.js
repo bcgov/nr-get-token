@@ -9,9 +9,9 @@ const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const OidcStrategy = require('passport-openidconnect').Strategy;
 
-const utils = require('./components/utils');
-const authRouter = require('./routes/auth');
-const v1Router = require('./routes/v1');
+const utils = require('./src/components/utils');
+const authRouter = require('./src/routes/auth');
+const v1Router = require('./src/routes/v1');
 
 const apiRouter = express.Router();
 

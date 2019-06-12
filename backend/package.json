@@ -10,7 +10,7 @@
     "start": "node ./bin/www",
     "lint": "node_modules/.bin/eslint . --no-fix --ignore-pattern 'node_modules' --ext .js",
     "lint:fix": "node_modules/.bin/eslint . --fix --ignore-pattern 'node_modules' --ext .js",
-    "test": "node_modules/.bin/jest --coverage",
+    "test": "node_modules/.bin/jest",
     "clean": "rm -rf coverage dist",
     "prebuild": "npm run test",
     "pretest": "npm run lint",
@@ -97,7 +97,12 @@
     "testMatch": [
       "**/tests/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)"
     ],
-    "testURL": "http://localhost/"
+    "testURL": "http://localhost/",
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/docs/*.*"
+    ]
   },
   "license": "Apache-2.0",
   "repository": {
