@@ -293,7 +293,7 @@ export default {
             FieldValidations.ACRONYM_MAX_LENGTH
           } characters or less`,
         v =>
-          /^(?:[A-Z]{2,}[_]?)+[A-Z]{2,}$/g.test(v) ||
+          /^(?:[A-Z]{2,}[_]?)+[A-Z]{1,}$/g.test(v) ||
           'Incorrect format. Hover the ? for details.'
       ],
       applicationNameRules: [
@@ -345,8 +345,8 @@ export default {
       this.shownPassword = '••••••••';
       this.$store.commit('configForm/clearConfigSubmissionMsgs');
 
-      // this is temporary, only allow MSSC and DOMO to be used at the moment
-      if (!['MSSC', 'DOMO'].includes(this.userAppCfg.applicationAcronym)) {
+      // this is temporary, only alloow MSSC and DOMO to be used at the moment
+      if (!['MSSC', 'DOMO', 'MDS'].includes(this.userAppCfg.applicationAcronym)) {
         this.$store.commit(
           'configForm/setConfigSubmissionError',
           'Temp: Only the application acronyms MSSC and DOMO are supported for now.'
