@@ -5,7 +5,7 @@ import bcgov.GitHubHelper
 // Declarative Pipeline
 // --------------------
 pipeline {
-  agent any
+  agent none
 
   environment {
     // Enable pipeline verbose debug output if greater than 0
@@ -39,6 +39,7 @@ pipeline {
 
   stages {
     stage('Initialize') {
+      agent any
       steps {
         // Cancel any running builds in progress
         timeout(10) {
@@ -60,6 +61,7 @@ pipeline {
     }
 
     stage('Build & Test') {
+      agent any
       steps {
         script {
           openshift.withCluster() {
@@ -183,6 +185,7 @@ pipeline {
     }
 
     stage('Deploy - Dev') {
+      agent any
       steps {
         script {
           deployStage('Dev', DEV_PROJECT, DEV_HOST_ROUTE)
@@ -201,6 +204,7 @@ pipeline {
     }
 
     stage('Deploy - Test') {
+      agent any
       steps {
         script {
           deployStage('Test', TEST_PROJECT, TEST_HOST_ROUTE)
@@ -219,6 +223,7 @@ pipeline {
     }
 
     stage('Deploy - Prod') {
+      agent any
       steps {
         script {
           deployStage('Prod', PROD_PROJECT, PROD_HOST_ROUTE)
