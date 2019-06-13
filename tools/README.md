@@ -131,9 +131,17 @@ Full details should be found at the [BCDevOps SonarQube repository](https://gith
 
 Do deploy the server and the backing PostgreSQL database clone the repo linked above and, from the root folder (where the template yaml is located), run the following command in the `Tools` project:
 
-    oc new-app -f sonarqube-postgresql-template.yaml --param=SONARQUBE_VERSION=6.7.5
+    oc -n k8vopl-tools new-app -f sonarqube-postgresql-template.yaml --param=SONARQUBE_VERSION=6.7.5
 
 At the point this was done on the GETOK tools project, the BCDevOps SonarQube repo was at commit `bbb9f62e29706b61382cf24d7ad7e08f2476a01f` (on master branch).
+
+### Admin Password
+The SonarQube server instance creates with a default admin password. This should be reset to something stronger and stored in an OpenShift secret so authorized developers can find it.
+
+The BCDevOps SonarQube repo provides a script that will generate a random PW, set it in SonarQube, and create a secret.
+In the `/provisioning` folder in the cloned BCDevOps repo, run (ensure your console is in the `Tools` project, k8vopl-tools in this instance)
+
+    ./updatesqadminpw.sh
 
 ## SonarQube Scanner
 TBD
