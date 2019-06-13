@@ -47,7 +47,7 @@ const utils = {
       }
     }
   },
-  buildWebAdeCfg: (requestBody) => {
+  buildWebAdeCfg: requestBody => {
     const configForm = requestBody.configForm;
     const generatedPassword = utils.generatePassword(requestBody.passwordPublicKey);
     const defaultAppCfg = {

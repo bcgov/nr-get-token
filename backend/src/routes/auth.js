@@ -29,7 +29,6 @@ router.use('/callback',
 
 router.use('/error', (_req, res) => {
   res.status(401).json({
-    status: 401,
     message: 'Error: Unable to authenticate'
   });
 });
@@ -64,7 +63,6 @@ router.use('/token', auth.removeExpired, (req, res) => {
     res.status(200).json(req.user);
   } else {
     res.status(401).json({
-      status: 401,
       message: 'Not logged in'
     });
   }

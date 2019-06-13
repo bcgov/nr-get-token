@@ -22,7 +22,7 @@ export const CommonServiceRoutes = Object.freeze({
 
 export const FieldValidations = Object.freeze({
   ACRONYM_MAX_LENGTH: 30,
-  ACRONYM_MIN_LENGTH: 4,
+  ACRONYM_MIN_LENGTH: 3,
   NAME_MAX_LENGTH: 120,
   DESCRIPTION_MAX_LENGTH: 2000,
   PASSWORD_MIN_LENGTH: 8,
