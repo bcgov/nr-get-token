@@ -1,16 +1,16 @@
 # Jenkins
 
-Uses BcDevOPs CICD Jenkins Basic install  [link](https://github.com/BCDevOps/openshift-components/tree/cvarjao-update-jenkins-basic/cicd/jenkins-basic)  
+Uses BcDevOPs CICD Jenkins Basic install  [link](https://github.com/BCDevOps/openshift-components/tree/cvarjao-update-jenkins-basic/cicd/jenkins-basic)
 
-The commands, labels, and naming conventions follow the Pull Request Pipeline principles of the BcDevOPs pipeline-cli [link] (https://github.com/BCDevOps/pipeline-cli).  
+The commands, labels, and naming conventions follow the Pull Request Pipeline principles of the BcDevOPs pipeline-cli [link] (https://github.com/BCDevOps/pipeline-cli).
 
-The jobs that Jenkins creates and uses will also follow those principles and build out an "environment" for each pull request.  
+The jobs that Jenkins creates and uses will also follow those principles and build out an "environment" for each pull request.
 
-This repository adds a script to the existing Jenkins deployment that will create our jobs.  
+This repository adds a script to the existing Jenkins deployment that will create our jobs.
 
-See tools/docker/contrib/jenkins/configuration/init.groovy.d/003-create-jobs.groovy.  
+See tools/docker/contrib/jenkins/configuration/init.groovy.d/003-create-jobs.groovy.
 
-To add or change the jobs, this is where you want to go.  The name of this file is important, as it needs to get run *BEFORE* the 003-register-github-webhooks.groovy included in the basic install.  Scripts are run alphabetically.  The jobs need to be created before the github webhooks are created.  Our jobs script will read secrets and configmaps created during this setup; described below.  
+To add or change the jobs, this is where you want to go.  The name of this file is important, as it needs to get run *BEFORE* the 003-register-github-webhooks.groovy included in the basic install.  Scripts are run alphabetically.  The jobs need to be created before the github webhooks are created.  Our jobs script will read secrets and configmaps created during this setup; described below.
 
 ## Prerequisites
 
@@ -20,27 +20,27 @@ You will need a github account and token (preferrably a team shared account) wit
 
 # Setup Jenkins
 
-The following commands setup up the Prod instance of Jenkins and uses this repository and specific OpenShift project namespaces.  
+The following commands setup up the Prod instance of Jenkins and uses this repository and specific OpenShift project namespaces.
 
-Change as necessary...  
+Change as necessary...
 
-Fill in this documentation about parameters and labels from pipeline-cli...  
+Fill in this documentation about parameters and labels from pipeline-cli...
 
-*phases*: build, dev, test, prod   
-*changeId*: (pull request number)  
-*suffix*: build = -build-{changeId}, dev = -dev-{changeId}, test = -test, prod = -prod  
-*version* (N.n.n): build = {version}-{changeId}, dev = {version}-{changeId}, test = {version}, prod = {version}    
-*tag*: build = build-{version}-{changeId}, dev = dev-{version}-{changeId}, test = test-{version}, prod = prod-{version}  
+*phases*: build, dev, test, prod
+*changeId*: (pull request number)
+*suffix*: build = -build-{changeId}, dev = -dev-{changeId}, test = -test, prod = -prod
+*version* (N.n.n): build = {version}-{changeId}, dev = {version}-{changeId}, test = {version}, prod = {version}
+*tag*: build = build-{version}-{changeId}, dev = dev-{version}-{changeId}, test = test-{version}, prod = prod-{version}
 
 #### parameter notes
--p VERSION={tag}  
+-p VERSION={tag}
 #### label notes
--l env-name={phase}  
--l env-id={changeId/pull request number}  
--l app={app name}{suffix}  
+-l env-name={phase}
+-l env-id={changeId/pull request number}
+-l app={app name}{suffix}
 
 ### login to openshift
-Login via web console, click your login name at top tight and click "Copy Login Command".  Go to your terminal, go to your project root and paste the copy command.  
+Login via web console, click your login name at top tight and click "Copy Login Command".  Go to your terminal, go to your project root and paste the copy command.
 
 ```
 cd tools/jenkins
@@ -66,7 +66,7 @@ oc -n k8vopl-tools process -f 'openshift/jobs-config.json' -p 'REPO_OWNER=bcgov'
 
 ### process the build config templates...
 
-These build configs have no build triggers, we start them manually (or in Jenkins job script)  
+These build configs have no build triggers, we start them manually (or in Jenkins job script)
 #### master
 
 ```
@@ -116,8 +116,24 @@ oc -n k8vopl-tools process -f 'openshift/deploy-slave.yaml' -p 'NAME=jenkins' -p
 ```
 
 ### cleanup
-This will not clean up the initial secret and config maps we explicitly created  
+This will not clean up the initial secret and config maps we explicitly created
 
 ```
 oc delete all,template,secret,configmap,pvc,serviceaccount,rolebinding --selector app=jenkins-prod -n k8vopl-tools
 ```
+
+# SonarQube
+
+## SonarQube Server
+To deploy a SonarQube server instance to our project we simply use the prebuilt server image provided by the BCDevOps organization.
+
+Full details should be found at the [BCDevOps SonarQube repository](https://github.com/BCDevOps/sonarqube).
+
+Do deploy the server and the backing PostgreSQL database clone the repo linked above and, from the root folder (where the template yaml is located), run the following command in the `Tools` project:
+
+    oc new-app -f sonarqube-postgresql-template.yaml --param=SONARQUBE_VERSION=6.7.5
+
+At the point this was done on the GETOK tools project, the BCDevOps SonarQube repo was at commit `bbb9f62e29706b61382cf24d7ad7e08f2476a01f` (on master branch).
+
+## SonarQube Scanner
+TBD
