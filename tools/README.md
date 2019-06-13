@@ -139,7 +139,7 @@ At the point this was done on the GETOK tools project, the BCDevOps SonarQube re
 The SonarQube server instance creates with a default admin password. This should be reset to something stronger and stored in an OpenShift secret so authorized developers can find it.
 
 The BCDevOps SonarQube repo provides a script that will generate a random PW, set it in SonarQube, and create a secret.
-In the `/provisioning` folder in the cloned BCDevOps repo, run (ensure your console is in the `Tools` project, k8vopl-tools in this instance)
+In the `/provisioning` folder in the cloned BCDevOps repo, run (ensure your console is in the `Tools` project, k8vopl-tools in this instance):
 
     ./updatesqadminpw.sh
 
