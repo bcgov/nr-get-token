@@ -3,6 +3,8 @@ node_modules
 dist
 .nyc_output
 coverage
+.gradle
+build
 
 # local env files
 local.*
