@@ -37,6 +37,7 @@
   "devDependencies": {
     "eslint": "^5.16.0",
     "jest": "^24.8.0",
+    "jest-sonar-reporter": "^2.0.0",
     "nodemon": "^1.19.0"
   },
   "eslintConfig": {
@@ -102,7 +103,11 @@
     "collectCoverageFrom": [
       "src/**/*.js",
       "!src/docs/*.*"
-    ]
+    ],
+    "testResultsProcessor": "jest-sonar-reporter"
+  },
+  "jestSonar": {
+    "reportPath": "coverage"
   },
   "license": "Apache-2.0",
   "repository": {
