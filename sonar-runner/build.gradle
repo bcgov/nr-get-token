@@ -6,11 +6,11 @@ plugins {
 }
 
 // ==============================================================================================
-// SonarQube Scanner Defaults
+// SonarQube Scanner Properties
 // ==============================================================================================
-// Set your project's SonarQube scanner properties at your build/pipeline script level,
-// not at this level.  The only thing that should be defined at this level is a minimal set of
-// generic defaults.
+// These can (and sometimes should) be overriden by the build pipeline and are supplied to the
+// gradlew sonarqube command with -D switches
+// (ex: ./gradlew sonarqube -Dsonar.host.url='https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca')
 //
 // For more information on available properties visit:
 // - https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle
@@ -21,23 +21,17 @@ sonarqube {
     property "sonar.projectName", "<Set This In Your Build/Pipeline Script>"
     property "sonar.projectKey", "<Set This In Your Build/Pipeline Script>"
 
-    // ================================================================
-    // Assumptions are being made by these defaults
-    // ================================================================
-    // You should set these paths at your build/pipeline script level.
-    // These defaults assume this build file is one level down
-    // from your root project directory and you what to scan
-    // your entire project.
-    // ----------------------------------------------------------------
     property "sonar.projectBaseDir", "../"
-    property "sonar.sources", "./"
-    // ================================================================
+    property "sonar.sources", "./frontend/src, ./backend/src"
 
     property "sonar.verbose", "true"
     property "sourceEncoding", "UTF-8"
-    property "sonar.python.coveragePlugin","cobertura"
-    property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
     property "sonar.exclusions", "**/node_modules/**, **/coverage/**"
+    
+    property "sonar.tests", "./frontend/tests, ./backend/tests"
+    property "sonar.javascript.lcov.reportPaths", "frontend/coverage/lcov.info, backend/coverage/lcov.info"
+    property "sonar.testExecutionReportPaths", "frontend/coverage/test-report.xml, backend/coverage/test-report.xml"
+    property "sonar.test.inclusions", "**/tests/**/*.spec.**"
   }
 }
 // ==============================================================================================
@@ -56,10 +50,6 @@ allprojects {
 
 test {
   ignoreFailures = true
-}
-
-dependencies {
-  testCompile 'junit:junit:4.12'
 }
 
 repositories {
