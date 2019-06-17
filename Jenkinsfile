@@ -63,41 +63,41 @@ pipeline {
       }
     }
 
-    stage('Static Analysis') {
-      agent any
-      steps {
-        echo 'Performing SonarQube static code analysis...'
+    // stage('Static Analysis') {
+    //   agent any
+    //   steps {
+    //     echo 'Performing SonarQube static code analysis...'
 
-        // The `sonar-runner` MUST exist in your project and contain a Gradle environment consisting of:
-        // - Gradle wrapper script(s)
-        // - A simple `build.gradle` file that includes the SonarQube plug-in.
-        //
-        // An example can be found here:
-        // - https://github.com/BCDevOps/sonarqube
-        dir('sonar-runner') {
-          // ======================================================================================================
-          // Set your SonarQube scanner properties at this level, not at the Gradle Build level.
-          // The only thing that should be defined at the Gradle Build level is a minimal set of generic defaults.
-          //
-          // For more information on available properties visit:
-          // - https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle
-          // ======================================================================================================
-          sh (
-            returnStdout: true,
-            script: """
-              chmod +x ./gradlew
-              ./gradlew sonarqube --stacktrace --info \
-                -Dsonar.verbose=true \
-                -Dsonar.host.url='${SONARQUBE_URL}' \
-                -Dsonar.projectName='${REPO_NAME}' \
-                -Dsonar.projectKey='${REPO_NAME}' \
-                -Dsonar.projectBaseDir='../' \
-                -Dsonar.sources='./'
-            """
-          )
-        }
-      }
-    }
+    //     // The `sonar-runner` MUST exist in your project and contain a Gradle environment consisting of:
+    //     // - Gradle wrapper script(s)
+    //     // - A simple `build.gradle` file that includes the SonarQube plug-in.
+    //     //
+    //     // An example can be found here:
+    //     // - https://github.com/BCDevOps/sonarqube
+    //     dir('sonar-runner') {
+    //       // ======================================================================================================
+    //       // Set your SonarQube scanner properties at this level, not at the Gradle Build level.
+    //       // The only thing that should be defined at the Gradle Build level is a minimal set of generic defaults.
+    //       //
+    //       // For more information on available properties visit:
+    //       // - https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle
+    //       // ======================================================================================================
+    //       sh (
+    //         returnStdout: true,
+    //         script: """
+    //           chmod +x ./gradlew
+    //           ./gradlew sonarqube --stacktrace --info \
+    //             -Dsonar.verbose=true \
+    //             -Dsonar.host.url='${SONARQUBE_URL}' \
+    //             -Dsonar.projectName='${REPO_NAME}' \
+    //             -Dsonar.projectKey='${REPO_NAME}' \
+    //             -Dsonar.projectBaseDir='../' \
+    //             -Dsonar.sources='./'
+    //         """
+    //       )
+    //     }
+    //   }
+    // }
 
     stage('Build & Test') {
       agent any
