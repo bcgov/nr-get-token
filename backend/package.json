@@ -12,8 +12,6 @@
     "lint:fix": "node_modules/.bin/eslint . --fix --ignore-pattern 'node_modules' --ext .js",
     "test": "node_modules/.bin/jest",
     "clean": "rm -rf coverage dist",
-    "prebuild": "npm run test",
-    "pretest": "npm run lint",
     "purge": "rm -rf node_modules",
     "rebuild": "npm run clean && npm run build",
     "reinstall": "npm run purge && npm install"
