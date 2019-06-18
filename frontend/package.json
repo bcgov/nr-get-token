@@ -10,6 +10,7 @@
     "lint": "node_modules/.bin/vue-cli-service lint --no-fix",
     "lint:fix": "node_modules/.bin/vue-cli-service lint --fix",
     "clean": "rm -rf coverage dist",
+    "pretest:unit": "npm run lint",
     "purge": "rm -rf node_modules",
     "rebuild": "npm run clean && npm run build",
     "reinstall": "npm run purge && npm install",

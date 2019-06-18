@@ -115,7 +115,7 @@ oc -n k8vopl-prod policy add-role-to-user 'admin' 'system:serviceaccount:k8vopl-
 #### slave
 
 ```sh
-oc -n k8vopl-tools process -f 'openshift/deploy-slave.yaml' -p 'NAME=jenkins' -p 'SUFFIX=-prod' -p 'VERSION=prod-1.0.0' -p 'SLAVE_NAME=build' -p 'SLAVE_LABELS=build deploy test ui-test' -p 'SLAVE_EXECUTORS=3' -p 'CPU_REQUEST=300m' -p 'CPU_LIMIT=500m' -p 'MEMORY_REQUEST=2Gi' -p 'MEMORY_LIMIT=2Gi' -l app-name=jenkins -l env-name=prod -l env-id=0 -l github-repo=https://github.com/bcgov/nr-get-token -l github-owner=bcgov -l app=jenkins-prod -o yaml | oc -n k8vopl-tools create -f -
+oc -n k8vopl-tools process -f 'openshift/deploy-slave.yaml' -p 'NAME=jenkins' -p 'SUFFIX=-prod' -p 'VERSION=prod-1.0.0' -p 'NAMESPACE=k8vopl-tools' -p 'SLAVE_NAME=build' -p 'SLAVE_LABELS=build deploy test ui-test' -p 'SLAVE_EXECUTORS=3' -p 'CPU_REQUEST=300m' -p 'CPU_LIMIT=2000m' -p 'MEMORY_REQUEST=256Mi' -p 'MEMORY_LIMIT=2Gi' -l app-name=jenkins -l env-name=prod -l env-id=0 -l github-repo=https://github.com/bcgov/nr-get-token -l github-owner=bcgov -l app=jenkins-prod -o yaml | oc -n k8vopl-tools create -f -
 ```
 
 ### cleanup
