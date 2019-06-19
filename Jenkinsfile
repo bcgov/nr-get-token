@@ -4,6 +4,7 @@ import bcgov.GitHubHelper
 // ------------------
 // Pipeline Variables
 // ------------------
+
 // Stash Names
 def BE_COV_STASH = 'backend-coverage'
 def FE_COV_STASH = 'frontend-coverage'
@@ -12,7 +13,7 @@ def FE_COV_STASH = 'frontend-coverage'
 // Declarative Pipeline
 // --------------------
 pipeline {
-  agent none
+  agent any
 
   environment {
     // Enable pipeline verbose debug output if greater than 0
@@ -77,16 +78,11 @@ pipeline {
 
     stage('Tests') {
       parallel {
-        stage('Notify Test Start') {
+        stage('Test Backend') {
           agent any
           steps {
             notifyStageStatus('Tests', 'PENDING')
-          }
-        }
 
-        stage('Backend Test') {
-          agent any
-          steps {
             dir('backend') {
               timeout(10) {
                 echo 'Installing NPM Dependencies...'
@@ -97,18 +93,18 @@ pipeline {
               }
             }
           }
-        }
-        post {
-          success {
-            echo 'Backend Lint Checks and Tests passed'
-            stash name: BE_COV_STASH, includes: 'backend/coverage/**'
-          }
-          failure {
-            echo 'Backend Lint Checks and Tests failed'
+          post {
+            success {
+              echo 'Backend Lint Checks and Tests passed'
+              stash name: BE_COV_STASH, includes: 'backend/coverage/**'
+            }
+            failure {
+              echo 'Backend Lint Checks and Tests failed'
+            }
           }
         }
 
-        stage('Frontend Test') {
+        stage('Test Frontend') {
           agent any
           steps {
             dir('frontend') {
@@ -121,26 +117,26 @@ pipeline {
               }
             }
           }
-        }
-        post {
-          success {
-            echo 'Frontend Lint Checks and Tests passed'
-            stash name: FE_COV_STASH, includes: 'frontend/coverage/**'
-          }
-          failure {
-            echo 'Frontend Lint Checks and Tests failed'
+          post {
+            success {
+              echo 'Frontend Lint Checks and Tests passed'
+              stash name: FE_COV_STASH, includes: 'frontend/coverage/**'
+            }
+            failure {
+              echo 'Frontend Lint Checks and Tests failed'
+            }
           }
         }
       }
-    }
-    post {
-      success {
-        echo 'All Lint Checks and Tests passed'
-        notifyStageStatus('Tests', 'SUCCESS')
-      }
-      failure {
-        echo 'Some Lint Checks and Tests failed'
-        notifyStageStatus('Tests', 'FAILURE')
+      post {
+        success {
+          echo 'All Lint Checks and Tests passed'
+          notifyStageStatus('Tests', 'SUCCESS')
+        }
+        failure {
+          echo 'Some Lint Checks and Tests failed'
+          notifyStageStatus('Tests', 'FAILURE')
+        }
       }
     }
 
