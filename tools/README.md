@@ -67,7 +67,7 @@ oc -n k8vopl-tools process -f 'openshift/ns-config.yaml' -p 'DEV=k8vopl-dev' -p 
 oc -n k8vopl-tools process -f 'openshift/jobs-config.yaml' -p 'REPO_OWNER=bcgov' -p 'REPO_NAME=nr-get-token' -p 'APP_NAME=getok' -p 'APP_DOMAIN=pathfinder.gov.bc.ca' | oc -n k8vopl-tools create -f -
 ```
 
-### process the build config templates...
+### process the build config templates
 
 These build configs have no build triggers, we start them manually (or in Jenkins job script)
 
@@ -77,7 +77,7 @@ These build configs have no build triggers, we start them manually (or in Jenkin
 oc -n k8vopl-tools process -f 'openshift/build-master.yaml' -p 'NAME=jenkins' -p 'SUFFIX=-prod' -p 'VERSION=prod-1.0.0' -p 'SOURCE_REPOSITORY_URL=https://github.com/bcgov/nr-get-token' -p 'SOURCE_REPOSITORY_REF=master' -l app-name=jenkins -l env-name=prod -l env-id=0 -l github-repo=https://github.com/bcgov/nr-get-token -l github-owner=bcgov -l app=jenkins-prod -o yaml | oc -n k8vopl-tools create -f -
 ```
 
-##### build and follow...
+##### build and follow
 
 ```sh
 oc -n k8vopl-tools start-build bc/jenkins-prod -F
@@ -89,7 +89,7 @@ oc -n k8vopl-tools start-build bc/jenkins-prod -F
 oc -n k8vopl-tools process -f 'openshift/build-slave.yaml' -p 'NAME=jenkins' -p 'SUFFIX=-prod' -p 'VERSION=prod-1.0.0' -p 'SLAVE_NAME=main' -p 'SOURCE_IMAGE_STREAM_TAG=jenkins:prod-1.0.0' -l app-name=jenkins -l env-name=prod -l env-id=0 -l github-repo=https://github.com/bcgov/nr-get-token -l github-owner=bcgov -l app=jenkins-prod -o yaml | oc -n k8vopl-tools create -f -
 ```
 
-##### build and follow...
+##### build and follow
 
 ```sh
 oc -n k8vopl-tools start-build bc/jenkins-slave-main-prod -F
@@ -101,7 +101,6 @@ oc -n k8vopl-tools start-build bc/jenkins-slave-main-prod -F
 
 ```sh
 oc -n k8vopl-tools process -f 'openshift/deploy-master.yaml' -p 'NAME=jenkins' -p 'SUFFIX=-prod' -p 'VERSION=prod-1.0.0' -p 'ROUTE_HOST=jenkins-prod-k8vopl-tools.pathfinder.gov.bc.ca' -p 'GH_USERNAME=bcgov-nr-csst' -p 'GH_PASSWORD=<personal_access_token>' -l app-name=jenkins -l env-name=prod -l env-id=0 -l github-repo=https://github.com/bcgov/nr-get-token -l github-owner=bcgov -l app=jenkins-prod -o yaml | oc -n k8vopl-tools create -f -
-
 ```
 
 #### add service account access to other projects
@@ -115,7 +114,7 @@ oc -n k8vopl-prod policy add-role-to-user 'admin' 'system:serviceaccount:k8vopl-
 #### slave
 
 ```sh
-oc -n k8vopl-tools process -f 'openshift/deploy-slave.yaml' -p 'NAME=jenkins' -p 'SUFFIX=-prod' -p 'VERSION=prod-1.0.0' -p 'NAMESPACE=k8vopl-tools' -p 'SLAVE_NAME=build' -p 'SLAVE_LABELS=build deploy test ui-test' -p 'SLAVE_EXECUTORS=3' -p 'CPU_REQUEST=300m' -p 'CPU_LIMIT=2000m' -p 'MEMORY_REQUEST=256Mi' -p 'MEMORY_LIMIT=2Gi' -l app-name=jenkins -l env-name=prod -l env-id=0 -l github-repo=https://github.com/bcgov/nr-get-token -l github-owner=bcgov -l app=jenkins-prod -o yaml | oc -n k8vopl-tools create -f -
+oc -n k8vopl-tools process -f 'openshift/deploy-slave.yaml' -p 'NAME=jenkins' -p 'SUFFIX=-prod' -p 'VERSION=prod-1.0.0' -p 'NAMESPACE=k8vopl-tools' -p 'SLAVE_NAME=build' -l app-name=jenkins -l env-name=prod -l env-id=0 -l github-repo=https://github.com/bcgov/nr-get-token -l github-owner=bcgov -l app=jenkins-prod -o yaml | oc -n k8vopl-tools create -f -
 ```
 
 ### cleanup
@@ -123,7 +122,7 @@ oc -n k8vopl-tools process -f 'openshift/deploy-slave.yaml' -p 'NAME=jenkins' -p
 This will not clean up the initial secret and config maps we explicitly created
 
 ```sh
-oc delete all,template,secret,configmap,pvc,serviceaccount,rolebinding --selector app=jenkins-prod -n k8vopl-tools
+oc -n k8vopl-tools delete all,template,secret,configmap,pvc,serviceaccount,rolebinding --selector app=jenkins-prod
 ```
 
 # SonarQube

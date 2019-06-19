@@ -147,36 +147,54 @@ objects:
       type: ImageChange
     - type: ConfigChange
 parameters:
-- description: A name used for all objects
+- name: NAME
+  description: A name used for all objects
   displayName: Name
-  name: NAME
   required: true
-- description: A name suffix used for all objects
+  value: jenkins
+- name: SUFFIX
+  description: A name suffix used for all objects
   displayName: Suffix
-  name: SUFFIX
-  required: false
   value: ''
-- description: A version used for the image tags
-  displayName: version
-  name: VERSION
+- name: VERSION
+  description: A version used for the image tags
+  displayName: Version
   required: true
   value: prod-1.0.0
 - name: NAMESPACE
   description: Target namespace reference (i.e. 'k8vopl-tools')
+  displayName: Namespace
   required: true
 - name: SLAVE_NAME
+  description: An identifier used for this slave
+  displayName: Slave Name
   required: true
+  value: build
 - name: SLAVE_LABELS
-  value: Linux rhel rhel7 build test deploy light
+  description: Labels this slave should be annotated with
+  displayName: Slave Labels
+  value: linux node rhel rhel7 build test deploy light
 - name: SLAVE_EXECUTORS
+  description: Number of executors this slave instance should have
+  displayName: Slave Executors
   value: '3'
 - name: REPLICAS
+  description: Number of pod replicas
+  displayName: Replicas
   value: '1'
 - name: CPU_REQUEST
+  description: Minimal CPU needed to run
+  displayName: CPU Request
   value: 300m
 - name: CPU_LIMIT
+  description: Maximum CPU allowed to use
+  displayName: CPU Limit
   value: 2000m
 - name: MEMORY_REQUEST
+  description: Minimal amount of memory needed to run
+  displayName: Memory Request
   value: 256Mi
 - name: MEMORY_LIMIT
+  description: Maximum amount of memory allowed to use
+  displayName: Memory Limit
   value: 2Gi
