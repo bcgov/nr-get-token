@@ -75,59 +75,58 @@ pipeline {
     }
 
     stage('Tests') {
-      parallel {
-        stage('Test Backend') {
-          agent any
-          steps {
-            notifyStageStatus('Tests', 'PENDING')
+      agent any
+      steps {
+        notifyStageStatus('Tests', 'PENDING')
 
-            dir('backend') {
-              timeout(10) {
-                echo 'Installing NPM Dependencies...'
-                sh 'npm ci'
+        script {
+          parallel(
+            Backend: {
+              dir('backend') {
+                try {
+                  timeout(10) {
+                    echo 'Installing NPM Dependencies...'
+                    sh 'npm ci'
 
-                echo 'Linting and Testing Backend...'
-                sh 'npm run test'
+                    echo 'Linting and Testing Backend...'
+                    sh 'npm run test'
+
+                    echo 'Backend Lint Checks and Tests passed'
+                  }
+                } catch (e) {
+                  echo 'Backend Lint Checks and Tests failed'
+                  throw e
+                }
+              }
+            },
+
+            Frontend: {
+              dir('frontend') {
+                try {
+                  timeout(10) {
+                  echo 'Installing NPM Dependencies...'
+                  sh 'npm ci'
+
+                  echo 'Linting and Testing Backend...'
+                  sh 'npm run test:unit'
+
+                  echo 'Frontend Lint Checks and Tests passed'
+
+                  }
+                } catch (e) {
+                  echo 'Frontend Lint Checks and Tests failed'
+                  throw e
+                }
               }
             }
-          }
-          post {
-            success {
-              echo 'Backend Lint Checks and Tests passed'
-              stash name: BE_COV_STASH, includes: 'backend/coverage/**'
-            }
-            failure {
-              echo 'Backend Lint Checks and Tests failed'
-            }
-          }
-        }
-
-        stage('Test Frontend') {
-          agent any
-          steps {
-            dir('frontend') {
-              timeout(10) {
-                echo 'Installing NPM Dependencies...'
-                sh 'npm ci'
-
-                echo 'Linting and Testing Frontend...'
-                sh 'npm run test:unit'
-              }
-            }
-          }
-          post {
-            success {
-              echo 'Frontend Lint Checks and Tests passed'
-              stash name: FE_COV_STASH, includes: 'frontend/coverage/**'
-            }
-            failure {
-              echo 'Frontend Lint Checks and Tests failed'
-            }
-          }
+          )
         }
       }
       post {
         success {
+          stash name: BE_COV_STASH, includes: 'backend/coverage/**'
+          stash name: FE_COV_STASH, includes: 'frontend/coverage/**'
+
           echo 'All Lint Checks and Tests passed'
           notifyStageStatus('Tests', 'SUCCESS')
         }
@@ -148,7 +147,6 @@ pipeline {
                 echo "DEBUG - Using project: ${openshift.project()}"
               }
 
-              // Using scripted parallelization due to Openshift Plugin limitation
               parallel(
                 Backend: {
                   try {
@@ -300,7 +298,7 @@ pipeline {
       script {
         // Comment on Pull Request if build changes to successful
         if(currentBuild.currentResult.equalsIgnoreCase('SUCCESS')) {
-          echo "Posting SonarQube Analysis (${SONARQUBE_URL_EXT}/dashboard?id=${REPO_NAME}-${JOB_NAME}) to Pull Request..."
+          echo "Posting 'SonarQube Analysis: ${SONARQUBE_URL_EXT}/dashboard?id=${REPO_NAME}-${JOB_NAME}' to Pull Request..."
           commentOnPR("SonarQube Analysis: ${SONARQUBE_URL_EXT}/dashboard?id=${REPO_NAME}-${JOB_NAME}")
         }
       }
@@ -404,7 +402,7 @@ def notifyStageStatus(String name, String status) {
 }
 
 // Create deployment status and pass to Jenkins-GitHub library
-def createDeploymentStatus (String environment, String status, String hostUrl) {
+def createDeploymentStatus(String environment, String status, String hostUrl) {
   def ghDeploymentId = new GitHubHelper().createDeployment(
     this,
     SOURCE_REPO_REF,
