@@ -28,7 +28,9 @@ oc create -n k8vopl-<env> configmap getok-server-config \
 
 ```sh
 oc create -n k8vopl-<env> configmap getok-sc-config \
-  --from-literal=SC_GETOK_ENDPOINT=https://i1api.nrs.gov.bc.ca/webade-api/v1 \
+  --from-literal=SC_GETOK_ENDPOINT_INT=https://i1api.nrs.gov.bc.ca/webade-api/v1 \
+  --from-literal=SC_GETOK_ENDPOINT_TEST=https://t1api.nrs.gov.bc.ca/webade-api/v1 \
+  --from-literal=SC_GETOK_ENDPOINT_PROD=https://api.nrs.gov.bc.ca/webade-api/v1 \
   --from-literal=SC_MSSC_ENDPOINT=https://i1api.nrs.gov.bc.ca/cmsg-messaging-api/v1
 ```
 
@@ -47,7 +49,21 @@ oc create -n k8vopl-<env> secret generic getok-oidc-secret \
 ```
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-sc-getok-secret \
+oc create -n k8vopl-<env> secret generic getok-sc-getok-secret-int \
+  --type=kubernetes.io/basic-auth \
+  --from-literal=username=<username> \
+  --from-literal=password=<password>
+```
+
+```sh
+oc create -n k8vopl-<env> secret generic getok-sc-getok-secret-test \
+  --type=kubernetes.io/basic-auth \
+  --from-literal=username=<username> \
+  --from-literal=password=<password>
+```
+
+```sh
+oc create -n k8vopl-<env> secret generic getok-sc-getok-secret-prod \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>

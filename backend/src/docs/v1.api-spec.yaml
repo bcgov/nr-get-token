@@ -252,6 +252,8 @@ components:
         - applicationName
         - applicationDescription
         - commonServices
+        - passwordPublicKey
+        - webadeEnvironment
       properties:
         applicationAcronym:
           type: string
@@ -268,6 +270,12 @@ components:
             type: string
             example: CMSG
           description: An array of applicationAcronyms
+        passwordPublicKey:
+          type: string
+          example: MIGfMA0GCSqGS...
+        webadeEnvironment:
+          type: string
+          example: INT
     AppConfigList:
       type: array
       items:

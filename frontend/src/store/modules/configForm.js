@@ -13,7 +13,8 @@ export default {
       applicationName: '',
       applicationDescription: '',
       commonServices: [],
-      deploymentMethod: ''
+      deploymentMethod: '',
+      webadeEnvironment: ''
     },
     configFormSubmissionResult: null,
     ephemeralPasswordRSAKey: null

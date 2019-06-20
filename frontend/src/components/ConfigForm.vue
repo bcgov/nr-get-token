@@ -80,6 +80,17 @@
 
     <v-stepper-content step="2">
       <v-form v-model="step2Valid">
+        <v-layout row wrap>
+          <v-flex xs12 md7>
+            <v-select
+              :items="webadeEnvironments"
+              label="Environment to Deploy to"
+              :value="userAppCfg.webadeEnvironment"
+              v-on:change="updateAppCfgField('webadeEnvironment', $event)"
+            ></v-select>
+          </v-flex>
+        </v-layout>
+
         <v-radio-group
           :value="userAppCfg.deploymentMethod"
           v-on:change="updateAppCfgField('deploymentMethod', $event)"
@@ -284,6 +295,7 @@ export default {
         value: serv.abbreviation,
         disabled: serv.disabled
       })),
+      webadeEnvironments: ['INT', 'TEST', 'PROD'],
       userAppCfg: this.$store.state.configForm.userAppCfg,
       applicationAcronymRules: [
         v => !!v || 'Acroynm is required',

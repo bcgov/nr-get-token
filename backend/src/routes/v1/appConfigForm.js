@@ -14,7 +14,8 @@ appConfig.post('/', [
   body('configForm.applicationName').exists(),
   body('configForm.applicationDescription').exists(),
   body('configForm.commonServices').exists(),
-  body('passwordPublicKey').exists()
+  body('passwordPublicKey').exists(),
+  body('configForm.webadeEnvironment').exists()
 ], async (req, res) => {
   // Validate for Bad Requests
   const errors = validationResult(req);

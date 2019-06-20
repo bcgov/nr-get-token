@@ -8,8 +8,18 @@ const discovery = null;
 
 const utils = {
   // Returns the response body of a webade oauth token request
-  async getWebAdeToken(username, password, scope) {
-    const url = 'https://i1api.nrs.gov.bc.ca/oauth2/v1/oauth/token';
+  async getWebAdeToken(username, password, scope, webadeEnv) {
+    // TODO: This should be config mapped like the webade-rest env?
+    let url = 'https://i1api.nrs.gov.bc.ca/oauth2/v1/oauth/token';
+    if (webadeEnv === 'INT') {
+      url = 'https://i1api.nrs.gov.bc.ca/oauth2/v1/oauth/token';
+    } else if (webadeEnv === 'TEST') {
+      url = 'https://t1api.nrs.gov.bc.ca/oauth2/v1/oauth/token';
+    } else if (webadeEnv === 'PROD') {
+      url = 'https://api.nrs.gov.bc.ca/oauth2/v1/oauth/token';
+    } else {
+      throw new Error(`WebADE environment ${webadeEnv} is not supported.`);
+    }
 
     try {
       const response = await axios.get(url, {

@@ -82,11 +82,21 @@ objects:
               secretKeyRef:
                 key: username
                 name: getok-sc-getok-secret
-          - name: SC_GETOK_PASSWORD
+          - name: SC_GETOK_PASSWORD_INT
             valueFrom:
               secretKeyRef:
                 key: password
-                name: getok-sc-getok-secret
+                name: getok-sc-getok-secret-int
+          - name: SC_GETOK_PASSWORD_TEST
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: getok-sc-getok-secret-test
+          - name: SC_GETOK_PASSWORD_PROD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: getok-sc-getok-secret-prod
           - name: SC_MSSC_USERNAME
             valueFrom:
               secretKeyRef:
