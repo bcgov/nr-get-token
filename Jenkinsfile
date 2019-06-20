@@ -223,8 +223,8 @@ pipeline {
                     echo 'Frontend build failed'
                     notifyStageStatus('Frontend', 'FAILURE')
                     throw e
-                  },
-                }
+                  }
+                },
 
                 SonarQube: {
                   unstash BE_COV_STASH
