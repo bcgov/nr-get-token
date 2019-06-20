@@ -224,6 +224,7 @@ pipeline {
                     notifyStageStatus('Frontend', 'FAILURE')
                     throw e
                   },
+                }
 
                 SonarQube: {
                   unstash BE_COV_STASH
@@ -236,7 +237,6 @@ pipeline {
                     -Dsonar.projectKey='${REPO_NAME}' \
                     -Dsonar.projectName='NR Get Token (${JOB_NAME.toUpperCase()})'
                   """
-                }
                 }
               )
             }
