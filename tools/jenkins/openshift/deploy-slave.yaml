@@ -48,10 +48,6 @@ objects:
           env:
           - name: JENKINS_MASTER_SERVICE
             value: "${NAME}${SUFFIX}"
-          - name: JAVA_TOOL_OPTIONS
-            value: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
-              -XX:MaxRAMFraction=5 -XX:MaxHeapFreeRatio=20 -XX:MinHeapFreeRatio=10
-              -XX:+UseParallelGC -XX:ParallelGCThreads=2"
           - name: ENV_NAME
             value: "${ENV_NAME}"
           - name: ENV_ID
