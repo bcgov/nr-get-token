@@ -1,18 +1,23 @@
 #!groovy
 import bcgov.GitHubHelper
 
+// ------------------
+// Pipeline Variables
+// ------------------
+
+// Stash Names
+def BE_COV_STASH = 'backend-coverage'
+def FE_COV_STASH = 'frontend-coverage'
+
 // --------------------
 // Declarative Pipeline
 // --------------------
 pipeline {
-  agent none
+  agent any
 
   environment {
     // Enable pipeline verbose debug output if greater than 0
     DEBUG_OUTPUT = 'false'
-
-    // Sonarqube Endpoint URL
-    SONARQUBE_URL = 'http://sonarqube:9000'
 
     // Get projects/namespaces from config maps
     DEV_PROJECT = new File('/var/run/configs/ns/project.dev').getText('UTF-8').trim()
@@ -38,6 +43,14 @@ pipeline {
     DEV_HOST_ROUTE = "${APP_NAME}-${JOB_NAME}-${DEV_PROJECT}.${APP_DOMAIN}"
     TEST_HOST_ROUTE = "${APP_NAME}-${JOB_NAME}-${TEST_PROJECT}.${APP_DOMAIN}"
     PROD_HOST_ROUTE = "${APP_NAME}-${JOB_NAME}-${PROD_PROJECT}.${APP_DOMAIN}"
+
+    // SonarQube Endpoint URL
+    SONARQUBE_URL_INT = 'http://sonarqube:9000'
+    SONARQUBE_URL_EXT = "https://sonarqube-${TOOLS_PROJECT}.${APP_DOMAIN}"
+  }
+
+  options {
+    parallelsAlwaysFailFast()
   }
 
   stages {
@@ -63,43 +76,70 @@ pipeline {
       }
     }
 
-    // stage('Static Analysis') {
-    //   agent any
-    //   steps {
-    //     echo 'Performing SonarQube static code analysis...'
+    stage('Tests') {
+      agent any
+      steps {
+        notifyStageStatus('Tests', 'PENDING')
 
-    //     // The `sonar-runner` MUST exist in your project and contain a Gradle environment consisting of:
-    //     // - Gradle wrapper script(s)
-    //     // - A simple `build.gradle` file that includes the SonarQube plug-in.
-    //     //
-    //     // An example can be found here:
-    //     // - https://github.com/BCDevOps/sonarqube
-    //     dir('sonar-runner') {
-    //       // ======================================================================================================
-    //       // Set your SonarQube scanner properties at this level, not at the Gradle Build level.
-    //       // The only thing that should be defined at the Gradle Build level is a minimal set of generic defaults.
-    //       //
-    //       // For more information on available properties visit:
-    //       // - https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle
-    //       // ======================================================================================================
-    //       sh (
-    //         returnStdout: true,
-    //         script: """
-    //           chmod +x ./gradlew
-    //           ./gradlew sonarqube --stacktrace --info \
-    //             -Dsonar.verbose=true \
-    //             -Dsonar.host.url='${SONARQUBE_URL}' \
-    //             -Dsonar.projectName='${REPO_NAME}' \
-    //             -Dsonar.projectKey='${REPO_NAME}' \
-    //             -Dsonar.projectBaseDir='../' \
-    //             -Dsonar.sources='./'
-    //         """
-    //       )
-    //     }
-    //   }
-    // }
+        script {
+          parallel(
+            Backend: {
+              dir('backend') {
+                try {
+                  timeout(10) {
+                    echo 'Installing NPM Dependencies...'
+                    sh 'npm ci'
 
-    stage('Build & Test') {
+                    echo 'Linting and Testing Backend...'
+                    sh 'npm run test'
+
+                    echo 'Backend Lint Checks and Tests passed'
+                  }
+                } catch (e) {
+                  echo 'Backend Lint Checks and Tests failed'
+                  throw e
+                }
+              }
+            },
+
+            Frontend: {
+              dir('frontend') {
+                try {
+                  timeout(10) {
+                  echo 'Installing NPM Dependencies...'
+                  sh 'npm ci'
+
+                  echo 'Linting and Testing Backend...'
+                  sh 'npm run test:unit'
+
+                  echo 'Frontend Lint Checks and Tests passed'
+
+                  }
+                } catch (e) {
+                  echo 'Frontend Lint Checks and Tests failed'
+                  throw e
+                }
+              }
+            }
+          )
+        }
+      }
+      post {
+        success {
+          stash name: BE_COV_STASH, includes: 'backend/coverage/**'
+          stash name: FE_COV_STASH, includes: 'frontend/coverage/**'
+
+          echo 'All Lint Checks and Tests passed'
+          notifyStageStatus('Tests', 'SUCCESS')
+        }
+        failure {
+          echo 'Some Lint Checks and Tests failed'
+          notifyStageStatus('Tests', 'FAILURE')
+        }
+      }
+    }
+
+    stage('Build') {
       agent any
       steps {
         script {
@@ -183,7 +223,20 @@ pipeline {
                     echo 'Frontend build failed'
                     notifyStageStatus('Frontend', 'FAILURE')
                     throw e
-                  }
+                  },
+                }
+
+                SonarQube: {
+                  unstash BE_COV_STASH
+                  unstash FE_COV_STASH
+
+                  echo 'Performing SonarQube static code analysis...'
+                  sh """
+                  sonar-scanner \
+                    -Dsonar.host.url='${SONARQUBE_URL_INT}' \
+                    -Dsonar.projectKey='${REPO_NAME}' \
+                    -Dsonar.projectName='NR Get Token (${JOB_NAME.toUpperCase()})'
+                  """
                 }
               )
             }
@@ -378,7 +431,7 @@ def notifyStageStatus(String name, String status) {
 }
 
 // Create deployment status and pass to Jenkins-GitHub library
-def createDeploymentStatus (String environment, String status, String hostUrl) {
+def createDeploymentStatus(String environment, String status, String hostUrl) {
   def ghDeploymentId = new GitHubHelper().createDeployment(
     this,
     SOURCE_REPO_REF,

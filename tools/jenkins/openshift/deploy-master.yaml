@@ -1,19 +1,10 @@
+---
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   creationTimestamp: null
   name: jenkins
 objects:
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    creationTimestamp: null
-    labels:
-      shared: "true"
-    name: ${NAME}
-  spec:
-    lookupPolicy:
-      local: false
 - apiVersion: v1
   kind: Secret
   metadata:
@@ -137,11 +128,11 @@ objects:
             timeoutSeconds: 240
           resources:
             limits:
-              cpu: "2"
+              cpu: 2000m
               memory: 2Gi
             requests:
               cpu: 300m
-              memory: 2Gi
+              memory: 1Gi
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           volumeMounts:
