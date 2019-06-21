@@ -18,27 +18,13 @@ To add or change the jobs, this is where you want to go.  The name of this file 
 
 ### Prerequisites
 
-You should have your 4 OpenShift projects created for you by ???: dev, test, prod, tools.
+We assume that you already have 4 OpenShift projects with the following suffixes: `dev`, `test`, `prod`, `tools`.
 
 You will need a github account and token (preferrably a team shared account) with access to your repo: [New Personal Access Token](https://github.com/settings/tokens/new?scopes=repo,read:user,user:email,admin:repo_hook).
 
 ### Setup Jenkins
 
 The following commands setup up the Prod instance of Jenkins and uses this repository and specific OpenShift project namespaces.
-
-Change as necessary...
-
-Fill in this documentation about parameters and labels from pipeline-cli...
-
-*phases*: build, dev, test, prod
-
-*changeId*: (pull request number)
-
-*suffix*: build = -build-{changeId}, dev = -dev-{changeId}, test = -test, prod = -prod
-
-*version* (N.n.n): build = {version}-{changeId}, dev = {version}-{changeId}, test = {version}, prod = {version}
-
-*tag*: build = build-{version}-{changeId}, dev = dev-{version}-{changeId}, test = test-{version}, prod = prod-{version}
 
 ### Notes
 
@@ -49,7 +35,9 @@ Fill in this documentation about parameters and labels from pipeline-cli...
 #### Labels
 
 -l env-name={phase}
+
 -l env-id={changeId/pull request number}
+
 -l app={app name}{suffix}
 
 ### OpenShift Login
