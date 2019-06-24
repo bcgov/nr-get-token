@@ -49,21 +49,21 @@ oc create -n k8vopl-<env> secret generic getok-oidc-secret \
 ```
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-sc-getok-secret-int \
+oc create -n k8vopl-<env> secret generic getok-sc-getokint-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>
 ```
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-sc-getok-secret-test \
+oc create -n k8vopl-<env> secret generic getok-sc-getoktest-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>
 ```
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-sc-getok-secret-prod \
+oc create -n k8vopl-<env> secret generic getok-sc-getokprod-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>

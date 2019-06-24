@@ -77,26 +77,36 @@ objects:
                 name: getok-oidc-secret
           - name: SERVER_FRONTEND
             value: "http://${HOST_ROUTE}"
-          - name: SC_GETOK_USERNAME
+          - name: SC_GETOKINT_USERNAME
             valueFrom:
               secretKeyRef:
                 key: username
-                name: getok-sc-getok-secret
-          - name: SC_GETOK_PASSWORD_INT
+                name: getok-sc-getokint-secret
+          - name: SC_GETOKINT_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: password
-                name: getok-sc-getok-secret-int
-          - name: SC_GETOK_PASSWORD_TEST
+                name: getok-sc-getokint-secret
+          - name: SC_GETOKTEST_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: getok-sc-getoktest-secret
+          - name: SC_GETOKTEST_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: password
-                name: getok-sc-getok-secret-test
-          - name: SC_GETOK_PASSWORD_PROD
+                name: getok-sc-getoktest-secret
+          - name: SC_GETOKPROD_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: getok-sc-getokprod-secret
+          - name: SC_GETOKPROD_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: password
-                name: getok-sc-getok-secret-prod
+                name: getok-sc-getokprod-secret
           - name: SC_MSSC_USERNAME
             valueFrom:
               secretKeyRef:
