@@ -4,27 +4,27 @@ const log = require('npmlog');
 
 const utils = require('./utils');
 
-async function getWebAdeOauth2Status() {
-  const username = config.get('serviceClient.getok.username');
-  const password = config.get('serviceClient.getok.password');
-
+async function getWebAdeOauth2Status(webadeEnv = 'INT') {
   const result = {
-    name: 'WebADE API',
-    endpoint: config.get('serviceClient.getok.endpoint'),
-    healthCheck: false,
     authenticated: false,
-    authorized: false
+    authorized: false,
+    endpoint: config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.endpoint`),
+    healthCheck: false,
+    name: `WebADE API (${webadeEnv})`
   };
 
   try {
-    const webAdeResponse = await utils.getWebAdeToken(username, password, 'WEBADE-REST');
+    const username = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.username`);
+    const password = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.password`);
+    const webAdeResponse = await utils.getWebAdeToken(username, password, 'WEBADE-REST', webadeEnv);
+
     result.healthCheck = !!webAdeResponse;
     result.authenticated = 'access_token' in webAdeResponse;
     result.authorized = 'scope' in webAdeResponse && webAdeResponse.scope.includes('WEBADE-REST.UPDATEAPPLICATIONS');
 
     return result;
   } catch (error) {
-    log.error(arguments.callee.name, error.message);
+    log.error('getWebAdeOauth2Status', error.message);
     return result;
   }
 }
@@ -34,11 +34,11 @@ async function getMsscStatus() {
   const password = config.get('serviceClient.mssc.password');
 
   const result = {
-    name: 'Common Messaging API',
+    authenticated: false,
+    authorized: false,
     endpoint: config.get('serviceClient.mssc.endpoint'),
     healthCheck: false,
-    authenticated: false,
-    authorized: false
+    name: 'Common Messaging API'
   };
 
 
@@ -62,20 +62,22 @@ async function getMsscStatus() {
           result.healthCheck = true;
         }
       } catch (error) {
-        log.error(arguments.callee.name, error.message);
+        log.error('getMsscStatus', error.message);
       }
     }
 
     return result;
   } catch (error) {
-    log.error(arguments.callee.name, error.message);
+    log.error('getMsscStatus', error.message);
     return result;
   }
 }
 
 const checks = {
   getStatus: () => Promise.all([
-    getWebAdeOauth2Status(),
+    getWebAdeOauth2Status('INT'),
+    getWebAdeOauth2Status('TEST'),
+    getWebAdeOauth2Status('PROD'),
     getMsscStatus()
   ])
 };

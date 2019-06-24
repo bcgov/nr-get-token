@@ -12,10 +12,20 @@
     "port": "SERVER_PORT"
   },
   "serviceClient": {
-    "getok": {
-      "endpoint": "SC_GETOK_ENDPOINT",
-      "username": "SC_GETOK_USERNAME",
-      "password": "SC_GETOK_PASSWORD"
+    "getokInt": {
+      "endpoint": "SC_GETOKINT_ENDPOINT",
+      "username": "SC_GETOKINT_USERNAME",
+      "password": "SC_GETOKINT_PASSWORD"
+    },
+    "getokTest": {
+      "endpoint": "SC_GETOKTEST_ENDPOINT",
+      "username": "SC_GETOKTEST_USERNAME",
+      "password": "SC_GETOKTEST_PASSWORD"
+    },
+    "getokProd": {
+      "endpoint": "SC_GETOKPROD_ENDPOINT",
+      "username": "SC_GETOKPROD_USERNAME",
+      "password": "SC_GETOKPROD_PASSWORD"
     },
     "mssc": {
       "endpoint": "SC_MSSC_ENDPOINT",

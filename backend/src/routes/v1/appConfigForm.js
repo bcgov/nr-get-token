@@ -10,11 +10,12 @@ const appConfigComponent = require('../../components/appConfig');
 
 // submits a webade application configuration
 appConfig.post('/', [
-  body('configForm.applicationAcronym').exists(),
-  body('configForm.applicationName').exists(),
-  body('configForm.applicationDescription').exists(),
-  body('configForm.commonServices').exists(),
-  body('passwordPublicKey').exists()
+  body('configForm.applicationAcronym').isString(),
+  body('configForm.applicationName').isString(),
+  body('configForm.applicationDescription').isString(),
+  body('configForm.commonServices').isArray(),
+  body('passwordPublicKey').isString(),
+  body('configForm.webadeEnvironment').isIn(['INT', 'TEST', 'PROD'])
 ], async (req, res) => {
   // Validate for Bad Requests
   const errors = validationResult(req);

@@ -49,11 +49,11 @@ const auth = {
         }
       );
 
-      log.verbose(arguments.callee.name, utils.prettyStringify(response.data));
+      log.verbose('renew', utils.prettyStringify(response.data));
       result.jwt = response.data.access_token;
       result.refreshToken = response.data.refresh_token;
     } catch (error) {
-      log.error(arguments.callee.name, error.message);
+      log.error('renew', error.message);
       result = error.response.data;
     }
 
@@ -64,13 +64,13 @@ const auth = {
   async removeExpired(req, _res, next) {
     try {
       if (!!req.user && !!req.user.jwt) {
-        log.verbose(arguments.callee.name, 'User & JWT exists');
+        log.verbose('removeExpired', 'User & JWT exists');
 
         if (auth.isTokenExpired(req.user.jwt)) {
-          log.verbose(arguments.callee.name, 'JWT has expired');
+          log.verbose('removeExpired', 'JWT has expired');
 
           if (!!req.user.refreshToken && auth.isRenewable(req.user.refreshToken)) {
-            log.verbose(arguments.callee.name, 'Can refresh JWT token');
+            log.verbose('removeExpired', 'Can refresh JWT token');
 
             // Get new JWT and Refresh Tokens and update the request
             const {
@@ -80,16 +80,16 @@ const auth = {
             req.user.jwt = jwt;
             req.user.refreshToken = refreshToken;
           } else {
-            log.verbose(arguments.callee.name, 'Cannot refresh JWT token');
+            log.verbose('removeExpired', 'Cannot refresh JWT token');
             delete req.user;
           }
         }
       } else {
-        log.verbose(arguments.callee.name, 'No existing User or JWT');
+        log.verbose('removeExpired', 'No existing User or JWT');
         delete req.user;
       }
     } catch (error) {
-      log.error(arguments.callee.name, error.message);
+      log.error('removeExpired', error.message);
     }
 
     next();

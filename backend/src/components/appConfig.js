@@ -5,10 +5,13 @@ const log = require('npmlog');
 const utils = require('./utils');
 
 async function postAppConfig(body) {
+  const webadeEnv = body.configForm.webadeEnvironment;
+  const endpoint = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.endpoint`);
+  const username = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.username`);
+  const password = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.password`);
+
   // Get a token with the getok service client
-  const username = config.get('serviceClient.getok.username');
-  const password = config.get('serviceClient.getok.password');
-  const token = await utils.getWebAdeToken(username, password, 'WEBADE-REST');
+  const token = await utils.getWebAdeToken(username, password, 'WEBADE-REST', webadeEnv);
   if (!token || token.error) {
     throw new Error('Unable to acquire access_token');
   }
@@ -17,7 +20,6 @@ async function postAppConfig(body) {
   const generatedConfig = utils.buildWebAdeCfg(body);
 
   // Submit the app config to webade
-  const endpoint = config.get('serviceClient.getok.endpoint');
   const path = '/applicationConfigurations';
   const webAdeUrl = endpoint + path;
   try {
@@ -27,7 +29,7 @@ async function postAppConfig(body) {
         'Content-Type': 'application/json; charset=utf-8'
       }
     });
-    log.verbose(arguments.callee.name, utils.prettyStringify(webAdeResponse.data));
+    log.verbose('postAppConfig', utils.prettyStringify(webAdeResponse.data));
 
     const reponse = {
       webAdeResponse: webAdeResponse.data,
