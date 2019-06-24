@@ -8,18 +8,10 @@ const discovery = null;
 
 const utils = {
   // Returns the response body of a webade oauth token request
-  async getWebAdeToken(username, password, scope, webadeEnv) {
-    // TODO: This should be config mapped like the webade-rest env?
-    let url = 'https://i1api.nrs.gov.bc.ca/oauth2/v1/oauth/token';
-    if (webadeEnv === 'INT') {
-      url = 'https://i1api.nrs.gov.bc.ca/oauth2/v1/oauth/token';
-    } else if (webadeEnv === 'TEST') {
-      url = 'https://t1api.nrs.gov.bc.ca/oauth2/v1/oauth/token';
-    } else if (webadeEnv === 'PROD') {
-      url = 'https://api.nrs.gov.bc.ca/oauth2/v1/oauth/token';
-    } else {
-      throw new Error(`WebADE environment ${webadeEnv} is not supported.`);
-    }
+  async getWebAdeToken(username, password, scope, webadeEnv = 'INT') {
+    const path = '/oauth/token';
+    const endpoint = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.endpoint`);
+    const url = endpoint.replace('webade-api', 'oauth2') + path;
 
     try {
       const response = await axios.get(url, {
@@ -34,13 +26,14 @@ const utils = {
         }
       });
 
-      log.verbose(arguments.callee.name, utils.prettyStringify(response.data));
+      log.verbose('getWebAdeToken', utils.prettyStringify(response.data));
       return response.data;
     } catch (error) {
-      log.error(arguments.callee.name, error.message);
+      log.error('getWebAdeToken', error.message);
       return error.response.data;
     }
   },
+
   // Returns OIDC Discovery values
   async getOidcDiscovery() {
     if (discovery) {
@@ -49,14 +42,16 @@ const utils = {
       try {
         const response = await axios.get(config.get('oidc.discovery'));
 
-        log.verbose(arguments.callee.name, utils.prettyStringify(response.data));
+        log.verbose('getOidcDiscovery', utils.prettyStringify(response.data));
         return response.data;
       } catch (error) {
-        log.error(arguments.callee.name, `OIDC Discovery failed - ${error.message}`);
+        log.error('getOidcDiscovery', `OIDC Discovery failed - ${error.message}`);
         return error.response.data;
       }
     }
   },
+
+  // Constructs a WebADE Application Configuration based on the request body
   buildWebAdeCfg: requestBody => {
     const configForm = requestBody.configForm;
     const generatedPassword = utils.generatePassword(requestBody.passwordPublicKey);
@@ -171,7 +166,9 @@ const utils = {
     };
     return ret;
   },
-  generatePassword: (key) => {
+
+  // Creates a random password
+  generatePassword: key => {
     const pw = generator.generate({
       length: 12,
       numbers: true
@@ -184,7 +181,10 @@ const utils = {
   },
 
   // Returns a pretty JSON representation of an object
-  prettyStringify: obj => JSON.stringify(obj, null, 2)
+  prettyStringify: obj => JSON.stringify(obj, null, 2),
+
+  // Returns a string in Pascal Case
+  toPascalCase: str => str.toLowerCase().replace(/\b\w/g, t => t.toUpperCase())
 };
 
 module.exports = utils;

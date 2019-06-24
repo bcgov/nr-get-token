@@ -272,9 +272,11 @@ components:
           description: An array of applicationAcronyms
         passwordPublicKey:
           type: string
+          description: A public key in PEM format without the headers
           example: MIGfMA0GCSqGS...
         webadeEnvironment:
           type: string
+          description: Which WebADE environment to work on - one of INT, TEST or PROD
           example: INT
     AppConfigList:
       type: array

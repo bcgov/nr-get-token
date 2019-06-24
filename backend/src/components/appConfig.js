@@ -5,22 +5,10 @@ const log = require('npmlog');
 const utils = require('./utils');
 
 async function postAppConfig(body) {
-  const username = config.get('serviceClient.getok.username');
-  let password = '';
-  let endpoint = '';
   const webadeEnv = body.configForm.webadeEnvironment;
-  if (webadeEnv === 'INT') {
-    endpoint = config.get('serviceClient.getok.endpointInt');
-    password = config.get('serviceClient.getok.passwordInt');
-  } else if (webadeEnv === 'TEST') {
-    endpoint = config.get('serviceClient.getok.endpointTest');
-    password = config.get('serviceClient.getok.passwordTest');
-  } else if (webadeEnv === 'PROD') {
-    endpoint = config.get('serviceClient.getok.endpointProd');
-    password = config.get('serviceClient.getok.passwordProd');
-  } else {
-    throw new Error(`WebADE environment ${webadeEnv} is not supported.`);
-  }
+  const endpoint = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.endpoint`);
+  const username = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.username`);
+  const password = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.password`);
 
   // Get a token with the getok service client
   const token = await utils.getWebAdeToken(username, password, 'WEBADE-REST', webadeEnv);
@@ -41,7 +29,7 @@ async function postAppConfig(body) {
         'Content-Type': 'application/json; charset=utf-8'
       }
     });
-    log.verbose(arguments.callee.name, utils.prettyStringify(webAdeResponse.data));
+    log.verbose('postAppConfig', utils.prettyStringify(webAdeResponse.data));
 
     const reponse = {
       webAdeResponse: webAdeResponse.data,

@@ -9,10 +9,14 @@
     "port": "8080"
   },
   "serviceClient": {
-    "getok": {
-      "endpointInt": "https://i1api.nrs.gov.bc.ca/webade-api/v1",
-      "endpointTest": "https://t1api.nrs.gov.bc.ca/webade-api/v1",
-      "endpointProd": "https://api.nrs.gov.bc.ca/webade-api/v1"
+    "getokInt": {
+      "endpoint": "https://i1api.nrs.gov.bc.ca/webade-api/v1"
+    },
+    "getokTest": {
+      "endpoint": "https://t1api.nrs.gov.bc.ca/webade-api/v1"
+    },
+    "getokProd": {
+      "endpoint": "https://api.nrs.gov.bc.ca/webade-api/v1"
     },
     "mssc": {
       "endpoint": "https://i1api.nrs.gov.bc.ca/cmsg-messaging-api/v1"

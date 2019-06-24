@@ -55,13 +55,15 @@ For more details, please consult the config library [documentation](https://gith
 | `SERVER_LOGLEVEL` | Server log verbosity. Options: `silly`, `verbose`, `debug`, `info`, `warn`, `error` |
 | `SERVER_MORGANFORMAT` | Morgan format style. Options: `dev`, `combined` |
 | `SERVER_PORT` | Port server is listening to |
-| `SC_GETOK_ENDPOINT_INT` | Base API endpoint for WebADE OAuth INT env |
-| `SC_GETOK_ENDPOINT_TEST` | Base API endpoint for WebADE OAuth TEST env |
-| `SC_GETOK_ENDPOINT_PROD` | Base API endpoint for WebADE OAuth PROD env |
-| `SC_GETOK_USERNAME` | Service client username |
-| `SC_GETOK_PASSWORD_INT` | Service client password for INT|
-| `SC_GETOK_PASSWORD_TEST` | Service client password for TEST|
-| `SC_GETOK_PASSWORD_PROD` | Service client password for PROD|
+| `SC_GETOKINT_ENDPOINT` | Base API endpoint for WebADE OAuth (INT env) |
+| `SC_GETOKINT_USERNAME` | Service client username (INT env) |
+| `SC_GETOKINT_PASSWORD` | Service client password (INT env) |
+| `SC_GETOKTEST_ENDPOINT` | Base API endpoint for WebADE OAuth (TEST env) |
+| `SC_GETOKTEST_USERNAME` | Service client username (TEST env) |
+| `SC_GETOKTEST_PASSWORD` | Service client password (TEST env) |
+| `SC_GETOKPROD_ENDPOINT` | Base API endpoint for WebADE OAuth (PROD env) |
+| `SC_GETOKPROD_USERNAME` | Service client username (PROD env) |
+| `SC_GETOKPROD_PASSWORD` | Service client password (PROD env) |
 | `SC_MSSC_ENDPOINT` | Base API endpoint for CMSG API |
 | `SC_MSSC_USERNAME` | Service client username |
 | `SC_MSSC_PASSWORD` | Service client password |
