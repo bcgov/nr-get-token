@@ -4,19 +4,32 @@ import AuthService from '@/common/authService';
 export default {
   namespaced: true,
   state: {
+    acronyms: [],
     isAuthenticated: localStorage.getItem('jwtToken') !== null
   },
   getters: {
+    acronyms: state => state.acronyms,
     isAuthenticated: state => state.isAuthenticated,
+    hasAcronyms: state => state.acronyms && state.acronyms.length,
     jwtToken: () => localStorage.getItem('jwtToken'),
-    refreshToken: () => localStorage.getItem('refreshToken'),
+    refreshToken: () => localStorage.getItem('refreshToken')
   },
   mutations: {
     setJwtToken: (state, token = null) => {
       if (token) {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const roles = payload.realm_access.roles;
+
+        if (typeof roles === 'object' && roles instanceof Array) {
+          state.acronyms = roles.filter(role => !role.match(/offline_access|uma_authorization/));
+        } else {
+          state.acronyms = [];
+        }
+
         state.isAuthenticated = true;
         localStorage.setItem('jwtToken', token);
       } else {
+        state.acronyms = [];
         state.isAuthenticated = false;
         localStorage.removeItem('jwtToken');
       }

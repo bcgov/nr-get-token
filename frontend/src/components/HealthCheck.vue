@@ -41,7 +41,7 @@
 import { mapState } from 'vuex';
 
 export default {
-  computed: mapState('checks',['healthCheck']),
+  computed: mapState('checks', ['healthCheck']),
   methods: {
     getStatus(status) {
       return status
