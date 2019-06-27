@@ -1,11 +1,36 @@
 <template>
   <v-stepper v-model="appConfigStep" vertical class="elevation-0">
     <v-stepper-step :complete="appConfigStep > 1" step="1">
+      Permissions
+      <small>Check your acronym access permissions</small>
+    </v-stepper-step>
+
+    <v-stepper-content step="1">
+      <div v-if="hasAcronyms">
+        You are authorized for these acronyms:
+        <ul>
+          <li v-for="(acronym, index) in acronyms" :key="index">{{ acronym }}</li>
+        </ul>
+        <p>Click next or register a new application.</p>
+      </div>
+      <div v-else>
+        <p>You are not authorized for any applications</p>
+        <p>Please register for a new application.</p>
+      </div>
+
+      <v-btn
+        color="success"
+        href="mailto:NR.CommonServiceShowcase@gov.bc.ca?subject=GETOK Registration for <acronym> - <idir>"
+      >Register New App</v-btn>
+      <v-btn color="primary" @click="appConfigStep = 2" :disabled="!hasAcronyms">Next</v-btn>
+    </v-stepper-content>
+
+    <v-stepper-step :complete="appConfigStep > 2" step="2">
       Set up Application
       <small>Pick application and service client details</small>
     </v-stepper-step>
 
-    <v-stepper-content step="1">
+    <v-stepper-content step="2">
       <v-form v-model="step1Valid">
         <v-layout row wrap>
           <v-flex xs12 md7>
@@ -69,16 +94,17 @@
           v-on:change="updateAppCfgField('commonServices', $event)"
         ></v-select>
 
-        <v-btn color="primary" @click="appConfigStep = 2" :disabled="!step1Valid">Next</v-btn>
+        <v-btn flat @click="appConfigStep = 1">Back</v-btn>
+        <v-btn color="primary" @click="appConfigStep = 3" :disabled="!step1Valid">Next</v-btn>
       </v-form>
     </v-stepper-content>
 
-    <v-stepper-step :complete="appConfigStep > 2" step="2">
+    <v-stepper-step :complete="appConfigStep > 3" step="3">
       Deployment
       <small>Choose method of deploying WebADE config</small>
     </v-stepper-step>
 
-    <v-stepper-content step="2">
+    <v-stepper-content step="3">
       <v-form v-model="step2Valid">
         <v-layout row wrap>
           <v-flex xs12 md7>
@@ -109,7 +135,7 @@
           <v-radio label="Direct Deploy" value="deploymentDirect"></v-radio>
         </v-radio-group>
 
-        <v-btn flat @click="appConfigStep = 1">Back</v-btn>
+        <v-btn flat @click="appConfigStep = 2">Back</v-btn>
 
         <v-dialog
           v-model="confirmationDialog"
@@ -298,15 +324,18 @@ export default {
       webadeEnvironments: ['INT', 'TEST', 'PROD'],
       userAppCfg: this.$store.state.configForm.userAppCfg,
       applicationAcronymRules: [
-        v => !!v || 'Acroynm is required',
+        v => !!v || 'Acronym is required',
         v =>
           v.length <= FieldValidations.ACRONYM_MAX_LENGTH ||
-          `Acroynm must be ${
+          `Acronym must be ${
             FieldValidations.ACRONYM_MAX_LENGTH
           } characters or less`,
         v =>
           /^(?:[A-Z]{2,}[_]?)+[A-Z]{1,}$/g.test(v) ||
-          'Incorrect format. Hover the ? for details.'
+          'Incorrect format. Hover over ? for details.',
+        v =>
+          this.acronyms.includes(v) ||
+          `You are only authorized to use acronym(s) ${this.acronyms}`
       ],
       applicationNameRules: [
         v => !!v || 'Name is required',
@@ -332,6 +361,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('auth', ['acronyms', 'hasAcronyms']),
     ...mapGetters('configForm', [
       'appConfigAsString',
       'configFormSubmissionResult',
