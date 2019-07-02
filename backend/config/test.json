@@ -1,0 +1,25 @@
+{
+  "oidc": {
+    "clientID": "clientID",
+    "clientSecret": "clientSecret",
+    "publicKey": "publicKey"
+  },
+  "serviceClient": {
+    "getokInt": {
+      "username": "username",
+      "password": "password"
+    },
+    "getokTest": {
+      "username": "username",
+      "password": "password"
+    },
+    "getokProd": {
+      "username": "username",
+      "password": "password"
+    },
+    "mssc": {
+      "username": "username",
+      "password": "password"
+    }
+  }
+}
