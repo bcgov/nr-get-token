@@ -54,7 +54,7 @@ const utils = {
   // Constructs a WebADE Application Configuration based on the request body
   buildWebAdeCfg: requestBody => {
     const configForm = requestBody.configForm;
-    const generatedPassword = utils.generatePassword(requestBody.passwordPublicKey);
+    const generatedPassword = utils.generateEncryptPassword(requestBody.passwordPublicKey);
     const defaultAppCfg = {
       '@type': 'http://webade.gov.bc.ca/applicationConfiguration',
       applicationAcronym: '',
@@ -162,22 +162,22 @@ const utils = {
     const ret = {
       webAdeCfg: finalCfg,
       unencryptedPassword: generatedPassword.password,
-      encyptedPassword: generatedPassword.encyptedPassword
+      encryptedPassword: generatedPassword.encryptedPassword
     };
     return ret;
   },
 
-  // Creates a random password
-  generatePassword: key => {
+  // Creates a random password of a certain length and encrypts it with the key
+  generateEncryptPassword: (key, len = 12) => {
     const pw = generator.generate({
-      length: 12,
+      length: len,
       numbers: true
     });
-    const result = {
+
+    return {
       password: pw,
-      encyptedPassword: cryptico.encrypt(pw, key).cipher
+      encryptedPassword: cryptico.encrypt(pw, key).cipher
     };
-    return result;
   },
 
   // Returns a pretty JSON representation of an object
