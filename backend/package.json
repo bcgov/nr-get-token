@@ -37,6 +37,7 @@
     "snyk": "^1.192.2"
   },
   "devDependencies": {
+    "axios-mock-adapter": "^1.17.0",
     "eslint": "^6.0.1",
     "jest": "^24.8.0",
     "jest-sonar-reporter": "^2.0.0",

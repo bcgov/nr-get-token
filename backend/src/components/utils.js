@@ -4,7 +4,7 @@ const log = require('npmlog');
 const cryptico = require('cryptico-js');
 const generator = require('generate-password');
 
-const discovery = null;
+let discovery = null;
 
 const utils = {
   // Returns the response body of a webade oauth token request
@@ -36,19 +36,18 @@ const utils = {
 
   // Returns OIDC Discovery values
   async getOidcDiscovery() {
-    if (discovery) {
-      return discovery;
-    } else {
+    if (!discovery) {
       try {
         const response = await axios.get(config.get('oidc.discovery'));
 
         log.verbose('getOidcDiscovery', utils.prettyStringify(response.data));
-        return response.data;
+        discovery = response.data; // eslint-disable-line require-atomic-updates
       } catch (error) {
         log.error('getOidcDiscovery', `OIDC Discovery failed - ${error.message}`);
-        return error.response.data;
       }
     }
+
+    return discovery;
   },
 
   // Constructs a WebADE Application Configuration based on the request body
@@ -181,7 +180,7 @@ const utils = {
   },
 
   // Returns a pretty JSON representation of an object
-  prettyStringify: obj => JSON.stringify(obj, null, 2),
+  prettyStringify: (obj, indent = 2) => JSON.stringify(obj, null, indent),
 
   // Returns a string in Pascal Case
   toPascalCase: str => str.toLowerCase().replace(/\b\w/g, t => t.toUpperCase())

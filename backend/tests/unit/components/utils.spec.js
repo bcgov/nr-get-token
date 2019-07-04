@@ -1,6 +1,116 @@
+const axios = require('axios');
+const config = require('config');
 const crypto = require('crypto');
 const cryptico = require('cryptico-js');
+const MockAdapter = require('axios-mock-adapter');
+
 const utils = require('../../../src/components/utils');
+
+const mockAxios = new MockAdapter(axios);
+
+describe('getWebAdeToken', () => {
+  const endpoint = config.get('serviceClient.getokInt.endpoint');
+  const username = config.get('serviceClient.getokInt.username');
+  const password = config.get('serviceClient.getokInt.password');
+  const scope = 'WEBADE-REST';
+  const url = endpoint.replace('webade-api', 'oauth2') + '/oauth/token';
+
+  const spy = jest.spyOn(axios, 'get');
+
+  afterEach(() => {
+    spy.mockClear();
+  });
+
+  it('can can call WebADE endpoint to get a token', async () => {
+    mockAxios.onGet(url).reply(200, {
+      data: {
+        'access_token': '00000000-0000-0000-0000-000000000000',
+        'token_type': 'bearer',
+        'expires_in': 43199,
+        'scope': 'scopes',
+        'jti': '00000000-0000-0000-0000-000000000000'
+      }
+    });
+
+    const result = await utils.getWebAdeToken(username, password, scope);
+
+    expect(result).toBeTruthy();
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(url, {
+      auth: {
+        username: username,
+        password: password
+      },
+      params: {
+        disableDeveloperFilter: true,
+        grant_type: 'client_credentials',
+        scope: scope
+      }
+    });
+  });
+
+  it('can gracefully fail if endpoint is down', async () => {
+    mockAxios.onGet(url).reply(400, {
+      data: {
+        'error': 'invalid_scope',
+        'error_description': 'Invalid application authority: GARBAGE. Client has not been granted the requested application authority...',
+        'scope': ''
+      }
+    });
+
+    const result = await utils.getWebAdeToken(username, password, 'GARBAGE');
+
+    expect(result).toBeTruthy();
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(url, {
+      auth: {
+        username: username,
+        password: password
+      },
+      params: {
+        disableDeveloperFilter: true,
+        grant_type: 'client_credentials',
+        scope: 'GARBAGE'
+      }
+    });
+  });
+});
+
+describe('getOidcDiscovery', () => {
+  const url = config.get('oidc.discovery');
+  const spy = jest.spyOn(axios, 'get');
+
+  afterEach(() => {
+    spy.mockClear();
+  });
+
+  it('can gracefully fail if endpoint is down', async () => {
+    mockAxios.onGet(url).networkErrorOnce();
+
+    const result = await utils.getOidcDiscovery();
+
+    expect(result).toBeFalsy();
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(url);
+  });
+
+  it('can get and cache OIDC Discovery data', async () => {
+    mockAxios.onGet(url).reply(200, {
+      data: {
+        'issuer': 'issuerurl',
+        'authorization_endpoint': 'authurl',
+        'token_endpoint': 'tokenurl'
+      }
+    });
+
+    await utils.getOidcDiscovery();
+    const result = await utils.getOidcDiscovery();
+
+    expect(result).toBeTruthy();
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(url);
+  });
+});
 
 describe('generateEncryptPassword', () => {
   const uniqueSeed = crypto.randomBytes(20).toString('hex');
@@ -25,14 +135,22 @@ describe('generateEncryptPassword', () => {
 });
 
 describe('prettyStringify', () => {
+  const obj = {
+    foo: 'bar'
+  };
+
   it('should return a formatted json string with 2 space indent', () => {
-    const obj = { foo: 'bar' };
     const result = utils.prettyStringify(obj);
 
     expect(result).toBeTruthy();
-    expect(result).toEqual(`{
-  "foo": "bar"
-}`);
+    expect(result).toEqual('{\n  "foo": "bar"\n}');
+  });
+
+  it('should return a formatted json string with 4 space indent', () => {
+    const result = utils.prettyStringify(obj, 4);
+
+    expect(result).toBeTruthy();
+    expect(result).toEqual('{\n    "foo": "bar"\n}');
   });
 });
 
