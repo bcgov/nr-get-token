@@ -4,6 +4,9 @@
     "clientSecret": "clientSecret",
     "publicKey": "publicKey"
   },
+  "server": {
+    "logLevel": "silent"
+  },
   "serviceClient": {
     "getokInt": {
       "username": "username",
