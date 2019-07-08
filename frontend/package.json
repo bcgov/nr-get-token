@@ -14,7 +14,7 @@
     "purge": "rm -rf node_modules",
     "rebuild": "npm run clean && npm run build",
     "reinstall": "npm run purge && npm install",
-    "test:unit": "node_modules/.bin/vue-cli-service test:unit"
+    "test:unit": "node_modules/.bin/vue-cli-service test:unit --verbose"
   },
   "homepage": "https://github.com/bcgov/nr-get-token",
   "dependencies": {
