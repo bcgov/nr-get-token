@@ -93,3 +93,71 @@ describe('renew', () => {
     expect(spy).toHaveBeenCalledWith();
   });
 });
+
+describe('removeExpired', () => {
+  const spy = jest.spyOn(auth, 'renew');
+  jest.mock('../../../src/components/auth');
+
+  afterEach(() => {
+    spy.mockClear();
+  });
+
+  it('should not have a user if no user or jwt exists', async () => {
+    const result = await auth.removeExpired({}, null, () => {});
+    expect(result).toBeUndefined();
+  });
+
+  it('should not have a user if jwt is still valid', async () => {
+    const result = await auth.removeExpired({
+      user: {
+        jwt: validToken,
+        refreshToken: endlessToken
+      }
+    }, null, () => {});
+    expect(result).toBeUndefined();
+  });
+
+  it('should not have a user if jwt and refresh token are expired', async () => {
+    const result = await auth.removeExpired({
+      user: {
+        jwt: expiredToken,
+        refreshToken: expiredToken
+      }
+    }, null, () => {});
+    expect(result).toBeUndefined();
+  });
+
+  it('should have a user if refresh token is renewable', async () => {
+    auth.renew.mockResolvedValue({
+      jwt: validToken,
+      refreshToken: endlessToken
+    });
+
+    const result = await auth.removeExpired({
+      user: {
+        jwt: expiredToken,
+        refreshToken: endlessToken
+      }
+    }, null, () => {});
+    expect(result).toBeUndefined();
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(endlessToken);
+  });
+
+  it('should gracefully fail and continue', async () => {
+    auth.renew.mockRejectedValue({
+      error: 'invalid_grant',
+      error_description: 'Maximum allowed refresh token reuse exceeded'
+    });
+
+    const result = await auth.removeExpired({
+      user: {
+        jwt: expiredToken,
+        refreshToken: endlessToken
+      }
+    }, null, () => {});
+    expect(result).toBeUndefined();
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(endlessToken);
+  });
+});

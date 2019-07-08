@@ -23,7 +23,7 @@ describe('getWebAdeToken', () => {
     spy.mockClear();
   });
 
-  it('can can call WebADE endpoint to get a token', async () => {
+  it('should call WebADE endpoint to get a token', async () => {
     mockAxios.onGet(url).reply(200, {
       data: {
         'access_token': '00000000-0000-0000-0000-000000000000',
@@ -51,7 +51,7 @@ describe('getWebAdeToken', () => {
     });
   });
 
-  it('can gracefully fail if endpoint is down', async () => {
+  it('should gracefully fail if endpoint is down', async () => {
     mockAxios.onGet(url).reply(400, {
       data: {
         'error': 'invalid_scope',
@@ -86,7 +86,7 @@ describe('getOidcDiscovery', () => {
     spy.mockClear();
   });
 
-  it('can gracefully fail if endpoint is down', async () => {
+  it('should gracefully fail if endpoint is down', async () => {
     mockAxios.onGet(url).networkErrorOnce();
 
     const result = await utils.getOidcDiscovery();
@@ -96,7 +96,7 @@ describe('getOidcDiscovery', () => {
     expect(spy).toHaveBeenCalledWith(url);
   });
 
-  it('can get and cache OIDC Discovery data', async () => {
+  it('should get and cache OIDC Discovery data', async () => {
     mockAxios.onGet(url).reply(200, {
       data: {
         issuer: 'issuerurl',
