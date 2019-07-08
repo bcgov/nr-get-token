@@ -99,9 +99,9 @@ describe('getOidcDiscovery', () => {
   it('can get and cache OIDC Discovery data', async () => {
     mockAxios.onGet(url).reply(200, {
       data: {
-        'issuer': 'issuerurl',
-        'authorization_endpoint': 'authurl',
-        'token_endpoint': 'tokenurl'
+        issuer: 'issuerurl',
+        authorization_endpoint: 'authurl',
+        token_endpoint: 'tokenurl'
       }
     });
 

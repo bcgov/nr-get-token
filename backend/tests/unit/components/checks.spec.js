@@ -24,11 +24,11 @@ describe('getWebAdeOauth2Status', () => {
 
   it('should return the state of endpoint', async () => {
     utils.getWebAdeToken.mockResolvedValue({
-      'access_token': '00000000-0000-0000-0000-000000000000',
-      'token_type': 'bearer',
-      'expires_in': 43199,
-      'scope': 'WEBADE-REST.UPDATEAPPLICATIONS',
-      'jti': '00000000-0000-0000-0000-000000000000'
+      access_token: '00000000-0000-0000-0000-000000000000',
+      token_type: 'bearer',
+      expires_in: 43199,
+      scope: 'WEBADE-REST.UPDATEAPPLICATIONS',
+      jti: '00000000-0000-0000-0000-000000000000'
     });
 
     const result = await checks.getWebAdeOauth2Status();
@@ -70,11 +70,11 @@ describe('getMsscStatus', () => {
 
   it('should return the state of endpoint as all true', async () => {
     utils.getWebAdeToken.mockResolvedValue({
-      'access_token': '00000000-0000-0000-0000-000000000000',
-      'token_type': 'bearer',
-      'expires_in': 43199,
-      'scope': 'CMSG.CREATEMESSAGE',
-      'jti': '00000000-0000-0000-0000-000000000000'
+      access_token: '00000000-0000-0000-0000-000000000000',
+      token_type: 'bearer',
+      expires_in: 43199,
+      scope: 'CMSG.CREATEMESSAGE',
+      jti: '00000000-0000-0000-0000-000000000000'
     });
 
     mockAxios.onGet(url).reply(200);
@@ -91,10 +91,10 @@ describe('getMsscStatus', () => {
 
   it('should fail authentication', async () => {
     utils.getWebAdeToken.mockResolvedValue({
-      'token_type': 'bearer',
-      'expires_in': 43199,
-      'scope': 'CMSG.CREATEMESSAGE',
-      'jti': '00000000-0000-0000-0000-000000000000'
+      token_type: 'bearer',
+      expires_in: 43199,
+      scope: 'CMSG.CREATEMESSAGE',
+      jti: '00000000-0000-0000-0000-000000000000'
     });
 
     mockAxios.onGet(url).reply(200);
@@ -111,10 +111,10 @@ describe('getMsscStatus', () => {
 
   it('should fail authorization', async () => {
     utils.getWebAdeToken.mockResolvedValue({
-      'access_token': '00000000-0000-0000-0000-000000000000',
-      'token_type': 'bearer',
-      'expires_in': 43199,
-      'jti': '00000000-0000-0000-0000-000000000000'
+      access_token: '00000000-0000-0000-0000-000000000000',
+      token_type: 'bearer',
+      expires_in: 43199,
+      jti: '00000000-0000-0000-0000-000000000000'
     });
 
     mockAxios.onGet(url).reply(200);
@@ -131,11 +131,11 @@ describe('getMsscStatus', () => {
 
   it('should fail healthcheck', async () => {
     utils.getWebAdeToken.mockResolvedValue({
-      'access_token': '00000000-0000-0000-0000-000000000000',
-      'token_type': 'bearer',
-      'expires_in': 43199,
-      'scope': 'CMSG.CREATEMESSAGE',
-      'jti': '00000000-0000-0000-0000-000000000000'
+      access_token: '00000000-0000-0000-0000-000000000000',
+      token_type: 'bearer',
+      expires_in: 43199,
+      scope: 'CMSG.CREATEMESSAGE',
+      jti: '00000000-0000-0000-0000-000000000000'
     });
 
     mockAxios.onGet(url).reply(404);
