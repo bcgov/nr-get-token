@@ -11,14 +11,16 @@ const auth = require('../components/auth');
 router.get('/', (_req, res) => {
   res.status(200).json({
     endpoints: [
+      '/callback',
       '/login',
       '/logout',
+      '/refresh',
       '/token'
     ]
   });
 });
 
-router.use('/callback',
+router.get('/callback',
   passport.authenticate('oidc', {
     failureRedirect: 'error'
   }),
@@ -27,7 +29,7 @@ router.use('/callback',
   }
 );
 
-router.use('/error', (_req, res) => {
+router.get('/error', (_req, res) => {
   res.status(401).json({
     message: 'Error: Unable to authenticate'
   });
