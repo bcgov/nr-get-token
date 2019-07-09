@@ -4,7 +4,7 @@ const appConfig = require('express').Router();
 const {
   body,
   validationResult
-} = require('express-validator/check');
+} = require('express-validator');
 
 const appConfigComponent = require('../../components/appConfig');
 

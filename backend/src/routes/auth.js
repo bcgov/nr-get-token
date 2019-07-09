@@ -4,7 +4,7 @@ const router = require('express').Router();
 const {
   body,
   validationResult
-} = require('express-validator/check');
+} = require('express-validator');
 
 const auth = require('../components/auth');
 
