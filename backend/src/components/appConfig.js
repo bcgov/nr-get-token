@@ -119,6 +119,7 @@ const appConfig = {
     // Get a token with the getok service client
     const token = await utils.getWebAdeToken(username, password, 'WEBADE-REST', webadeEnv);
     if (!token || token.error) {
+      log.error('postAppConfig', 'Unable to acquire access_token');
       throw new Error('Unable to acquire access_token');
     }
 
@@ -137,13 +138,11 @@ const appConfig = {
       });
       log.verbose('postAppConfig', utils.prettyStringify(webAdeResponse.data));
 
-      const reponse = {
+      return {
         webAdeResponse: webAdeResponse.data,
-        generatedPassword: generatedConfig.webAdeCfg.serviceClients ? generatedConfig.encryptedPassword : '',
-        generatedServiceClient: generatedConfig.webAdeCfg.serviceClients ? generatedConfig.webAdeCfg.serviceClients[0].accountName : ''
+        generatedPassword: generatedConfig.encryptedPassword,
+        generatedServiceClient: generatedConfig.webAdeCfg.serviceClients[0].accountName
       };
-      return reponse;
-
     } catch (error) {
       log.error('postAppConfig', error.message);
       throw new Error(`WebADE ${path} returned an error. ${JSON.stringify(error.response.data)}`);
