@@ -7,5 +7,11 @@ import checks from '@/store/modules/checks.js';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  modules: { auth, configForm, checks }
+  modules: { auth, configForm, checks },
+  state: {
+    devMode: false
+  },
+  getters: {
+    devMode: state => state.devMode
+  }
 });

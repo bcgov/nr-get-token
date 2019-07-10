@@ -95,7 +95,7 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <v-layout>
+    <v-layout v-if="devMode">
       <v-flex xs12>
         <v-card class="sectionCard">
           <v-toolbar card color="grey lighten-3">
@@ -129,6 +129,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['devMode']),
     ...mapGetters('auth', ['isAuthenticated']),
     ...mapGetters('configForm', [
       'configSubmissionSuccess',
