@@ -5,6 +5,7 @@ import Home from '@/components/Home.vue';
 
 describe('Home.vue', () => {
   let getters;
+  let actions;
   let store;
   let wrapper;
 
@@ -18,8 +19,12 @@ describe('Home.vue', () => {
       isAuthenticated: () => 'false'
     };
 
+    actions = {
+      getHealthCheckStatus: jest.fn()
+    };
+
     store = new Vuex.Store({
-      getters
+      getters, actions
     });
 
     wrapper = mount(Home, {
@@ -31,4 +36,9 @@ describe('Home.vue', () => {
   it('has the app config panel', () => {
     expect(wrapper.html()).toBe('<div class="container"><h1>Not Logged In</h1></div>');
   });
+
+  // it('dispatches "getHealthCheckStatus" when the refresh button is clicked', () => {
+  //   wrapper.find('.getHealthCheck').trigger('click');
+  //   expect(actions.getHealthCheckStatus).toHaveBeenCalled();
+  // });
 });

@@ -52,7 +52,7 @@
                   <v-spacer></v-spacer>
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
-                      <v-btn flat icon color="white" v-on="on" @click="getHealthCheck">
+                      <v-btn class="getHealthCheck" flat icon color="white" v-on="on" @click="getHealthCheck">
                         <v-icon>cached</v-icon>
                       </v-btn>
                     </template>
