@@ -34,7 +34,7 @@
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "passport-openidconnect": "0.0.2",
-    "snyk": "^1.192.2"
+    "snyk": "^1.193.0"
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.17.0",
