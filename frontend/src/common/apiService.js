@@ -24,9 +24,9 @@ apiAxios.interceptors.response.use(config => config, error => {
   const originalRequest = error.config;
   if (error.response.status === 401 && !originalRequest._retry) {
     if (isRefreshing) {
-      return new Promise(async (resolve, reject) => {
+      return new Promise((resolve, reject) => {
         try {
-          const token = await failedQueue.push({ resolve, reject });
+          const token = failedQueue.push({ resolve, reject });
           originalRequest.headers['Authorization'] = `Bearer ${token}`;
           return axios(originalRequest);
         } catch (e) {
@@ -38,29 +38,28 @@ apiAxios.interceptors.response.use(config => config, error => {
     originalRequest._retry = true;
     isRefreshing = true;
 
-    return new Promise(async (resolve, reject) => {
-      try {
-        const response = await AuthService.refreshAuthToken(localStorage.getItem('refreshToken'));
+    return new Promise((resolve, reject) => {
+      AuthService.refreshAuthToken(localStorage.getItem('refreshToken'))
+        .then(response => {
+          if (response.jwt) {
+            localStorage.setItem('jwtToken', response.jwt);
+            apiAxios.defaults.headers.common['Authorization'] = `Bearer ${response.jwt}`;
+            originalRequest.headers['Authorization'] = `Bearer ${response.jwt}`;
+          }
+          if (response.refreshToken) {
+            localStorage.setItem('refreshToken', response.refreshToken);
+          }
 
-        if (response.jwt) {
-          localStorage.setItem('jwtToken', response.jwt);
-          apiAxios.defaults.headers.common['Authorization'] = `Bearer ${response.jwt}`;
-          originalRequest.headers['Authorization'] = `Bearer ${response.jwt}`;
-        }
-        if (response.refreshToken) {
-          localStorage.setItem('refreshToken', response.refreshToken);
-        }
-
-        processQueue(null, response.jwt);
-        resolve(axios(originalRequest));
-      } catch (e) {
-        processQueue(e, null);
-        localStorage.removeItem('jwtToken');
-        localStorage.removeItem('refreshToken');
-        reject(e);
-      } finally {
-        isRefreshing = false;
-      }
+          processQueue(null, response.jwt);
+          resolve(axios(originalRequest));
+        })
+        .catch(e => {
+          processQueue(e, null);
+          localStorage.removeItem('jwtToken');
+          localStorage.removeItem('refreshToken');
+          reject(e);
+        })
+        .finally(() => isRefreshing = false);
     });
   }
 
