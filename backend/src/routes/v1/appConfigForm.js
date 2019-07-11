@@ -4,7 +4,7 @@ const appConfig = require('express').Router();
 const {
   body,
   validationResult
-} = require('express-validator/check');
+} = require('express-validator');
 
 const appConfigComponent = require('../../components/appConfig');
 
@@ -14,8 +14,8 @@ appConfig.post('/', [
   body('configForm.applicationName').isString(),
   body('configForm.applicationDescription').isString(),
   body('configForm.commonServices').isArray(),
-  body('passwordPublicKey').isString(),
-  body('configForm.webadeEnvironment').isIn(['INT', 'TEST', 'PROD'])
+  body('configForm.webadeEnvironment').isIn(['INT', 'TEST', 'PROD']),
+  body('passwordPublicKey').isString()
 ], async (req, res) => {
   // Validate for Bad Requests
   const errors = validationResult(req);
@@ -33,15 +33,20 @@ appConfig.post('/', [
     acronyms = roles.filter(role => !role.match(/offline_access|uma_authorization/));
   }
 
-  const appAcronym = req.body.configForm.applicationAcronym;
-  if (!acronyms.includes(req.body.configForm.applicationAcronym)) {
+  const {
+    configForm,
+    passwordPublicKey: publicKey
+  } = req.body;
+
+  const appAcronym = configForm.applicationAcronym;
+  if (!acronyms.includes(configForm.applicationAcronym)) {
     return res.status(403).json({
       message: `User lacks permission for '${appAcronym}' acronym`
     });
   }
 
   try {
-    const response = await appConfigComponent.postAppConfig(req.body);
+    const response = await appConfigComponent.postAppConfig(configForm, publicKey);
     return res.status(200).json(response);
   } catch (error) {
     log.error(error);

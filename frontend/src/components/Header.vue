@@ -42,8 +42,8 @@ export default {
   },
   methods: {
     clearStorage() {
-      localStorage.removeItem('jwtToken');
-      localStorage.removeItem('refreshToken');
+      this.$store.commit('auth/setJwtToken');
+      this.$store.commit('auth/setRefreshToken');
     }
   }
 };

@@ -10,7 +10,7 @@
     "start": "node ./bin/www",
     "lint": "node_modules/.bin/eslint . --no-fix --ignore-pattern 'node_modules' --ext .js",
     "lint:fix": "node_modules/.bin/eslint . --fix --ignore-pattern 'node_modules' --ext .js",
-    "test": "node_modules/.bin/jest",
+    "test": "node_modules/.bin/jest --verbose",
     "clean": "rm -rf coverage dist",
     "pretest": "npm run lint",
     "purge": "rm -rf node_modules",
@@ -26,9 +26,9 @@
     "config": "^3.0.1",
     "cryptico-js": "^1.1.0",
     "express": "^4.17.0",
-    "express-session": "^1.16.1",
-    "express-validator": "^6.0.0",
-    "generate-password": "^1.4.1",
+    "express-session": "^1.16.2",
+    "express-validator": "^6.1.1",
+    "generate-password": "^1.4.2",
     "morgan": "^1.9.1",
     "npmlog": "^4.1.2",
     "passport": "^0.4.0",
@@ -37,10 +37,12 @@
     "snyk": "^1.192.2"
   },
   "devDependencies": {
-    "eslint": "^5.16.0",
+    "axios-mock-adapter": "^1.17.0",
+    "eslint": "^6.0.1",
     "jest": "^24.8.0",
     "jest-sonar-reporter": "^2.0.0",
-    "nodemon": "^1.19.0"
+    "nodemon": "^1.19.0",
+    "supertest": "^4.0.2"
   },
   "eslintConfig": {
     "root": true,

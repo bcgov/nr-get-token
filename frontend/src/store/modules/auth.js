@@ -47,7 +47,7 @@ export default {
       try {
         if (context.getters.isAuthenticated && !!context.getters.refreshToken) {
           const now = Date.now().valueOf() / 1000;
-          const jwtPayload = localStorage.getItem('jwtToken').split('.')[1];
+          const jwtPayload = context.getters.jwtToken.split('.')[1];
           const payload = JSON.parse(window.atob(jwtPayload));
 
           if (payload.exp > now) {
