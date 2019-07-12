@@ -173,7 +173,7 @@ parameters:
 - name: SLAVE_EXECUTORS
   description: Number of executors this slave instance should have
   displayName: Slave Executors
-  value: '3'
+  value: '6'
 - name: REPLICAS
   description: Number of pod replicas
   displayName: Replicas
@@ -185,7 +185,7 @@ parameters:
 - name: CPU_LIMIT
   description: Maximum CPU allowed to use
   displayName: CPU Limit
-  value: 2000m
+  value: 4000m
 - name: MEMORY_REQUEST
   description: Minimal amount of memory needed to run
   displayName: Memory Request
@@ -193,4 +193,4 @@ parameters:
 - name: MEMORY_LIMIT
   description: Maximum amount of memory allowed to use
   displayName: Memory Limit
-  value: 2Gi
+  value: 4Gi
