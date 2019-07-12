@@ -1,8 +1,8 @@
 {
-  "route": "/api/v1/someendpoint",
+  "route": "/api/v1/checks/status",
   "response": {
     "request": {
-      "url": "/api/v1/someendpoint"
+      "url": "/api/v1/checks/status"
     }
   },
   "formattedResult": ""

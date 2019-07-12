@@ -19,6 +19,7 @@
   "homepage": "https://github.com/bcgov/nr-get-token",
   "dependencies": {
     "axios": "^0.19.0",
+    "axios-mock-adapter": "^1.17.0",
     "core-js": "^2.6.5",
     "cryptico-js": "^1.1.0",
     "vue": "^2.6.6",

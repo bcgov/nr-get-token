@@ -20,7 +20,7 @@ function processQueue(error, token = null) {
 
 // Create new non-global axios instance and intercept strategy
 const apiAxios = axios.create();
-apiAxios.interceptors.response.use(config => config, error => {
+const intercept = apiAxios.interceptors.response.use(config => config, error => {
   const originalRequest = error.config;
   if (error.response.status === 401 && !originalRequest._retry) {
     if (isRefreshing) {
@@ -67,6 +67,9 @@ apiAxios.interceptors.response.use(config => config, error => {
 });
 
 export default {
+  apiAxios: apiAxios,
+  intercept: intercept,
+
   setAuthHeader(token) {
     if (token) {
       apiAxios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -88,7 +91,7 @@ export default {
   async getApiCheck(route) {
     try {
       const response = await apiAxios.get(route);
-      return `URL: ${response.request.responseURL}
+      return `URL: ${route}
 Status: ${response.status} - ${response.statusText}
 Body: ${JSON.stringify(response.data, null, 2)}`;
     } catch (e) {
