@@ -21,7 +21,6 @@ objects:
 - apiVersion: v1
   kind: Service
   metadata:
-    creationTimestamp: 
     labels:
       cluster-name: "${NAME}-${INSTANCE}"
     name: "${NAME}-${INSTANCE}"
@@ -41,8 +40,6 @@ objects:
 - apiVersion: apps/v1
   kind: StatefulSet
   metadata:
-    creationTimestamp: 
-    generation: 3
     labels:
       cluster-name: "${INSTANCE}"
     name: "${NAME}-${INSTANCE}"
@@ -56,7 +53,6 @@ objects:
     serviceName: "${NAME}-${INSTANCE}"
     template:
       metadata:
-        creationTimestamp: 
         labels:
           statefulset: "${NAME}-${INSTANCE}"
           cluster-name: "${INSTANCE}"
@@ -69,7 +65,7 @@ objects:
                 matchExpressions:
                 - key: app
                   operator: In
-                  values: 
+                  values:
                   - ${NAME}-${INSTANCE}
               topologyKey: "kubernetes.io/hostname"
         containers:
@@ -79,13 +75,13 @@ objects:
               fieldRef:
                 apiVersion: v1
                 fieldPath: status.podIP
+          - name: PATRONI_KUBERNETES_LABELS
+            value: '{"cluster-name": "${INSTANCE}", "app.kubernetes.io/name": "patroni"}'
           - name: PATRONI_KUBERNETES_NAMESPACE
             valueFrom:
               fieldRef:
                 apiVersion: v1
                 fieldPath: metadata.namespace
-          - name: PATRONI_KUBERNETES_LABELS
-            value: '{"cluster-name": "${INSTANCE}", "app.kubernetes.io/name": "patroni"}'
           - name: PATRONI_SUPERUSER_USERNAME
             valueFrom:
               secretKeyRef:
@@ -106,34 +102,20 @@ objects:
               secretKeyRef:
                 key: replication-password
                 name: "${NAME}-${INSTANCE}-secret"
-          - name: APP_USER
-            valueFrom:
-              secretKeyRef:
-                key: app-db-username
-                name: "${NAME}-${INSTANCE}-secret"
-          - name: APP_PASSWORD
+          - name: "PATRONI_${APP_DB_USERNAME}_PASSWORD"
             valueFrom:
               secretKeyRef:
                 key: app-db-password
                 name: "${NAME}-${INSTANCE}-secret"
-          - name: APP_DATABASE
-            valueFrom:
-              secretKeyRef:
-                key: app-db-name
-                name: "${NAME}-${INSTANCE}-secret"
-          - name: PATRONI_SCOPE
-            value: "${INSTANCE}"
-          - name: POSTGRESQL_MAX_CONNECTIONS
-            value: '500'
-          - name: POSTGRESQL_MAX_PREPARED_TRANSACTIONS
-            value: '500'
+          - name: "PATRONI_${APP_DB_USERNAME}_OPTIONS"
+            value: "${APP_DB_USER_OPTIONS}"
+          - name: PATRONI_LOG_LEVEL
+            value: WARNING
           - name: PATRONI_NAME
             valueFrom:
               fieldRef:
                 apiVersion: v1
                 fieldPath: metadata.name
-          - name: PATRONI_LOG_LEVEL
-            value: WARNING
           - name: PATRONI_POSTGRESQL_DATA_DIR
             value: "/home/postgres/pgdata/pgroot/data"
           - name: PATRONI_POSTGRESQL_PGPASS
@@ -142,9 +124,16 @@ objects:
             value: 0.0.0.0:5432
           - name: PATRONI_RESTAPI_LISTEN
             value: 0.0.0.0:8008
+          - name: PATRONI_SCOPE
+            value: "${INSTANCE}"
+          - name: POSTGRESQL_MAX_CONNECTIONS
+            value: '500'
+          - name: POSTGRESQL_MAX_PREPARED_TRANSACTIONS
+            value: '500'
           image: "${IMAGE_REGISTRY}/${IMAGE_STREAM_NAMESPACE}/${IMAGE_STREAM_TAG}"
           imagePullPolicy: Always
           lifecycle:
+            # Poststart is required as the wrong folder permissions prevent postgres from starting upon pod restart
             postStart:
               exec:
                 command:
@@ -339,3 +328,13 @@ parameters:
   displayName: Persistent Volume Class
   required: true
   value: gluster-block
+- name: APP_DB_USERNAME
+  description: Username of the application database
+  displayName: Application Database Username
+  required: true
+  value: app
+- name: APP_DB_USER_OPTIONS
+  description: User permission options for the application database
+  displayName: Application User Options
+  required: true
+  value: "createrole,createdb"
