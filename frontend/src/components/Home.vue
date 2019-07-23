@@ -6,7 +6,13 @@
   <v-container v-else>
     <v-layout wrap>
       <v-flex xs4>
-        <v-img :src="require('@/assets/images/tokey.svg')" contain height="180" position="right"></v-img>
+        <v-img
+          :src="require('@/assets/images/tokey.svg')"
+          contain
+          height="180"
+          position="right"
+          id="devModeTrigger"
+        ></v-img>
       </v-flex>
       <v-flex xs8>
         <v-img
@@ -60,7 +66,7 @@
                   </v-tooltip>
                 </v-toolbar>
 
-                <HealthCheck/>
+                <HealthCheck />
 
                 <v-divider></v-divider>
 
@@ -135,12 +141,25 @@ export default {
       'configSubmissionSuccess',
       'configSubmissionError',
       'configSubmissionInProgress'
-    ]),
+    ])
   },
   methods: {
     getHealthCheck() {
       this.$store.dispatch('checks/getHealthCheckStatus');
     }
+  },
+  mounted() {
+    const pressed = [];
+    const devModeCode =
+      'ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightbaEnter';
+    const devModeKeyLength = 11;
+    window.addEventListener('keyup', e => {
+      pressed.push(e.key);
+      pressed.splice(-devModeKeyLength - 1, pressed.length - devModeKeyLength);
+      if (pressed.join('').includes(devModeCode)) {
+        this.$store.commit('setDevMode');
+      }
+    });
   }
 };
 </script>

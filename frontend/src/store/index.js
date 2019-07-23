@@ -13,5 +13,10 @@ export default new Vuex.Store({
   },
   getters: {
     devMode: state => state.devMode
+  },
+  mutations: {
+    setDevMode: (state) => {
+      state.devMode = true;
+    }
   }
 });
