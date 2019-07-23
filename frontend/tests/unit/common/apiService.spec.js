@@ -11,7 +11,6 @@ describe('getAPICheck()', () => {
   const spy = jest.spyOn(ApiService.apiAxios, 'get');
 
   beforeEach(() => {
-    //ApiService.apiAxios.interceptors.response.use = jest.fn(c => c, e => e);
     ApiService.apiAxios.interceptors.response.eject(ApiService.intercept);
   });
 
@@ -28,6 +27,7 @@ describe('getAPICheck()', () => {
     });
     const res = await ApiService.getApiCheck(apiCheckFixture.route);
 
+    // TODO: see about re-adding these conditions
     // expect(res).toContain(`URL: ${apiCheckFixture.route}`);
     // eslint-disable-next-line no-console
     console.log(res);
