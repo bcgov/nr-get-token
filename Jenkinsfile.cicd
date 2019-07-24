@@ -343,6 +343,15 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
       echo "Tagging Image ${REPO_NAME}-frontend-static:${JOB_NAME}..."
       openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-frontend-static:${JOB_NAME}", "${REPO_NAME}-frontend-static:${JOB_NAME}")
 
+      echo "Processing DeploymentConfig Patroni..."
+      def dcPatroniTemplate = openshift.process('-f',
+        'openshift/patroni-ephemeral.dc.yaml',
+        "APP_NAME=${APP_NAME}",
+        "INSTANCE=${JOB_NAME}",
+        "APP_DB_NAME=${APP_NAME}",
+        "APP_DB_USERNAME=${APP_NAME}"
+      )
+
       echo "Processing DeploymentConfig ${REPO_NAME}-backend..."
       def dcBackendTemplate = openshift.process('-f',
         'openshift/backend.dc.yaml',
@@ -365,20 +374,22 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
 
       createDeploymentStatus(projectEnv, 'PENDING', hostRouteEnv)
 
-      echo "Applying Deployment ${REPO_NAME}-frontend-static..."
-      def dcFrontendStatic = openshift.apply(dcFrontendStaticTemplate).narrow('dc')
-
-      echo "Applying Deployment ${REPO_NAME}-backend..."
-      def dcBackend = openshift.apply(dcBackendTemplate).narrow('dc')
-
       // Wait for deployments to roll out
       timeout(10) {
         parallel(
           Backend: {
+            echo "Applying Deployment Patroni..."
+            def dcPatroni = openshift.apply(dcPatroniTemplate).narrow('dc')
+            dcPatroni.rollout().status('--watch=true')
+
+            echo "Applying Deployment ${REPO_NAME}-backend..."
+            def dcBackend = openshift.apply(dcBackendTemplate).narrow('dc')
             dcBackend.rollout().status('--watch=true')
           },
 
           Frontend: {
+            echo "Applying Deployment ${REPO_NAME}-frontend-static..."
+            def dcFrontendStatic = openshift.apply(dcFrontendStaticTemplate).narrow('dc')
             dcFrontendStatic.rollout().status('--watch=true')
           }
         )
