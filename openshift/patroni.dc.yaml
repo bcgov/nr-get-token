@@ -9,7 +9,7 @@ metadata:
     openshift.io/long-description: This template deploys a patroni postgresql HA cluster
       with persistent storage.
     tags: postgresql
-  name: patroni-postgregsql
+  name: patroni-postgregsql-persistent
 labels:
   app: "${NAME}-${INSTANCE}"
   app.kubernetes.io/instance: "${INSTANCE}"
@@ -17,12 +17,23 @@ labels:
   app.kubernetes.io/name: patroni
   app.kubernetes.io/managed-by: template
   app.kubernetes.io/version: '10'
+  cluster-name: "${INSTANCE}"
 objects:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: "${NAME}-${INSTANCE}-secret"
+  stringData:
+    replication-username: "${PATRONI_REPLICATION_USERNAME}"
+    replication-password: "${PATRONI_REPLICATION_PASSWORD}"
+    superuser-username: "${PATRONI_SUPERUSER_USERNAME}"
+    superuser-password: "${PATRONI_SUPERUSER_PASSWORD}"
+    app-db-name: "${APP_DB_NAME}"
+    app-db-username: "${APP_DB_USERNAME}"
+    app-db-password: "${APP_DB_PASSWORD}"
 - apiVersion: v1
   kind: Service
   metadata:
-    labels:
-      cluster-name: "${NAME}-${INSTANCE}"
     name: "${NAME}-${INSTANCE}"
   spec:
     ports:
@@ -40,8 +51,6 @@ objects:
 - apiVersion: apps/v1
   kind: StatefulSet
   metadata:
-    labels:
-      cluster-name: "${INSTANCE}"
     name: "${NAME}-${INSTANCE}"
   spec:
     podManagementPolicy: Parallel
@@ -213,14 +222,10 @@ objects:
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
-    labels:
-      cluster-name: "${INSTANCE}"
     name: "${NAME}-${INSTANCE}"
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: Role
   metadata:
-    labels:
-      cluster-name: "${INSTANCE}"
     name: "${NAME}-${INSTANCE}"
   rules:
   - apiGroups:
@@ -272,8 +277,6 @@ objects:
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: RoleBinding
   metadata:
-    labels:
-      cluster-name: "${INSTANCE}"
     name: "${NAME}-${INSTANCE}"
   roleRef:
     apiGroup: rbac.authorization.k8s.io
@@ -317,24 +320,56 @@ parameters:
   description: The size of the persistent volume to create.
   displayName: Persistent Volume Size
   required: true
-  value: 1Gi
+  value: 5Gi
 - name: REPLICAS
   description: The number of database replicas to create.
   displayName: Replica Count
   required: true
-  value: "2"
+  value: "3"
 - name: STORAGE_CLASS
   description: The type of the persistent volume to create.
   displayName: Persistent Volume Class
   required: true
   value: gluster-block
+- name: APP_DB_NAME
+  description: Name of the application database
+  displayName: Application Database Name
+  required: true
+  value: app
 - name: APP_DB_USERNAME
   description: Username of the application database
   displayName: Application Database Username
   required: true
   value: app
+- name: APP_DB_PASSWORD
+  description: Password of the application database
+  displayName: Application Database Password
+  generate: expression
+  from: "[a-zA-Z0-9]{32}"
 - name: APP_DB_USER_OPTIONS
   description: User permission options for the application database
   displayName: Application User Options
   required: true
   value: "createrole,createdb"
+- name: PATRONI_SUPERUSER_USERNAME
+  description: Username of the superuser account for initialization.
+  displayName: Superuser Username
+  required: true
+  value: postgres
+- name: PATRONI_SUPERUSER_PASSWORD
+  description: Password of the superuser account for initialization.
+  displayName: Superuser Passsword
+  generate: expression
+  from: "[a-zA-Z0-9]{32}"
+  required: true
+- name: PATRONI_REPLICATION_USERNAME
+  description: Username of the replication account for initialization.
+  displayName: Replication Username
+  required: true
+  value: replication
+- name: PATRONI_REPLICATION_PASSWORD
+  description: Password of the replication account for initialization.
+  displayName: Repication Passsword
+  generate: expression
+  from: "[a-zA-Z0-9]{32}"
+  required: true
