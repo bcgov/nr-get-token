@@ -3,15 +3,15 @@ apiVersion: v1
 kind: Template
 metadata:
   annotations:
-    description: Patroni Postgresql database cluster, with persistent storage.
+    description: Patroni Postgresql database cluster, with ephemeral storage.
     iconClass: icon-postgresql
-    openshift.io/display-name: Patroni Postgresql (Persistent)
+    openshift.io/display-name: Patroni Postgresql (Ephemeral)
     openshift.io/long-description: This template deploys a patroni postgresql HA cluster
-      with persistent storage.
+      with ephemeral storage.
     tags: postgresql
-  name: patroni-postgregsql-persistent
+  name: patroni-postgregsql-ephemeral
 labels:
-  app: "${NAME}-${INSTANCE}"
+  app: "${APP_NAME}-${INSTANCE}"
   app.kubernetes.io/instance: "${INSTANCE}"
   app.kubernetes.io/component: database
   app.kubernetes.io/name: patroni
@@ -197,24 +197,9 @@ objects:
         terminationGracePeriodSeconds: 0
         volumes:
         - name: postgresql
-          persistentVolumeClaim:
-            claimName: postgresql
+          emptyDir: {}
     updateStrategy:
       type: RollingUpdate
-    volumeClaimTemplates:
-    - metadata:
-        annotations:
-          volume.beta.kubernetes.io/storage-class: "${STORAGE_CLASS}"
-        labels:
-          app: "${NAME}-${INSTANCE}"
-        name: postgresql
-      spec:
-        accessModes:
-        - ReadWriteOnce
-        resources:
-          requests:
-            storage: "${PVC_SIZE}"
-        storageClassName: "${STORAGE_CLASS}"
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
@@ -282,9 +267,12 @@ objects:
   - kind: ServiceAccount
     name: "${NAME}-${INSTANCE}"
 parameters:
+- name: APP_NAME
+  description: Application name
+  required: true
 - name: NAME
   description: The name of the application for labelling all artifacts.
-  displayName: Application Name
+  displayName: Database Application Name
   required: true
   value: patroni
 - name: INSTANCE
@@ -312,21 +300,11 @@ parameters:
   displayName: Memory Limit
   required: true
   value: 512Mi
-- name: PVC_SIZE
-  description: The size of the persistent volume to create.
-  displayName: Persistent Volume Size
-  required: true
-  value: 5Gi
 - name: REPLICAS
   description: The number of database replicas to create.
   displayName: Replica Count
   required: true
-  value: "3"
-- name: STORAGE_CLASS
-  description: The type of the persistent volume to create.
-  displayName: Persistent Volume Class
-  required: true
-  value: gluster-block
+  value: "1"
 - name: APP_DB_NAME
   description: Name of the application database
   displayName: Application Database Name
