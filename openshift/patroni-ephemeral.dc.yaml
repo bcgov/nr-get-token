@@ -20,18 +20,6 @@ labels:
   cluster-name: "${INSTANCE}"
 objects:
 - apiVersion: v1
-  kind: Secret
-  metadata:
-    name: "${NAME}-${INSTANCE}-secret"
-  stringData:
-    replication-username: "${PATRONI_REPLICATION_USERNAME}"
-    replication-password: "${PATRONI_REPLICATION_PASSWORD}"
-    superuser-username: "${PATRONI_SUPERUSER_USERNAME}"
-    superuser-password: "${PATRONI_SUPERUSER_PASSWORD}"
-    app-db-name: "${APP_DB_NAME}"
-    app-db-username: "${APP_DB_USERNAME}"
-    app-db-password: "${APP_DB_PASSWORD}"
-- apiVersion: v1
   kind: Service
   metadata:
     name: "${NAME}-${INSTANCE}"
@@ -53,8 +41,8 @@ objects:
   metadata:
     name: "${NAME}-${INSTANCE}"
   spec:
-    podManagementPolicy: Parallel
-    replicas: "${REPLICAS}"
+    podManagementPolicy: OrderedReady
+    replicas: 2
     revisionHistoryLimit: 10
     selector:
       matchLabels:
@@ -79,6 +67,21 @@ objects:
               topologyKey: "kubernetes.io/hostname"
         containers:
         - env:
+          - name: APP_DATABASE
+            valueFrom:
+              secretKeyRef:
+                key: app-db-name
+                name: "${NAME}-${INSTANCE}-secret"
+          - name: APP_USER
+            valueFrom:
+              secretKeyRef:
+                key: app-db-username
+                name: "${NAME}-${INSTANCE}-secret"
+          - name: APP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: app-db-password
+                name: "${NAME}-${INSTANCE}-secret"
           - name: POD_IP
             valueFrom:
               fieldRef:
@@ -111,13 +114,6 @@ objects:
               secretKeyRef:
                 key: replication-password
                 name: "${NAME}-${INSTANCE}-secret"
-          - name: "PATRONI_${APP_DB_USERNAME}_PASSWORD"
-            valueFrom:
-              secretKeyRef:
-                key: app-db-password
-                name: "${NAME}-${INSTANCE}-secret"
-          - name: "PATRONI_${APP_DB_USERNAME}_OPTIONS"
-            value: "${APP_DB_USER_OPTIONS}"
           - name: PATRONI_LOG_LEVEL
             value: WARNING
           - name: PATRONI_NAME
@@ -141,51 +137,35 @@ objects:
             value: '500'
           image: "${IMAGE_REGISTRY}/${IMAGE_STREAM_NAMESPACE}/${IMAGE_STREAM_TAG}"
           imagePullPolicy: Always
-          lifecycle:
-            # Poststart is required as the wrong folder permissions prevent postgres from starting upon pod restart
-            postStart:
-              exec:
-                command:
-                - sh
-                - -c
-                - '[ -d "/home/postgres/pgdata/pgroot" ] && chmod -R g-rwxs /home/postgres/pgdata/pgroot; exit 0'
           livenessProbe:
             exec:
               command:
-              - psql
-              - "-w"
-              - "-U"
-              - postgres
-              - "-c"
-              - SELECT 1
-            initialDelaySeconds: 30
-            periodSeconds: 10
+                - /usr/share/scripts/patroni/health_check.sh
+            initialDelaySeconds: 5
             timeoutSeconds: 5
-            failureThreshold: 6
-            successThreshold: 1
+            failureThreshold: 4
           name: postgresql
           ports:
           - containerPort: 8008
             protocol: TCP
           - containerPort: 5432
             protocol: TCP
-          resources: {}
+          resources:
+            requests:
+              cpu: ${CPU_REQUEST}
+              memory: ${MEMORY_REQUEST}
+            limits:
+              cpu: ${CPU_LIMIT}
+              memory: ${MEMORY_LIMIT}
           terminationMessagePath: "/dev/termination-log"
           terminationMessagePolicy: File
           readinessProbe:
             exec:
               command:
-              - psql
-              - "-w"
-              - "-U"
-              - postgres
-              - "-c"
-              - SELECT 1
+                - /usr/share/scripts/patroni/health_check.sh
             initialDelaySeconds: 5
-            periodSeconds: 10
             timeoutSeconds: 5
-            failureThreshold: 6
-            successThreshold: 1
+            failureThreshold: 4
           volumeMounts:
           - mountPath: "/home/postgres/pgdata"
             name: postgresql
@@ -268,11 +248,12 @@ objects:
     name: "${NAME}-${INSTANCE}"
 parameters:
 - name: APP_NAME
-  description: Application name
+  description: The name of the application which will use this database.
+  displayName: Application client name
   required: true
 - name: NAME
   description: The name of the application for labelling all artifacts.
-  displayName: Database Application Name
+  displayName: Application Name
   required: true
   value: patroni
 - name: INSTANCE
@@ -289,61 +270,29 @@ parameters:
     resides.
   displayName: ImageStream Namespace
   required: true
-  value: openshift
+  value: bcgov
 - name: IMAGE_STREAM_TAG
   description: Patroni ImageTag
   displayName: ImageStream Tag
   required: true
-  value: patroni:10
+  value: patroni:v10-stable
+- name: CPU_REQUEST
+  description: Starting amount of CPU the container can use.
+  displayName: CPU Request
+  required: true
+  value: '250m'
+- name: CPU_LIMIT
+  description: Maximum amount of CPU the container can use.
+  displayName: CPU Limit
+  required: true
+  value: '1'
+- name: MEMORY_REQUEST
+  description: Starting amount of memory the container can use.
+  displayName: Memory Request
+  required: true
+  value: 512Mi
 - name: MEMORY_LIMIT
   description: Maximum amount of memory the container can use.
   displayName: Memory Limit
   required: true
   value: 512Mi
-- name: REPLICAS
-  description: The number of database replicas to create.
-  displayName: Replica Count
-  required: true
-  value: "1"
-- name: APP_DB_NAME
-  description: Name of the application database
-  displayName: Application Database Name
-  required: true
-  value: app
-- name: APP_DB_USERNAME
-  description: Username of the application database
-  displayName: Application Database Username
-  required: true
-  value: app
-- name: APP_DB_PASSWORD
-  description: Password of the application database
-  displayName: Application Database Password
-  generate: expression
-  from: "[a-zA-Z0-9]{32}"
-- name: APP_DB_USER_OPTIONS
-  description: User permission options for the application database
-  displayName: Application User Options
-  required: true
-  value: "createrole,createdb"
-- name: PATRONI_SUPERUSER_USERNAME
-  description: Username of the superuser account for initialization.
-  displayName: Superuser Username
-  required: true
-  value: postgres
-- name: PATRONI_SUPERUSER_PASSWORD
-  description: Password of the superuser account for initialization.
-  displayName: Superuser Passsword
-  generate: expression
-  from: "[a-zA-Z0-9]{32}"
-  required: true
-- name: PATRONI_REPLICATION_USERNAME
-  description: Username of the replication account for initialization.
-  displayName: Replication Username
-  required: true
-  value: replication
-- name: PATRONI_REPLICATION_PASSWORD
-  description: Password of the replication account for initialization.
-  displayName: Repication Passsword
-  generate: expression
-  from: "[a-zA-Z0-9]{32}"
-  required: true

@@ -20,18 +20,6 @@ labels:
   cluster-name: "${INSTANCE}"
 objects:
 - apiVersion: v1
-  kind: Secret
-  metadata:
-    name: "${NAME}-${INSTANCE}-secret"
-  stringData:
-    replication-username: "${PATRONI_REPLICATION_USERNAME}"
-    replication-password: "${PATRONI_REPLICATION_PASSWORD}"
-    superuser-username: "${PATRONI_SUPERUSER_USERNAME}"
-    superuser-password: "${PATRONI_SUPERUSER_PASSWORD}"
-    app-db-name: "${APP_DB_NAME}"
-    app-db-username: "${APP_DB_USERNAME}"
-    app-db-password: "${APP_DB_PASSWORD}"
-- apiVersion: v1
   kind: Service
   metadata:
     name: "${NAME}-${INSTANCE}"
@@ -54,7 +42,7 @@ objects:
     name: "${NAME}-${INSTANCE}"
   spec:
     podManagementPolicy: Parallel
-    replicas: "${REPLICAS}"
+    replicas: 3
     revisionHistoryLimit: 10
     selector:
       matchLabels:
@@ -79,6 +67,21 @@ objects:
               topologyKey: "kubernetes.io/hostname"
         containers:
         - env:
+          - name: APP_DATABASE
+            valueFrom:
+              secretKeyRef:
+                key: app-db-name
+                name: "${NAME}-${INSTANCE}-secret"
+          - name: APP_USER
+            valueFrom:
+              secretKeyRef:
+                key: app-db-username
+                name: "${NAME}-${INSTANCE}-secret"
+          - name: APP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: app-db-password
+                name: "${NAME}-${INSTANCE}-secret"
           - name: POD_IP
             valueFrom:
               fieldRef:
@@ -317,11 +320,6 @@ parameters:
   displayName: Persistent Volume Size
   required: true
   value: 5Gi
-- name: REPLICAS
-  description: The number of database replicas to create.
-  displayName: Replica Count
-  required: true
-  value: "3"
 - name: STORAGE_CLASS
   description: The type of the persistent volume to create.
   displayName: Persistent Volume Class
