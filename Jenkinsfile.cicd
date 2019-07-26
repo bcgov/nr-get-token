@@ -337,6 +337,12 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
         throw e
       }
 
+      echo "Tagging Image ${REPO_NAME}-backend:${JOB_NAME}..."
+      openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-backend:${JOB_NAME}", "${REPO_NAME}-backend:${JOB_NAME}")
+
+      echo "Tagging Image ${REPO_NAME}-frontend-static:${JOB_NAME} Deployment..."
+      openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-frontend-static:${JOB_NAME}", "${REPO_NAME}-frontend-static:${JOB_NAME}")
+
       createDeploymentStatus(projectEnv, 'PENDING', hostRouteEnv)
 
       // Wait for deployments to roll out
@@ -344,9 +350,6 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
         parallel(
           Backend: {
             // Apply Backend Server
-            echo "Tagging Image ${REPO_NAME}-backend:${JOB_NAME}..."
-            openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-backend:${JOB_NAME}", "${REPO_NAME}-backend:${JOB_NAME}")
-
             echo "Processing DeploymentConfig ${REPO_NAME}-backend..."
             def dcBackendTemplate = openshift.process('-f',
               'openshift/backend.dc.yaml',
@@ -368,33 +371,29 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
               echo "Patroni Secret already exists. Skipping..."
             } else {
               echo "Processing Patroni Secret..."
-              def dcPatroniTemplate = openshift.process('-f',
+              def dcPatroniSecretTemplate = openshift.process('-f',
                 'openshift/patroni.secret.yaml',
                 "INSTANCE=${JOB_NAME}"
               )
 
-              echo "Applying Patroni Secret..."
-              def dcPatroni = openshift.apply(dcPatroniTemplate).narrow('dc')
-              dcPatroni.rollout().status('--watch=true')
+              echo "Creating Patroni Secret..."
+              openshift.create(dcPatroniSecretTemplate)
             }
 
-            echo "Processing Patroni DeploymentConfig.."
+            echo "Processing Patroni StatefulSet.."
             def dcPatroniTemplate = openshift.process('-f',
               'openshift/patroni-ephemeral.dc.yaml',
               "APP_NAME=${APP_NAME}",
               "INSTANCE=${JOB_NAME}"
             )
 
-            echo "Applying Patroni DeploymentConfig..."
-            def dcPatroni = openshift.apply(dcPatroniTemplate).narrow('dc')
+            echo "Applying Patroni StatefulSet..."
+            def dcPatroni = openshift.apply(dcPatroniTemplate).narrow('sts')
             dcPatroni.rollout().status('--watch=true')
           },
 
           Frontend: {
             // Apply Frontend Server
-            echo "Tagging Image ${REPO_NAME}-frontend-static:${JOB_NAME} Deployment..."
-            openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-frontend-static:${JOB_NAME}", "${REPO_NAME}-frontend-static:${JOB_NAME}")
-
             echo "Processing ${REPO_NAME}-frontend-static Deployment..."
             def dcFrontendStaticTemplate = openshift.process('-f',
               'openshift/frontend-static.dc.yaml',
