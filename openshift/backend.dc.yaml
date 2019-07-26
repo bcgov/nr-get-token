@@ -22,8 +22,17 @@ objects:
       app: "${APP_NAME}-${JOB_NAME}"
       deploymentconfig: "${APP_NAME}-backend-${JOB_NAME}"
     strategy:
+      type: Recreate
+      recreateParams:
+        timeoutSeconds: 600
+        mid:
+          failurePolicy: Abort
+          execNewPod:
+            command:
+            - npx
+            - "--version"
+            containerName: "${APP_NAME}-backend-${JOB_NAME}"
       resources: {}
-      type: Rolling
     template:
       metadata:
         annotations:
