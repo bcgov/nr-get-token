@@ -15,9 +15,7 @@
     "pretest": "npm run lint",
     "purge": "rm -rf node_modules",
     "rebuild": "npm run clean && npm run build",
-    "reinstall": "npm run purge && npm install",
-    "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "reinstall": "npm run purge && npm install"
   },
   "homepage": "https://github.com/bcgov/nr-get-token",
   "dependencies": {
@@ -33,8 +31,7 @@
     "npmlog": "^4.1.2",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
-    "passport-openidconnect": "0.0.2",
-    "snyk": "^1.193.0"
+    "passport-openidconnect": "0.0.2"
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.17.0",
@@ -120,6 +117,5 @@
   },
   "bugs": {
     "url": "https://github.com/bcgov/nr-get-token/issues"
-  },
-  "snyk": true
+  }
 }
