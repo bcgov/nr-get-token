@@ -8,6 +8,7 @@ const passport = require('passport');
 const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const OidcStrategy = require('passport-openidconnect').Strategy;
+const Sequelize = require('sequelize');
 
 const utils = require('./src/components/utils');
 const authRouter = require('./src/routes/auth');
@@ -42,6 +43,29 @@ log.addLevel('debug', 1500, {
 
 // Print out configuration settings in verbose startup
 log.debug('Config', utils.prettyStringify(config));
+
+const sequelize = new Sequelize(
+  config.get('db.database'), config.get('db.username'), config.get('db.password'), {
+    define: {
+      freezeTableName: true
+    },
+    dialect: 'postgres',
+    pool: {
+      max: 5,
+      idle: 10000,
+      acquire: 60000
+    }
+  }
+);
+
+sequelize.authenticate()
+  .then(() => {
+    log.info('Database connection has been established successfully.');
+  })
+  .error(err => {
+    log.error('Unable to connect to the database:', err);
+    process.exit(1);
+  });
 
 // Resolves OIDC Discovery values and sets up passport strategies
 utils.getOidcDiscovery().then(discovery => {

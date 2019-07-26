@@ -1,4 +1,10 @@
 {
+  "db": {
+    "database": "DB_DATABASE",
+    "host": "DB_HOST",
+    "username": "DB_USERNAME",
+    "password": "DB_PASSWORD"
+  },
   "oidc": {
     "discovery": "OIDC_DISCOVERY",
     "clientID": "OIDC_USERNAME",
