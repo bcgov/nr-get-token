@@ -44,28 +44,40 @@ log.addLevel('debug', 1500, {
 // Print out configuration settings in verbose startup
 log.debug('Config', utils.prettyStringify(config));
 
-const sequelize = new Sequelize(
-  config.get('db.database'), config.get('db.username'), config.get('db.password'), {
-    define: {
-      freezeTableName: true
-    },
-    dialect: 'postgres',
-    pool: {
-      max: 5,
-      idle: 10000,
-      acquire: 60000
-    }
+const sequelize = new Sequelize({
+  database: config.get('db.database'),
+  host: config.get('db.host'),
+  username: config.get('db.username'),
+  password: config.get('db.password'),
+  define: {
+    charset: 'utf8',
+    freezeTableName: true,
+    timestamps: true,
+    underscored: true
+  },
+  dialect: 'postgres',
+  isolationLevel: Sequelize.Transaction.SERIALIZABLE,
+  logging: query => log.verbose(query),
+  pool: {
+    max: 5,
+    idle: 10000,
+    acquire: 60000
   }
-);
+});
 
-sequelize.authenticate()
-  .then(() => {
-    log.info('Database connection has been established successfully.');
-  })
-  .error(err => {
-    log.error('Unable to connect to the database:', err);
-    process.exit(1);
-  });
+(() => {
+  let dbError = false;
+  sequelize.authenticate()
+    .then(() => log.info('Database connection established'))
+    .catch(err => {
+      dbError = true;
+      log.error(err);
+    })
+    .finally(() => {
+      sequelize.close();
+      if (dbError) process.exit(1);
+    });
+})();
 
 // Resolves OIDC Discovery values and sets up passport strategies
 utils.getOidcDiscovery().then(discovery => {

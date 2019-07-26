@@ -30,7 +30,8 @@ objects:
           execNewPod:
             command:
             - npx
-            - "--version"
+            - sequelize-cli
+            - db:migrate
             containerName: "${APP_NAME}-backend-${JOB_NAME}"
       resources: {}
     template:
