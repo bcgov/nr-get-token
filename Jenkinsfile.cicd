@@ -343,6 +343,26 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
       timeout(10) {
         parallel(
           Backend: {
+            // Apply Backend Server
+            echo "Tagging Image ${REPO_NAME}-backend:${JOB_NAME}..."
+            openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-backend:${JOB_NAME}", "${REPO_NAME}-backend:${JOB_NAME}")
+
+            echo "Processing DeploymentConfig ${REPO_NAME}-backend..."
+            def dcBackendTemplate = openshift.process('-f',
+              'openshift/backend.dc.yaml',
+              "REPO_NAME=${REPO_NAME}",
+              "JOB_NAME=${JOB_NAME}",
+              "NAMESPACE=${projectEnv}",
+              "APP_NAME=${APP_NAME}",
+              "HOST_ROUTE=${hostRouteEnv}"
+            )
+
+            echo "Applying ${REPO_NAME}-backend Deployment..."
+            def dcBackend = openshift.apply(dcBackendTemplate).narrow('dc')
+            dcBackend.rollout().status('--watch=true')
+          },
+
+          Database: {
             // Apply Patroni Database
             if(openshift.selector('secret', "patroni-${JOB_NAME}-secret").exists()) {
               echo "Patroni Secret already exists. Skipping..."
@@ -368,24 +388,6 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
             echo "Applying Patroni DeploymentConfig..."
             def dcPatroni = openshift.apply(dcPatroniTemplate).narrow('dc')
             dcPatroni.rollout().status('--watch=true')
-
-            // Apply Backend Server
-            echo "Tagging Image ${REPO_NAME}-backend:${JOB_NAME}..."
-            openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-backend:${JOB_NAME}", "${REPO_NAME}-backend:${JOB_NAME}")
-
-            echo "Processing DeploymentConfig ${REPO_NAME}-backend..."
-            def dcBackendTemplate = openshift.process('-f',
-              'openshift/backend.dc.yaml',
-              "REPO_NAME=${REPO_NAME}",
-              "JOB_NAME=${JOB_NAME}",
-              "NAMESPACE=${projectEnv}",
-              "APP_NAME=${APP_NAME}",
-              "HOST_ROUTE=${hostRouteEnv}"
-            )
-
-            echo "Applying ${REPO_NAME}-backend Deployment..."
-            def dcBackend = openshift.apply(dcBackendTemplate).narrow('dc')
-            dcBackend.rollout().status('--watch=true')
           },
 
           Frontend: {

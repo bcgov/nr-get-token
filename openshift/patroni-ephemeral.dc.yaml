@@ -290,7 +290,7 @@ parameters:
   description: Starting amount of memory the container can use.
   displayName: Memory Request
   required: true
-  value: 512Mi
+  value: 256Mi
 - name: MEMORY_LIMIT
   description: Maximum amount of memory the container can use.
   displayName: Memory Limit
