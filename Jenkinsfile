@@ -373,7 +373,9 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
         parallel(
           Backend: {
             // Apply Patroni Database
-            if(!(openshift.selector('secret', "patroni-${JOB_NAME}-secret").exists()) {
+            if(openshift.selector('secret', "patroni-${JOB_NAME}-secret").exists()) {
+              echo "Patroni Secret already exists. Skipping..."
+            } else {
               echo "Processing Patroni Secret..."
               def dcPatroniTemplate = openshift.process('-f',
                 'openshift/patroni.secret.yaml',
@@ -383,8 +385,6 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
               echo "Applying Patroni Secret..."
               def dcPatroni = openshift.apply(dcPatroniTemplate).narrow('dc')
               dcPatroni.rollout().status('--watch=true')
-            } else {
-              echo "Patroni Secret already exists. Skipping..."
             }
 
             echo "Processing Patroni DeploymentConfig.."
