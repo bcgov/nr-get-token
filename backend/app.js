@@ -22,11 +22,6 @@ app.use(express.urlencoded({
   extended: false
 }));
 
-// Add Morgan endpoint logging
-if (process.env.NODE_ENV !== 'test') {
-  app.use(morgan(config.get('server.morganFormat')));
-}
-
 app.use(session({
   secret: config.get('oidc.clientSecret'),
   resave: false,
@@ -44,6 +39,7 @@ log.addLevel('debug', 1500, {
 // Print out configuration settings in verbose startup
 log.debug('Config', utils.prettyStringify(config));
 
+// Setup Database Connection
 const sequelize = new Sequelize({
   database: config.get('db.database'),
   host: config.get('db.host'),
@@ -65,7 +61,12 @@ const sequelize = new Sequelize({
   }
 });
 
-(() => {
+// Skip if running tests
+if (process.env.NODE_ENV !== 'test') {
+  // Add Morgan endpoint logging
+  app.use(morgan(config.get('server.morganFormat')));
+
+  // Check database connection and exit if unsuccessful
   let dbError = false;
   sequelize.authenticate()
     .then(() => log.info('Database connection established'))
@@ -77,7 +78,7 @@ const sequelize = new Sequelize({
       sequelize.close();
       if (dbError) process.exit(1);
     });
-})();
+}
 
 // Resolves OIDC Discovery values and sets up passport strategies
 utils.getOidcDiscovery().then(discovery => {
@@ -172,5 +173,14 @@ app.use((_req, res) => {
 process.on('unhandledRejection', err => {
   log.error(err.stack);
 });
+
+// Graceful shutdown support
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);
+
+function shutdown() {
+  log.info('Received kill signal. Draining DB connections and shutting down...');
+  sequelize.close().then(() => process.exit());
+}
 
 module.exports = app;
