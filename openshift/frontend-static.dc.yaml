@@ -3,18 +3,15 @@ apiVersion: v1
 kind: Template
 labels:
   template: "${REPO_NAME}-template"
+  app: "${APP_NAME}-${JOB_NAME}"
 metadata:
   name: "${REPO_NAME}-frontend-dc"
-  creationTimestamp:
 objects:
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     annotations:
       openshift.io/generated-by: OpenShiftNewApp
-    creationTimestamp:
-    labels:
-      app: "${APP_NAME}-${JOB_NAME}"
     name: "${APP_NAME}-frontend-${JOB_NAME}"
   spec:
     replicas: 2
@@ -28,7 +25,6 @@ objects:
       metadata:
         annotations:
           openshift.io/generated-by: OpenShiftNewApp
-        creationTimestamp:
         labels:
           app: "${APP_NAME}-${JOB_NAME}"
           deploymentconfig: "${APP_NAME}-frontend-${JOB_NAME}"
@@ -79,9 +75,6 @@ objects:
   metadata:
     annotations:
       openshift.io/generated-by: OpenShiftNewApp
-    creationTimestamp:
-    labels:
-      app: "${APP_NAME}-${JOB_NAME}"
     name: "${APP_NAME}-frontend-${JOB_NAME}"
   spec:
     ports:
@@ -97,8 +90,6 @@ objects:
   metadata:
     annotations:
       openshift.io/host.generated: 'true'
-    labels:
-      app: "${APP_NAME}-${JOB_NAME}"
     name: "${APP_NAME}-frontend-${JOB_NAME}"
   spec:
     host: "${HOST_ROUTE}"
@@ -115,16 +106,21 @@ objects:
 parameters:
 - name: REPO_NAME
   description: Application repository name
+  displayName: Repository Name
   required: true
 - name: JOB_NAME
   description: Job identifier (i.e. 'pr-5' OR 'master')
+  displayName: Job Branch Name
   required: true
 - name: NAMESPACE
   description: Target namespace reference (i.e. 'k8vopl-dev')
+  displayName: Target Namespace
   required: true
 - name: APP_NAME
   description: Application name
+  displayName: Application name
   required: true
 - name: HOST_ROUTE
   description: The host the route will use to expose service outside cluster
+  displayName: Host route
   required: true

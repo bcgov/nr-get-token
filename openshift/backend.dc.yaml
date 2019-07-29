@@ -56,6 +56,7 @@ objects:
         annotations:
           openshift.io/generated-by: OpenShiftNewApp
         labels:
+          app: "${APP_NAME}-${JOB_NAME}"
           deploymentconfig: "${APP_NAME}-backend-${JOB_NAME}"
       spec:
         containers:
