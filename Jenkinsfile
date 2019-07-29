@@ -366,6 +366,19 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
         throw e
       }
 
+      if(openshift.selector('secret', "patroni-${JOB_NAME}-secret").exists()) {
+        echo "Patroni Secret already exists. Skipping..."
+      } else {
+        echo "Processing Patroni Secret..."
+        def dcPatroniSecretTemplate = openshift.process('-f',
+          'openshift/patroni.secret.yaml',
+          "INSTANCE=${JOB_NAME}"
+        )
+
+        echo "Creating Patroni Secret..."
+        openshift.create(dcPatroniSecretTemplate)
+      }
+
       echo "Tagging Image ${REPO_NAME}-backend:${JOB_NAME}..."
       openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-backend:${JOB_NAME}", "${REPO_NAME}-backend:${JOB_NAME}")
 
@@ -396,19 +409,6 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
 
           Database: {
             // Apply Patroni Database
-            if(openshift.selector('secret', "patroni-${JOB_NAME}-secret").exists()) {
-              echo "Patroni Secret already exists. Skipping..."
-            } else {
-              echo "Processing Patroni Secret..."
-              def dcPatroniSecretTemplate = openshift.process('-f',
-                'openshift/patroni.secret.yaml',
-                "INSTANCE=${JOB_NAME}"
-              )
-
-              echo "Creating Patroni Secret..."
-              openshift.create(dcPatroniSecretTemplate)
-            }
-
             echo "Processing Patroni StatefulSet.."
             def dcPatroniTemplate = openshift.process('-f',
               'openshift/patroni.dc.yaml',
