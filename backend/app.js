@@ -15,6 +15,9 @@ const authRouter = require('./src/routes/auth');
 const v1Router = require('./src/routes/v1');
 
 const apiRouter = express.Router();
+const state = {
+  isShutdown: false
+};
 
 const app = express();
 app.use(express.json());
@@ -131,15 +134,19 @@ passport.deserializeUser((obj, next) => next(null, obj));
 
 // GetOK Base API Directory
 apiRouter.get('/', (_req, res) => {
-  res.status(200).json({
-    endpoints: [
-      '/api/auth',
-      '/api/v1'
-    ],
-    versions: [
-      1
-    ]
-  });
+  if(state.isShutdown) {
+    res.status(500).end('not ok');
+  } else {
+    res.status(200).json({
+      endpoints: [
+        '/api/auth',
+        '/api/v1'
+      ],
+      versions: [
+        1
+      ]
+    });
+  }
 });
 
 // Root level Router
@@ -180,6 +187,7 @@ process.on('SIGINT', shutdown);
 
 function shutdown() {
   log.info('Received kill signal. Draining DB connections and shutting down...');
+  state.isShutdown = true;
   sequelize.close().then(() => process.exit());
 }
 
