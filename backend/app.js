@@ -188,7 +188,9 @@ process.on('SIGINT', shutdown);
 function shutdown() {
   log.info('Received kill signal. Draining DB connections and shutting down...');
   state.isShutdown = true;
-  sequelize.close().then(() => process.exit());
+  sequelize.close();
+  // Wait 3 seconds before hard exiting
+  setTimeout(() => process.exit(), 3000);
 }
 
 module.exports = app;

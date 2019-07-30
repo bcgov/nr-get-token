@@ -26,9 +26,9 @@ objects:
           failurePolicy: Abort
           execNewPod:
             command:
-            - npx
-            - sequelize-cli
-            - db:migrate
+            - npm
+            - run
+            - migrate
             containerName: "${APP_NAME}-backend-${JOB_NAME}"
             env:
             - name: NODE_ENV

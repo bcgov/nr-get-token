@@ -10,6 +10,7 @@
     "start": "node ./bin/www",
     "lint": "node_modules/.bin/eslint . --no-fix --ignore-pattern 'node_modules' --ext .js",
     "lint:fix": "node_modules/.bin/eslint . --fix --ignore-pattern 'node_modules' --ext .js",
+    "migrate": "node_modules/.bin/sequelize db:migrate",
     "test": "node_modules/.bin/jest --verbose",
     "clean": "rm -rf coverage dist",
     "pretest": "npm run lint",
@@ -33,7 +34,8 @@
     "passport-jwt": "^4.0.0",
     "passport-openidconnect": "0.0.2",
     "pg": "^7.12.0",
-    "sequelize": "^5.10.3"
+    "sequelize": "^5.12.1",
+    "sequelize-cli": "^5.5.0"
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.17.0",
