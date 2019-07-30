@@ -317,8 +317,3 @@ parameters:
   displayName: Persistent Volume Class
   required: true
   value: gluster-block
-- name: APP_DB_NAME
-  description: Name of the application database
-  displayName: Application Database Name
-  required: true
-  value: app
