@@ -5,7 +5,8 @@ const dbConfig = {
   password: config.get('db.password'),
   database: config.get('db.database'),
   host: config.get('db.host'),
-  dialect: 'postgres'
+  dialect: 'postgres',
+  migrationStorageTableName: 'sequelize_meta'
 };
 
 module.exports = {
