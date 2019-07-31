@@ -51,6 +51,7 @@ const sequelize = new Sequelize({
   define: {
     charset: 'utf8',
     freezeTableName: true,
+    paranoid: true,
     timestamps: true,
     underscored: true
   },

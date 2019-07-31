@@ -5,7 +5,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      validate: {
+        isUUID: 4
+      }
     },
     appCfg: {
       allowNull: false,
@@ -15,7 +18,12 @@ module.exports = (sequelize, DataTypes) => {
     env: {
       allowNull: false,
       comment: 'What environment the appplication configuration has been deployed to',
-      type: DataTypes.STRING(4)
+      type: DataTypes.STRING(4),
+      validate: {
+        isIn: [
+          ['INT', 'TEST', 'PROD']
+        ]
+      }
     }
   }, {
     comment: 'Current state of promotion lifecycle for an acronym',

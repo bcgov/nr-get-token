@@ -5,13 +5,19 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      validate: {
+        isUUID: 4
+      }
     },
     keycloakId: {
       allowNull: false,
       comment: 'Associated Keycloak user id',
       type: DataTypes.UUID,
-      unique: true
+      unique: true,
+      validate: {
+        isUUID: 4
+      }
     },
     displayName: {
       allowNull: false,

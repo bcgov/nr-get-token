@@ -5,12 +5,20 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      validate: {
+        min: 1
+      }
     },
     previousEnv: {
       allowNull: false,
       comment: 'What environment the promotion lifecycle was at',
-      type: DataTypes.STRING(4)
+      type: DataTypes.STRING(4),
+      validate: {
+        isIn: [
+          ['INT', 'TEST', 'PROD']
+        ]
+      }
     }
   }, {
     comment: 'History of changes to the promotion lifecycle',

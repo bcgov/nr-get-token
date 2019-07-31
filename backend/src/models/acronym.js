@@ -5,13 +5,19 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      validate: {
+        isUUID: 4
+      }
     },
     acronym: {
       allowNull: false,
       comment: 'The application acronym',
       type: DataTypes.STRING(16),
-      unique: true
+      unique: true,
+      validate: {
+        is: /^(?:[A-Z]{2,}[_]?)+[A-Z]{1,}$/g
+      }
     },
     name: {
       allowNull: false,
