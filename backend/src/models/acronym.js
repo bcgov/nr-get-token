@@ -4,9 +4,10 @@ module.exports = (sequelize, DataTypes) => {
     acronym: DataTypes.STRING,
     name: DataTypes.STRING
   }, {});
-  // eslint-disable-next-line no-unused-vars
-  Acronym.associate = models => {
-    // associations can be defined here
+  Acronym.associate = (model) => {
+    Acronym.belongsToMany(model.User, {
+      through: model.UserAcronym
+    });
   };
   return Acronym;
 };

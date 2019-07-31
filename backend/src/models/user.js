@@ -4,9 +4,10 @@ module.exports = (sequelize, DataTypes) => {
     keycloakId: DataTypes.UUID,
     displayName: DataTypes.STRING
   }, {});
-  // eslint-disable-next-line no-unused-vars
-  User.associate = models => {
-    // associations can be defined here
+  User.associate = (model) => {
+    User.belongsToMany(model.Acronym, {
+      through: model.UserAcronym
+    });
   };
   return User;
 };
