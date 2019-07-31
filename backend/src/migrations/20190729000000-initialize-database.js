@@ -21,7 +21,8 @@ module.exports = {
           acronym: {
             allowNull: false,
             comment: 'The application acronym',
-            type: Sequelize.STRING(16)
+            type: Sequelize.STRING(16),
+            unique: true
           },
           name: {
             allowNull: false,
@@ -50,7 +51,8 @@ module.exports = {
           keycloakId: {
             allowNull: false,
             comment: 'Associated Keycloak user id',
-            type: Sequelize.UUID
+            type: Sequelize.UUID,
+            unique: true
           },
           displayName: {
             allowNull: false,
@@ -62,7 +64,7 @@ module.exports = {
           transaction: t
         }),
         queryInterface.createTable('user_acronym', {
-          id: {
+          userAcronymId: {
             allowNull: false,
             defaultValue: Sequelize.UUIDV4,
             primaryKey: true,
@@ -140,7 +142,7 @@ module.exports = {
           transaction: t
         }),
         queryInterface.createTable('lifecycle_history', {
-          id: {
+          lifecycleHistoryId: {
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,

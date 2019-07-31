@@ -1,8 +1,22 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const UserAcronym = sequelize.define('UserAcronym', {
-    owner: DataTypes.BOOLEAN
-  }, {});
+    userAcronymId: {
+      allowNull: false,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+      type: DataTypes.UUID
+    },
+    owner: {
+      allowNull: false,
+      comment: 'Does user have ownership privileges on acronym',
+      defaultValue: false,
+      type: DataTypes.BOOLEAN
+    }
+  }, {
+    comment: 'Correlation between users and acronyms',
+    tableName: 'user_acronym'
+  });
   UserAcronym.associate = models => {
     UserAcronym.belongsTo(models.Acronym, {
       foreignKey: 'acronymId'
