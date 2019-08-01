@@ -4,7 +4,9 @@ module.exports = {
   async findOrCreate(keycloakId, displayName, username) {
     return await User.findOrCreate({
       where: {
-        keycloakId: keycloakId,
+        keycloakId: keycloakId
+      },
+      defaults: {
         displayName: displayName,
         username: username
       }

@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
         isUUID: 4
       }
     },
-    appCfg: {
+    appConfig: {
       allowNull: false,
       comment: 'WebADE application configuration JSON Object',
       type: DataTypes.JSON

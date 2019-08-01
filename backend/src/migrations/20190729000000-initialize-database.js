@@ -147,7 +147,7 @@ module.exports = {
             },
             type: Sequelize.UUID
           },
-          appCfg: {
+          appConfig: {
             allowNull: false,
             comment: 'WebADE application configuration JSON Object',
             type: Sequelize.JSON
