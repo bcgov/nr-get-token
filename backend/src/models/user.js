@@ -22,6 +22,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       comment: 'Display name of the user',
       type: DataTypes.STRING(32)
+    },
+    username: {
+      allowNull: false,
+      comment: 'Username as known by Keycloak',
+      type: DataTypes.STRING(32)
     }
   }, {
     comment: 'List of all registered users',

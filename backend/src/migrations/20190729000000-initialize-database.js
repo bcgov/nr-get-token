@@ -65,6 +65,11 @@ module.exports = {
             allowNull: false,
             comment: 'Display name of the user',
             type: Sequelize.STRING(32)
+          },
+          username: {
+            allowNull: false,
+            comment: 'Username as known by Keycloak',
+            type: Sequelize.STRING(32)
           }
         }, {
           comment: 'List of all registered users',
