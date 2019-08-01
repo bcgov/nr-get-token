@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
@@ -16,6 +15,10 @@ module.exports = {
           },
           updatedAt: {
             allowNull: false,
+            type: Sequelize.DATE
+          },
+          deletedAt: {
+            allowNull: true,
             type: Sequelize.DATE
           },
           acronym: {
@@ -48,6 +51,10 @@ module.exports = {
             allowNull: false,
             type: Sequelize.DATE
           },
+          deletedAt: {
+            allowNull: true,
+            type: Sequelize.DATE
+          },
           keycloakId: {
             allowNull: false,
             comment: 'Associated Keycloak user id',
@@ -76,6 +83,10 @@ module.exports = {
           },
           updatedAt: {
             allowNull: false,
+            type: Sequelize.DATE
+          },
+          deletedAt: {
+            allowNull: true,
             type: Sequelize.DATE
           },
           userId: {
@@ -119,6 +130,10 @@ module.exports = {
             allowNull: false,
             type: Sequelize.DATE
           },
+          deletedAt: {
+            allowNull: true,
+            type: Sequelize.DATE
+          },
           acronymId: {
             allowNull: false,
             references: {
@@ -154,6 +169,10 @@ module.exports = {
           },
           updatedAt: {
             allowNull: false,
+            type: Sequelize.DATE
+          },
+          deletedAt: {
+            allowNull: true,
             type: Sequelize.DATE
           },
           lifecycleId: {

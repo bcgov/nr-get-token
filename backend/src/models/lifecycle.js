@@ -1,4 +1,3 @@
-'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Lifecycle = sequelize.define('Lifecycle', {
     lifecycleId: {

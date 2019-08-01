@@ -7,6 +7,7 @@ const {
 } = require('express-validator');
 
 const auth = require('../components/auth');
+const users = require('../controllers').users;
 
 router.get('/', (_req, res) => {
   res.status(200).json({
@@ -62,6 +63,7 @@ router.post('/refresh', [
 
 router.use('/token', auth.removeExpired, (req, res) => {
   if (req.user && req.user.jwt && req.user.refreshToken) {
+    users.findOrCreate(req.user.id, req.user.displayName);
     res.status(200).json(req.user);
   } else {
     res.status(401).json({

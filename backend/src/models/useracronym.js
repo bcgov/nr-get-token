@@ -1,4 +1,3 @@
-'use strict';
 module.exports = (sequelize, DataTypes) => {
   const UserAcronym = sequelize.define('UserAcronym', {
     userAcronymId: {

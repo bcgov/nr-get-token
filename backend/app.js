@@ -167,11 +167,4 @@ function shutdown() {
   setTimeout(() => process.exit(), 3000);
 }
 
-setTimeout(async () => {
-  // const controller = require('./src/controllers');
-  // const result = await controller.users.findOrCreate('7da83ab4-2a39-4860-aa7b-8339fc994cea', 'display name');
-  // console.log(JSON.stringify(result[0], null, 2));
-  // console.log(result[0].userId);
-}, 1000);
-
 module.exports = app;
