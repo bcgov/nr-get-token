@@ -9,22 +9,21 @@ const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const OidcStrategy = require('passport-openidconnect').Strategy;
 
+const db = require('./src/models');
 const utils = require('./src/components/utils');
 const authRouter = require('./src/routes/auth');
 const v1Router = require('./src/routes/v1');
 
 const apiRouter = express.Router();
+const state = {
+  isShutdown: false
+};
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({
   extended: false
 }));
-
-// Add Morgan endpoint logging
-if (process.env.NODE_ENV !== 'test') {
-  app.use(morgan(config.get('server.morganFormat')));
-}
 
 app.use(session({
   secret: config.get('oidc.clientSecret'),
@@ -42,6 +41,21 @@ log.addLevel('debug', 1500, {
 
 // Print out configuration settings in verbose startup
 log.debug('Config', utils.prettyStringify(config));
+
+// Skip if running tests
+if (process.env.NODE_ENV !== 'test') {
+  // Add Morgan endpoint logging
+  app.use(morgan(config.get('server.morganFormat')));
+
+  // Check database connection and exit if unsuccessful
+  db.sequelize.authenticate()
+    .then(() => log.info('Database connection established'))
+    .catch(err => {
+      log.error(err);
+      db.sequelize.close();
+      process.exit(1);
+    });
+}
 
 // Resolves OIDC Discovery values and sets up passport strategies
 utils.getOidcDiscovery().then(discovery => {
@@ -94,15 +108,19 @@ passport.deserializeUser((obj, next) => next(null, obj));
 
 // GetOK Base API Directory
 apiRouter.get('/', (_req, res) => {
-  res.status(200).json({
-    endpoints: [
-      '/api/auth',
-      '/api/v1'
-    ],
-    versions: [
-      1
-    ]
-  });
+  if(state.isShutdown) {
+    res.status(500).end('not ok');
+  } else {
+    res.status(200).json({
+      endpoints: [
+        '/api/auth',
+        '/api/v1'
+      ],
+      versions: [
+        1
+      ]
+    });
+  }
 });
 
 // Root level Router
@@ -136,5 +154,17 @@ app.use((_req, res) => {
 process.on('unhandledRejection', err => {
   log.error(err.stack);
 });
+
+// Graceful shutdown support
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);
+
+function shutdown() {
+  log.info('Received kill signal. Draining DB connections and shutting down...');
+  state.isShutdown = true;
+  db.sequelize.close();
+  // Wait 3 seconds before hard exiting
+  setTimeout(() => process.exit(), 3000);
+}
 
 module.exports = app;

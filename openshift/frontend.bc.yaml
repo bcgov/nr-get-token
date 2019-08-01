@@ -2,19 +2,16 @@
 apiVersion: v1
 kind: Template
 labels:
+  build: "${REPO_NAME}-frontend"
   template: "${REPO_NAME}-template"
 metadata:
   name: "${REPO_NAME}-frontend-bc"
-  creationTimestamp:
 objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
     annotations:
       openshift.io/generated-by: OpenShiftNewBuild
-    creationTimestamp:
-    labels:
-      build: "${REPO_NAME}-frontend"
     name: nodejs-10
   spec:
     lookupPolicy:
@@ -35,9 +32,6 @@ objects:
   metadata:
     annotations:
       openshift.io/generated-by: OpenShiftNewBuild
-    creationTimestamp:
-    labels:
-      build: "${REPO_NAME}-frontend"
     name: "${REPO_NAME}-frontend"
   spec:
     lookupPolicy:
@@ -47,9 +41,6 @@ objects:
   metadata:
     annotations:
       openshift.io/generated-by: OpenShiftNewBuild
-    creationTimestamp:
-    labels:
-      build: "${REPO_NAME}-frontend"
     name: "${REPO_NAME}-frontend-${JOB_NAME}"
   spec:
     completionDeadlineSeconds: 600
@@ -86,13 +77,17 @@ objects:
 parameters:
 - name: REPO_NAME
   description: Application repository name
+  displayName: Repository Name
   required: true
 - name: JOB_NAME
   description: Job identifier (i.e. 'pr-5' OR 'master')
+  displayName: Job Branch Name
   required: true
 - name: SOURCE_REPO_REF
   description: Git Pull Request Reference (i.e. 'pull/CHANGE_ID/head')
+  displayName: Source Repository Reference
   required: true
 - name: SOURCE_REPO_URL
   description: Git Repository URL
+  displayName: Source Repository URL
   required: true

@@ -1,4 +1,8 @@
 {
+  "db": {
+    "username": "username",
+    "password": "password"
+  },
   "oidc": {
     "clientID": "clientID",
     "clientSecret": "clientSecret",

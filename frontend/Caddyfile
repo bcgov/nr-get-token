@@ -2,6 +2,9 @@
     # Change root to /dist folder if running locally
     root /var/www/html
 
+    # Add gzip compression if client supports it
+    gzip
+
     # Ensure API calls are reaching the right service
     # 307 must be passed to preserve the same method and post data call
     # https://softwareengineering.stackexchange.com/a/99966

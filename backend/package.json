@@ -10,20 +10,19 @@
     "start": "node ./bin/www",
     "lint": "node_modules/.bin/eslint . --no-fix --ignore-pattern 'node_modules' --ext .js",
     "lint:fix": "node_modules/.bin/eslint . --fix --ignore-pattern 'node_modules' --ext .js",
+    "migrate": "node_modules/.bin/sequelize db:migrate",
     "test": "node_modules/.bin/jest --verbose",
     "clean": "rm -rf coverage dist",
     "pretest": "npm run lint",
     "purge": "rm -rf node_modules",
     "rebuild": "npm run clean && npm run build",
-    "reinstall": "npm run purge && npm install",
-    "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "reinstall": "npm run purge && npm install"
   },
   "homepage": "https://github.com/bcgov/nr-get-token",
   "dependencies": {
     "atob": "^2.1.2",
     "axios": "^0.19.0",
-    "config": "^3.0.1",
+    "config": "^3.2.2",
     "cryptico-js": "^1.1.0",
     "express": "^4.17.0",
     "express-session": "^1.16.2",
@@ -34,11 +33,13 @@
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "passport-openidconnect": "0.0.2",
-    "snyk": "^1.193.0"
+    "pg": "^7.12.0",
+    "sequelize": "^5.12.1",
+    "sequelize-cli": "^5.5.0"
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.17.0",
-    "eslint": "^6.0.1",
+    "eslint": "^6.1.0",
     "jest": "^24.8.0",
     "jest-sonar-reporter": "^2.0.0",
     "nodemon": "^1.19.0",
@@ -120,6 +121,5 @@
   },
   "bugs": {
     "url": "https://github.com/bcgov/nr-get-token/issues"
-  },
-  "snyk": true
+  }
 }
