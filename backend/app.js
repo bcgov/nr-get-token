@@ -8,8 +8,8 @@ const passport = require('passport');
 const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const OidcStrategy = require('passport-openidconnect').Strategy;
-const Sequelize = require('sequelize');
 
+const db = require('./src/models');
 const utils = require('./src/components/utils');
 const authRouter = require('./src/routes/auth');
 const v1Router = require('./src/routes/v1');
@@ -42,45 +42,18 @@ log.addLevel('debug', 1500, {
 // Print out configuration settings in verbose startup
 log.debug('Config', utils.prettyStringify(config));
 
-// Setup Database Connection
-const sequelize = new Sequelize({
-  database: config.get('db.database'),
-  host: config.get('db.host'),
-  username: config.get('db.username'),
-  password: config.get('db.password'),
-  define: {
-    charset: 'utf8',
-    freezeTableName: true,
-    paranoid: true,
-    timestamps: true,
-    underscored: true
-  },
-  dialect: 'postgres',
-  isolationLevel: Sequelize.Transaction.SERIALIZABLE,
-  logging: query => log.verbose(query),
-  pool: {
-    max: 5,
-    idle: 10000,
-    acquire: 60000
-  }
-});
-
 // Skip if running tests
 if (process.env.NODE_ENV !== 'test') {
   // Add Morgan endpoint logging
   app.use(morgan(config.get('server.morganFormat')));
 
   // Check database connection and exit if unsuccessful
-  let dbError = false;
-  sequelize.authenticate()
+  db.sequelize.authenticate()
     .then(() => log.info('Database connection established'))
     .catch(err => {
-      dbError = true;
       log.error(err);
-    })
-    .finally(() => {
-      sequelize.close();
-      if (dbError) process.exit(1);
+      db.sequelize.close();
+      process.exit(1);
     });
 }
 
@@ -189,9 +162,16 @@ process.on('SIGINT', shutdown);
 function shutdown() {
   log.info('Received kill signal. Draining DB connections and shutting down...');
   state.isShutdown = true;
-  sequelize.close();
+  db.sequelize.close();
   // Wait 3 seconds before hard exiting
   setTimeout(() => process.exit(), 3000);
 }
+
+setTimeout(async () => {
+  // const controller = require('./src/controllers');
+  // const result = await controller.users.findOrCreate('7da83ab4-2a39-4860-aa7b-8339fc994cea', 'display name');
+  // console.log(JSON.stringify(result[0], null, 2));
+  // console.log(result[0].userId);
+}, 1000);
 
 module.exports = app;
