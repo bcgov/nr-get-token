@@ -1,3 +1,4 @@
+const atob = require('atob');
 const config = require('config');
 const passport = require('passport');
 const router = require('express').Router();
@@ -7,7 +8,10 @@ const {
 } = require('express-validator');
 
 const auth = require('../components/auth');
-const users = require('../controllers').users;
+const {
+  acronyms,
+  users
+} = require('../controllers');
 
 router.get('/', (_req, res) => {
   res.status(200).json({
@@ -61,10 +65,23 @@ router.post('/refresh', [
   return res.status(200).json(refresh);
 });
 
-router.use('/token', auth.removeExpired, (req, res) => {
+router.use('/token', auth.removeExpired, async (req, res) => {
   if (req.user && req.user.jwt && req.user.refreshToken) {
+    // Add user if they don't already exist
     const user = req.user;
     users.findOrCreate(user.id, user.displayName, user._json.preferred_username);
+
+    // Add keycloak authorized acronyms if they don't already exist
+    const jwtPayload = req.user.jwt.split('.')[1];
+    const payload = JSON.parse(atob(jwtPayload));
+    const roles = payload.realm_access.roles;
+
+    let acronymList = [];
+    if (typeof roles === 'object' && roles instanceof Array) {
+      acronymList = roles.filter(role => !role.match(/offline_access|uma_authorization/));
+    }
+    acronyms.findOrCreateList(acronymList);
+
     res.status(200).json(user);
   } else {
     res.status(401).json({
