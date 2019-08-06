@@ -67,20 +67,25 @@ router.post('/refresh', [
 
 router.use('/token', auth.removeExpired, async (req, res) => {
   if (req.user && req.user.jwt && req.user.refreshToken) {
-    // Add user if they don't already exist
     const user = req.user;
-    users.findOrCreate(user.id, user.displayName, user._json.preferred_username);
-
-    // Add keycloak authorized acronyms if they don't already exist
-    const jwtPayload = req.user.jwt.split('.')[1];
+    const jwtPayload = user.jwt.split('.')[1];
     const payload = JSON.parse(atob(jwtPayload));
     const roles = payload.realm_access.roles;
 
+    // Add keycloak authorized acronyms if they don't already exist
     let acronymList = [];
     if (typeof roles === 'object' && roles instanceof Array) {
       acronymList = roles.filter(role => !role.match(/offline_access|uma_authorization/));
     }
     acronyms.findOrCreateList(acronymList);
+
+    // Add user if they don't already exist
+    users.findOrCreate(user.id, user.displayName, user._json.preferred_username);
+
+    // Add update user-acronym association from JWT roles
+    acronymList.forEach(value => {
+      users.addAcronym(user.id, value);
+    });
 
     res.status(200).json(user);
   } else {
