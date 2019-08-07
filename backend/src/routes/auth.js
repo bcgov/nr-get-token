@@ -11,7 +11,7 @@ const auth = require('../components/auth');
 const {
   acronyms,
   users
-} = require('../controllers');
+} = require('../services');
 
 router.get('/', (_req, res) => {
   res.status(200).json({
