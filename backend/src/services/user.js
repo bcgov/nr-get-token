@@ -1,10 +1,8 @@
 const db = require('../models');
-const Acronym = db.Acronym;
-const User = db.User;
 
 module.exports = {
   async findOrCreate(keycloakId, displayName, username) {
-    return await User.findOrCreate({
+    return await db.User.findOrCreate({
       where: {
         keycloakId: keycloakId
       },
@@ -16,12 +14,12 @@ module.exports = {
   },
 
   async addAcronym(keycloakId, value) {
-    const acronym = await Acronym.findOne({
+    const acronym = await db.Acronym.findOne({
       where: {
         acronym: value
       }
     });
-    const user = await User.findOne({
+    const user = await db.User.findOne({
       where: {
         keycloakId: keycloakId
       }
@@ -30,7 +28,7 @@ module.exports = {
   },
 
   async acronymOwnerList(keycloakId) {
-    const result = await User.findAll({
+    const result = await db.User.findAll({
       attributes: [],
       include: [
         {

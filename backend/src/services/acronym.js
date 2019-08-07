@@ -1,9 +1,8 @@
 const db = require('../models');
-const Acronym = db.Acronym;
 
 module.exports = {
   async find(acronym) {
-    return await Acronym.findOne({
+    return await db.Acronym.findOne({
       where: {
         acronym: acronym
       }
@@ -14,7 +13,7 @@ module.exports = {
     return db.sequelize.transaction(t => {
       if (typeof acronymList === 'object' && acronymList instanceof Array) {
         return Promise.all(acronymList.map(acronym => {
-          Acronym.findOrCreate({
+          db.Acronym.findOrCreate({
             where: {
               acronym: acronym
             },
@@ -29,7 +28,7 @@ module.exports = {
   },
 
   async updateName(acronym, name) {
-    return await Acronym.update({
+    return await db.Acronym.update({
       name: name
     }, {
       where: {

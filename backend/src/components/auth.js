@@ -1,17 +1,20 @@
-const atob = require('atob');
 const axios = require('axios');
 const config = require('config');
+const jsonwebtoken = require('jsonwebtoken');
 const log = require('npmlog');
 const qs = require('querystring');
 
+const {
+  acronymService,
+  userService
+} = require('../services');
 const utils = require('./utils');
 
 const auth = {
   // Check if JWT Access Token has expired
   isTokenExpired(token) {
     const now = Date.now().valueOf() / 1000;
-    const jwtPayload = token.split('.')[1];
-    const payload = JSON.parse(atob(jwtPayload));
+    const payload = jsonwebtoken.decode(token);
 
     return (!!payload.exp && payload.exp < now);
   },
@@ -19,8 +22,7 @@ const auth = {
   // Check if JWT Refresh Token has expired
   isRenewable(token) {
     const now = Date.now().valueOf() / 1000;
-    const jwtPayload = token.split('.')[1];
-    const payload = JSON.parse(atob(jwtPayload));
+    const payload = jsonwebtoken.decode(token);
 
     // Check if expiration exists, or lacks expiration
     return (typeof (payload.exp) !== 'undefined' && payload.exp !== null &&
@@ -61,39 +63,63 @@ const auth = {
   },
 
   // Update or remove token based on JWT and user state
-  async removeExpired(req, _res, next) {
+  async refreshJWT(req, _res, next) {
     try {
       if (!!req.user && !!req.user.jwt) {
-        log.verbose('removeExpired', 'User & JWT exists');
+        log.verbose('refreshJWT', 'User & JWT exists');
 
         if (auth.isTokenExpired(req.user.jwt)) {
-          log.verbose('removeExpired', 'JWT has expired');
+          log.verbose('refreshJWT', 'JWT has expired');
 
           if (!!req.user.refreshToken && auth.isRenewable(req.user.refreshToken)) {
-            log.verbose('removeExpired', 'Can refresh JWT token');
+            log.verbose('refreshJWT', 'Can refresh JWT token');
 
             // Get new JWT and Refresh Tokens and update the request
-            const {
-              jwt,
-              refreshToken
-            } = await auth.renew(req.user.refreshToken);
-            req.user.jwt = jwt; // eslint-disable-line require-atomic-updates
-            req.user.refreshToken = refreshToken; // eslint-disable-line require-atomic-updates
+            auth.renew(req.user.refreshToken).then(result => {
+              req.user.jwt = result.jwt;
+              req.user.refreshToken = result.refreshToken;
+            });
           } else {
-            log.verbose('removeExpired', 'Cannot refresh JWT token');
+            log.verbose('refreshJWT', 'Cannot refresh JWT token');
             delete req.user;
           }
         }
       } else {
-        log.verbose('removeExpired', 'No existing User or JWT');
+        log.verbose('refreshJWT', 'No existing User or JWT');
         delete req.user;
       }
     } catch (error) {
-      log.error('removeExpired', error.message);
+      log.error('refreshJWT', error.message);
     }
 
     next();
-    return;
+  },
+
+  // Populate and update database based on incoming JWT token
+  async updateDBFromToken(req, _res, next) {
+    if (req.user && req.user.jwt) {
+      const payload = jsonwebtoken.decode(req.user.jwt);
+      const roles = payload.realm_access.roles;
+
+      // Add keycloak authorized acronyms if they don't already exist
+      let acronymList = [];
+      if (typeof roles === 'object' && roles instanceof Array) {
+        acronymList = roles.filter(role => !role.match(/offline_access|uma_authorization/));
+      }
+      await acronymService.findOrCreateList(acronymList);
+
+      // Add user if they don't already exist
+      await userService.findOrCreate(req.user.id, req.user.displayName, req.user._json.preferred_username);
+
+      // Add update user-acronym association from JWT roles
+      await acronymList.forEach(value => {
+        userService.addAcronym(req.user.id, value);
+      });
+
+      // TODO: Consider removing user-acronym associations if they are not on JWT
+    }
+
+    next();
   }
 };
 
