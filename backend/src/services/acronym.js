@@ -10,21 +10,18 @@ module.exports = {
   },
 
   async findOrCreateList(acronymList, name = '') {
-    return db.sequelize.transaction(t => {
-      if (typeof acronymList === 'object' && acronymList instanceof Array) {
-        return Promise.all(acronymList.map(acronym => {
-          db.Acronym.findOrCreate({
-            where: {
-              acronym: acronym
-            },
-            defaults: {
-              name: name
-            },
-            transaction: t
-          });
-        }));
-      }
-    });
+    if (typeof acronymList === 'object' && acronymList instanceof Array) {
+      return Promise.all(acronymList.map(acronym => {
+        db.Acronym.findCreateFind({
+          where: {
+            acronym: acronym
+          },
+          defaults: {
+            name: name
+          }
+        });
+      }));
+    }
   },
 
   async updateName(acronym, name) {
