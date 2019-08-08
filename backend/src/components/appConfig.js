@@ -2,6 +2,7 @@ const axios = require('axios');
 const config = require('config');
 const log = require('npmlog');
 
+const lifecycleService = require('../services').lifecycleService;
 const utils = require('./utils');
 
 const appConfig = {
@@ -110,7 +111,7 @@ const appConfig = {
     };
   },
 
-  postAppConfig: async (configForm, publicKey) => {
+  postAppConfig: async (configForm, publicKey, userId) => {
     const webadeEnv = configForm.webadeEnvironment;
     const endpoint = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.endpoint`);
     const username = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.username`);
@@ -138,6 +139,8 @@ const appConfig = {
       });
       log.verbose('postAppConfig', utils.prettyStringify(webAdeResponse.data));
 
+      await lifecycleService.create(configForm.applicationAcronym, generatedConfig.webAdeCfg, webadeEnv, userId);
+
       return {
         webAdeResponse: webAdeResponse.data,
         generatedPassword: generatedConfig.encryptedPassword,
@@ -145,7 +148,9 @@ const appConfig = {
       };
     } catch (error) {
       log.error('postAppConfig', error.message);
-      throw new Error(`WebADE ${path} returned an error. ${JSON.stringify(error.response.data)}`);
+      if(error.response) {
+        throw new Error(`WebADE ${path} returned an error. ${JSON.stringify(error.response.data)}`);
+      }
     }
   }
 };

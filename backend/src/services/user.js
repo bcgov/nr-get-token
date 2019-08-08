@@ -1,6 +1,14 @@
 const db = require('../models');
 
 module.exports = {
+  async find(keycloakId) {
+    return await db.User.findOne({
+      where: {
+        keycloakId: keycloakId
+      }
+    });
+  },
+
   async findOrCreate(keycloakId, displayName, username) {
     return await db.User.findCreateFind({
       where: {
