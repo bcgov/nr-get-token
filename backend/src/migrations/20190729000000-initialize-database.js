@@ -154,7 +154,7 @@ module.exports = {
           },
           env: {
             allowNull: false,
-            comment: 'What environment the appplication configuration has been deployed to',
+            comment: 'What environment the application configuration is currently deployed to',
             type: Sequelize.STRING(4)
           }
         }, {
@@ -196,9 +196,9 @@ module.exports = {
             },
             type: Sequelize.UUID
           },
-          previousEnv: {
+          env: {
             allowNull: false,
-            comment: 'What environment the promotion lifecycle was at',
+            comment: 'What environment this history event was deployed to',
             type: Sequelize.STRING(4)
           }
         }, {

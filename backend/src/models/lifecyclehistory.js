@@ -9,9 +9,9 @@ module.exports = (sequelize, DataTypes) => {
         min: 1
       }
     },
-    previousEnv: {
+    env: {
       allowNull: false,
-      comment: 'What environment the promotion lifecycle was at',
+      comment: 'What environment this history event was deployed to',
       type: DataTypes.STRING(4),
       validate: {
         isIn: [
