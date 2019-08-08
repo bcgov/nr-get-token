@@ -7,6 +7,9 @@ module.exports = {
     const acronymObj = await acronymService.find(acronym);
     const userObj = await userService.find(keycloakId);
 
+    // Remove passwords from service clients
+    appConfig.serviceClients.forEach(sc => delete sc.secret);
+
     let lifecycleHistory;
     await db.sequelize.transaction(async t => {
       const lifecycle = await db.Lifecycle.create({
