@@ -107,7 +107,8 @@
     "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.js",
-      "!src/docs/*.*"
+      "!src/docs/*.*",
+      "!src/migrations/*.js"
     ],
     "testResultsProcessor": "jest-sonar-reporter"
   },

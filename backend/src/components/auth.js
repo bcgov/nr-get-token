@@ -75,10 +75,9 @@ const auth = {
             log.verbose('refreshJWT', 'Can refresh JWT token');
 
             // Get new JWT and Refresh Tokens and update the request
-            auth.renew(req.user.refreshToken).then(result => {
-              req.user.jwt = result.jwt;
-              req.user.refreshToken = result.refreshToken;
-            });
+            const result = await auth.renew(req.user.refreshToken);
+            req.user.jwt = result.jwt; // eslint-disable-line require-atomic-updates
+            req.user.refreshToken = result.refreshToken; // eslint-disable-line require-atomic-updates
           } else {
             log.verbose('refreshJWT', 'Cannot refresh JWT token');
             delete req.user;

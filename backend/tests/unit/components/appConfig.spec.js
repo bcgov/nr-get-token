@@ -6,6 +6,7 @@ const log = require('npmlog');
 const MockAdapter = require('axios-mock-adapter');
 
 const appConfig = require('../../../src/components/appConfig');
+const lifecycleService = require('../../../src/services').lifecycleService;
 const utils = require('../../../src/components/utils');
 
 log.level = config.get('server.logLevel');
@@ -57,12 +58,18 @@ describe('buildWebAdeCfg', () => {
 describe('postAppConfig', () => {
   const accountName = 'TEST_SERVICE_CLIENT';
   const encryptedPass = 'encryptedPassword';
+  const token = '00000000-0000-0000-0000-000000000000';
+  const userId = '00000000-0000-0000-0000-000000000000';
   const url = config.get('serviceClient.getokInt.endpoint') + '/applicationConfigurations';
 
+  lifecycleService.create = jest.fn().mockResolvedValue();
+
   const spy = jest.spyOn(axios, 'post');
+  const lifecycleSpy = jest.spyOn(lifecycleService, 'create');
 
   afterEach(() => {
     spy.mockClear();
+    lifecycleSpy.mockClear();
   });
 
   it('should error if unable to acquire access token', async () => {
@@ -74,10 +81,10 @@ describe('postAppConfig', () => {
       webadeEnvironment: 'INT'
     }, pubKeyString)).rejects.toThrowError('Unable to acquire access_token');
     expect(spy).toHaveBeenCalledTimes(0);
+    expect(lifecycleSpy).not.toHaveBeenCalled();
   });
 
   it('should error if WebADE post returned an error', async () => {
-    const token = '00000000-0000-0000-0000-000000000000';
     utils.getWebAdeToken = jest.fn().mockResolvedValue({
       access_token: token
     });
@@ -105,10 +112,13 @@ describe('postAppConfig', () => {
         'Content-Type': 'application/json; charset=utf-8'
       }
     });
+    expect(lifecycleSpy).not.toHaveBeenCalled();
   });
 
   it('should yield a response upon successful WebADE post', async () => {
-    const token = '00000000-0000-0000-0000-000000000000';
+    const appAcronym = 'TEST';
+    const webadeEnv = 'INT';
+
     utils.getWebAdeToken = jest.fn().mockResolvedValue({
       access_token: token
     });
@@ -128,13 +138,13 @@ describe('postAppConfig', () => {
     mockAxios.onPost(url).reply(200, response);
 
     const result = await appConfig.postAppConfig({
-      applicationAcronym: 'TEST',
+      applicationAcronym: appAcronym,
       applicationName: 'name',
       applicationDescription: 'description',
       commonServices: ['cmsg'],
       deploymentMethod: 'deploymentDirect',
-      webadeEnvironment: 'INT'
-    }, pubKeyString);
+      webadeEnvironment: webadeEnv
+    }, pubKeyString, userId);
 
     expect(result).toBeTruthy();
     expect(result.webAdeResponse).toEqual(response);
@@ -147,5 +157,7 @@ describe('postAppConfig', () => {
         'Content-Type': 'application/json; charset=utf-8'
       }
     });
+    expect(lifecycleSpy).toHaveBeenCalledTimes(1);
+    expect(lifecycleSpy).toHaveBeenCalledWith(appAcronym, generatedConfig.webAdeCfg, webadeEnv, userId);
   });
 });
