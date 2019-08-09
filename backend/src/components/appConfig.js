@@ -2,7 +2,9 @@ const axios = require('axios');
 const config = require('config');
 const log = require('npmlog');
 
-const lifecycleService = require('../services').lifecycleService;
+const {
+  lifecycleService
+} = require('../services');
 const utils = require('./utils');
 
 const appConfig = {
@@ -148,7 +150,7 @@ const appConfig = {
       };
     } catch (error) {
       log.error('postAppConfig', error.message);
-      if(error.response) {
+      if (error.response) {
         throw new Error(`WebADE ${path} returned an error. ${JSON.stringify(error.response.data)}`);
       }
     }

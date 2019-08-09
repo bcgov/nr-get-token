@@ -6,7 +6,9 @@ const log = require('npmlog');
 const MockAdapter = require('axios-mock-adapter');
 
 const appConfig = require('../../../src/components/appConfig');
-const lifecycleService = require('../../../src/services').lifecycleService;
+const {
+  lifecycleService
+} = require('../../../src/services');
 const utils = require('../../../src/components/utils');
 
 log.level = config.get('server.logLevel');
@@ -65,11 +67,11 @@ describe('postAppConfig', () => {
   lifecycleService.create = jest.fn().mockResolvedValue();
 
   const spy = jest.spyOn(axios, 'post');
-  const lifecycleSpy = jest.spyOn(lifecycleService, 'create');
+  const spyLifecycle = jest.spyOn(lifecycleService, 'create');
 
   afterEach(() => {
     spy.mockClear();
-    lifecycleSpy.mockClear();
+    spyLifecycle.mockClear();
   });
 
   it('should error if unable to acquire access token', async () => {
@@ -81,7 +83,7 @@ describe('postAppConfig', () => {
       webadeEnvironment: 'INT'
     }, pubKeyString)).rejects.toThrowError('Unable to acquire access_token');
     expect(spy).toHaveBeenCalledTimes(0);
-    expect(lifecycleSpy).not.toHaveBeenCalled();
+    expect(spyLifecycle).not.toHaveBeenCalled();
   });
 
   it('should error if WebADE post returned an error', async () => {
@@ -112,7 +114,7 @@ describe('postAppConfig', () => {
         'Content-Type': 'application/json; charset=utf-8'
       }
     });
-    expect(lifecycleSpy).not.toHaveBeenCalled();
+    expect(spyLifecycle).not.toHaveBeenCalled();
   });
 
   it('should yield a response upon successful WebADE post', async () => {
@@ -157,7 +159,7 @@ describe('postAppConfig', () => {
         'Content-Type': 'application/json; charset=utf-8'
       }
     });
-    expect(lifecycleSpy).toHaveBeenCalledTimes(1);
-    expect(lifecycleSpy).toHaveBeenCalledWith(appAcronym, generatedConfig.webAdeCfg, webadeEnv, userId);
+    expect(spyLifecycle).toHaveBeenCalledTimes(1);
+    expect(spyLifecycle).toHaveBeenCalledWith(appAcronym, generatedConfig.webAdeCfg, webadeEnv, userId);
   });
 });
