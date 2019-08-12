@@ -46,7 +46,7 @@ appConfig.post('/', [
   }
 
   try {
-    const response = await appConfigComponent.postAppConfig(configForm, publicKey);
+    const response = await appConfigComponent.postAppConfig(configForm, publicKey, req.user.jwt.sub);
     return res.status(200).json(response);
   } catch (error) {
     log.error(error);

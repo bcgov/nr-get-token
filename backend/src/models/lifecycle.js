@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     env: {
       allowNull: false,
-      comment: 'What environment the appplication configuration has been deployed to',
+      comment: 'What environment the application configuration is currently deployed to',
       type: DataTypes.STRING(4),
       validate: {
         isIn: [

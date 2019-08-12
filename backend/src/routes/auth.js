@@ -7,7 +7,6 @@ const {
 } = require('express-validator');
 
 const auth = require('../components/auth');
-const users = require('../controllers').users;
 
 router.get('/', (_req, res) => {
   res.status(200).json({
@@ -61,11 +60,9 @@ router.post('/refresh', [
   return res.status(200).json(refresh);
 });
 
-router.use('/token', auth.removeExpired, (req, res) => {
+router.use('/token', auth.refreshJWT, auth.updateDBFromToken, async (req, res) => {
   if (req.user && req.user.jwt && req.user.refreshToken) {
-    const user = req.user;
-    users.findOrCreate(user.id, user.displayName, user._json.preferred_username);
-    res.status(200).json(user);
+    res.status(200).json(req.user);
   } else {
     res.status(401).json({
       message: 'Not logged in'
