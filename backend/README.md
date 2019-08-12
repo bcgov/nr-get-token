@@ -124,3 +124,35 @@ npm run test
 ``` sh
 npm run lint
 ```
+
+## Database Migrations
+
+In order to handle changes to our code-first database, we need to periodically write in Sequelize compatible database migration scripts. You will likely require the `QueryInterface` API of Sequelize in order to achieve a proper up and down migration which can be found on Sequelize documentation. You may also look at previously implemented migrations as a design guide.
+
+* [QueryInterface API](https://sequelize.org/master/class/lib/query-interface.js~QueryInterface.html)
+
+### Creating a Migration
+
+When creating a new migration, it is suggested to run the following to generate a new migration script scaffold to work with:
+
+`npx sequelize-cli migration:generate --name yourmigrationname`
+
+This tool will generate a new file with a verbose timestamp and the specified name appended (i.e. `20190812183401-yourmigrationname.js`). Please preserve this naming convention as that Sequelize appears to determine migration order alphanumerically.
+
+The following is a simple migration script example which renames an existing column. Note that the transformation is specified on both the fowards up direction as well as the reverse down direction.
+
+`20190812183401-yourmigrationname.js`
+
+```javascript
+module.exports = {
+  up: queryInterface => {
+    return queryInterface.renameColumn('lifecycle_history', 'previousEnv', 'env');
+  },
+
+  down: queryInterface => {
+    return queryInterface.renameColumn('lifecycle_history', 'env', 'previousEnv');
+  }
+};
+```
+
+When creating a migration, you MUST ensure that the migrations can work on a properly functioning database before even considering making a PR as that any migration that doesn't work correctly can risk damaging the production database contents.
