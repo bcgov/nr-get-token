@@ -30,13 +30,24 @@ Logging
 * `morgan` - HTTP request logger
 * `npmlog` - General log framework
 
+### General Code Layout
+
+The codebase is separated into a few discrete layers:
+
+* `components` - Business logic layer - the majority of useful functionality resides here
+* `docs` - Contains OpenAPI 3.0 Yaml specification and ReDoc renderer
+* `migrations` - Database migration scripts
+* `models` - Database ORM models
+* `routes` - Express middleware routing
+* `services` - Database Access Object layer
+
 ## Quickstart Guide
 
 In order for the application to run correctly, you will need to ensure that the following have been addressed:
 
 1. All node dependencies have been installed and resolved
 2. Environment configurations have been set up
-3. The local machine has a functioning Postgres database
+3. A Postgres database instance that is reachable
 4. The database has been initialized with the correct migrations
 
 ### Install
@@ -114,7 +125,7 @@ Note: for publicKey, you must enter the PEM encoded value with newlines encoded 
 
 ### Database Setup
 
-The backend requires a valid Postgres database to connect to in order to function. Please ensure you have installed a Postgres server on your local development machine before attempting to start up the backend application.
+The backend requires a valid Postgres database to connect to in order to function. Please ensure you have either installed a Postgres server on your local development machine OR have an equivalent Postgres database available to connect to BEFORE attempting to start up the backend application.
 
 #### Database Initialization
 
@@ -128,7 +139,7 @@ GRANT ALL PRIVILEGES ON DATABASE getok TO username;
 
 #### Initial Migration
 
-Assuming you have a database ready to go, you will stilll require the database schema to be populated. This can be achieved by executing the following in the root backend directory:
+Assuming you have a database ready to go, you will still require the database schema to be populated. This can be achieved by executing the following in the root backend directory:
 
 ``` sh
 npm run migrate
