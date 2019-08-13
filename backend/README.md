@@ -227,7 +227,7 @@ while the backend is not running. In the event a migration must be undone, you c
 npx sequelize-cli db:migrate:undo
 ```
 
-Should the database need to be nuked and rebuilt from scratch, you can do so by undoing all migrations and reapplyingt hem as follows:
+Should the database need to be nuked and rebuilt from scratch, you can do so by undoing all migrations and reapplying them as follows:
 
 ``` sh
 npx sequelize-cli db:migrate:undo:all
