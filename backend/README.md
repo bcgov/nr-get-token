@@ -13,7 +13,7 @@ Authentication & Password Management
 * `jsonwebtoken` - JWT parsing library
 * `passportjs` - JWT and OIDC strategies
 
-Database Mangement
+Database Management
 
 * `pg` - Postgres library
 * `sequelize` - Promise-based ORM
@@ -149,7 +149,7 @@ Once this is done, you should be able to start up the backend application.
 
 ## Commands
 
-After adressing the prerequisites, the following are common commands that are used for this application.
+After addressing the prerequisites, the following are common commands that are used for this application.
 
 ### Run the server with hot-reloads for development
 
@@ -195,7 +195,7 @@ When creating a new migration, it is suggested to run the following to generate 
 
 This tool will generate a new file with a verbose timestamp and the specified name appended (i.e. `20190812183401-yourmigrationname.js`). Please preserve this naming convention as that Sequelize appears to determine migration order alphanumerically.
 
-The following is a simple migration script example which renames an existing column. Note that the transformation is specified on both the fowards up direction as well as the reverse down direction.
+The following is a simple migration script example which renames an existing column. Note that the transformation is specified on both the forwards up direction as well as the reverse down direction.
 
 `20190812183401-yourmigrationname.js`
 
