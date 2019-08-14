@@ -21,8 +21,6 @@ Natural Resources Get Token (GETOK will be a front end access point for authoriz
     docs/                      - Documentation
     frontend/                  - Vue.js Frontend codebase
     openshift/                 - OpenShift-deployment specific files
-    tools/                     - Devops utilities
-    └── jenkins                - Jenkins standup
     CODE-OF-CONDUCT.md         - Code of Conduct
     CONTRIBUTING.md            - Contributing Guidelines
     Jenkinsfile                - Top-level Pipeline
@@ -36,6 +34,7 @@ Natural Resources Get Token (GETOK will be a front end access point for authoriz
 * [Backend Readme](backend/README.md)
 * [Frontend Readme](frontend/README.md)
 * [Openshift Readme](openshift/README.md)
+* [Devops Tools Setup](https://github.com/bcgov/nr-showcase-devops-tools)
 * [Get Token Wiki](https://github.com/bcgov/nr-get-token/wiki)
 * [Showcase Team Roadmap](https://github.com/bcgov/nr-get-token/wiki/Product-Roadmap)
 

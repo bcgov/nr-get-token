@@ -12,7 +12,7 @@ module.exports = {
   async findOrCreateList(acronymList, name = '') {
     if (typeof acronymList === 'object' && acronymList instanceof Array) {
       return Promise.all(acronymList.map(acronym => {
-        db.Acronym.findCreateFind({
+        return db.Acronym.findCreateFind({
           where: {
             acronym: acronym
           },
