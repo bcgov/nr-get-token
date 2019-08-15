@@ -23,7 +23,8 @@ objects:
         kind: DockerImage
         name: docker-registry.default.svc:5000/bcgov/s2i-caddy:v1-stable
       generation:
-      importPolicy: {}
+      importPolicy:
+        scheduled: true
       name: v1-stable
       referencePolicy:
         type: Local
