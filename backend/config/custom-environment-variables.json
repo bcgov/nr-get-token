@@ -37,6 +37,14 @@
       "endpoint": "SC_MSSC_ENDPOINT",
       "username": "SC_MSSC_USERNAME",
       "password": "SC_MSSC_PASSWORD"
+    },
+    "keyCloak": {
+      "INT": {
+        "endpoint": "SC_KC_INT_ENDPOINT",
+        "username": "SC_KC_INT_USERNAME",
+        "password": "SC_KC_INT_PASSWORD",
+        "realm": "SC_KC_INT_REALM"
+      }
     }
   }
 }
