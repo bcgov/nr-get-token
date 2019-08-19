@@ -3,11 +3,31 @@ const log = require('npmlog');
 
 class KeyCloakServiceClientManager {
   constructor(realmAdminService) {
+    if (!realmAdminService) {
+      log.error('KeyCloakServiceClientManager - no realm admin service provided.');
+      throw new Error('KeyCloakServiceClientManager requires RealmAdminService.  Check configuration.');
+    }
     this.svc = realmAdminService;
   }
 
   async manage({applicationAcronym, applicationName, applicationDescription, commonServices}) {
     log.info('KeyCloakServiceClientManager.manage ', `${applicationAcronym}, ${applicationName}, ${applicationDescription}, [${commonServices}]`);
+    if (!applicationAcronym) {
+      log.error('KeyCloakServiceClientManager - no applicationAcronymprovided.');
+      throw new Error('Cannot manage service clients in KeyCloak realm: applicationAcronym required.');
+    }
+    if (!applicationName) {
+      log.error('KeyCloakServiceClientManager - no applicationName provided.');
+      throw new Error('Cannot manage service clients in KeyCloak realm: applicationName required.');
+    }
+    if (!applicationDescription) {
+      log.error('KeyCloakServiceClientManager - no applicationDescription provided.');
+      throw new Error('Cannot manage service clients in KeyCloak realm: applicationDescription required.');
+    }
+    if (!commonServices) {
+      log.error('KeyCloakServiceClientManager - no commonServices provided.');
+      throw new Error('Cannot manage service clients in KeyCloak realm: commonServices required.');
+    }
 
     const clientId = `${applicationAcronym.toUpperCase()}_SERVICE_CLIENT`;
     const clientRoleName = 'COMMON_SERVICES';

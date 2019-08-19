@@ -6,14 +6,14 @@ const log = require('npmlog');
 class RealmAdminService {
   constructor({realmId, realmBaseUrl, clientId, clientSecret}) {
     log.info('RealmAdminService ', `${realmId}, ${realmBaseUrl}, ${clientId}, secret`);
-    this.grantType = 'client_credentials';
-    this.realmId = realmId;
-    this.realmBaseUrl = realmBaseUrl;
-    this.clientId = clientId;
-    this.clientSecret = clientSecret;
+    if (!realmId || !realmBaseUrl || !clientId || !clientSecret) {
+      log.error('RealmAdminService - invalid configuration.');
+      throw new Error('RealmAdminService is not configured.  Check configuration.');
+    }
 
-    this.tokenUrl = `${this.realmBaseUrl}/auth/realms/${this.realmId}/protocol/openid-connect/token`;
-    this.realmAdminUrl = `${this.realmBaseUrl}/auth/admin/realms/${this.realmId}`;
+    this.tokenUrl = `${realmBaseUrl}/auth/realms/${realmId}/protocol/openid-connect/token`;
+    this.realmAdminUrl = `${realmBaseUrl}/auth/admin/realms/${realmId}`;
+    this.realmId = realmId;
 
     this.axios = axios.create();
     this.axios.interceptors.request.use(
@@ -22,9 +22,9 @@ class RealmAdminService {
       // until the token expires
       oauth.interceptor(tokenProvider, oauth.client(axios.create(), {
         url: this.tokenUrl,
-        grant_type: this.grantType,
-        client_id: this.clientId,
-        client_secret: this.clientSecret,
+        grant_type: 'client_credentials',
+        client_id: clientId,
+        client_secret: clientSecret,
         scope: ''
       }))
     );
@@ -49,6 +49,10 @@ class RealmAdminService {
   }
 
   async getClient(id) {
+    if (!id) {
+      log.error('RealmAdminService getClient id parameter is null.');
+      throw new Error('Cannot get client: id parameter cannot be null.');
+    }
     const response = await this.axios.get(`${this.realmAdminUrl}/clients/${id}`)
       .catch(e => {
         log.error('RealmAdminService.getClient', JSON.stringify(e));
@@ -58,6 +62,10 @@ class RealmAdminService {
   }
 
   async createClient(clientId, name, description) {
+    if (!clientId || !name || !description) {
+      log.error('RealmAdminService createClient a parameter is null.');
+      throw new Error('Cannot create client: clientId, name, and description cannot be null.');
+    }
     const defaults = {
       'clientId': '',
       'name': '',
@@ -176,6 +184,16 @@ class RealmAdminService {
   }
 
   async updateClientDetails(client, name, description) {
+    if (!client) {
+      log.error('RealmAdminService updateClientDetails no client provided.');
+      throw new Error('Cannot update client: client cannot be null.');
+    }
+
+    if (!name || !description) {
+      log.error('RealmAdminService updateClientDetails a parameter is null.');
+      throw new Error('Cannot update client: name, and description cannot be null.');
+    }
+
     const applicationDetails = {
       'name': name,
       'description': description
@@ -199,6 +217,11 @@ class RealmAdminService {
   }
 
   async getClientSecret(id) {
+    if (!id) {
+      log.error('RealmAdminService getClientSecret id parameter is null.');
+      throw new Error('Cannot get client secret: id parameter cannot be null.');
+    }
+
     const response = await this.axios.get(`${this.realmAdminUrl}/clients/${id}/client-secret`
     ).catch(e => {
       log.error('RealmAdminService.getClientSecret', JSON.stringify(e));
@@ -208,6 +231,11 @@ class RealmAdminService {
   }
 
   async getServiceAccountUser(id) {
+    if (!id) {
+      log.error('RealmAdminService getServiceAccountUser id parameter is null.');
+      throw new Error('Cannot get client service account user: id parameter cannot be null.');
+    }
+
     const response = await this.axios.get(`${this.realmAdminUrl}/clients/${id}/service-account-user`)
       .catch(e => {
         log.error('RealmAdminService.getServiceAccountUser', JSON.stringify(e));
@@ -217,6 +245,11 @@ class RealmAdminService {
   }
 
   async getClientRoles(id) {
+    if (!id) {
+      log.error('RealmAdminService getClientRoles id parameter is null.');
+      throw new Error('Cannot get client roles: id parameter cannot be null.');
+    }
+
     const response = await this.axios.get(`${this.realmAdminUrl}/clients/${id}/roles`
     ).catch(e => {
       log.error('RealmAdminService.getClientRoles', JSON.stringify(e));
@@ -226,6 +259,15 @@ class RealmAdminService {
   }
 
   async removeClientRole(id, roleName) {
+    if (!id) {
+      log.error('RealmAdminService removeClientRole id parameter is null.');
+      throw new Error('Cannot remove client role: id parameter cannot be null.');
+    }
+    if (!roleName) {
+      log.error('RealmAdminService removeClientRole roleName parameter is null.');
+      throw new Error('Cannot remove client role: roleName parameter cannot be null.');
+    }
+
     const response = await this.axios.delete(
       `${this.realmAdminUrl}/clients/${id}/roles/${roleName}`
     ).catch(e => {
@@ -236,6 +278,15 @@ class RealmAdminService {
   }
 
   async addClientRole(id, roleName) {
+    if (!id) {
+      log.error('RealmAdminService addClientRole id parameter is null.');
+      throw new Error('Cannot add client role: id parameter cannot be null.');
+    }
+    if (!roleName) {
+      log.error('RealmAdminService addClientRole roleName parameter is null.');
+      throw new Error('Cannot add client role: roleName parameter cannot be null.');
+    }
+
     const requestBody = {
       'name': roleName,
       'composite': true,
@@ -259,6 +310,19 @@ class RealmAdminService {
   }
 
   async addServiceAccountRole(serviceAccountUserId, clientId, role) {
+    if (!serviceAccountUserId) {
+      log.error('RealmAdminService addServiceAccountRole serviceAccountUserId parameter is null.');
+      throw new Error('Cannot add service account role: serviceAccountUserId parameter cannot be null.');
+    }
+    if (!clientId) {
+      log.error('RealmAdminService addServiceAccountRole clientId parameter is null.');
+      throw new Error('Cannot add service account role: clientId parameter cannot be null.');
+    }
+    if (!role) {
+      log.error('RealmAdminService addServiceAccountRole role parameter is null.');
+      throw new Error('Cannot add service account role: role parameter cannot be null.');
+    }
+
     const response = await this.axios.post(
       `${this.realmAdminUrl}/users/${serviceAccountUserId}/role-mappings/clients/${clientId}`,
       JSON.stringify([role]),
@@ -275,6 +339,19 @@ class RealmAdminService {
   }
 
   async setRoleComposites(client, roleName, roles) {
+    if (!client) {
+      log.error('RealmAdminService setRoleComposites client parameter is null.');
+      throw new Error('Cannot add service roles to client roles: client parameter cannot be null.');
+    }
+    if (!roleName) {
+      log.error('RealmAdminService setRoleComposites roleName parameter is null.');
+      throw new Error('Cannot add service roles to client roles: roleName parameter cannot be null.');
+    }
+    if (!roles) {
+      log.error('RealmAdminService setRoleComposites roles parameter is null.');
+      throw new Error('Cannot add service roles to client roles: roles parameter cannot be null.');
+    }
+
     const response = await this.axios.post(
       `${this.realmAdminUrl}/clients/${client.id}/roles/${roleName}/composites`,
       JSON.stringify(roles),
