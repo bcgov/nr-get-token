@@ -44,10 +44,17 @@ class KeyCloakServiceClientManager {
     // get all the selected common services and their roles
     // add roles to the lob COMMON_SERVICE role
     // commonServices is an array of clientIds
+
+    // was an inline function, but that's a code smell...
+    // eslint-disable-next-line no-inner-declarations
+    function getCmnSrvClient(clientId) {
+      return clients.find(y => { return clientId === y.clientId; });
+    }
+
     let commonServiceRoles = [];
     if (commonServices && commonServices.length > 0) {
       for (const cmnSrvClientId of commonServices) {
-        const cmnSrvClient = clients.find(y => { return cmnSrvClientId === y.clientId; });
+        const cmnSrvClient = getCmnSrvClient(cmnSrvClientId);
         if (cmnSrvClient) {
           const cmnSrvClientRoles = await this.svc.getClientRoles(cmnSrvClient.id);
           commonServiceRoles = commonServiceRoles.concat(cmnSrvClientRoles);
