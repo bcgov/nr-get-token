@@ -8,18 +8,18 @@ const RealmAdminService = require('../../../src/components/realmAdminSvc');
 
 log.level = config.get('server.logLevel');
 
-let realmConfig = {};
-
-beforeEach(() => {
-  const {
-    endpoint: realmBaseUrl,
-    username: clientId,
-    password: clientSecret,
-    realm: realmId} = config.get('serviceClient.keyCloak.INT');
-  realmConfig = {realmId, realmBaseUrl, clientId, clientSecret};
-});
 
 describe('RealmAdminService create', () => {
+  let realmConfig = {};
+
+  beforeEach(() => {
+    const {
+      endpoint: realmBaseUrl,
+      username: clientId,
+      password: clientSecret,
+      realm: realmId} = config.get('serviceClient.keyCloak.INT');
+    realmConfig = {realmId, realmBaseUrl, clientId, clientSecret};
+  });
 
   it('should throw an error without realmId', async () => {
     expect(() => {
@@ -64,6 +64,16 @@ describe('RealmAdminService create', () => {
 });
 
 describe('RealmAdminService getRealm', () => {
+  let realmConfig = {};
+
+  beforeEach(() => {
+    const {
+      endpoint: realmBaseUrl,
+      username: clientId,
+      password: clientSecret,
+      realm: realmId} = config.get('serviceClient.keyCloak.INT');
+    realmConfig = {realmId, realmBaseUrl, clientId, clientSecret};
+  });
 
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
@@ -92,6 +102,16 @@ describe('RealmAdminService getRealm', () => {
 });
 
 describe('RealmAdminService getClients', () => {
+  let realmConfig = {};
+
+  beforeEach(() => {
+    const {
+      endpoint: realmBaseUrl,
+      username: clientId,
+      password: clientSecret,
+      realm: realmId} = config.get('serviceClient.keyCloak.INT');
+    realmConfig = {realmId, realmBaseUrl, clientId, clientSecret};
+  });
 
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
@@ -120,6 +140,16 @@ describe('RealmAdminService getClients', () => {
 });
 
 describe('RealmAdminService getClient', () => {
+  let realmConfig = {};
+
+  beforeEach(() => {
+    const {
+      endpoint: realmBaseUrl,
+      username: clientId,
+      password: clientSecret,
+      realm: realmId} = config.get('serviceClient.keyCloak.INT');
+    realmConfig = {realmId, realmBaseUrl, clientId, clientSecret};
+  });
 
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
@@ -153,6 +183,16 @@ describe('RealmAdminService getClient', () => {
 });
 
 describe('RealmAdminService createClient', () => {
+  let realmConfig = {};
+
+  beforeEach(() => {
+    const {
+      endpoint: realmBaseUrl,
+      username: clientId,
+      password: clientSecret,
+      realm: realmId} = config.get('serviceClient.keyCloak.INT');
+    realmConfig = {realmId, realmBaseUrl, clientId, clientSecret};
+  });
 
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
@@ -197,6 +237,16 @@ describe('RealmAdminService createClient', () => {
 });
 
 describe('RealmAdminService updateClientDetails', () => {
+  let realmConfig = {};
+
+  beforeEach(() => {
+    const {
+      endpoint: realmBaseUrl,
+      username: clientId,
+      password: clientSecret,
+      realm: realmId} = config.get('serviceClient.keyCloak.INT');
+    realmConfig = {realmId, realmBaseUrl, clientId, clientSecret};
+  });
 
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
@@ -247,6 +297,16 @@ describe('RealmAdminService updateClientDetails', () => {
 });
 
 describe('RealmAdminService getClientSecret', () => {
+  let realmConfig = {};
+
+  beforeEach(() => {
+    const {
+      endpoint: realmBaseUrl,
+      username: clientId,
+      password: clientSecret,
+      realm: realmId} = config.get('serviceClient.keyCloak.INT');
+    realmConfig = {realmId, realmBaseUrl, clientId, clientSecret};
+  });
 
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
@@ -280,6 +340,16 @@ describe('RealmAdminService getClientSecret', () => {
 });
 
 describe('RealmAdminService getServiceAccountUser', () => {
+  let realmConfig = {};
+
+  beforeEach(() => {
+    const {
+      endpoint: realmBaseUrl,
+      username: clientId,
+      password: clientSecret,
+      realm: realmId} = config.get('serviceClient.keyCloak.INT');
+    realmConfig = {realmId, realmBaseUrl, clientId, clientSecret};
+  });
 
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
@@ -313,6 +383,16 @@ describe('RealmAdminService getServiceAccountUser', () => {
 });
 
 describe('RealmAdminService getClientRoles', () => {
+  let realmConfig = {};
+
+  beforeEach(() => {
+    const {
+      endpoint: realmBaseUrl,
+      username: clientId,
+      password: clientSecret,
+      realm: realmId} = config.get('serviceClient.keyCloak.INT');
+    realmConfig = {realmId, realmBaseUrl, clientId, clientSecret};
+  });
 
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
@@ -346,6 +426,16 @@ describe('RealmAdminService getClientRoles', () => {
 });
 
 describe('RealmAdminService removeClientRole', () => {
+  let realmConfig = {};
+
+  beforeEach(() => {
+    const {
+      endpoint: realmBaseUrl,
+      username: clientId,
+      password: clientSecret,
+      realm: realmId} = config.get('serviceClient.keyCloak.INT');
+    realmConfig = {realmId, realmBaseUrl, clientId, clientSecret};
+  });
 
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
@@ -384,6 +474,16 @@ describe('RealmAdminService removeClientRole', () => {
 });
 
 describe('RealmAdminService addClientRole', () => {
+  let realmConfig = {};
+
+  beforeEach(() => {
+    const {
+      endpoint: realmBaseUrl,
+      username: clientId,
+      password: clientSecret,
+      realm: realmId} = config.get('serviceClient.keyCloak.INT');
+    realmConfig = {realmId, realmBaseUrl, clientId, clientSecret};
+  });
 
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
@@ -422,6 +522,16 @@ describe('RealmAdminService addClientRole', () => {
 });
 
 describe('RealmAdminService addServiceAccountRole', () => {
+  let realmConfig = {};
+
+  beforeEach(() => {
+    const {
+      endpoint: realmBaseUrl,
+      username: clientId,
+      password: clientSecret,
+      realm: realmId} = config.get('serviceClient.keyCloak.INT');
+    realmConfig = {realmId, realmBaseUrl, clientId, clientSecret};
+  });
 
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
@@ -465,6 +575,16 @@ describe('RealmAdminService addServiceAccountRole', () => {
 });
 
 describe('RealmAdminService addServiceAccountRole', () => {
+  let realmConfig = {};
+
+  beforeEach(() => {
+    const {
+      endpoint: realmBaseUrl,
+      username: clientId,
+      password: clientSecret,
+      realm: realmId} = config.get('serviceClient.keyCloak.INT');
+    realmConfig = {realmId, realmBaseUrl, clientId, clientSecret};
+  });
 
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
