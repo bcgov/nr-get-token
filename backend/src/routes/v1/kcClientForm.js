@@ -1,4 +1,5 @@
 const config = require('config');
+const cryptico = require('cryptico-js');
 const log = require('npmlog');
 
 const RealmAdminService = require('../../components/realmAdminSvc');
@@ -17,7 +18,8 @@ kcClientForm.post('/', [
   body('serviceClientForm.applicationName').isString(),
   body('serviceClientForm.applicationDescription').isString(),
   body('serviceClientForm.commonServices').isArray(),
-  body('serviceClientForm.keycloakEnvironment').isIn(['INT'])
+  body('serviceClientForm.keycloakEnvironment').isIn(['INT']),
+  body('passwordPublicKey').isString()
 ], async (req, res) => {
   // Validate for Bad Requests
   const errors = validationResult(req);
@@ -29,7 +31,8 @@ kcClientForm.post('/', [
   }
 
   const {
-    serviceClientForm
+    serviceClientForm,
+    passwordPublicKey: publicKey
   } = req.body;
 
   try {
@@ -43,7 +46,12 @@ kcClientForm.post('/', [
     const kcScMgr = new KeyCloakServiceClientManager(realmSvc);
 
     const response = await kcScMgr.manage(serviceClientForm);
-    return res.status(200).json(response);
+    const encryptedPassword = cryptico.encrypt(response.generatedPassword, publicKey).cipher;
+    return res.status(200).json({
+      oidcTokenUrl: response.oidcTokenUrl,
+      generatedServiceClient: response.generatedServiceClient,
+      generatedPassword: encryptedPassword
+    });
   } catch (error) {
     log.error(error);
     res.status(500).json({
