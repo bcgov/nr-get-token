@@ -11,8 +11,8 @@ const {
 } = require('express-validator');
 
 // submits a keycloak service client
-// will need to add public key to this for encryption from frontend...
 const kcClientForm = require('express').Router();
+
 kcClientForm.post('/', [
   body('serviceClientForm.applicationAcronym').isString(),
   body('serviceClientForm.applicationName').isString(),
@@ -41,7 +41,8 @@ kcClientForm.post('/', [
       endpoint: realmBaseUrl,
       username: clientId,
       password: clientSecret,
-      realm: realmId} = config.get(realmKey);
+      realm: realmId
+    } = config.get(realmKey);
     const realmSvc = new RealmAdminService({realmBaseUrl, clientId, clientSecret, realmId});
     const kcScMgr = new KeyCloakServiceClientManager(realmSvc);
 

@@ -1,7 +1,8 @@
 const axios = require('axios');
+const log = require('npmlog');
 const oauth = require('axios-oauth-client');
 const tokenProvider = require('axios-token-interceptor');
-const log = require('npmlog');
+
 
 class RealmAdminService {
   constructor({realmId, realmBaseUrl, clientId, clientSecret}) {
