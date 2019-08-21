@@ -41,13 +41,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  '/appConfig/{acronym}':
+  '/appConfig/{webAdeEnv}/{acronym}':
     get:
-      summary: Returns WebADE JSON response for the specified acronym
+      summary: Returns WebADE JSON response for the specified acronym in the specified environment
       operationId: appConfigGetAcronym
       tags:
         - Application Configuration
       parameters:
+        - name: webAdeEnv
+          in: path
+          description: The ISSS WebADE environment
+          required: true
+          schema:
+            type: string
         - name: acronym
           in: path
           description: Name of the project
@@ -65,6 +71,8 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
         default:
           description: Unexpected error
           content:

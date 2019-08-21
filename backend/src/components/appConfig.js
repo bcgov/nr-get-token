@@ -185,6 +185,11 @@ const appConfig = {
     } catch (error) {
       log.error('getAppConfig', error.message);
       if (error.response) {
+        log.error(error.response.status);
+        if (error.response.status && error.response.status === 404) {
+          // 404, couldn't find a config for the specified acronym, return nothing.
+          return '';
+        }
         throw new Error(`WebADE ${path} returned an error. ${JSON.stringify(error.response.data)}`);
       }
     }

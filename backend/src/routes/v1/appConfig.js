@@ -32,7 +32,11 @@ appConfig.get('/:webAdeEnv/:appAcronym', [
 
   try {
     const response = await appConfigComponent.getAppConfig(req.params.webAdeEnv, req.params.appAcronym);
-    return res.status(200).json(response);
+    if(response) {
+      return res.status(200).json(response);
+    } else {
+      return res.status(404).json();
+    }
   } catch (error) {
     log.error(error);
     res.status(500).json({

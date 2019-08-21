@@ -213,7 +213,27 @@ describe('getAppConfig', () => {
     const result = await appConfig.getAppConfig('INT', sampleAcronym);
 
     expect(result).toBeTruthy();
-    log.error(result);
+    expect(result).toEqual(response);
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(resourceToGet, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json; charset=utf-8'
+      }
+    });
+  });
+
+  it('should yield a empty response upon a 404 WebADE get', async () => {
+    utils.getWebAdeToken = jest.fn().mockResolvedValue({
+      access_token: token
+    });
+
+    const response = '';
+    mockAxios.onGet(resourceToGet).reply(404, response);
+
+    const result = await appConfig.getAppConfig('INT', sampleAcronym);
+
+    expect(result).toBeFalsy();
     expect(result).toEqual(response);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(resourceToGet, {
