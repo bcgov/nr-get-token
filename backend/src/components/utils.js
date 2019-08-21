@@ -67,7 +67,11 @@ const utils = {
   prettyStringify: (obj, indent = 2) => JSON.stringify(obj, null, indent),
 
   // Returns a string in Pascal Case
-  toPascalCase: str => str.toLowerCase().replace(/\b\w/g, t => t.toUpperCase())
+  toPascalCase: str => str.toLowerCase().replace(/\b\w/g, t => t.toUpperCase()),
+
+  // TODO: this is likely soon to be refactored out, as we will be pulling acronyms from the DB, not from access roles
+  // Returns only app acronym based roles
+  filterAppAcronymRoles: roles => roles.filter(role => !role.match(/offline_access|uma_authorization|WEBADE_CFG_READ|WEBADE_CFG_READ_ALL/))
 };
 
 module.exports = utils;

@@ -165,3 +165,21 @@ describe('toPascalCase', () => {
     expect(result).toMatch(/[A-Z][a-z]+(?:[A-Z][a-z]+)*/);
   });
 });
+
+
+describe('filterAppAcronymRoles', () => {
+  it('should return the filtered acronym list', () => {
+    const roles = ['offline_access','uma_authorization','WEBADE_CFG_READ','WEBADE_CFG_READ_ALL','DOMO','MSSC'];
+    const result = utils.filterAppAcronymRoles(roles);
+
+    expect(result).toBeTruthy();
+    expect(result).toHaveLength(2);
+  });
+
+  it('should handle an empty array', () => {
+    const roles = [];
+    const result = utils.filterAppAcronymRoles(roles);
+    expect(result).toBeTruthy();
+    expect(result).toHaveLength(0);
+  });
+});

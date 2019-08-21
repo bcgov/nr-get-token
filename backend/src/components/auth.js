@@ -103,7 +103,7 @@ const auth = {
       // Add keycloak authorized acronyms if they don't already exist
       let acronymList = [];
       if (typeof roles === 'object' && roles instanceof Array) {
-        acronymList = roles.filter(role => !role.match(/offline_access|uma_authorization/));
+        acronymList = utils.filterAppAcronymRoles(roles);
       }
       await acronymService.findOrCreateList(acronymList);
 

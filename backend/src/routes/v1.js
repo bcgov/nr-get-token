@@ -3,6 +3,7 @@ const path = require('path');
 const passport = require('passport');
 
 // const auth = require('./auth/auth');
+const appConfigRouter = require('./v1/appConfig');
 const appConfigFormRouter = require('./v1/appConfigForm');
 const checksRouter = require('./v1/checks');
 
@@ -27,6 +28,11 @@ router.get('/docs', (_req, res) => {
 router.get('/api-spec.yaml', (_req, res) => {
   res.sendFile(path.join(__dirname, '../docs/v1.api-spec.yaml'));
 });
+
+// WebADE Application Configurations
+router.use('/appConfig', passport.authenticate('jwt', {
+  session: false
+}), appConfigRouter);
 
 // Application Configuration Form
 router.use('/appConfigForm', passport.authenticate('jwt', {
