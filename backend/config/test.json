@@ -27,6 +27,12 @@
     "mssc": {
       "username": "username",
       "password": "password"
+    },
+    "keyCloak": {
+      "INT": {
+        "username": "username",
+        "password": "password"
+      }
     }
   }
 }
