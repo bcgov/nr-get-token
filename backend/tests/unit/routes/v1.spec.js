@@ -10,9 +10,10 @@ describe('/api/v1', () => {
     expect(response.body).toBeTruthy();
     expect(response.body).toEqual({
       endpoints: [
-        '/appConfig',
+        '/appConfigForm',
         '/checks',
-        '/validation'
+        '/docs',
+        '/kcClientForm'
       ]
     });
   });

@@ -162,6 +162,16 @@ objects:
               secretKeyRef:
                 key: password
                 name: getok-sc-mssc-secret
+          - name: SC_KC_INT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: getok-sc-keycloakint-secret
+          - name: SC_KC_INT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: getok-sc-keycloakint-secret
           envFrom:
           - configMapRef:
               name: getok-oidc-config

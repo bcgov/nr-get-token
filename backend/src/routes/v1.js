@@ -6,14 +6,16 @@ const passport = require('passport');
 const appConfigRouter = require('./v1/appConfig');
 const appConfigFormRouter = require('./v1/appConfigForm');
 const checksRouter = require('./v1/checks');
+const kcClientFormRouter = require('./v1/kcClientForm');
 
 // Base v1 Responder
 router.get('/', (_req, res) => {
   res.status(200).json({
     endpoints: [
-      '/appConfig',
+      '/appConfigForm',
       '/checks',
-      '/validation'
+      '/docs',
+      '/kcClientForm'
     ]
   });
 });
@@ -38,6 +40,11 @@ router.use('/appConfig', passport.authenticate('jwt', {
 router.use('/appConfigForm', passport.authenticate('jwt', {
   session: false
 }), appConfigFormRouter);
+
+// KeyCloak Client Form
+router.use('/kcClientForm', passport.authenticate('jwt', {
+  session: false
+}), kcClientFormRouter);
 
 // Checks
 router.use('/checks', passport.authenticate('jwt', {

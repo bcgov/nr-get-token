@@ -23,7 +23,8 @@ objects:
         kind: DockerImage
         name: registry.access.redhat.com/rhoar-nodejs/nodejs-10:latest
       generation:
-      importPolicy: {}
+      importPolicy:
+        scheduled: true
       name: latest
       referencePolicy:
         type: Local

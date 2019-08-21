@@ -139,6 +139,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /kcConfigForm:
+    post:
+      summary: Submit a proposed application to KeyCloak
+      operationId: kcConfigFormPost
+      tags:
+        - KeyCloak Service Client Configuration
+      requestBody:
+        description: Form fields required to generate a minimal KeyCloak Service Client Configuration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KcConfigForm'
+      responses:
+        '200':
+          description: Service Client Credentials and Endpoint information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KcConfigResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /validations/rules:
     post:
       summary: Returns status of correspondent APIs
@@ -307,6 +337,57 @@ components:
           type: string
           description: 'Contains the service client name that was written to WebADE'
           example: DOMO_SERVICE_CLIENT
+    KcConfigForm:
+      type: object
+      required:
+        - applicationAcronym
+        - applicationName
+        - applicationDescription
+        - commonServices
+        - keycloakEnvironment
+        - passwordPublicKey
+      properties:
+        applicationAcronym:
+          type: string
+          example: MSSC
+        applicationName:
+          type: string
+          example: Application Name
+        applicationDescription:
+          type: string
+          example: Application Description
+        commonServices:
+          type: array
+          items:
+            type: string
+            example: CHES
+          description: An array of applicationAcronyms
+        keycloakEnvironment:
+          type: string
+          description: Which KeyCloak environment to work on - one of INT, TEST or PROD
+          example: INT
+        passwordPublicKey:
+          type: string
+          description: A public key in PEM format without the headers
+          example: MIGfMA0GCSqGS...
+    KcConfigResponse:
+      required:
+        - oidcTokenUrl
+        - generatedPassword
+        - generatedServiceClient
+      properties:
+        oidcTokenUrl:
+          type: string
+          description: 'Contains the OpenID Connect token url for the generated Service Client to get authenticated'
+          example: ABC123XYZ
+        generatedPassword:
+          type: string
+          description: 'Contains the generated password, encrypted with the user-supplied public key'
+          example: ABC123XYZ
+        generatedServiceClient:
+          type: string
+          description: 'Contains the service client name that was written to WebADE'
+          example: CHES_SERVICE_CLIENT
     EndpointStatus:
       type: object
       required:
