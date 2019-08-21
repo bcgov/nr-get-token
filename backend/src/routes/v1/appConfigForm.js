@@ -1,4 +1,5 @@
 const log = require('npmlog');
+const utils = require('../../components/utils');
 
 const appConfig = require('express').Router();
 const {
@@ -30,7 +31,7 @@ appConfig.post('/', [
   let acronyms = [];
   const roles = req.user.jwt.realm_access.roles;
   if (typeof roles === 'object' && roles instanceof Array) {
-    acronyms = roles.filter(role => !role.match(/offline_access|uma_authorization/));
+    acronyms = utils.filterAppAcronymRoles(roles);
   }
 
   const {

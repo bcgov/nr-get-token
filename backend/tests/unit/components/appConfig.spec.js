@@ -163,3 +163,84 @@ describe('postAppConfig', () => {
     expect(spyLifecycle).toHaveBeenCalledWith(appAcronym, generatedConfig.webAdeCfg, webadeEnv, userId);
   });
 });
+
+describe('getAppConfig', () => {
+  const token = '00000000-0000-0000-0000-000000000000';
+  const url = config.get('serviceClient.getokInt.endpoint') + '/applicationConfigurations';
+  const sampleAcronym = 'MSSC';
+  const resourceToGet = url + '/' + sampleAcronym;
+
+  const spy = jest.spyOn(axios, 'get');
+
+  afterEach(() => {
+    spy.mockClear();
+  });
+
+  it('should error if unable to acquire access token', async () => {
+    utils.getWebAdeToken = jest.fn().mockReturnValue({
+      error: 'error'
+    });
+
+    await expect(appConfig.getAppConfig('INT', sampleAcronym)).rejects.toThrowError('Unable to acquire access_token');
+    expect(spy).toHaveBeenCalledTimes(0);
+  });
+
+  it('should error if WebADE GET returned an error', async () => {
+    utils.getWebAdeToken = jest.fn().mockResolvedValue({
+      access_token: token
+    });
+
+    mockAxios.onGet(resourceToGet).reply(500);
+
+    await expect(appConfig.getAppConfig('INT', sampleAcronym)).rejects.toThrowError(/^WebADE \/applicationConfigurations\/MSSC returned an error./);
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(resourceToGet, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json; charset=utf-8'
+      }
+    });
+  });
+
+  it('should yield a response upon successful WebADE get', async () => {
+    utils.getWebAdeToken = jest.fn().mockResolvedValue({
+      access_token: token
+    });
+
+    const response = 'webAdeResponseObject';
+    mockAxios.onGet(resourceToGet).reply(200, response);
+
+    const result = await appConfig.getAppConfig('INT', sampleAcronym);
+
+    expect(result).toBeTruthy();
+    expect(result).toEqual(response);
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(resourceToGet, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json; charset=utf-8'
+      }
+    });
+  });
+
+  it('should yield a empty response upon a 404 WebADE get', async () => {
+    utils.getWebAdeToken = jest.fn().mockResolvedValue({
+      access_token: token
+    });
+
+    const response = '';
+    mockAxios.onGet(resourceToGet).reply(404, response);
+
+    const result = await appConfig.getAppConfig('INT', sampleAcronym);
+
+    expect(result).toBeFalsy();
+    expect(result).toEqual(response);
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(resourceToGet, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json; charset=utf-8'
+      }
+    });
+  });
+});

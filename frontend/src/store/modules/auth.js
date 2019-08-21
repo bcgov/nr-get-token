@@ -20,8 +20,9 @@ export default {
         const payload = JSON.parse(atob(token.split('.')[1]));
         const roles = payload.realm_access.roles;
 
+        // TODO: this will require re-conceptualizing as acronyms will come from the DB, not the access roles in the future.
         if (typeof roles === 'object' && roles instanceof Array) {
-          state.acronyms = roles.filter(role => !role.match(/offline_access|uma_authorization/));
+          state.acronyms = roles.filter(role => !role.match(/offline_access|uma_authorization|WEBADE_CFG_READ|WEBADE_CFG_READ_ALL/));
         } else {
           state.acronyms = [];
         }
