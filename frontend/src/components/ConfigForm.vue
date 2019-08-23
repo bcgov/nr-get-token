@@ -140,17 +140,42 @@
         <v-dialog
           v-model="confirmationDialog"
           persistent
-          max-width="400"
+          max-width="1200"
           v-if="userAppCfg.deploymentMethod === 'deploymentDirect'"
         >
           <template v-slot:activator="{ on }">
-            <v-btn color="success" :disabled="!step2Valid" v-on="on">Submit</v-btn>
+            <v-btn color="success" :disabled="!step2Valid" v-on="on" @click="getWebAdeConfig">Submit</v-btn>
           </template>
           <v-card>
             <v-card-title class="headline">Are you sure?</v-card-title>
             <v-card-text>
-              This will overwrite any existing WebADE configuration for the
-              <strong>{{ userAppCfg.applicationAcronym }}</strong> application. Are you sure you want to proceed?
+              <p>
+                This will overwrite any existing WebADE configuration for the
+                <strong>{{ userAppCfg.applicationAcronym }}</strong> application.
+              </p>
+              <p>The following shows the differences between the current configuration and the configuration that will be created. Are you sure you want to proceed?</p>
+
+              <v-layout wrap>
+                <v-flex xs6>
+                  <v-textarea
+                    rows="40"
+                    readonly
+                    label="Current WebADE Config"
+                    v-model="existingWebAdeConfig"
+                    class="jsonText"
+                  ></v-textarea>
+                </v-flex>
+                <v-flex xs6>
+                  <v-textarea
+                    rows="40"
+                    readonly
+                    label="New WebADE config"
+                    v-model="appConfigAsString"
+                    class="jsonText"
+                  ></v-textarea>
+                </v-flex>
+              </v-layout>
+              <pre id="display"></pre>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -248,13 +273,13 @@
                     </v-tooltip>
                   </v-flex>
                 </v-layout>
-                <br>
+                <br />
 
                 <div v-if="userAppCfg.commonServices.length > 0">
                   <h2>3. API Store Swagger</h2>
                   <p>
                     This token can be used to test out the common services you have specified by trying them out in the API Store.
-                    <br>Fill in the token above into the Access Token field at the top of the
+                    <br />Fill in the token above into the Access Token field at the top of the
                     <strong>API Console</strong> tab for the common service(s) linked below:
                   </p>
                   <ul>
@@ -299,6 +324,8 @@ import cryptico from 'cryptico-js';
 import Vue from 'vue';
 import VueClipboard from 'vue-clipboard2';
 import { mapGetters } from 'vuex';
+require('colors');
+var jsdiff = require('diff');
 
 VueClipboard.config.autoSetContainer = true;
 Vue.use(VueClipboard);
@@ -327,9 +354,7 @@ export default {
         v => !!v || 'Acronym is required',
         v =>
           v.length <= FieldValidations.ACRONYM_MAX_LENGTH ||
-          `Acronym must be ${
-            FieldValidations.ACRONYM_MAX_LENGTH
-          } characters or less`,
+          `Acronym must be ${FieldValidations.ACRONYM_MAX_LENGTH} characters or less`,
         v =>
           /^(?:[A-Z]{2,}[_]?)+[A-Z]{1,}$/g.test(v) ||
           'Incorrect format. Hover over ? for details.',
@@ -347,9 +372,7 @@ export default {
         v => !!v || 'Description is required',
         v =>
           v.length <= FieldValidations.DESCRIPTION_MAX_LENGTH ||
-          `Description must be ${
-            FieldValidations.DESCRIPTION_MAX_LENGTH
-          } characters or less`
+          `Description must be ${FieldValidations.DESCRIPTION_MAX_LENGTH} characters or less`
       ],
       snackbar: {
         on: false,
@@ -367,7 +390,8 @@ export default {
       'configFormSubmissionResult',
       'ephemeralPasswordRSAKey',
       'configSubmissionSuccess',
-      'configSubmissionError'
+      'configSubmissionError',
+      'existingWebAdeConfig'
     ]),
     displayClient: function() {
       return this.configFormSubmissionResult
@@ -424,6 +448,35 @@ export default {
         this.generatedTokenError =
           'Error fetching token. The service client can take a moment to register, you can try again in a few seconds.';
       }
+    },
+    async getWebAdeConfig() {
+      await this.$store.dispatch('configForm/getWebAdeConfig', {
+        webAdeEnv: this.userAppCfg.webadeEnvironment,
+        acronym: this.userAppCfg.applicationAcronym
+      });
+      var diff = jsdiff.diffLines(
+          this.existingWebAdeConfig,
+          this.appConfigAsString
+        ),
+        display = document.getElementById('display'),
+        fragment = document.createDocumentFragment();
+
+      diff.forEach(function(part) {
+        console.log('added ' + part.added);
+        console.log('removed ' + part.removed);
+        // green for additions, red for deletions
+        // grey for common parts
+        let color = part.added ? 'green' : part.removed ? 'red' : 'grey';
+        //console.log('color ' + color);
+        console.log('document ' + document);
+        let span = document.createElement('span');
+        console.log('span ' + span);
+        span.style.color = color;
+        span.appendChild(document.createTextNode(part.value));
+        fragment.appendChild(span);
+      });
+
+      display.appendChild(fragment);
     },
     updateAppCfgField(field, value) {
       this.$store.commit('configForm/updateUserAppCfg', {

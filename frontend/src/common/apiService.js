@@ -112,5 +112,17 @@ Body: ${JSON.stringify(response.data, null, 2)}`;
       console.log(`Failed to post app config form - ${e}`); // eslint-disable-line no-console
       throw e;
     }
+  },
+
+  async getWebAdeConfig(webAdeEnv, acronym) {
+    try {
+      console.log(webAdeEnv + ' ' + acronym); // eslint-disable-line no-console
+      const url = `${ApiRoutes.WEBADECONFIG}/${webAdeEnv}/${acronym}`;
+      const response = await apiAxios.get(url);
+      return response.data;
+    } catch (e) {
+      console.log(`Failed to get webade app config for ${acronym} in ${webAdeEnv} - ${e}`); // eslint-disable-line no-console
+      throw e;
+    }
   }
 };

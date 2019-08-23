@@ -17,7 +17,8 @@ export default {
       webadeEnvironment: ''
     },
     configFormSubmissionResult: null,
-    ephemeralPasswordRSAKey: null
+    ephemeralPasswordRSAKey: null,
+    existingWebAdeConfig: ''
   },
   getters: {
     configSubmissionSuccess: state => state.configSubmissionSuccess,
@@ -25,6 +26,7 @@ export default {
     configSubmissionInProgress: state => state.configSubmissionInProgress,
     configFormSubmissionResult: state => state.configFormSubmissionResult,
     ephemeralPasswordRSAKey: state => state.ephemeralPasswordRSAKey,
+    existingWebAdeConfig: state => JSON.stringify(state.existingWebAdeConfig, null, 2),
     appConfigAsString: state => {
       // these are the hardcoded WebADE cfg values users do not enter
       const defaultAppCfg = {
@@ -161,7 +163,10 @@ export default {
     },
     setEphemeralPasswordRSAKey: (state, ephemeralPasswordRSAKey) => {
       state.ephemeralPasswordRSAKey = ephemeralPasswordRSAKey;
-    }
+    },
+    setExistingWebAdeConfig: (state, val) => {
+      state.existingWebAdeConfig = val, null, 2;
+    },
   },
   actions: {
     async submitConfigForm(context) {
@@ -199,6 +204,16 @@ export default {
           'setConfigSubmissionError',
           'An error occurred while attempting to update the application configuration in WebADE.'
         );
+      }
+    },
+    async getWebAdeConfig(context, payload) {
+      try {
+        const response = await ApiService.getWebAdeConfig(payload.webAdeEnv, payload.acronym);
+        // remove the 'links' item
+        delete response.links;
+        context.commit('setExistingWebAdeConfig', response);
+      } catch (error) {
+        context.commit('setExistingWebAdeConfig', `An error occurred getting the existing WebADE configuration for ${payload.acronym} in ${payload.webAdeEnv}`);
       }
     }
   }
