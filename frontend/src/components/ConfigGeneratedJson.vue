@@ -4,7 +4,7 @@
       <v-textarea
         auto-grow
         readonly
-        label="Application Configuration"
+        label="WebADE Application Configuration"
         v-model="appConfigAsString"
         class="jsonText"
       ></v-textarea>

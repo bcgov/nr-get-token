@@ -26,11 +26,30 @@
     </v-stepper-content>
 
     <v-stepper-step :complete="appConfigStep > 2" step="2">
+      Select Common Service(s)
+      <small>Select type of common service to onboard to</small>
+    </v-stepper-step>
+
+    <v-stepper-content step="2">
+      <v-btn
+        color="primary"
+        @click="setChes(); appConfigStep = 3"
+        :disabled="!hasAcronyms"
+      ><v-icon left>email</v-icon> Common Hosted Email</v-btn>
+      <v-btn color="primary" @click="appConfigStep = 3" :disabled="true"><v-icon left>insert_drive_file</v-icon> Common Hosted Document</v-btn>
+      <v-btn
+        color="primary"
+        @click="setWebade(); appConfigStep = 3"
+        :disabled="!hasAcronyms"
+      ><v-icon left>save</v-icon> Legacy (WebADE)</v-btn>
+    </v-stepper-content>
+
+    <v-stepper-step :complete="appConfigStep > 3" step="3">
       Set up Application
       <small>Pick application and service client details</small>
     </v-stepper-step>
 
-    <v-stepper-content step="2">
+    <v-stepper-content step="3">
       <v-form v-model="step1Valid">
         <v-layout row wrap>
           <v-flex xs12 md7>
@@ -84,32 +103,37 @@
           :counter="fieldValidations.DESCRIPTION_MAX_LENGTH"
           :rules="applicationDescriptionRules"
         ></v-text-field>
-        <v-select
-          :items="commonServices"
-          label="Common Service(s) Required"
-          multiple
-          chips
-          deletable-chips
-          :value="userAppCfg.commonServices"
-          v-on:change="updateAppCfgField('commonServices', $event)"
-        ></v-select>
+        <div v-if="usingWebadeConfig">
+          <v-select
+            :items="commonServices"
+            label="Common Service(s) Required"
+            multiple
+            chips
+            deletable-chips
+            :value="userAppCfg.commonServices"
+            v-on:change="updateAppCfgField('commonServices', $event)"
+          ></v-select>
+        </div>
 
-        <v-btn flat @click="appConfigStep = 1">Back</v-btn>
-        <v-btn color="primary" @click="appConfigStep = 3" :disabled="!step1Valid">Next</v-btn>
+        <v-btn flat @click="appConfigStep = 2">Back</v-btn>
+        <v-btn color="primary" @click="appConfigStep = 4" :disabled="!step1Valid">Next</v-btn>
       </v-form>
     </v-stepper-content>
 
-    <v-stepper-step :complete="appConfigStep > 3" step="3">
+    <v-stepper-step :complete="appConfigStep > 4" step="4">
       Deployment
-      <small>Choose method of deploying WebADE config</small>
+      <small v-if="usingWebadeConfig">Choose method of deploying WebADE config</small>
+      <small v-if="!usingWebadeConfig">Choose service client deployment details</small>
     </v-stepper-step>
 
-    <v-stepper-content step="3">
+    <v-stepper-content step="4">
       <v-form v-model="step2Valid">
         <v-layout row wrap>
           <v-flex xs12 md7>
             <v-select
-              :items="webadeEnvironments"
+              required
+              :mandatory="true"
+              :items="usingWebadeConfig ? webadeEnvironments : keycloakEnvironments"
               label="Environment to Deploy to"
               :value="userAppCfg.webadeEnvironment"
               v-on:change="updateAppCfgField('webadeEnvironment', $event)"
@@ -118,9 +142,10 @@
         </v-layout>
 
         <v-radio-group
+          v-if="usingWebadeConfig"
           :value="userAppCfg.deploymentMethod"
           v-on:change="updateAppCfgField('deploymentMethod', $event)"
-          :mandatory="true"
+          :mandatory="usingWebadeConfig"
         >
           <v-radio
             label="Manual commit to Bitbucket (deploy with Jenkins)"
@@ -135,47 +160,32 @@
           <v-radio label="Direct Deploy" value="deploymentDirect"></v-radio>
         </v-radio-group>
 
-        <v-btn flat @click="appConfigStep = 2">Back</v-btn>
+        <v-btn flat @click="appConfigStep = 3">Back</v-btn>
 
         <v-dialog
           v-model="confirmationDialog"
           persistent
           max-width="1200"
-          v-if="userAppCfg.deploymentMethod === 'deploymentDirect'"
+          v-if="!usingWebadeConfig || userAppCfg.deploymentMethod === 'deploymentDirect'"
         >
           <template v-slot:activator="{ on }">
             <v-btn color="success" :disabled="!step2Valid" v-on="on" @click="getWebAdeConfig">Submit</v-btn>
           </template>
           <v-card>
             <v-card-title class="headline">Are you sure?</v-card-title>
-            <v-card-text>
+            <v-card-text v-if="usingWebadeConfig">
               <p>
                 This will overwrite any existing WebADE configuration for the
                 <strong>{{ userAppCfg.applicationAcronym }}</strong> application.
               </p>
               <p>The following shows the differences between the current configuration and the configuration that will be created. Are you sure you want to proceed?</p>
-
-              <v-layout wrap>
-                <v-flex xs6>
-                  <v-textarea
-                    rows="40"
-                    readonly
-                    label="Current WebADE Config"
-                    v-model="existingWebAdeConfig"
-                    class="jsonText"
-                  ></v-textarea>
-                </v-flex>
-                <v-flex xs6>
-                  <v-textarea
-                    rows="40"
-                    readonly
-                    label="New WebADE config"
-                    v-model="appConfigAsString"
-                    class="jsonText"
-                  ></v-textarea>
-                </v-flex>
-              </v-layout>
-              <pre id="display"></pre>
+              <pre id="webadeDiff"></pre>
+            </v-card-text>
+            <v-card-text v-if="!usingWebadeConfig">
+              <p>
+                This will create of replace a service client in the Common Services Keycloak realm for the
+                <strong>{{ userAppCfg.applicationAcronym }}</strong> application.
+              </p>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -349,6 +359,7 @@ export default {
         disabled: serv.disabled
       })),
       webadeEnvironments: ['INT', 'TEST', 'PROD'],
+      keycloakEnvironments: ['DEV', 'TEST', 'PROD'],
       userAppCfg: this.$store.state.configForm.userAppCfg,
       applicationAcronymRules: [
         v => !!v || 'Acronym is required',
@@ -391,6 +402,7 @@ export default {
       'ephemeralPasswordRSAKey',
       'configSubmissionSuccess',
       'configSubmissionError',
+      'usingWebadeConfig',
       'existingWebAdeConfig'
     ]),
     displayClient: function() {
@@ -405,6 +417,15 @@ export default {
     }
   },
   methods: {
+    async usingWebade(val) {
+      this.$store.commit('configForm/setUsingWebadeConfig', val);
+    },
+    async setWebade() {
+      this.usingWebade(true);
+    },
+    async setChes() {
+      this.usingWebade(false);
+    },
     async submitConfig() {
       this.generatedToken = '';
       window.scrollTo(0, 0);
@@ -450,6 +471,10 @@ export default {
       }
     },
     async getWebAdeConfig() {
+      if (!this.usingWebadeConfig) {
+        return;
+      }
+
       await this.$store.dispatch('configForm/getWebAdeConfig', {
         webAdeEnv: this.userAppCfg.webadeEnvironment,
         acronym: this.userAppCfg.applicationAcronym
@@ -458,19 +483,14 @@ export default {
           this.existingWebAdeConfig,
           this.appConfigAsString
         ),
-        display = document.getElementById('display'),
+        display = document.getElementById('webadeDiff'),
         fragment = document.createDocumentFragment();
 
       diff.forEach(function(part) {
-        console.log('added ' + part.added);
-        console.log('removed ' + part.removed);
         // green for additions, red for deletions
         // grey for common parts
         let color = part.added ? 'green' : part.removed ? 'red' : 'grey';
-        //console.log('color ' + color);
-        console.log('document ' + document);
         let span = document.createElement('span');
-        console.log('span ' + span);
         span.style.color = color;
         span.appendChild(document.createTextNode(part.value));
         fragment.appendChild(span);
@@ -510,3 +530,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.commonSvcBtn {
+  min-height: 100px;
+}
+</style>

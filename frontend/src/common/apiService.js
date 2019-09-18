@@ -116,11 +116,15 @@ Body: ${JSON.stringify(response.data, null, 2)}`;
 
   async getWebAdeConfig(webAdeEnv, acronym) {
     try {
-      console.log(webAdeEnv + ' ' + acronym); // eslint-disable-line no-console
       const url = `${ApiRoutes.WEBADECONFIG}/${webAdeEnv}/${acronym}`;
       const response = await apiAxios.get(url);
+
       return response.data;
     } catch (e) {
+      // If it's a 404, treat it as a blank config. Not found is valid, it means the acronym doesn't exist
+      if (e.response && e.response.status === 404) {
+        return '';
+      }
       console.log(`Failed to get webade app config for ${acronym} in ${webAdeEnv} - ${e}`); // eslint-disable-line no-console
       throw e;
     }

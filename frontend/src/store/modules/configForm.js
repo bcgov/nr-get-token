@@ -8,6 +8,7 @@ export default {
     configSubmissionError: '',
     configSubmissionInProgress: false,
     submitting: false,
+    usingWebadeConfig: false,
     userAppCfg: {
       applicationAcronym: '',
       applicationName: '',
@@ -25,6 +26,7 @@ export default {
     configSubmissionError: state => state.configSubmissionError,
     configSubmissionInProgress: state => state.configSubmissionInProgress,
     configFormSubmissionResult: state => state.configFormSubmissionResult,
+    usingWebadeConfig: state => state.usingWebadeConfig,
     ephemeralPasswordRSAKey: state => state.ephemeralPasswordRSAKey,
     existingWebAdeConfig: state => JSON.stringify(state.existingWebAdeConfig, null, 2),
     appConfigAsString: state => {
@@ -163,6 +165,9 @@ export default {
     },
     setEphemeralPasswordRSAKey: (state, ephemeralPasswordRSAKey) => {
       state.ephemeralPasswordRSAKey = ephemeralPasswordRSAKey;
+    },
+    setUsingWebadeConfig: (state, usingWebadeConfig) => {
+      state.usingWebadeConfig = usingWebadeConfig;
     },
     setExistingWebAdeConfig: (state, val) => {
       state.existingWebAdeConfig = val, null, 2;

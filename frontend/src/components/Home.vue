@@ -58,7 +58,14 @@
                   <v-spacer></v-spacer>
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
-                      <v-btn class="getHealthCheck" flat icon color="white" v-on="on" @click="getHealthCheck">
+                      <v-btn
+                        class="getHealthCheck"
+                        flat
+                        icon
+                        color="white"
+                        v-on="on"
+                        @click="getHealthCheck"
+                      >
                         <v-icon>cached</v-icon>
                       </v-btn>
                     </template>
@@ -94,7 +101,7 @@
             <v-flex xs12 md5>
               <ConfigForm></ConfigForm>
             </v-flex>
-            <v-flex xs12 md6 offset-md1>
+            <v-flex xs12 md6 offset-md1 v-if="usingWebadeConfig">
               <ConfigGeneratedJson></ConfigGeneratedJson>
             </v-flex>
           </v-layout>
@@ -140,7 +147,8 @@ export default {
     ...mapGetters('configForm', [
       'configSubmissionSuccess',
       'configSubmissionError',
-      'configSubmissionInProgress'
+      'configSubmissionInProgress',
+      'usingWebadeConfig'
     ])
   },
   methods: {
