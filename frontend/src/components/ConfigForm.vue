@@ -31,17 +31,15 @@
     </v-stepper-step>
 
     <v-stepper-content step="2">
-      <v-btn
-        color="primary"
-        @click="setChes(); appConfigStep = 3"
-        :disabled="!hasAcronyms"
-      ><v-icon left>email</v-icon> Common Hosted Email</v-btn>
-      <v-btn color="primary" @click="appConfigStep = 3" :disabled="true"><v-icon left>insert_drive_file</v-icon> Common Hosted Document</v-btn>
-      <v-btn
-        color="primary"
-        @click="setWebade(); appConfigStep = 3"
-        :disabled="!hasAcronyms"
-      ><v-icon left>save</v-icon> Legacy (WebADE)</v-btn>
+      <v-btn color="primary" @click="setChes(); appConfigStep = 3" :disabled="!hasAcronyms">
+        <v-icon left>email</v-icon>Common Hosted Email
+      </v-btn>
+      <v-btn color="primary" @click="appConfigStep = 3" :disabled="true">
+        <v-icon left>insert_drive_file</v-icon>Common Hosted Document
+      </v-btn>
+      <v-btn color="primary" @click="setWebade(); appConfigStep = 3" :disabled="!hasAcronyms">
+        <v-icon left>save</v-icon>Legacy (WebADE)
+      </v-btn>
     </v-stepper-content>
 
     <v-stepper-step :complete="appConfigStep > 3" step="3">
@@ -202,12 +200,18 @@
         <v-dialog v-model="passwordDialog" persistent max-width="700">
           <v-card>
             <v-card-title class="headline success" primary-title>
-              <v-icon class="mr-2">check_circle</v-icon>Application Configuration Updated
+              <v-icon class="mr-2">check_circle</v-icon>
+              <span v-if="usingWebadeConfig">Application Configuration Updated</span>
+              <span v-else>Keycloak Client Updated</span>
             </v-card-title>
             <v-card-text>
-              <p>
+              <p v-if="usingWebadeConfig">
                 Your application configuration for
                 <strong>{{userAppCfg.applicationAcronym}}</strong> has been updated in the WebADE system.
+              </p>
+              <p v-else>
+                Your service client for
+                <strong>{{userAppCfg.applicationAcronym}}</strong> has been updated in the Keycloak realm.
               </p>
               <h2>1. Service Client</h2>
               <p>A password for the service client created is shown below. Keep this password secure and do not lose it as you will be unable to fetch it again.</p>
@@ -257,7 +261,12 @@
 
               <div v-if="passwordDecrypted">
                 <h2>2. API Access Token</h2>
-                <p>You can fetch a token with this new service client to test out in the API store or through any REST client</p>
+                <p
+                  v-if="usingWebadeConfig"
+                >You can fetch a token with this new service client to test out in the API store or through any REST client</p>
+                <p
+                  v-else
+                >You can fetch a token with this new service client to test out a REST client (or use the username and password to fetch a token on-demand)</p>
                 <v-layout row wrap align-center>
                   <v-flex xs12 sm2>
                     <v-btn small color="primary" dark @click="getToken()">Get Token</v-btn>
@@ -286,19 +295,28 @@
                 <br />
 
                 <div v-if="userAppCfg.commonServices.length > 0">
-                  <h2>3. API Store Swagger</h2>
-                  <p>
+                  <h2 v-if="usingWebadeConfig">3. API Store Swagger</h2>
+                  <h2 v-else>3. API Documentation and Usage</h2>
+                  <p v-if="usingWebadeConfig">
                     This token can be used to test out the common services you have specified by trying them out in the API Store.
                     <br />Fill in the token above into the Access Token field at the top of the
                     <strong>API Console</strong> tab for the common service(s) linked below:
                   </p>
+                  <p v-else>
+                    This service client can be used to test out using a REST client. Example collections for Postman are provided.
+                    <br />Either fill in the token above as a bearer header in your REST call, or fetch a new token using the service client and password against the authorization endpoint.
+                  </p>
                   <ul>
-                    <li v-for="item in storeLinks" v-bind:key="item.name">
+                    <li v-for="item in apiLinks" v-bind:key="item.name">
                       {{item.name}}
-                      <v-btn small color="primary" dark :href="item.apiStoreLink" target="_blank">
+                      <v-btn small color="primary" dark :href="item.apiDocLink" target="_blank">
                         Try it out
                         <v-icon right dark>open_in_new</v-icon>
                       </v-btn>
+                      <br />Download Postman collection:
+                      <a href="/files/ches.postman_collection.json" target="_blank">
+                        <v-icon right>open_in_new</v-icon>
+                      </a>
                     </li>
                   </ul>
                 </div>
@@ -410,7 +428,7 @@ export default {
         ? this.configFormSubmissionResult.generatedServiceClient
         : '';
     },
-    storeLinks: function() {
+    apiLinks: function() {
       return this.userAppCfg.commonServices.map(item =>
         commonServiceList.find(service => service.abbreviation === item)
       );
@@ -425,6 +443,7 @@ export default {
     },
     async setChes() {
       this.usingWebade(false);
+      this.userAppCfg.commonServices.push('ches');
     },
     async submitConfig() {
       this.generatedToken = '';
