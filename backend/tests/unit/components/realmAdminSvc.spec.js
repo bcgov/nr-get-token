@@ -15,7 +15,7 @@ beforeEach(() => {
     endpoint: realmBaseUrl,
     username: clientId,
     password: clientSecret,
-    realm: realmId} = config.get('serviceClient.keyCloak.INT');
+    realm: realmId} = config.get('serviceClient.keyCloak.DEV');
   realmConfig = {realmId, realmBaseUrl, clientId, clientSecret};
 });
 

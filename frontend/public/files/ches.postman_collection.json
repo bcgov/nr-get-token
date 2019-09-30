@@ -1,0 +1,10 @@
+{
+	"info": {
+		"_postman_id": "76db54d3-dfad-4970-9be4-d6b628f37633",
+		"name": "Common Hosted Email",
+		"description": "The NR Common Services CHES (Common Hosted Email Service) API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [],
+	"protocolProfileBehavior": {}
+}
