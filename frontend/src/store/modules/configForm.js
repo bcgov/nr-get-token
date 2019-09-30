@@ -15,7 +15,7 @@ export default {
       applicationDescription: '',
       commonServices: [],
       deploymentMethod: '',
-      webadeEnvironment: ''
+      clientEnvironment: ''
     },
     configFormSubmissionResult: null,
     ephemeralPasswordRSAKey: null,
@@ -189,7 +189,7 @@ export default {
         passwordPublicKey: cryptico.publicKeyString(ephemeralRSAKey)
       };
       try {
-        const response = await ApiService.postConfigForm(body);
+        const response = await ApiService.postConfigForm(body, context.state.usingWebadeConfig);
         if (!response || !response.generatedPassword) {
           throw new Error('Config form POST response is blank or does not include the password');
         }
@@ -199,15 +199,17 @@ export default {
           generatedServiceClient: response.generatedServiceClient
         };
 
+        const msg = `SUCCESS, configuration for ${context.state.userAppCfg.applicationAcronym} updated in ${context.state.userAppCfg.clientEnvironment}.`;
         context.commit(
           'setConfigSubmissionSuccess',
-          `SUCCESS, application configuration for ${context.state.userAppCfg.applicationAcronym} updated in Integration.`
+          msg
         );
         context.commit('setConfigFormSubmissionResult', configFormSubmissionResult);
       } catch (error) {
         context.commit(
           'setConfigSubmissionError',
-          'An error occurred while attempting to update the application configuration in WebADE.'
+          context.state.usingWebadeConfig ? 'An error occurred while attempting to update the application configuration in WebADE.'
+            : 'An error occurred while attempting to create a service client in Keycloak.'
         );
       }
     },

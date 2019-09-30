@@ -14,15 +14,17 @@ const {
 const kcClientForm = require('express').Router();
 
 kcClientForm.post('/', [
-  body('serviceClientForm.applicationAcronym').isString(),
-  body('serviceClientForm.applicationName').isString(),
-  body('serviceClientForm.applicationDescription').isString(),
-  body('serviceClientForm.commonServices').isArray(),
-  body('serviceClientForm.keycloakEnvironment').isIn(['INT']),
+  body('configForm.applicationAcronym').isString(),
+  body('configForm.applicationName').isString(),
+  body('configForm.applicationDescription').isString(),
+  body('configForm.commonServices').isArray(),
+  body('configForm.clientEnvironment').isIn(['DEV', 'TEST', 'PROD']),
   body('passwordPublicKey').isString()
 ], async (req, res) => {
   // Validate for Bad Requests
   const errors = validationResult(req);
+  console.log(req.body);
+  console.log(errors);
   if (!errors.isEmpty()) {
     return res.status(400).json({
       errors: errors.array(),
@@ -31,12 +33,12 @@ kcClientForm.post('/', [
   }
 
   const {
-    serviceClientForm,
+    configForm,
     passwordPublicKey: publicKey
   } = req.body;
 
   try {
-    const realmKey = `serviceClient.keyCloak.${serviceClientForm.keycloakEnvironment}`;
+    const realmKey = `serviceClient.keyCloak.${configForm.clientEnvironment}`;
     const {
       endpoint: realmBaseUrl,
       username: clientId,
@@ -46,7 +48,7 @@ kcClientForm.post('/', [
     const realmSvc = new RealmAdminService({realmBaseUrl, clientId, clientSecret, realmId});
     const kcScMgr = new KeyCloakServiceClientManager(realmSvc);
 
-    const response = await kcScMgr.manage(serviceClientForm);
+    const response = await kcScMgr.manage(configForm);
     const encryptedPassword = cryptico.encrypt(response.generatedPassword, publicKey).cipher;
     return res.status(200).json({
       oidcTokenUrl: response.oidcTokenUrl,

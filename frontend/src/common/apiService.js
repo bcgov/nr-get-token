@@ -100,9 +100,10 @@ Body: ${JSON.stringify(response.data, null, 2)}`;
     }
   },
 
-  async postConfigForm(configFormBody) {
+  async postConfigForm(configFormBody, usingWebadeConfig) {
     try {
-      const response = await apiAxios.post(ApiRoutes.APPCONFIG, configFormBody, {
+      const route = usingWebadeConfig ? ApiRoutes.APPCONFIG : ApiRoutes.KCCONFIG;
+      const response = await apiAxios.post(route, configFormBody, {
         headers: {
           'Content-Type': 'application/json'
         }

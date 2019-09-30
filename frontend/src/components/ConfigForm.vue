@@ -135,8 +135,8 @@
               :mandatory="true"
               :items="usingWebadeConfig ? webadeEnvironments : keycloakEnvironments"
               label="Environment to Deploy to"
-              :value="userAppCfg.webadeEnvironment"
-              v-on:change="updateAppCfgField('webadeEnvironment', $event)"
+              :value="userAppCfg.clientEnvironment"
+              v-on:change="updateAppCfgField('clientEnvironment', $event)"
             ></v-select>
           </v-flex>
         </v-layout>
@@ -476,7 +476,7 @@ export default {
       }
 
       await this.$store.dispatch('configForm/getWebAdeConfig', {
-        webAdeEnv: this.userAppCfg.webadeEnvironment,
+        webAdeEnv: this.userAppCfg.clientEnvironment,
         acronym: this.userAppCfg.applicationAcronym
       });
       var diff = jsdiff.diffLines(

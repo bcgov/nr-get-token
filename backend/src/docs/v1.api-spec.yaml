@@ -291,7 +291,7 @@ components:
         - applicationDescription
         - commonServices
         - passwordPublicKey
-        - webadeEnvironment
+        - clientEnvironment
       properties:
         applicationAcronym:
           type: string
@@ -312,7 +312,7 @@ components:
           type: string
           description: A public key in PEM format without the headers
           example: MIGfMA0GCSqGS...
-        webadeEnvironment:
+        clientEnvironment:
           type: string
           description: Which WebADE environment to work on - one of INT, TEST or PROD
           example: INT
@@ -344,7 +344,7 @@ components:
         - applicationName
         - applicationDescription
         - commonServices
-        - keycloakEnvironment
+        - clientEnvironment
         - passwordPublicKey
       properties:
         applicationAcronym:
@@ -362,7 +362,7 @@ components:
             type: string
             example: CHES
           description: An array of applicationAcronyms
-        keycloakEnvironment:
+        clientEnvironment:
           type: string
           description: Which KeyCloak environment to work on - one of INT, TEST or PROD
           example: INT

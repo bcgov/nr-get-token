@@ -15,7 +15,7 @@ appConfig.post('/', [
   body('configForm.applicationName').isString(),
   body('configForm.applicationDescription').isString(),
   body('configForm.commonServices').isArray(),
-  body('configForm.webadeEnvironment').isIn(['INT', 'TEST', 'PROD']),
+  body('configForm.clientEnvironment').isIn(['INT', 'TEST', 'PROD']),
   body('passwordPublicKey').isString()
 ], async (req, res) => {
   // Validate for Bad Requests
