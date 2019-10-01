@@ -314,7 +314,10 @@
                         <v-icon right dark>open_in_new</v-icon>
                       </v-btn>
                       <br />Download Postman collection:
-                      <a href="/files/ches.postman_collection.json" target="_blank">
+                      <a
+                        href="/files/ches.postman_collection.json"
+                        target="_blank"
+                      >
                         <v-icon right>open_in_new</v-icon>
                       </a>
                     </li>

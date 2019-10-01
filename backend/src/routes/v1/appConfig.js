@@ -8,6 +8,7 @@ const appConfigComponent = require('../../components/appConfig');
 // submits a webade application configuration
 appConfig.get('/:webAdeEnv/:appAcronym', [
 ], async (req, res) => {
+  console.log(req.params.webAdeEnv + " " + req.params.appAcronym);
 
   // TODO: a lot of this role checking is duplicate, but as we will be moving acronym management to the DB soon all this will need to be refactored anyways
 

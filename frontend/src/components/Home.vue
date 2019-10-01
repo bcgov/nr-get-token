@@ -108,6 +108,18 @@
         </v-card>
       </v-flex>
     </v-layout>
+
+    <v-layout>
+      <v-flex xs12>
+        <v-card class="sectionCard">
+          <v-toolbar card color="grey lighten-3">
+            <v-toolbar-title>WebADE Application Configuration Viewer</v-toolbar-title>
+          </v-toolbar>
+          <WebAdeVisualizer></WebAdeVisualizer>
+        </v-card>
+      </v-flex>
+    </v-layout>
+
     <v-layout v-if="devMode">
       <v-flex xs12>
         <v-card class="sectionCard">
@@ -127,6 +139,7 @@ import ApiCheck from './ApiCheck';
 import ConfigForm from './ConfigForm';
 import ConfigGeneratedJson from './ConfigGeneratedJson';
 import HealthCheck from './HealthCheck';
+import WebAdeVisualizer from './WebAdeVisualizer';
 
 export default {
   name: 'home',
@@ -134,7 +147,8 @@ export default {
     ConfigForm,
     ConfigGeneratedJson,
     ApiCheck,
-    HealthCheck
+    HealthCheck,
+    WebAdeVisualizer
   },
   data() {
     return {

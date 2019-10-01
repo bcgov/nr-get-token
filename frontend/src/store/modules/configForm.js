@@ -7,7 +7,6 @@ export default {
     configSubmissionSuccess: '',
     configSubmissionError: '',
     configSubmissionInProgress: false,
-    submitting: false,
     usingWebadeConfig: false,
     userAppCfg: {
       applicationAcronym: '',
