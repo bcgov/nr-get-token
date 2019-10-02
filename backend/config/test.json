@@ -29,7 +29,7 @@
       "password": "password"
     },
     "keyCloak": {
-      "INT": {
+      "DEV": {
         "username": "username",
         "password": "password"
       }

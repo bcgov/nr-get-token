@@ -100,9 +100,10 @@ Body: ${JSON.stringify(response.data, null, 2)}`;
     }
   },
 
-  async postConfigForm(configFormBody) {
+  async postConfigForm(configFormBody, usingWebadeConfig) {
     try {
-      const response = await apiAxios.post(ApiRoutes.APPCONFIG, configFormBody, {
+      const route = usingWebadeConfig ? ApiRoutes.APPCONFIG : ApiRoutes.KCCONFIG;
+      const response = await apiAxios.post(route, configFormBody, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -110,6 +111,22 @@ Body: ${JSON.stringify(response.data, null, 2)}`;
       return response.data;
     } catch (e) {
       console.log(`Failed to post app config form - ${e}`); // eslint-disable-line no-console
+      throw e;
+    }
+  },
+
+  async getWebAdeConfig(webAdeEnv, acronym) {
+    try {
+      const url = `${ApiRoutes.WEBADECONFIG}/${webAdeEnv}/${acronym}`;
+      const response = await apiAxios.get(url);
+
+      return response.data;
+    } catch (e) {
+      // If it's a 404, treat it as a blank config. Not found is valid, it means the acronym doesn't exist
+      if (e.response && e.response.status === 404) {
+        return '';
+      }
+      console.log(`Failed to get webade app config for ${acronym} in ${webAdeEnv} - ${e}`); // eslint-disable-line no-console
       throw e;
     }
   }

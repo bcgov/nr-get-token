@@ -39,7 +39,7 @@
       "password": "SC_MSSC_PASSWORD"
     },
     "keyCloak": {
-      "INT": {
+      "DEV": {
         "endpoint": "SC_KC_INT_ENDPOINT",
         "username": "SC_KC_INT_USERNAME",
         "password": "SC_KC_INT_PASSWORD",

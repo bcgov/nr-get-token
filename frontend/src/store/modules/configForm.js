@@ -7,24 +7,27 @@ export default {
     configSubmissionSuccess: '',
     configSubmissionError: '',
     configSubmissionInProgress: false,
-    submitting: false,
+    usingWebadeConfig: false,
     userAppCfg: {
       applicationAcronym: '',
       applicationName: '',
       applicationDescription: '',
       commonServices: [],
       deploymentMethod: '',
-      webadeEnvironment: ''
+      clientEnvironment: ''
     },
     configFormSubmissionResult: null,
-    ephemeralPasswordRSAKey: null
+    ephemeralPasswordRSAKey: null,
+    existingWebAdeConfig: ''
   },
   getters: {
     configSubmissionSuccess: state => state.configSubmissionSuccess,
     configSubmissionError: state => state.configSubmissionError,
     configSubmissionInProgress: state => state.configSubmissionInProgress,
     configFormSubmissionResult: state => state.configFormSubmissionResult,
+    usingWebadeConfig: state => state.usingWebadeConfig,
     ephemeralPasswordRSAKey: state => state.ephemeralPasswordRSAKey,
+    existingWebAdeConfig: state => JSON.stringify(state.existingWebAdeConfig, null, 2),
     appConfigAsString: state => {
       // these are the hardcoded WebADE cfg values users do not enter
       const defaultAppCfg = {
@@ -161,7 +164,13 @@ export default {
     },
     setEphemeralPasswordRSAKey: (state, ephemeralPasswordRSAKey) => {
       state.ephemeralPasswordRSAKey = ephemeralPasswordRSAKey;
-    }
+    },
+    setUsingWebadeConfig: (state, usingWebadeConfig) => {
+      state.usingWebadeConfig = usingWebadeConfig;
+    },
+    setExistingWebAdeConfig: (state, val) => {
+      state.existingWebAdeConfig = val, null, 2;
+    },
   },
   actions: {
     async submitConfigForm(context) {
@@ -179,7 +188,7 @@ export default {
         passwordPublicKey: cryptico.publicKeyString(ephemeralRSAKey)
       };
       try {
-        const response = await ApiService.postConfigForm(body);
+        const response = await ApiService.postConfigForm(body, context.state.usingWebadeConfig);
         if (!response || !response.generatedPassword) {
           throw new Error('Config form POST response is blank or does not include the password');
         }
@@ -189,16 +198,28 @@ export default {
           generatedServiceClient: response.generatedServiceClient
         };
 
+        const msg = `SUCCESS, configuration for ${context.state.userAppCfg.applicationAcronym} updated in ${context.state.userAppCfg.clientEnvironment}.`;
         context.commit(
           'setConfigSubmissionSuccess',
-          `SUCCESS, application configuration for ${context.state.userAppCfg.applicationAcronym} updated in Integration.`
+          msg
         );
         context.commit('setConfigFormSubmissionResult', configFormSubmissionResult);
       } catch (error) {
         context.commit(
           'setConfigSubmissionError',
-          'An error occurred while attempting to update the application configuration in WebADE.'
+          context.state.usingWebadeConfig ? 'An error occurred while attempting to update the application configuration in WebADE.'
+            : 'An error occurred while attempting to create a service client in Keycloak.'
         );
+      }
+    },
+    async getWebAdeConfig(context, payload) {
+      try {
+        const response = await ApiService.getWebAdeConfig(payload.webAdeEnv, payload.acronym);
+        // remove the 'links' item
+        delete response.links;
+        context.commit('setExistingWebAdeConfig', response);
+      } catch (error) {
+        context.commit('setExistingWebAdeConfig', `An error occurred getting the existing WebADE configuration for ${payload.acronym} in ${payload.webAdeEnv}`);
       }
     }
   }

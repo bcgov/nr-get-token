@@ -26,7 +26,7 @@ describe('buildWebAdeCfg', () => {
       applicationDescription: 'description',
       commonServices: ['cmsg'],
       deploymentMethod: 'deploymentDirect',
-      webadeEnvironment: 'INT'
+      clientEnvironment: 'INT'
     }, pubKeyString);
 
     expect(result).toBeTruthy();
@@ -46,7 +46,7 @@ describe('buildWebAdeCfg', () => {
       applicationDescription: 'description',
       commonServices: [],
       deploymentMethod: 'deploymentDirect',
-      webadeEnvironment: 'INT'
+      clientEnvironment: 'INT'
     }, pubKeyString);
 
     expect(result).toBeTruthy();
@@ -80,7 +80,7 @@ describe('postAppConfig', () => {
     });
 
     await expect(appConfig.postAppConfig({
-      webadeEnvironment: 'INT'
+      clientEnvironment: 'INT'
     }, pubKeyString)).rejects.toThrowError('Unable to acquire access_token');
     expect(spy).toHaveBeenCalledTimes(0);
     expect(spyLifecycle).not.toHaveBeenCalled();
@@ -105,7 +105,7 @@ describe('postAppConfig', () => {
     mockAxios.onPost(url).reply(500);
 
     await expect(appConfig.postAppConfig({
-      webadeEnvironment: 'INT'
+      clientEnvironment: 'INT'
     }, pubKeyString)).rejects.toThrowError(/^WebADE \/applicationConfigurations returned an error./);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(url, generatedConfig.webAdeCfg, {
@@ -145,7 +145,7 @@ describe('postAppConfig', () => {
       applicationDescription: 'description',
       commonServices: ['cmsg'],
       deploymentMethod: 'deploymentDirect',
-      webadeEnvironment: webadeEnv
+      clientEnvironment: webadeEnv
     }, pubKeyString, userId);
 
     expect(result).toBeTruthy();

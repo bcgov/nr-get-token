@@ -4,7 +4,9 @@ const apiRoot = `${baseRoot}/v1`;
 export const ApiRoutes = Object.freeze({
   APPCONFIG: `${apiRoot}/appConfigForm`,
   DOCS: `${apiRoot}/docs`,
-  HEALTH: `${apiRoot}/checks/status`
+  HEALTH: `${apiRoot}/checks/status`,
+  KCCONFIG: `${apiRoot}/kcClientForm`,
+  WEBADECONFIG: `${apiRoot}/appConfig`
 });
 
 const authRoot = `${baseRoot}/auth`;

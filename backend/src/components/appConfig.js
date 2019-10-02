@@ -114,7 +114,7 @@ const appConfig = {
   },
 
   postAppConfig: async (configForm, publicKey, userId) => {
-    const webadeEnv = configForm.webadeEnvironment;
+    const webadeEnv = configForm.clientEnvironment;
     const endpoint = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.endpoint`);
     const username = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.username`);
     const password = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.password`);

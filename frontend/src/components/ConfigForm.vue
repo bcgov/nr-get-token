@@ -7,7 +7,7 @@
 
     <v-stepper-content step="1">
       <div v-if="hasAcronyms">
-        You are authorized for these acronyms:
+        You are authorized for these applications:
         <ul>
           <li v-for="(acronym, index) in acronyms" :key="index">{{ acronym }}</li>
         </ul>
@@ -26,11 +26,28 @@
     </v-stepper-content>
 
     <v-stepper-step :complete="appConfigStep > 2" step="2">
+      Select Common Service(s)
+      <small>Select type of common service to onboard to</small>
+    </v-stepper-step>
+
+    <v-stepper-content step="2">
+      <v-btn color="primary" @click="setChes(); appConfigStep = 3" :disabled="!hasAcronyms">
+        <v-icon left>email</v-icon>Common Hosted Email
+      </v-btn>
+      <v-btn color="primary" @click="appConfigStep = 3" :disabled="true">
+        <v-icon left>insert_drive_file</v-icon>Common Hosted Document
+      </v-btn>
+      <v-btn color="primary" @click="setWebade(); appConfigStep = 3" :disabled="!hasAcronyms">
+        <v-icon left>save</v-icon>Legacy (WebADE)
+      </v-btn>
+    </v-stepper-content>
+
+    <v-stepper-step :complete="appConfigStep > 3" step="3">
       Set up Application
       <small>Pick application and service client details</small>
     </v-stepper-step>
 
-    <v-stepper-content step="2">
+    <v-stepper-content step="3">
       <v-form v-model="step1Valid">
         <v-layout row wrap>
           <v-flex xs12 md7>
@@ -84,43 +101,49 @@
           :counter="fieldValidations.DESCRIPTION_MAX_LENGTH"
           :rules="applicationDescriptionRules"
         ></v-text-field>
-        <v-select
-          :items="commonServices"
-          label="Common Service(s) Required"
-          multiple
-          chips
-          deletable-chips
-          :value="userAppCfg.commonServices"
-          v-on:change="updateAppCfgField('commonServices', $event)"
-        ></v-select>
+        <div v-if="usingWebadeConfig">
+          <v-select
+            :items="commonServices"
+            label="Common Service(s) Required"
+            multiple
+            chips
+            deletable-chips
+            :value="userAppCfg.commonServices"
+            v-on:change="updateAppCfgField('commonServices', $event)"
+          ></v-select>
+        </div>
 
-        <v-btn flat @click="appConfigStep = 1">Back</v-btn>
-        <v-btn color="primary" @click="appConfigStep = 3" :disabled="!step1Valid">Next</v-btn>
+        <v-btn flat @click="appConfigStep = 2">Back</v-btn>
+        <v-btn color="primary" @click="appConfigStep = 4" :disabled="!step1Valid">Next</v-btn>
       </v-form>
     </v-stepper-content>
 
-    <v-stepper-step :complete="appConfigStep > 3" step="3">
+    <v-stepper-step :complete="appConfigStep > 4" step="4">
       Deployment
-      <small>Choose method of deploying WebADE config</small>
+      <small v-if="usingWebadeConfig">Choose method of deploying WebADE config</small>
+      <small v-if="!usingWebadeConfig">Choose service client deployment details</small>
     </v-stepper-step>
 
-    <v-stepper-content step="3">
+    <v-stepper-content step="4">
       <v-form v-model="step2Valid">
         <v-layout row wrap>
           <v-flex xs12 md7>
             <v-select
-              :items="webadeEnvironments"
+              required
+              :mandatory="true"
+              :items="usingWebadeConfig ? webadeEnvironments : keycloakEnvironments"
               label="Environment to Deploy to"
-              :value="userAppCfg.webadeEnvironment"
-              v-on:change="updateAppCfgField('webadeEnvironment', $event)"
+              :value="userAppCfg.clientEnvironment"
+              v-on:change="updateAppCfgField('clientEnvironment', $event)"
             ></v-select>
           </v-flex>
         </v-layout>
 
         <v-radio-group
+          v-if="usingWebadeConfig"
           :value="userAppCfg.deploymentMethod"
           v-on:change="updateAppCfgField('deploymentMethod', $event)"
-          :mandatory="true"
+          :mandatory="usingWebadeConfig"
         >
           <v-radio
             label="Manual commit to Bitbucket (deploy with Jenkins)"
@@ -135,22 +158,32 @@
           <v-radio label="Direct Deploy" value="deploymentDirect"></v-radio>
         </v-radio-group>
 
-        <v-btn flat @click="appConfigStep = 2">Back</v-btn>
+        <v-btn flat @click="appConfigStep = 3">Back</v-btn>
 
         <v-dialog
           v-model="confirmationDialog"
           persistent
-          max-width="400"
-          v-if="userAppCfg.deploymentMethod === 'deploymentDirect'"
+          max-width="1200"
+          v-if="!usingWebadeConfig || userAppCfg.deploymentMethod === 'deploymentDirect'"
         >
           <template v-slot:activator="{ on }">
-            <v-btn color="success" :disabled="!step2Valid" v-on="on">Submit</v-btn>
+            <v-btn color="success" :disabled="!step2Valid" v-on="on" @click="getWebAdeConfig">Submit</v-btn>
           </template>
           <v-card>
             <v-card-title class="headline">Are you sure?</v-card-title>
-            <v-card-text>
-              This will overwrite any existing WebADE configuration for the
-              <strong>{{ userAppCfg.applicationAcronym }}</strong> application. Are you sure you want to proceed?
+            <v-card-text v-if="usingWebadeConfig">
+              <p>
+                This will overwrite any existing WebADE configuration for the
+                <strong>{{ userAppCfg.applicationAcronym }}</strong> application.
+              </p>
+              <p>The following shows the differences between the current configuration and the configuration that will be created. Are you sure you want to proceed?</p>
+              <pre id="webadeDiff"></pre>
+            </v-card-text>
+            <v-card-text v-if="!usingWebadeConfig">
+              <p>
+                This will create or replace a service client in the Common Services Keycloak realm for the
+                <strong>{{ userAppCfg.applicationAcronym }}</strong> application.
+              </p>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -167,12 +200,18 @@
         <v-dialog v-model="passwordDialog" persistent max-width="700">
           <v-card>
             <v-card-title class="headline success" primary-title>
-              <v-icon class="mr-2">check_circle</v-icon>Application Configuration Updated
+              <v-icon class="mr-2">check_circle</v-icon>
+              <span v-if="usingWebadeConfig">Application Configuration Updated</span>
+              <span v-else>Keycloak Client Updated</span>
             </v-card-title>
             <v-card-text>
-              <p>
+              <p v-if="usingWebadeConfig">
                 Your application configuration for
                 <strong>{{userAppCfg.applicationAcronym}}</strong> has been updated in the WebADE system.
+              </p>
+              <p v-else>
+                Your service client for
+                <strong>{{userAppCfg.applicationAcronym}}</strong> has been updated in the Keycloak realm.
               </p>
               <h2>1. Service Client</h2>
               <p>A password for the service client created is shown below. Keep this password secure and do not lose it as you will be unable to fetch it again.</p>
@@ -222,7 +261,12 @@
 
               <div v-if="passwordDecrypted">
                 <h2>2. API Access Token</h2>
-                <p>You can fetch a token with this new service client to test out in the API store or through any REST client</p>
+                <p
+                  v-if="usingWebadeConfig"
+                >You can fetch a token with this new service client to test out in the API store or through any REST client</p>
+                <p
+                  v-else
+                >You can fetch a token with this new service client to test out a REST client (or use the username and password to fetch a token on-demand)</p>
                 <v-layout row wrap align-center>
                   <v-flex xs12 sm2>
                     <v-btn small color="primary" dark @click="getToken()">Get Token</v-btn>
@@ -248,22 +292,34 @@
                     </v-tooltip>
                   </v-flex>
                 </v-layout>
-                <br>
+                <br />
 
                 <div v-if="userAppCfg.commonServices.length > 0">
-                  <h2>3. API Store Swagger</h2>
-                  <p>
+                  <h2 v-if="usingWebadeConfig">3. API Store Swagger</h2>
+                  <h2 v-else>3. API Documentation and Usage</h2>
+                  <p v-if="usingWebadeConfig">
                     This token can be used to test out the common services you have specified by trying them out in the API Store.
-                    <br>Fill in the token above into the Access Token field at the top of the
+                    <br />Fill in the token above into the Access Token field at the top of the
                     <strong>API Console</strong> tab for the common service(s) linked below:
                   </p>
+                  <p v-else>
+                    This service client can be used to test out using a REST client. Example collections for Postman are provided.
+                    <br />Either fill in the token above as a bearer header in your REST call, or fetch a new token using the service client and password against the authorization endpoint.
+                  </p>
                   <ul>
-                    <li v-for="item in storeLinks" v-bind:key="item.name">
+                    <li v-for="item in apiLinks" v-bind:key="item.name">
                       {{item.name}}
-                      <v-btn small color="primary" dark :href="item.apiStoreLink" target="_blank">
+                      <v-btn small color="primary" dark :href="item.apiDocLink" target="_blank">
                         Try it out
                         <v-icon right dark>open_in_new</v-icon>
                       </v-btn>
+                      <br />Download Postman collection:
+                      <a
+                        href="/files/ches.postman_collection.json"
+                        target="_blank"
+                      >
+                        <v-icon right>open_in_new</v-icon>
+                      </a>
                     </li>
                   </ul>
                 </div>
@@ -299,6 +355,7 @@ import cryptico from 'cryptico-js';
 import Vue from 'vue';
 import VueClipboard from 'vue-clipboard2';
 import { mapGetters } from 'vuex';
+var jsdiff = require('diff');
 
 VueClipboard.config.autoSetContainer = true;
 Vue.use(VueClipboard);
@@ -316,20 +373,21 @@ export default {
       appConfigStep: 1,
       step1Valid: false,
       step2Valid: false,
-      commonServices: commonServiceList.map(serv => ({
-        text: serv.name,
-        value: serv.abbreviation,
-        disabled: serv.disabled
-      })),
+      commonServices: commonServiceList
+        .filter(serv => serv.type === 'webade')
+        .map(serv => ({
+          text: serv.name,
+          value: serv.abbreviation,
+          disabled: serv.disabled
+        })),
       webadeEnvironments: ['INT', 'TEST', 'PROD'],
+      keycloakEnvironments: ['DEV', 'TEST', 'PROD'],
       userAppCfg: this.$store.state.configForm.userAppCfg,
       applicationAcronymRules: [
         v => !!v || 'Acronym is required',
         v =>
           v.length <= FieldValidations.ACRONYM_MAX_LENGTH ||
-          `Acronym must be ${
-            FieldValidations.ACRONYM_MAX_LENGTH
-          } characters or less`,
+          `Acronym must be ${FieldValidations.ACRONYM_MAX_LENGTH} characters or less`,
         v =>
           /^(?:[A-Z]{2,}[_]?)+[A-Z]{1,}$/g.test(v) ||
           'Incorrect format. Hover over ? for details.',
@@ -347,9 +405,7 @@ export default {
         v => !!v || 'Description is required',
         v =>
           v.length <= FieldValidations.DESCRIPTION_MAX_LENGTH ||
-          `Description must be ${
-            FieldValidations.DESCRIPTION_MAX_LENGTH
-          } characters or less`
+          `Description must be ${FieldValidations.DESCRIPTION_MAX_LENGTH} characters or less`
       ],
       snackbar: {
         on: false,
@@ -367,20 +423,32 @@ export default {
       'configFormSubmissionResult',
       'ephemeralPasswordRSAKey',
       'configSubmissionSuccess',
-      'configSubmissionError'
+      'configSubmissionError',
+      'usingWebadeConfig',
+      'existingWebAdeConfig'
     ]),
     displayClient: function() {
       return this.configFormSubmissionResult
         ? this.configFormSubmissionResult.generatedServiceClient
         : '';
     },
-    storeLinks: function() {
+    apiLinks: function() {
       return this.userAppCfg.commonServices.map(item =>
         commonServiceList.find(service => service.abbreviation === item)
       );
     }
   },
   methods: {
+    async usingWebade(val) {
+      this.$store.commit('configForm/setUsingWebadeConfig', val);
+    },
+    async setWebade() {
+      this.usingWebade(true);
+    },
+    async setChes() {
+      this.usingWebade(false);
+      this.userAppCfg.commonServices.push('ches');
+    },
     async submitConfig() {
       this.generatedToken = '';
       window.scrollTo(0, 0);
@@ -425,6 +493,34 @@ export default {
           'Error fetching token. The service client can take a moment to register, you can try again in a few seconds.';
       }
     },
+    async getWebAdeConfig() {
+      if (!this.usingWebadeConfig) {
+        return;
+      }
+
+      await this.$store.dispatch('configForm/getWebAdeConfig', {
+        webAdeEnv: this.userAppCfg.clientEnvironment,
+        acronym: this.userAppCfg.applicationAcronym
+      });
+      let diff = jsdiff.diffLines(
+          this.existingWebAdeConfig,
+          this.appConfigAsString
+        ),
+        display = document.getElementById('webadeDiff'),
+        fragment = document.createDocumentFragment();
+
+      diff.forEach((part) => {
+        // green for additions, red for deletions
+        // grey for common parts
+        let color = part.added ? 'green' : part.removed ? 'red' : 'grey';
+        let span = document.createElement('span');
+        span.style.color = color;
+        span.appendChild(document.createTextNode(part.value));
+        fragment.appendChild(span);
+      });
+
+      display.appendChild(fragment);
+    },
     updateAppCfgField(field, value) {
       this.$store.commit('configForm/updateUserAppCfg', {
         [field]: value
@@ -457,3 +553,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.commonSvcBtn {
+  min-height: 100px;
+}
+</style>
