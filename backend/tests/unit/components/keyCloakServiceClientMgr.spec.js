@@ -18,13 +18,13 @@ jest.mock('../../../src/components/realmAdminSvc', () => {
     return {
       tokenUrl: 'https://tokenurl',
       getClients: () => { return []; },
-      createClient: () => { return {id: '1', clientId: 'generatedserviceclientid'}; },
+      createClient: () => { return { id: '1', clientId: 'generatedserviceclientid' }; },
       getClientRoles: () => { return []; },
       addClientRole: () => { return []; },
-      setRoleComposites: () => {},
-      getServiceAccountUser: () => { return {id: '2', 'clientId': '1'}; },
-      addServiceAccountRole: () => {},
-      getClientSecret: () => { return {value: 'itsasecret'}; }
+      setRoleComposites: () => { },
+      getServiceAccountUser: () => { return { id: '2', 'clientId': '1' }; },
+      addServiceAccountRole: () => { },
+      getClientSecret: () => { return { value: 'itsasecret' }; }
     };
   });
 });
@@ -34,10 +34,11 @@ beforeEach(() => {
     endpoint: realmBaseUrl,
     username: clientId,
     password: clientSecret,
-    realm: realmId} = config.get('serviceClient.keyCloak.DEV');
-  realmConfig = {realmId, realmBaseUrl, clientId, clientSecret};
+    realm: realmId
+  } = config.get('serviceClient.keyCloak.DEV');
+  realmConfig = { realmId, realmBaseUrl, clientId, clientSecret };
   realmAdminService = new RealmAdminService(realmConfig);
-  form = {applicationAcronym: 'ABC', applicationName: 'Alphabet', applicationDescription: 'Easy as 1,2,3.', commonServices: ['cmn-srv-ex-a']};
+  form = { applicationAcronym: 'ABC', applicationName: 'Alphabet', applicationDescription: 'Easy as 1,2,3.', commonServices: ['cmn-srv-ex-a'] };
 });
 
 describe('KeyCloakServiceClientManager create', () => {

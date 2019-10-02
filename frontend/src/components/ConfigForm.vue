@@ -181,7 +181,7 @@
             </v-card-text>
             <v-card-text v-if="!usingWebadeConfig">
               <p>
-                This will create of replace a service client in the Common Services Keycloak realm for the
+                This will create or replace a service client in the Common Services Keycloak realm for the
                 <strong>{{ userAppCfg.applicationAcronym }}</strong> application.
               </p>
             </v-card-text>
@@ -373,11 +373,13 @@ export default {
       appConfigStep: 1,
       step1Valid: false,
       step2Valid: false,
-      commonServices: commonServiceList.map(serv => ({
-        text: serv.name,
-        value: serv.abbreviation,
-        disabled: serv.disabled
-      })),
+      commonServices: commonServiceList
+        .filter(serv => serv.type === 'webade')
+        .map(serv => ({
+          text: serv.name,
+          value: serv.abbreviation,
+          disabled: serv.disabled
+        })),
       webadeEnvironments: ['INT', 'TEST', 'PROD'],
       keycloakEnvironments: ['DEV', 'TEST', 'PROD'],
       userAppCfg: this.$store.state.configForm.userAppCfg,
@@ -500,14 +502,14 @@ export default {
         webAdeEnv: this.userAppCfg.clientEnvironment,
         acronym: this.userAppCfg.applicationAcronym
       });
-      var diff = jsdiff.diffLines(
+      let diff = jsdiff.diffLines(
           this.existingWebAdeConfig,
           this.appConfigAsString
         ),
         display = document.getElementById('webadeDiff'),
         fragment = document.createDocumentFragment();
 
-      diff.forEach(function(part) {
+      diff.forEach((part) => {
         // green for additions, red for deletions
         // grey for common parts
         let color = part.added ? 'green' : part.removed ? 'red' : 'grey';

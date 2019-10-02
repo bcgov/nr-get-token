@@ -289,9 +289,9 @@ components:
         - applicationAcronym
         - applicationName
         - applicationDescription
+        - clientEnvironment
         - commonServices
         - passwordPublicKey
-        - clientEnvironment
       properties:
         applicationAcronym:
           type: string
