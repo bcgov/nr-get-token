@@ -355,7 +355,6 @@ import cryptico from 'cryptico-js';
 import Vue from 'vue';
 import VueClipboard from 'vue-clipboard2';
 import { mapGetters } from 'vuex';
-require('colors');
 var jsdiff = require('diff');
 
 VueClipboard.config.autoSetContainer = true;
