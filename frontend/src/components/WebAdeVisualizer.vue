@@ -1,9 +1,15 @@
 <template>
   <v-container>
     <v-progress-linear v-if="searching" :indeterminate="true"></v-progress-linear>
-    <p>
-      You must be authorized for an application acronym to view its WebADE configuration details.
-      <br />You can apply for access to an acronym by contacting the GETOK team. (
+    <p
+      v-if="!hasReadAllWebade"
+    >You must be authorized for an application acronym to view its WebADE configuration details.</p>
+    <p v-if="hasReadAllWebade">
+      <v-icon>info</v-icon>You have been authorized to use the Configuration Viewer for all WebADE application acronyms.
+      Client passwords, or preferences that are marked as secret are not returned by the WebADE REST API.
+    </p>
+    <p v-if="!hasReadAllWebade">
+      You can apply for access to an acronym by contacting the GETOK team. (
       <a
         href="mailto:NR.CommonServiceShowcase@gov.bc.ca?subject=GETOK Access to <acronym> - <idir>"
       >
@@ -15,12 +21,22 @@
         <v-layout>
           <v-flex xs12 md2>
             <v-text-field
+              v-if="hasReadAllWebade"
               v-model="acronym"
               :rules="acronymRules"
               label="Application Acronym"
               required
               :mandatory="true"
             ></v-text-field>
+
+            <v-select
+              v-if="!hasReadAllWebade"
+              v-model="acronym"
+              :items="acronyms"
+              label="Application Acronym"
+              required
+              :mandatory="true"
+            ></v-select>
           </v-flex>
 
           <v-flex xs12 md2>
@@ -67,7 +83,14 @@ export default {
       environmentRules: [v => !!v || 'Environment is required']
     };
   },
-  computed: mapGetters('webadeVisualizer', ['searching', 'webAdeConfig', 'resultFound']),
+  computed: {
+    ...mapGetters('auth', ['acronyms', 'hasAcronyms', 'hasReadAllWebade']),
+    ...mapGetters('webadeVisualizer', [
+      'searching',
+      'webAdeConfig',
+      'resultFound'
+    ])
+  },
   methods: {
     async search() {
       if (this.$refs.form.validate()) {

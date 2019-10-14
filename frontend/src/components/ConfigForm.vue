@@ -7,7 +7,7 @@
 
     <v-stepper-content step="1">
       <div v-if="hasAcronyms">
-        You are authorized for these applications:
+        You are authorized to submit configurations for these applications:
         <ul>
           <li v-for="(acronym, index) in acronyms" :key="index">{{ acronym }}</li>
         </ul>
