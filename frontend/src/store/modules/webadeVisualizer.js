@@ -3,21 +3,21 @@ import ApiService from '@/common/apiService';
 export default {
   namespaced: true,
   state: {
+    errorMessage: '',
     searching: false,
-    resultFound: false,
     webAdeConfig: ''
   },
   getters: {
+    errorMessage: state => state.errorMessage,
     searching: state => state.searching,
-    resultFound: state => state.resultFound,
-    webAdeConfig: state => JSON.stringify(state.webAdeConfig, null, 2)
+    webAdeConfig: state => state.webAdeConfig ? JSON.stringify(state.webAdeConfig, null, 2) : ''
   },
   mutations: {
+    setErrorMessage: (state, errorMessage) => {
+      state.errorMessage = errorMessage;
+    },
     setSearching: (state, searching) => {
       state.searching = searching;
-    },
-    setResultFound: (state, resultFound) => {
-      state.resultFound = resultFound;
     },
     setWebAdeConfig: (state, cfg) => {
       state.webAdeConfig = cfg;
@@ -26,11 +26,16 @@ export default {
   actions: {
     async getWebAdeConfig(context, payload) {
       try {
+        context.commit('setErrorMessage', '');
+        context.commit('setWebAdeConfig', '');
         const response = await ApiService.getWebAdeConfig(payload.webAdeEnv, payload.acronym);
-        context.commit('setResultFound', true);
-        context.commit('setWebAdeConfig', response);
+        if (response) {
+          context.commit('setWebAdeConfig', response);
+        } else {
+          context.commit('setErrorMessage', `Could not find a WebADE configuration for the acronym ${payload.acronym} in ${payload.webAdeEnv}`);
+        }
       } catch (error) {
-        context.commit('setWebAdeConfig', `An error occurred getting the WebADE configuration for ${payload.acronym} in ${payload.webAdeEnv}`);
+        context.commit('setErrorMessage', `An error occurred getting the WebADE configuration for ${payload.acronym} in ${payload.webAdeEnv}`);
       }
     }
   }

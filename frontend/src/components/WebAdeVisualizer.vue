@@ -57,7 +57,11 @@
       </v-container>
     </v-form>
 
-    <div v-if="resultFound">
+    <div v-if="errorMessage">
+      <v-alert :value="true" type="error">{{errorMessage}}</v-alert>
+    </div>
+
+    <div v-if="webAdeConfig">
       <v-textarea
         auto-grow
         readonly
@@ -86,16 +90,15 @@ export default {
   computed: {
     ...mapGetters('auth', ['acronyms', 'hasAcronyms', 'hasReadAllWebade']),
     ...mapGetters('webadeVisualizer', [
+      'errorMessage',
       'searching',
-      'webAdeConfig',
-      'resultFound'
+      'webAdeConfig'
     ])
   },
   methods: {
     async search() {
       if (this.$refs.form.validate()) {
         this.$store.commit('webadeVisualizer/setSearching', true);
-        this.$store.commit('setResultFound', false);
 
         await this.$store.dispatch('webadeVisualizer/getWebAdeConfig', {
           webAdeEnv: this.environment,
