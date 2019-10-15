@@ -22,7 +22,7 @@ export default Object.freeze([{
   disabled: true
 },
 {
-  abbreviation: 'ches',
+  abbreviation: 'CHES',
   type: 'keycloak',
   shortName: 'common-hosted-email',
   name: 'Common Hosted Email Service',

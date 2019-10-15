@@ -447,7 +447,7 @@ export default {
     },
     async setChes() {
       this.usingWebade(false);
-      this.userAppCfg.commonServices.push('ches');
+      this.userAppCfg.commonServices.push('CHES');
     },
     async submitConfig() {
       this.generatedToken = '';
