@@ -21,8 +21,8 @@ describe('checks.js', () => {
   });
 
   it('updates "apiCheckResponse" value when "setApiCheckResponse" is commited', () => {
-    expect(store.state.healthCheck).toBe(null);
-    store.commit('setHealthCheck', 'test');
-    expect(store.state.healthCheck).toBe('test');
+    expect(store.state.apiCheckResponse).toBe('');
+    store.commit('setApiCheckResponse', 'test');
+    expect(store.state.apiCheckResponse).toBe('test');
   });
 });

@@ -74,7 +74,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 
 export default {
   data: function() {
@@ -86,28 +85,6 @@ export default {
       environment: '',
       environmentRules: [v => !!v || 'Environment is required']
     };
-  },
-  computed: {
-    ...mapGetters('auth', ['acronyms', 'hasAcronyms', 'hasReadAllWebade']),
-    ...mapGetters('webadeVisualizer', [
-      'errorMessage',
-      'searching',
-      'webAdeConfig'
-    ])
-  },
-  methods: {
-    async search() {
-      if (this.$refs.form.validate()) {
-        this.$store.commit('webadeVisualizer/setSearching', true);
-
-        await this.$store.dispatch('webadeVisualizer/getWebAdeConfig', {
-          webAdeEnv: this.environment,
-          acronym: this.acronym
-        });
-
-        this.$store.commit('webadeVisualizer/setSearching', false);
-      }
-    }
   }
 };
 </script>

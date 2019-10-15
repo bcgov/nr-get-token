@@ -87,6 +87,7 @@ export default {
       );
       element.setAttribute('download', 'applicationConfig.json');
       element.style.display = 'none';
+      element.classList.add('hiddenDownloadTextElement');
       document.body.appendChild(element);
       element.click();
       document.body.removeChild(element);
