@@ -20,23 +20,24 @@
       <v-container>
         <v-layout>
           <v-flex xs12 md2>
-            <v-text-field
-              v-if="hasReadAllWebade"
-              v-model="acronym"
-              :rules="acronymRules"
-              label="Application Acronym"
-              required
-              :mandatory="true"
-            ></v-text-field>
-
-            <v-select
-              v-if="!hasReadAllWebade"
-              v-model="acronym"
-              :items="acronyms"
-              label="Application Acronym"
-              required
-              :mandatory="true"
-            ></v-select>
+            <div v-if="hasReadAllWebade">
+              <v-text-field
+                v-model="acronym"
+                :rules="acronymRules"
+                label="Application Acronym"
+                required
+                :mandatory="true"
+              ></v-text-field>
+            </div>
+            <div v-else>
+              <v-select
+                v-model="acronym"
+                :items="acronyms"
+                label="Application Acronym"
+                required
+                :mandatory="true"
+              ></v-select>
+            </div>
           </v-flex>
 
           <v-flex xs12 md2>
@@ -74,6 +75,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 
 export default {
   data: function() {
@@ -85,6 +87,26 @@ export default {
       environment: '',
       environmentRules: [v => !!v || 'Environment is required']
     };
+  },
+  computed: {
+    ...mapGetters('auth', ['acronyms', 'hasAcronyms', 'hasReadAllWebade']),
+    ...mapGetters('webadeVisualizer', [
+      'errorMessage',
+      'searching',
+      'webAdeConfig'
+    ])
+  },
+  methods: {
+    async search() {
+      if (this.$refs.form.validate()) {
+        this.$store.commit('webadeVisualizer/setSearching', true);
+        await this.$store.dispatch('webadeVisualizer/getWebAdeConfig', {
+          webAdeEnv: this.environment,
+          acronym: this.acronym
+        });
+        this.$store.commit('webadeVisualizer/setSearching', false);
+      }
+    }
   }
 };
 </script>
