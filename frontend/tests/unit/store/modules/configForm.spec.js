@@ -69,4 +69,12 @@ describe('configForm.js', () => {
     expect(store.state.ephemeralPasswordRSAKey).toBe('test');
     expect(store.getters.ephemeralPasswordRSAKey).toBe('test');
   });
+
+  it('updates "usingWebadeConfig" values when "setUsingWebadeConfig" is commited', () => {
+    expect(store.state.usingWebadeConfig).toBe(false);
+    store.commit('setUsingWebadeConfig', true);
+    expect(store.state.usingWebadeConfig).toBe(true);
+    expect(store.getters.usingWebadeConfig).toBe(true);
+  });
+
 });

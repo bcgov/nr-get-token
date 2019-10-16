@@ -7,7 +7,7 @@
 
     <v-stepper-content step="1">
       <div v-if="hasAcronyms">
-        You are authorized for these applications:
+        You are authorized to submit configurations for these applications:
         <ul>
           <li v-for="(acronym, index) in acronyms" :key="index">{{ acronym }}</li>
         </ul>
@@ -315,10 +315,14 @@
                       </v-btn>
                       <br />Download Postman collection:
                       <a
+                        class="buttonLink"
                         href="/files/ches.postman_collection.json"
+                        download="ches.postman_collection.json"
                         target="_blank"
                       >
-                        <v-icon right>open_in_new</v-icon>
+                        <v-btn flat icon color="primary">
+                          <v-icon>cloud_download</v-icon>
+                        </v-btn>
                       </a>
                     </li>
                   </ul>
@@ -447,7 +451,7 @@ export default {
     },
     async setChes() {
       this.usingWebade(false);
-      this.userAppCfg.commonServices.push('ches');
+      this.userAppCfg.commonServices = ['CHES'];
     },
     async submitConfig() {
       this.generatedToken = '';
@@ -509,7 +513,7 @@ export default {
         display = document.getElementById('webadeDiff'),
         fragment = document.createDocumentFragment();
 
-      diff.forEach((part) => {
+      diff.forEach(part => {
         // green for additions, red for deletions
         // grey for common parts
         let color = part.added ? 'green' : part.removed ? 'red' : 'grey';

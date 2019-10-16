@@ -29,7 +29,10 @@
       <v-flex xs12>
         <v-card class="sectionCard">
           <v-toolbar card color="grey lighten-3">
-            <v-toolbar-title>Submit Application Configuration</v-toolbar-title>
+            <v-tabs v-model="tabControl" color="grey lighten-3" slider-color="blue">
+              <v-tab :href="`#tab-1`">Submit Application Configuration</v-tab>
+              <v-tab :href="`#tab-2`">WebADE Application Configuration Viewer</v-tab>
+            </v-tabs>
             <v-spacer></v-spacer>
 
             <v-tooltip bottom>
@@ -84,38 +87,36 @@
               </v-card>
             </v-dialog>
           </v-toolbar>
-          <div>
-            <v-progress-linear v-if="configSubmissionInProgress" :indeterminate="true"></v-progress-linear>
-            <v-alert
-              :value="configSubmissionSuccess"
-              type="success"
-              transition="scale-transition"
-            >{{configSubmissionSuccess}}</v-alert>
-            <v-alert
-              :value="configSubmissionError"
-              type="error"
-              transition="scale-transition"
-            >{{configSubmissionError}}</v-alert>
-          </div>
-          <v-layout row wrap>
-            <v-flex xs12 md5>
-              <ConfigForm></ConfigForm>
-            </v-flex>
-            <v-flex xs12 md6 offset-md1 v-if="usingWebadeConfig">
-              <ConfigGeneratedJson></ConfigGeneratedJson>
-            </v-flex>
-          </v-layout>
-        </v-card>
-      </v-flex>
-    </v-layout>
 
-    <v-layout>
-      <v-flex xs12>
-        <v-card class="sectionCard">
-          <v-toolbar card color="grey lighten-3">
-            <v-toolbar-title>WebADE Application Configuration Viewer</v-toolbar-title>
-          </v-toolbar>
-          <WebAdeVisualizer></WebAdeVisualizer>
+          <v-tabs-items v-model="tabControl">
+            <v-tab-item :value="`tab-1`">
+              <div>
+                <v-progress-linear v-if="configSubmissionInProgress" :indeterminate="true"></v-progress-linear>
+                <v-alert
+                  :value="configSubmissionSuccess"
+                  type="success"
+                  transition="scale-transition"
+                >{{configSubmissionSuccess}}</v-alert>
+                <v-alert
+                  :value="configSubmissionError"
+                  type="error"
+                  transition="scale-transition"
+                >{{configSubmissionError}}</v-alert>
+              </div>
+              <v-layout row wrap>
+                <v-flex xs12 md5>
+                  <ConfigForm></ConfigForm>
+                </v-flex>
+                <v-flex xs12 md6 offset-md1 v-if="usingWebadeConfig">
+                  <ConfigGeneratedJson></ConfigGeneratedJson>
+                </v-flex>
+              </v-layout>
+            </v-tab-item>
+
+            <v-tab-item :value="`tab-2`">
+              <WebAdeVisualizer></WebAdeVisualizer>
+            </v-tab-item>
+          </v-tabs-items>
         </v-card>
       </v-flex>
     </v-layout>
@@ -152,7 +153,8 @@ export default {
   },
   data() {
     return {
-      dialog: false
+      dialog: false,
+      tabControl: 'tab-1'
     };
   },
   computed: {
@@ -197,5 +199,9 @@ export default {
 
 .underRadioField {
   padding-left: 32px;
+}
+
+.buttonLink {
+  text-decoration: none;
 }
 </style>
