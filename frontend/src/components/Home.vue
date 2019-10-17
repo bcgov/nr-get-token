@@ -4,8 +4,8 @@
   </v-container>
 
   <v-container v-else>
-    <v-layout wrap>
-      <v-flex xs4>
+    <v-row>
+      <v-col cols="4">
         <v-img
           :src="require('@/assets/images/tokey.svg')"
           contain
@@ -13,8 +13,8 @@
           position="right"
           id="devModeTrigger"
         ></v-img>
-      </v-flex>
-      <v-flex xs8>
+      </v-col>
+      <v-col cols="8">
         <v-img
           :src="require('@/assets/images/Get-Token_md.png')"
           class="my-3"
@@ -22,14 +22,14 @@
           height="150"
           position="left"
         ></v-img>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
 
-    <v-layout row wrap>
-      <v-flex xs12>
+    <v-row>
+      <v-col cols="12">
         <v-card class="sectionCard">
-          <v-toolbar card color="grey lighten-3">
-            <v-tabs v-model="tabControl" color="grey lighten-3" slider-color="blue">
+          <v-toolbar flat color="grey lighten-3">
+            <v-tabs v-model="tabControl" background-color="grey lighten-3" slider-color="blue">
               <v-tab :href="`#tab-1`">Submit Application Configuration</v-tab>
               <v-tab :href="`#tab-2`">WebADE Application Configuration Viewer</v-tab>
             </v-tabs>
@@ -53,10 +53,10 @@
 
             <v-dialog v-model="dialog" width="600">
               <v-card>
-                <v-toolbar color="light-blue" dark>
-                  <v-icon dark right class="mr-2">healing</v-icon>
+                <v-toolbar dark flat color="primary">
+                  <v-icon right class="mr-2">healing</v-icon>
 
-                  <v-toolbar-title class="text-xs-center">API Health Check</v-toolbar-title>
+                  <v-toolbar-title class="text-center">API Health Check</v-toolbar-title>
 
                   <v-spacer></v-spacer>
                   <v-tooltip bottom>
@@ -65,7 +65,6 @@
                         class="getHealthCheck"
                         flat
                         icon
-                        color="white"
                         v-on="on"
                         @click="getHealthCheck"
                       >
@@ -82,7 +81,7 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="primary" flat @click="dialog = false">Close</v-btn>
+                  <v-btn color="primary" text @click="dialog = false">Close</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -93,24 +92,27 @@
               <div>
                 <v-progress-linear v-if="configSubmissionInProgress" :indeterminate="true"></v-progress-linear>
                 <v-alert
-                  :value="configSubmissionSuccess"
+                  :value="configSubmissionSuccess != ''"
+                  tile
+                  icon="check"
                   type="success"
                   transition="scale-transition"
                 >{{configSubmissionSuccess}}</v-alert>
                 <v-alert
-                  :value="configSubmissionError"
+                  :value="configSubmissionError != ''"
+                  tile
                   type="error"
                   transition="scale-transition"
                 >{{configSubmissionError}}</v-alert>
               </div>
-              <v-layout row wrap>
-                <v-flex xs12 md5>
+              <v-row>
+                <v-col cols="12" md="5">
                   <ConfigForm></ConfigForm>
-                </v-flex>
-                <v-flex xs12 md6 offset-md1 v-if="usingWebadeConfig">
+                </v-col>
+                <v-col cols="12" md="6" offset-md="1" v-if="usingWebadeConfig">
                   <ConfigGeneratedJson></ConfigGeneratedJson>
-                </v-flex>
-              </v-layout>
+                </v-col>
+              </v-row>
             </v-tab-item>
 
             <v-tab-item :value="`tab-2`">
@@ -118,19 +120,19 @@
             </v-tab-item>
           </v-tabs-items>
         </v-card>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
 
-    <v-layout v-if="devMode">
-      <v-flex xs12>
+    <v-row v-if="devMode">
+      <v-col cols="12">
         <v-card class="sectionCard">
-          <v-toolbar card color="grey lighten-3">
+          <v-toolbar flat color="grey lighten-3">
             <v-toolbar-title>DEBUG API Tester</v-toolbar-title>
           </v-toolbar>
           <ApiCheck></ApiCheck>
         </v-card>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

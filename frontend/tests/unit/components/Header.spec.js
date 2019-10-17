@@ -1,18 +1,20 @@
-import { mount, createLocalVue } from '@vue/test-utils';
 import Vuetify from 'vuetify';
 import Vuex from 'vuex';
-import Header from '@/components/Header.vue';
+import { mount, createLocalVue } from '@vue/test-utils';
+import Header from '@/components/Header';
+
+const localVue = createLocalVue();
+localVue.use(Vuetify);
+localVue.use(Vuex);
 
 describe('Header.vue', () => {
   let getters;
   let store;
+  let vuetify;
   let wrapper;
 
   beforeEach(() => {
-    const localVue = createLocalVue();
-
-    localVue.use(Vuetify);
-    localVue.use(Vuex);
+    vuetify = new Vuetify();
 
     getters = {
       isAuthenticated: () => 'false'
@@ -24,15 +26,12 @@ describe('Header.vue', () => {
 
     wrapper = mount(Header, {
       localVue,
+      vuetify,
       store
     });
   });
 
-  it('has the bcgov link', () => {
-    expect(wrapper.html()).toContain('<a href="https://www2.gov.bc.ca">');
-  });
-
-  it('has the app title', () => {
-    expect(wrapper.html()).toContain('NATURAL RESOURCES GET TOKEN');
+  it('has the gov link', () => {
+    expect(wrapper.html()).toContain('https://www2.gov.bc.ca');
   });
 });

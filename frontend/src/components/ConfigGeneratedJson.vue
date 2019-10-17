@@ -9,10 +9,10 @@
         class="jsonText"
       ></v-textarea>
     </div>
-    <p class="text-xs-right">
+    <p class="text-right">
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-btn flat icon color="primary" v-on="on" @click="downloadFile">
+          <v-btn text icon color="primary" v-on="on" @click="downloadFile">
             <v-icon>cloud_download</v-icon>
           </v-btn>
         </template>
@@ -22,7 +22,7 @@
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-btn
-            flat
+            text
             icon
             color="primary"
             v-clipboard:copy="appConfigAsString"
@@ -39,7 +39,7 @@
 
     <v-snackbar v-model="snackbar.on" right top :timeout="6000" :color="snackbar.color">
       {{snackbar.text}}
-      <v-btn color="white" flat @click="snackbar.on = false">
+      <v-btn color="white" text @click="snackbar.on = false">
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>

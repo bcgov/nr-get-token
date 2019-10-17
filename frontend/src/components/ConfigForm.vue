@@ -17,8 +17,8 @@
         <p>You are not authorized for any applications</p>
         <p>Please register for a new application.</p>
       </div>
-
       <v-btn
+        class="ma-2"
         color="success"
         href="mailto:NR.CommonServiceShowcase@gov.bc.ca?subject=GETOK Registration for <acronym> - <idir>"
       >Register New App</v-btn>
@@ -31,13 +31,13 @@
     </v-stepper-step>
 
     <v-stepper-content step="2">
-      <v-btn color="primary" @click="setChes(); appConfigStep = 3" :disabled="!hasAcronyms">
+      <v-btn class="ma-2" color="primary" @click="setChes(); appConfigStep = 3" :disabled="!hasAcronyms">
         <v-icon left>email</v-icon>Common Hosted Email
       </v-btn>
-      <v-btn color="primary" @click="appConfigStep = 3" :disabled="true">
+      <v-btn class="ma-2" color="primary" @click="appConfigStep = 3" :disabled="true">
         <v-icon left>insert_drive_file</v-icon>Common Hosted Document
       </v-btn>
-      <v-btn color="primary" @click="setWebade(); appConfigStep = 3" :disabled="!hasAcronyms">
+      <v-btn class="ma-2" color="primary" @click="setWebade(); appConfigStep = 3" :disabled="!hasAcronyms">
         <v-icon left>save</v-icon>Legacy (WebADE)
       </v-btn>
     </v-stepper-content>
@@ -49,8 +49,8 @@
 
     <v-stepper-content step="3">
       <v-form v-model="step1Valid">
-        <v-layout row wrap>
-          <v-flex xs12 md7>
+        <v-row>
+          <v-col cols="12" md="7">
             <v-text-field
               label="Application Acronym"
               required
@@ -79,10 +79,10 @@
                 </v-tooltip>
               </template>
             </v-text-field>
-          </v-flex>
-        </v-layout>
-        <v-layout row wrap>
-          <v-flex xs12 md9>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" md="9">
             <v-text-field
               label="Application Name"
               required
@@ -91,8 +91,8 @@
               :counter="fieldValidations.NAME_MAX_LENGTH"
               :rules="applicationNameRules"
             ></v-text-field>
-          </v-flex>
-        </v-layout>
+          </v-col>
+        </v-row>
         <v-text-field
           label="Application Description"
           required
@@ -113,7 +113,7 @@
           ></v-select>
         </div>
 
-        <v-btn flat @click="appConfigStep = 2">Back</v-btn>
+        <v-btn text @click="appConfigStep = 2">Back</v-btn>
         <v-btn color="primary" @click="appConfigStep = 4" :disabled="!step1Valid">Next</v-btn>
       </v-form>
     </v-stepper-content>
@@ -126,8 +126,8 @@
 
     <v-stepper-content step="4">
       <v-form v-model="step2Valid">
-        <v-layout row wrap>
-          <v-flex xs12 md7>
+        <v-row>
+          <v-col cols="12" md="7">
             <v-select
               required
               :mandatory="true"
@@ -136,8 +136,8 @@
               :value="userAppCfg.clientEnvironment"
               v-on:change="updateAppCfgField('clientEnvironment', $event)"
             ></v-select>
-          </v-flex>
-        </v-layout>
+          </v-col>
+        </v-row>
 
         <v-radio-group
           v-if="usingWebadeConfig"
@@ -158,7 +158,7 @@
           <v-radio label="Direct Deploy" value="deploymentDirect"></v-radio>
         </v-radio-group>
 
-        <v-btn flat @click="appConfigStep = 3">Back</v-btn>
+        <v-btn text @click="appConfigStep = 3">Back</v-btn>
 
         <v-dialog
           v-model="confirmationDialog"
@@ -187,10 +187,10 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn flat @click="confirmationDialog = false">CANCEL</v-btn>
+              <v-btn text @click="confirmationDialog = false">CANCEL</v-btn>
               <v-btn
                 color="green darken-1"
-                flat
+                text
                 @click="confirmationDialog = false; submitConfig()"
               >CONTINUE</v-btn>
             </v-card-actions>
@@ -198,13 +198,14 @@
         </v-dialog>
 
         <v-dialog v-model="passwordDialog" persistent max-width="700">
-          <v-card>
-            <v-card-title class="headline success" primary-title>
+          <v-card >
+            <v-card-title class="headline success">
               <v-icon class="mr-2">check_circle</v-icon>
               <span v-if="usingWebadeConfig">Application Configuration Updated</span>
               <span v-else>Keycloak Client Updated</span>
             </v-card-title>
             <v-card-text>
+              <br>
               <p v-if="usingWebadeConfig">
                 Your application configuration for
                 <strong>{{userAppCfg.applicationAcronym}}</strong> has been updated in the WebADE system.
@@ -222,27 +223,27 @@
               ></v-checkbox>
 
               <v-card color="green lighten-5" class="pl-3 pt-3 mb-3">
-                <v-layout row wrap>
-                  <v-flex xs12 sm6>
+                <v-row>
+                  <v-col cols="12" sm="6">
                     <v-text-field v-model="displayClient" readonly label="Service Client"></v-text-field>
-                  </v-flex>
-                </v-layout>
-                <v-layout row wrap>
-                  <v-flex xs12 sm6>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12" sm="6">
                     <v-text-field v-model="shownPassword" readonly label="Password"></v-text-field>
-                  </v-flex>
-                  <v-flex xs6 sm4>
+                  </v-col>
+                  <v-col cols="6" sm="4">
                     <v-btn
                       color="success"
                       :disabled="!passwordAgree"
                       @click="decryptPassword()"
                     >DECRYPT PASSWORD</v-btn>
-                  </v-flex>
-                  <v-flex xs6 sm2>
+                  </v-col>
+                  <v-col cols="6" sm="2">
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on }">
                         <v-btn
-                          flat
+                          text
                           icon
                           color="primary"
                           v-clipboard:copy="shownPassword"
@@ -255,8 +256,8 @@
                       </template>
                       <span>Copy password to clipboard</span>
                     </v-tooltip>
-                  </v-flex>
-                </v-layout>
+                  </v-col>
+                </v-row>
               </v-card>
 
               <div v-if="passwordDecrypted">
@@ -267,17 +268,22 @@
                 <p
                   v-else
                 >You can fetch a token with this new service client to test out a REST client (or use the username and password to fetch a token on-demand)</p>
-                <v-layout row wrap align-center>
-                  <v-flex xs12 sm2>
+                <v-row align="center">
+                  <v-col cols="12" sm="2">
                     <v-btn small color="primary" dark @click="getToken()">Get Token</v-btn>
-                  </v-flex>
-                  <v-flex xs12 sm8 v-if="generatedToken">{{generatedToken}}</v-flex>
-                  <v-flex xs12 sm8 v-if="generatedTokenError" error>{{generatedTokenError}}</v-flex>
-                  <v-flex xs6 sm2 v-if="generatedToken">
+                  </v-col>
+                  <v-col cols="12" sm="8" v-if="generatedToken">{{generatedToken}}</v-col>
+                  <v-col
+                    class="error"
+                    cols="12"
+                    sm="8"
+                    v-if="generatedTokenError"
+                  >{{generatedTokenError}}</v-col>
+                  <v-col cols="6" sm="2" v-if="generatedToken">
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on }">
                         <v-btn
-                          flat
+                          text
                           icon
                           color="primary"
                           v-clipboard:copy="generatedToken"
@@ -290,8 +296,8 @@
                       </template>
                       <span>Copy token to clipboard</span>
                     </v-tooltip>
-                  </v-flex>
-                </v-layout>
+                  </v-col>
+                </v-row>
                 <br />
 
                 <div v-if="userAppCfg.commonServices.length > 0">
@@ -320,7 +326,7 @@
                         download="ches.postman_collection.json"
                         target="_blank"
                       >
-                        <v-btn flat icon color="primary">
+                        <v-btn text icon color="primary">
                           <v-icon>cloud_download</v-icon>
                         </v-btn>
                       </a>
@@ -333,7 +339,7 @@
               <v-spacer></v-spacer>
               <v-btn
                 color="info darken-1"
-                flat
+                text
                 :disabled="!passwordAgree || !passwordDecrypted"
                 @click="passwordDialog = false"
               >FINISHED</v-btn>
@@ -343,7 +349,7 @@
       </v-form>
       <v-snackbar v-model="snackbar.on" right top :timeout="6000" :color="snackbar.color">
         {{snackbar.text}}
-        <v-btn color="white" flat @click="snackbar.on = false">
+        <v-btn color="white" text @click="snackbar.on = false">
           <v-icon>close</v-icon>
         </v-btn>
       </v-snackbar>

@@ -1,20 +1,23 @@
 import { mount, createLocalVue } from '@vue/test-utils';
 import Vuetify from 'vuetify';
 import VueRouter from 'vue-router';
-import App from '@/App.vue';
 import Vuex from 'vuex';
+import App from '@/App.vue';
+
+const localVue = createLocalVue();
+localVue.use(Vuetify);
+localVue.use(Vuex);
+localVue.use(VueRouter);
 
 describe('App.vue', () => {
   let wrapper;
   let getters;
+  let vuetify;
   let store;
 
   beforeEach(() => {
-    const localVue = createLocalVue();
+    vuetify = new Vuetify();
 
-    localVue.use(Vuetify);
-    localVue.use(Vuex);
-    localVue.use(VueRouter);
     getters = {
       isAuthenticated: () => 'false'
     };
@@ -27,6 +30,7 @@ describe('App.vue', () => {
     wrapper = mount(App, {
       localVue,
       store,
+      vuetify,
       router
     });
   });
