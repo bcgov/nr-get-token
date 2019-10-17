@@ -18,8 +18,8 @@
     </p>
     <v-form ref="form" v-model="valid" lazy-validation>
       <v-container>
-        <v-layout>
-          <v-flex xs12 md2>
+        <v-row>
+          <v-col cols="12" md="2">
             <div v-if="hasReadAllWebade">
               <v-text-field
                 v-model="acronym"
@@ -38,9 +38,9 @@
                 :mandatory="true"
               ></v-select>
             </div>
-          </v-flex>
+          </v-col>
 
-          <v-flex xs12 md2>
+          <v-col cols="12" md="2">
             <v-select
               v-model="environment"
               required
@@ -49,12 +49,12 @@
               :items="webadeEnvironments"
               label="ISSS Environment"
             ></v-select>
-          </v-flex>
+          </v-col>
 
-          <v-flex xs12 md4>
+          <v-col cols="12" md="4">
             <v-btn color="success" @click="search">Search</v-btn>
-          </v-flex>
-        </v-layout>
+          </v-col>
+        </v-row>
       </v-container>
     </v-form>
 

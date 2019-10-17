@@ -1,13 +1,13 @@
 <template>
   <v-container>
-    <v-layout row wrap>
-      <v-flex xs12 md5>
+    <v-row>
+      <v-col cols="12" md="5">
         <v-form @submit.prevent="testApi">
           <v-text-field v-model="testRoute" label="Endpoint" required></v-text-field>
           <v-btn color="success" @click="testApi">Test</v-btn>
         </v-form>
-      </v-flex>
-      <v-flex xs12 md6 offset-md1>
+      </v-col>
+      <v-col cols="12" md="6" offset-md="1">
         <v-textarea
           v-model="apiCheckResponse"
           rows="1"
@@ -16,8 +16,8 @@
           readonly
           label="Api Response"
         ></v-textarea>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
