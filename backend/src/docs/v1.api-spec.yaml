@@ -79,22 +79,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /appConfigs:
+  '/appConfigs/{webAdeEnv}':
     get:
       summary: Returns WebADE JSON response for all defined acronyms
       operationId: appConfigGetAll
       tags:
         - Application Configuration
       parameters:
-        - name: acronym
+        - name: webAdeEnv
           in: path
-          description: Name of the project
+          description: The ISSS WebADE environment
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: WebADE JSON response
+          description: Array of WebADE JSONs
           content:
             application/json:
               schema:
