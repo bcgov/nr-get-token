@@ -33,7 +33,7 @@ describe('/api/v1/api-spec.yaml', () => {
     const response = await request(app).get('/api/v1/api-spec.yaml');
 
     expect(response.statusCode).toBe(200);
-    expect(response.text).toMatch(/openapi: 3.0.0/);
+    expect(response.text).toMatch(/openapi: 3.0.2/);
     expect(response.text).toMatch(/title: GetOK API/);
   });
 });
