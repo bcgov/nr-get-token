@@ -48,7 +48,7 @@ paths:
         environment
       operationId: appConfigGetAcronym
       tags:
-        - Application Configuration
+        - WebADE Application Configuration
       parameters:
         - name: acronym
           in: path
@@ -86,7 +86,7 @@ paths:
       summary: Returns a list of other WebADE acronyms that reference the one supplied
       operationId: getDependencies
       tags:
-        - Application Configuration
+        - WebADE Application Configuration
       parameters:
         - name: acronym
           in: path
@@ -124,7 +124,7 @@ paths:
       summary: Returns WebADE JSON response for all acronyms
       operationId: appConfigGetAll
       tags:
-        - Application Configuration
+        - WebADE Application Configuration
       parameters:
         - name: webAdeEnv
           in: path
@@ -154,7 +154,7 @@ paths:
       summary: Submit a proposed application
       operationId: appConfigFormPost
       tags:
-        - Application Configuration
+        - WebADE Application Configuration
       requestBody:
         description: Form fields required to generate a minimal Application Configuration
         required: true
