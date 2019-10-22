@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-progress-linear v-if="searching" :indeterminate="true"></v-progress-linear>
+    <v-progress-linear v-if="searching" :indeterminate="true" class="mb-2"></v-progress-linear>
     <p
       v-if="!hasReadAllWebade"
     >You must be authorized for an application acronym to view its WebADE configuration details.</p>
@@ -63,13 +63,43 @@
     </div>
 
     <div v-if="webAdeConfig">
-      <v-textarea
-        auto-grow
-        readonly
-        label="WebADE Application Configuration"
-        v-model="webAdeConfig"
-        class="jsonText"
-      ></v-textarea>
+      <v-tabs vertical v-on:change="getDependencies">
+        <v-tab>
+          <v-icon left>description</v-icon>App Config
+        </v-tab>
+        <v-tab>
+          <v-icon left>list</v-icon>Dependent Apps
+        </v-tab>
+
+        <v-tab-item>
+          <v-card flat>
+            <v-card-text>
+              <v-textarea
+                auto-grow
+                readonly
+                label="WebADE Application Configuration"
+                v-model="webAdeConfig"
+                class="jsonText"
+              ></v-textarea>
+            </v-card-text>
+          </v-card>
+        </v-tab-item>
+        <v-tab-item>
+          <v-card flat>
+            <v-card-text>
+              <div v-if="searching">
+                <p>Building dependency list...</p>
+              </div>
+              <div v-else>
+                <p v-if="webAdeDependencies && webAdeDependencies.length > 0">{{webAdeDependencies}}</p>
+                <p
+                  v-else
+                >Could not find any other WebADE applications that are dependent on {{acronym}}</p>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-tab-item>
+      </v-tabs>
     </div>
   </v-container>
 </template>
@@ -93,7 +123,8 @@ export default {
     ...mapGetters('webadeVisualizer', [
       'errorMessage',
       'searching',
-      'webAdeConfig'
+      'webAdeConfig',
+      'webAdeDependencies'
     ])
   },
   methods: {
@@ -104,6 +135,24 @@ export default {
           webAdeEnv: this.environment,
           acronym: this.acronym
         });
+        this.$store.commit('webadeVisualizer/setSearching', false);
+      }
+    },
+    sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    },
+    async getDependencies(tabNum) {
+      // Only load the big dependency query once they go to the second tab
+      // Only query for it if it hasn't been loaded already
+      if (tabNum === 1 && !this.webAdeDependencies) {
+        this.$store.commit('webadeVisualizer/setSearching', true);
+        await this.sleep(1000);
+        await this.$store.dispatch('webadeVisualizer/getWebAdeDependencies', {
+          webAdeEnv: this.environment,
+          acronym: this.acronym
+        });
+        this.$store.commit('webadeVisualizer/setSearching', false);
+      } else {
         this.$store.commit('webadeVisualizer/setSearching', false);
       }
     }

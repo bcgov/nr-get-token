@@ -129,5 +129,15 @@ Body: ${JSON.stringify(response.data, null, 2)}`;
       console.log(`Failed to get webade app config for ${acronym} in ${webAdeEnv} - ${e}`); // eslint-disable-line no-console
       throw e;
     }
+  },
+
+  async getWebAdeDependencies(webAdeEnv, acronym) {
+    try {
+      const test = [];
+      return test;
+    } catch (e) {
+      console.log(`Failed to get webade dependencies for ${acronym} in ${webAdeEnv} - ${e}`); // eslint-disable-line no-console
+      throw e;
+    }
   }
 };

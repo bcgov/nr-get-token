@@ -142,7 +142,7 @@ import ApiCheck from './ApiCheck';
 import ConfigForm from './ConfigForm';
 import ConfigGeneratedJson from './ConfigGeneratedJson';
 import HealthCheck from './HealthCheck';
-import WebAdeVisualizer from './WebAdeVisualizer';
+import WebAdeVisualizer from './webAdeVisualizer/WebAdeVisualizer';
 
 export default {
   name: 'home',

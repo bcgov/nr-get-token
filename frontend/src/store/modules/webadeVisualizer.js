@@ -5,12 +5,14 @@ export default {
   state: {
     errorMessage: '',
     searching: false,
-    webAdeConfig: ''
+    webAdeConfig: '',
+    webAdeDependencies: null
   },
   getters: {
     errorMessage: state => state.errorMessage,
     searching: state => state.searching,
-    webAdeConfig: state => state.webAdeConfig ? JSON.stringify(state.webAdeConfig, null, 2) : ''
+    webAdeConfig: state => state.webAdeConfig ? JSON.stringify(state.webAdeConfig, null, 2) : '',
+    webAdeDependencies: state => state.webAdeDependencies
   },
   mutations: {
     setErrorMessage: (state, errorMessage) => {
@@ -21,6 +23,9 @@ export default {
     },
     setWebAdeConfig: (state, cfg) => {
       state.webAdeConfig = cfg;
+    },
+    setWebAdeDependencies: (state, dep) => {
+      state.webAdeDependencies = dep;
     }
   },
   actions: {
@@ -28,6 +33,7 @@ export default {
       try {
         context.commit('setErrorMessage', '');
         context.commit('setWebAdeConfig', '');
+        context.commit('setWebAdeDependencies', null);
         const response = await ApiService.getWebAdeConfig(payload.webAdeEnv, payload.acronym);
         if (response) {
           context.commit('setWebAdeConfig', response);
@@ -36,6 +42,19 @@ export default {
         }
       } catch (error) {
         context.commit('setErrorMessage', `An error occurred getting the WebADE configuration for ${payload.acronym} in ${payload.webAdeEnv}`);
+      }
+    },
+    async getWebAdeDependencies(context, payload) {
+      try {
+        context.commit('setWebAdeDependencies', null);
+        const response = await ApiService.getWebAdeDependencies(payload.webAdeEnv, payload.acronym);
+        if (response) {
+          context.commit('setWebAdeDependencies', response);
+        } else {
+          context.commit('setErrorMessage', `Error occurred trying to resolve dependencies on ${payload.acronym} in ${payload.webAdeEnv}`);
+        }
+      } catch (error) {
+        context.commit('setErrorMessage', `Error occurred trying to resolve dependencies on ${payload.acronym} in ${payload.webAdeEnv}`);
       }
     }
   }
