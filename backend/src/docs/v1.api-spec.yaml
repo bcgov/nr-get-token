@@ -1,3 +1,4 @@
+---
 openapi: 3.0.2
 info:
   version: 1.0.0
@@ -48,7 +49,7 @@ paths:
         environment
       operationId: appConfigGetAcronym
       tags:
-        - WebADE Application Configuration
+        - Application Configuration
       parameters:
         - name: acronym
           in: path
@@ -62,6 +63,10 @@ paths:
           required: true
           schema:
             type: string
+            enum:
+              - INT
+              - TEST
+              - PROD
       responses:
         '200':
           description: WebADE JSON response
@@ -86,7 +91,7 @@ paths:
       summary: Returns a list of other WebADE acronyms that reference the one supplied
       operationId: getDependencies
       tags:
-        - WebADE Application Configuration
+        - Application Configuration
       parameters:
         - name: acronym
           in: path
@@ -100,6 +105,10 @@ paths:
           required: true
           schema:
             type: string
+            enum:
+              - INT
+              - TEST
+              - PROD
       responses:
         '200':
           description: WebADE JSON response
@@ -124,7 +133,7 @@ paths:
       summary: Returns WebADE JSON response for all acronyms
       operationId: appConfigGetAll
       tags:
-        - WebADE Application Configuration
+        - Application Configuration
       parameters:
         - name: webAdeEnv
           in: path
@@ -132,6 +141,10 @@ paths:
           required: true
           schema:
             type: string
+            enum:
+              - INT
+              - TEST
+              - PROD
       responses:
         '200':
           description: Array of WebADE JSONs
@@ -154,7 +167,7 @@ paths:
       summary: Submit a proposed application
       operationId: appConfigFormPost
       tags:
-        - WebADE Application Configuration
+        - Application Configuration
       requestBody:
         description: Form fields required to generate a minimal Application Configuration
         required: true
@@ -333,7 +346,11 @@ components:
           example: MIGfMA0GCSqGS...
         clientEnvironment:
           type: string
-          description: 'Which WebADE environment to work on - one of INT, TEST or PROD'
+          enum:
+            - INT
+            - TEST
+            - PROD
+          description: Which WebADE environment to work on
           example: INT
     AppConfigList:
       type: array
@@ -428,6 +445,10 @@ components:
           example: Application Description
         clientEnvironment:
           type: string
+          enum:
+            - DEV
+            - TEST
+            - PROD
           description: 'Which KeyCloak environment to work on - one of INT, TEST or PROD'
           example: INT
         commonServices:
