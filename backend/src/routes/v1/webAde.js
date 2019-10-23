@@ -50,6 +50,47 @@ webAde.get('/:webAdeEnv/:appAcronym/appConfig', [
   }
 });
 
+// fetches a list of other webade apps that are dependent on a supplied acronym in a specified env
+webAde.get('/:webAdeEnv/:appAcronym/dependencies', [
+], async (req, res) => {
+
+  // TODO: a lot of this role checking is duplicate, but as we will be moving acronym management to the DB soon all this will need to be refactored anyways
+
+  // Check for required permissions. Can only fetch cfgs for the acronyms you are associated with
+  // If the user has "WEBADE_CFG_READ_ALL" then they can get all
+  let acronyms = [];
+  const roles = req.user.jwt.realm_access.roles;
+  let hasReadAllRole = false;
+  if (typeof roles === 'object' && roles instanceof Array) {
+    acronyms = utils.filterAppAcronymRoles(roles);
+    hasReadAllRole = roles.includes('WEBADE_CFG_READ_ALL');
+  }
+
+  if (!hasReadAllRole) {
+    const appAcronym = req.params.appAcronym;
+    if (!acronyms.includes(appAcronym)) {
+      return res.status(403).json({
+        message: `User lacks permission for '${appAcronym}' acronym`
+      });
+    }
+  }
+
+  try {
+    const response = await appConfigComponent.getAppConfigs(req.params.webAdeEnv);
+    if (response) {
+      return res.status(200).json(utils.filterWebAdeDependencies(response, req.params.appAcronym));
+    } else {
+      return res.status(404).json();
+    }
+  } catch (error) {
+    log.error(error);
+    res.status(500).json({
+      message: error.message
+    });
+    return res;
+  }
+});
+
 // gets the big array of all webade configs for a specified env
 webAde.get('/:webAdeEnv/appConfigs', [
 ], async (req, res) => {

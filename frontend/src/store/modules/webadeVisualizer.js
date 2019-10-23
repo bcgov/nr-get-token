@@ -48,6 +48,7 @@ export default {
       try {
         context.commit('setWebAdeDependencies', null);
         const response = await ApiService.getWebAdeDependencies(payload.webAdeEnv, payload.acronym);
+        debugger; // eslint-disable-line no-debugger
         if (response) {
           context.commit('setWebAdeDependencies', response);
         } else {

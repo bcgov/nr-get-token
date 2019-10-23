@@ -134,11 +134,9 @@ Body: ${JSON.stringify(response.data, null, 2)}`;
   async getWebAdeDependencies(webAdeEnv, acronym) {
     try {
 
-      //const url = `${ApiRoutes.WEBADE}/${webAdeEnv}/${acronym}/${ApiRoutes.WEBADE_DEP}`;
-      //const response = await apiAxios.get(url);
-
-      const test = [];
-      return test;
+      const url = `${ApiRoutes.WEBADE}/${webAdeEnv}/${acronym}/${ApiRoutes.WEBADE_DEP}`;
+      const response = await apiAxios.get(url);
+      return response.data;
     } catch (e) {
       console.log(`Failed to get webade dependencies for ${acronym} in ${webAdeEnv} - ${e}`); // eslint-disable-line no-console
       throw e;

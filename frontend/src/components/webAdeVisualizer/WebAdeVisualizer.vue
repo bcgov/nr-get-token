@@ -91,7 +91,7 @@
                 <p>Building dependency list...</p>
               </div>
               <div v-else>
-                <p v-if="webAdeDependencies && webAdeDependencies.length > 0">{{webAdeDependencies}}</p>
+                <p v-if="webAdeDependencies">{{webAdeDependencies}}</p>
                 <p
                   v-else
                 >Could not find any other WebADE applications that are dependent on {{acronym}}</p>
@@ -146,7 +146,6 @@ export default {
       // Only query for it if it hasn't been loaded already
       if (tabNum === 1 && !this.webAdeDependencies) {
         this.$store.commit('webadeVisualizer/setSearching', true);
-        await this.sleep(1000);
         await this.$store.dispatch('webadeVisualizer/getWebAdeDependencies', {
           webAdeEnv: this.environment,
           acronym: this.acronym

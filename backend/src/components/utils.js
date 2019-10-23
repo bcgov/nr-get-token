@@ -71,7 +71,24 @@ const utils = {
 
   // TODO: this is likely soon to be refactored out, as we will be pulling acronyms from the DB, not from access roles
   // Returns only app acronym based roles
-  filterAppAcronymRoles: roles => roles.filter(role => !role.match(/offline_access|uma_authorization|WEBADE_CFG_READ|WEBADE_CFG_READ_ALL/))
+  filterAppAcronymRoles: roles => roles.filter(role => !role.match(/offline_access|uma_authorization|WEBADE_CFG_READ|WEBADE_CFG_READ_ALL/)),
+
+  // From the big list of webade configs, return mapped dependencies for a specific acronym
+  filterWebAdeDependencies: (webadeConfigsList, acronym) => {
+    if (webadeConfigsList && webadeConfigsList.applicationConfigurations) {
+      // From all the configs, find the ones where
+      const appsWithDependencies = webadeConfigsList.applicationConfigurations.filter(
+        cfg => cfg.profiles.some(
+          prof => prof.profileRoles.some(
+            pr => pr.applicationCode == acronym)
+        )
+      );
+      return appsWithDependencies.map(apps => apps.applicationAcronym);
+    } else {
+      log.error('filterWebAdeDependencies', 'Error in supplied webade configuration list');
+      throw new Error('Unable to fetch dependencies - Error in supplied webade configuration list');
+    }
+  }
 };
 
 module.exports = utils;

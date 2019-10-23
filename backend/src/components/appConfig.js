@@ -156,6 +156,41 @@ const appConfig = {
     }
   },
 
+  getAppConfigs: async (webadeEnv) => {
+    const endpoint = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.endpoint`);
+    const username = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.username`);
+    const password = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.password`);
+
+    // Get a token with the getok service client
+    const token = await utils.getWebAdeToken(username, password, 'WEBADE-REST', webadeEnv);
+    if (!token || token.error) {
+      log.error('postAppConfig', 'Unable to acquire access_token');
+      throw new Error('Unable to acquire access_token');
+    }
+
+    const path = '/applicationConfigurations';
+
+    try {
+
+      // Get the app configurations array
+      const webAdeUrl = endpoint + path;
+      const webAdeResponse = await axios.get(webAdeUrl, {
+        headers: {
+          'Authorization': `Bearer ${token.access_token}`,
+          'Content-Type': 'application/json; charset=utf-8'
+        }
+      });
+      log.verbose('getAppConfigs', utils.prettyStringify(webAdeResponse.data));
+      return webAdeResponse.data;
+    } catch (error) {
+      log.error('getAppConfigs', error.message);
+      if (error.response) {
+        log.error(error.response.status);
+        throw new Error(`WebADE ${path} returned an error. ${JSON.stringify(error.response.data)}`);
+      }
+    }
+  },
+
   getAppConfig: async (webadeEnv, applicationAcronym) => {
     const endpoint = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.endpoint`);
     const username = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.username`);
