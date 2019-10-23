@@ -11,9 +11,9 @@ const {
 } = require('express-validator');
 
 // submits a keycloak service client
-const kcClientForm = require('express').Router();
+const keyCloak = require('express').Router();
 
-kcClientForm.post('/', [
+keyCloak.post('/configForm', [
   body('configForm.applicationAcronym').isString(),
   body('configForm.applicationName').isString(),
   body('configForm.applicationDescription').isString(),
@@ -64,4 +64,4 @@ kcClientForm.post('/', [
   }
 });
 
-module.exports = kcClientForm;
+module.exports = keyCloak;

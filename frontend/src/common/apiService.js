@@ -102,7 +102,7 @@ Body: ${JSON.stringify(response.data, null, 2)}`;
 
   async postConfigForm(configFormBody, usingWebadeConfig) {
     try {
-      const route = usingWebadeConfig ? ApiRoutes.APPCONFIG : ApiRoutes.KCCONFIG;
+      const route = usingWebadeConfig ? ApiRoutes.WEBADE_CONFIGFORM : ApiRoutes.KCCONFIG;
       const response = await apiAxios.post(route, configFormBody, {
         headers: {
           'Content-Type': 'application/json'
@@ -117,7 +117,7 @@ Body: ${JSON.stringify(response.data, null, 2)}`;
 
   async getWebAdeConfig(webAdeEnv, acronym) {
     try {
-      const url = `${ApiRoutes.WEBADECONFIG}/${webAdeEnv}/${acronym}`;
+      const url = `${ApiRoutes.WEBADE}/${webAdeEnv}/${acronym}/${ApiRoutes.WEBADE_CFG}`;
       const response = await apiAxios.get(url);
 
       return response.data;
@@ -133,6 +133,10 @@ Body: ${JSON.stringify(response.data, null, 2)}`;
 
   async getWebAdeDependencies(webAdeEnv, acronym) {
     try {
+
+      //const url = `${ApiRoutes.WEBADE}/${webAdeEnv}/${acronym}/${ApiRoutes.WEBADE_DEP}`;
+      //const response = await apiAxios.get(url);
+
       const test = [];
       return test;
     } catch (e) {
