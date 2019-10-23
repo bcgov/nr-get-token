@@ -64,10 +64,10 @@
 
     <div v-if="webAdeConfig">
       <v-tabs vertical v-on:change="getDependencies">
-        <v-tab>
+        <v-tab class="justify-start">
           <v-icon left>description</v-icon>App Config
         </v-tab>
-        <v-tab>
+        <v-tab class="justify-start">
           <v-icon left>list</v-icon>Dependent Apps
         </v-tab>
 

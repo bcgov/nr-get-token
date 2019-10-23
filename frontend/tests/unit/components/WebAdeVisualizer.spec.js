@@ -1,7 +1,7 @@
 import Vuetify from 'vuetify';
 import Vuex from 'vuex';
 import { mount, createLocalVue } from '@vue/test-utils';
-import WebAdeVisualizer from '@/components/WebAdeVisualizer';
+import WebAdeVisualizer from '@/components/webadeVisualizer/WebAdeVisualizer';
 import auth from '@/store/modules/auth';
 import webadeVisualizer from '@/store/modules/webadeVisualizer';
 
