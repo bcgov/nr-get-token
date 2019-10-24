@@ -83,7 +83,16 @@ const utils = {
             pr => pr.applicationCode == acronym)
         )
       );
-      return appsWithDependencies.map(apps => apps.applicationAcronym);
+      // Map out the relevant values we want from the app configs
+      const dependencies = appsWithDependencies.map(apps =>
+        ({
+          applicationAcronym: apps.applicationAcronym,
+          applicationName: apps.applicationName,
+          applicationDescription: apps.applicationDescription,
+          enabled: apps.enabledInd
+        }));
+      // Return the list of objects sorted alphabetically
+      return dependencies.sort((a, b) => a.applicationAcronym.localeCompare(b.firstname));
     } else {
       log.error('filterWebAdeDependencies', 'Error in supplied webade configuration list');
       throw new Error('Unable to fetch dependencies - Error in supplied webade configuration list');

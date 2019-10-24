@@ -489,6 +489,7 @@ components:
         - applicationAcronym
         - applicationName
         - applicationDescription
+        - enabled
       properties:
         applicationAcronym:
           type: string
@@ -499,6 +500,9 @@ components:
         applicationDescription:
           type: string
           example: Application Description
+        enabled:
+          type: boolean
+          example: true
       description: 'A WebADE project acronym, name, and description'
   responses:
     Forbidden:
