@@ -91,7 +91,26 @@
                 <p>Building dependency list...</p>
               </div>
               <div v-else>
-                <p v-if="webAdeDependencies">{{webAdeDependencies}}</p>
+                <v-simple-table v-if="webAdeDependencies">
+                  <template v-slot:default>
+                    <thead>
+                      <tr>
+                        <th class="text-left">Application</th>
+                        <th class="text-left">Details</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="dep in webAdeDependencies" :key="dep.applicationAcronym">
+                        <td>{{ dep.applicationAcronym }}</td>
+                        <td>
+                          <p v-if="!dep.enabled" class="red--text"><strong>Disabled</strong></p>
+                          <p><strong>Name:</strong> {{ dep.applicationName }}</p>
+                          <p><strong>Description:</strong> {{ dep.applicationDescription}}</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
                 <p
                   v-else
                 >Could not find any other WebADE applications that are dependent on {{acronym}}</p>

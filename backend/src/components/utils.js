@@ -92,7 +92,7 @@ const utils = {
           enabled: apps.enabledInd
         }));
       // Return the list of objects sorted alphabetically
-      return dependencies.sort((a, b) => a.applicationAcronym.localeCompare(b.firstname));
+      return dependencies.sort((a, b) => a.applicationAcronym.localeCompare(b.applicationAcronym));
     } else {
       log.error('filterWebAdeDependencies', 'Error in supplied webade configuration list');
       throw new Error('Unable to fetch dependencies - Error in supplied webade configuration list');
