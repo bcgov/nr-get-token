@@ -50,9 +50,9 @@
       >
         <v-icon left>save</v-icon>Legacy (WebADE)
       </v-btn>
-      <br>
-      <br>
-        <v-btn text @click="appConfigStep = 1">Back</v-btn>
+      <br />
+      <br />
+      <v-btn text @click="appConfigStep = 1">Back</v-btn>
     </v-stepper-content>
 
     <v-stepper-step :complete="appConfigStep > 3" step="3">
