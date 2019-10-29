@@ -260,7 +260,7 @@
                 </v-row>
               </v-card>
 
-              <div v-if="passwordDecrypted">
+              <div v-if="passwordDecrypted && usingWebadeConfig">
                 <h2>2. API Access Token</h2>
                 <p
                   v-if="usingWebadeConfig"
@@ -302,7 +302,7 @@
 
                 <div v-if="userAppCfg.commonServices.length > 0">
                   <h2 v-if="usingWebadeConfig">3. API Store Swagger</h2>
-                  <h2 v-else>3. API Documentation and Usage</h2>
+                  <h2 v-else>2. API Documentation and Usage</h2>
                   <p v-if="usingWebadeConfig">
                     This token can be used to test out the common services you have specified by trying them out in the API Store.
                     <br />Fill in the token above into the Access Token field at the top of the
@@ -310,7 +310,7 @@
                   </p>
                   <p v-else>
                     This service client can be used to test out using a REST client. Example collections for Postman are provided.
-                    <br />Either fill in the token above as a bearer header in your REST call, or fetch a new token using the service client and password against the authorization endpoint.
+                    <br />Fetch a new token using the service client and password against the authorization endpoint (see postman collection) and use that token in your bearer header.
                   </p>
                   <ul>
                     <li v-for="item in apiLinks" v-bind:key="item.name">
