@@ -50,6 +50,9 @@
       >
         <v-icon left>save</v-icon>Legacy (WebADE)
       </v-btn>
+      <br>
+      <br>
+        <v-btn text @click="appConfigStep = 1">Back</v-btn>
     </v-stepper-content>
 
     <v-stepper-step :complete="appConfigStep > 3" step="3">
@@ -123,7 +126,7 @@
           ></v-select>
         </div>
 
-        <v-btn text @click="appConfigStep = 2">Back</v-btn>
+        <v-btn text @click="usingWebade(false); appConfigStep = 2">Back</v-btn>
         <v-btn color="primary" @click="appConfigStep = 4" :disabled="!step1Valid">Next</v-btn>
       </v-form>
     </v-stepper-content>
