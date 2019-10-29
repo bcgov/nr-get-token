@@ -31,13 +31,23 @@
     </v-stepper-step>
 
     <v-stepper-content step="2">
-      <v-btn class="ma-2" color="primary" @click="setChes(); appConfigStep = 3" :disabled="!hasAcronyms">
+      <v-btn
+        class="ma-2"
+        color="primary"
+        @click="setChes(); appConfigStep = 3"
+        :disabled="!hasAcronyms"
+      >
         <v-icon left>email</v-icon>Common Hosted Email
       </v-btn>
       <v-btn class="ma-2" color="primary" @click="appConfigStep = 3" :disabled="true">
         <v-icon left>insert_drive_file</v-icon>Common Hosted Document
       </v-btn>
-      <v-btn class="ma-2" color="primary" @click="setWebade(); appConfigStep = 3" :disabled="!hasAcronyms">
+      <v-btn
+        class="ma-2"
+        color="primary"
+        @click="setWebade(); appConfigStep = 3"
+        :disabled="!hasAcronyms"
+      >
         <v-icon left>save</v-icon>Legacy (WebADE)
       </v-btn>
     </v-stepper-content>
@@ -198,14 +208,14 @@
         </v-dialog>
 
         <v-dialog v-model="passwordDialog" persistent max-width="700">
-          <v-card >
+          <v-card>
             <v-card-title class="headline success">
               <v-icon class="mr-2">check_circle</v-icon>
               <span v-if="usingWebadeConfig">Application Configuration Updated</span>
               <span v-else>Keycloak Client Updated</span>
             </v-card-title>
             <v-card-text>
-              <br>
+              <br />
               <p v-if="usingWebadeConfig">
                 Your application configuration for
                 <strong>{{userAppCfg.applicationAcronym}}</strong> has been updated in the WebADE system.
@@ -260,45 +270,47 @@
                 </v-row>
               </v-card>
 
-              <div v-if="passwordDecrypted && usingWebadeConfig">
-                <h2>2. API Access Token</h2>
-                <p
-                  v-if="usingWebadeConfig"
-                >You can fetch a token with this new service client to test out in the API store or through any REST client</p>
-                <p
-                  v-else
-                >You can fetch a token with this new service client to test out a REST client (or use the username and password to fetch a token on-demand)</p>
-                <v-row align="center">
-                  <v-col cols="12" sm="2">
-                    <v-btn small color="primary" dark @click="getToken()">Get Token</v-btn>
-                  </v-col>
-                  <v-col cols="12" sm="8" v-if="generatedToken">{{generatedToken}}</v-col>
-                  <v-col
-                    class="error"
-                    cols="12"
-                    sm="8"
-                    v-if="generatedTokenError"
-                  >{{generatedTokenError}}</v-col>
-                  <v-col cols="6" sm="2" v-if="generatedToken">
-                    <v-tooltip bottom>
-                      <template v-slot:activator="{ on }">
-                        <v-btn
-                          text
-                          icon
-                          color="primary"
-                          v-clipboard:copy="generatedToken"
-                          v-clipboard:success="clipboardSuccessHandler"
-                          v-clipboard:error="clipboardErrorHandler"
-                          v-on="on"
-                        >
-                          <v-icon>file_copy</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>Copy token to clipboard</span>
-                    </v-tooltip>
-                  </v-col>
-                </v-row>
-                <br />
+              <div v-if="passwordDecrypted">
+                <div v-if="usingWebadeConfig">
+                  <h2>2. API Access Token</h2>
+                  <p
+                    v-if="usingWebadeConfig"
+                  >You can fetch a token with this new service client to test out in the API store or through any REST client</p>
+                  <p
+                    v-else
+                  >You can fetch a token with this new service client to test out a REST client (or use the username and password to fetch a token on-demand)</p>
+                  <v-row align="center">
+                    <v-col cols="12" sm="2">
+                      <v-btn small color="primary" dark @click="getToken()">Get Token</v-btn>
+                    </v-col>
+                    <v-col cols="12" sm="8" v-if="generatedToken">{{generatedToken}}</v-col>
+                    <v-col
+                      class="error"
+                      cols="12"
+                      sm="8"
+                      v-if="generatedTokenError"
+                    >{{generatedTokenError}}</v-col>
+                    <v-col cols="6" sm="2" v-if="generatedToken">
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <v-btn
+                            text
+                            icon
+                            color="primary"
+                            v-clipboard:copy="generatedToken"
+                            v-clipboard:success="clipboardSuccessHandler"
+                            v-clipboard:error="clipboardErrorHandler"
+                            v-on="on"
+                          >
+                            <v-icon>file_copy</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Copy token to clipboard</span>
+                      </v-tooltip>
+                    </v-col>
+                  </v-row>
+                  <br />
+                </div>
 
                 <div v-if="userAppCfg.commonServices.length > 0">
                   <h2 v-if="usingWebadeConfig">3. API Store Swagger</h2>
