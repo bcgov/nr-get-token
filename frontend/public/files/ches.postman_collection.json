@@ -5,6 +5,212 @@
 		"description": "The NR Common Services CHES (Common Hosted Email Service) API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
-	"item": [],
+	"item": [
+		{
+			"name": "CHES Collection",
+			"item": [
+				{
+					"name": "Status - DEV",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI5Rm5UcVlVRkxnbTFIbTJIOThnWEJhWnpPcXBnMFlWU1NvNHBESlVuNXZ3In0.eyJqdGkiOiI5YzEwOGY0NC1jNjEzLTQ4MDctOGRkOS0zNTM5Y2QxY2M1ZmEiLCJleHAiOjE1NzIzMjA4NDcsIm5iZiI6MCwiaWF0IjoxNTcyMzIwNTQ3LCJpc3MiOiJodHRwczovL3Nzby1kZXYucGF0aGZpbmRlci5nb3YuYmMuY2EvYXV0aC9yZWFsbXMvamJkNnJueHciLCJhdWQiOiJDSEVTIiwic3ViIjoiZmUwOTQ2MTAtMjYyNS00Mjk4LThjN2ItMTc1OTMzYWU3OWYxIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiV09SR19TRVJWSUNFX0NMSUVOVCIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6ImM3MjBjODU0LTU1YmQtNDE2NS1iNjcwLWRkZTVmODc3ZjEwNyIsImFjciI6IjEiLCJyZXNvdXJjZV9hY2Nlc3MiOnsiV09SR19TRVJWSUNFX0NMSUVOVCI6eyJyb2xlcyI6WyJ1bWFfcHJvdGVjdGlvbiIsIkNPTU1PTl9TRVJWSUNFUyJdfSwiQ0hFUyI6eyJyb2xlcyI6WyJFTUFJTEVSIiwidW1hX3Byb3RlY3Rpb24iXX19LCJzY29wZSI6IiIsImNsaWVudEhvc3QiOiI3MC42Ni4yMzQuNDIiLCJjbGllbnRJZCI6IldPUkdfU0VSVklDRV9DTElFTlQiLCJjbGllbnRBZGRyZXNzIjoiNzAuNjYuMjM0LjQyIn0.KyBePKGD5eYLM5HkqfzZ7XrLosFOAZbL1A4rYZXGxRNDPBgnmSY_R67Tix3zNnFxRvFreilGpqkVzHKoHctV9_IpR4s5dvaVUy-AmdbFL1WFlzK2XH4ChX8k8U62_1G3jId0J_E-EaRhfMPcOqdczFEEuqGdDSELJg_w5bjNZp40Y0Y26etKnOVwUnzh-9vx1aLfSV8CFbBkVETipPsgc0m0D6RI8BGV1PKPbOlc-CZjC98Pzws2ete3tedPXLEW9OVowyOYU9O_LGGpG9FYWVMC3CJljrjMUCK7ioN5jQaD4Mb--X8z93fRvMvpEqRE4ttEQFsaFLMiay55tb1SeA",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api/v1/health",
+							"protocol": "https",
+							"host": [
+								"ches-master-9f0fbe-dev",
+								"pathfinder",
+								"gov",
+								"bc",
+								"ca"
+							],
+							"path": [
+								"api",
+								"v1",
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Email - DEV",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"from\": \"<your app email here>\",\n\t\"to\": [\"email1\", \"email2\"],\n\t\"bcc\": [\"bcc1\", \"bcc2\"],\n\t\"cc\": [\"cc1\", \"cc2\"],\n\t\"subject\": \"Test email via CHES\",\n\t\"bodyType\": \"text\",\n\t\"body\": \"hello world\"\n}"
+						},
+						"url": {
+							"raw": "http://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api/v1/email",
+							"protocol": "http",
+							"host": [
+								"ches-master-9f0fbe-dev",
+								"pathfinder",
+								"gov",
+								"bc",
+								"ca"
+							],
+							"path": [
+								"api",
+								"v1",
+								"email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Merge - DEV",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"youremailhere\",\n    \"subject\": \"test\",\n    \"bodyType\": \"text\",\n    \"body\": \"hello world and {{username}}, this is a merged email and has some replacement {{fieldgoeshere}} \",\n    \"contexts\": [\n        {\n            \"to\": [\n                \"email1\"\n            ],\n            \"context\": {\n            \t\"username\": \"name1\",\n            \t\"fieldgoeshere\": \"variables\"\n            }\n        },\n        {\n            \"to\": [\n                \"email2\"\n            ],\n            \"context\": {\n            \t\"username\": \"name2\",\n            \t\"fieldgoeshere\": \"candies\"\n            }\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "https://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api/v1/emailMerge",
+							"protocol": "https",
+							"host": [
+								"ches-master-9f0fbe-dev",
+								"pathfinder",
+								"gov",
+								"bc",
+								"ca"
+							],
+							"path": [
+								"api",
+								"v1",
+								"emailMerge"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Common hosted email service",
+			"auth": {
+				"type": "oauth2",
+				"oauth2": [
+					{
+						"key": "accessToken",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI5Rm5UcVlVRkxnbTFIbTJIOThnWEJhWnpPcXBnMFlWU1NvNHBESlVuNXZ3In0.eyJqdGkiOiJlZWIzZDQ1My1iMGEyLTQ2NTItYTQwMC03MDI3Yjg4ZDE4YjkiLCJleHAiOjE1NjgyMzg5OTYsIm5iZiI6MCwiaWF0IjoxNTY4MjM4Njk2LCJpc3MiOiJodHRwczovL3Nzby1kZXYucGF0aGZpbmRlci5nb3YuYmMuY2EvYXV0aC9yZWFsbXMvamJkNnJueHciLCJhdWQiOiJDSEVTIiwic3ViIjoiZWNkNzZmNjctOTc1Zi00OTQ5LWI5MzItZTI0NzYyNWI2ZmJlIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiTVNTQ19TRVJWSUNFX0NMSUVOVCIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6IjQ4OGRiZDQzLTMxYmYtNGRjZS05M2EwLTA4MDAyM2JlYjM3NyIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7Ik1TU0NfU0VSVklDRV9DTElFTlQiOnsicm9sZXMiOlsiQ09NTU9OX1NFUlZJQ0VTIl19LCJDSEVTIjp7InJvbGVzIjpbIkVNQUlMRVIiXX19LCJzY29wZSI6IiIsImNsaWVudEhvc3QiOiIxNDIuMjQuNzEuMTkyIiwiY2xpZW50SWQiOiJNU1NDX1NFUlZJQ0VfQ0xJRU5UIiwiY2xpZW50QWRkcmVzcyI6IjE0Mi4yNC43MS4xOTIifQ.diuChxHlwMAixAUYp9fH3lgNjhNTyQ9-pX8TcTk4yDibOynxAgh88PbPsdwk0blaaK_jw3oksMv4ASCW1g9vXS8VZ_RbxZ9irfzUMqeJ3MYrjzF6nQo2aEFy2w3_LJprs0x-Dp6AD8dfKtZwNSQKfOyAJc0raEfyboOuGMxCbFRy7ZTdWIqUv6m7GhQ2Hp3ZkH28OcoTqXg0T8JFVcRVc2qPBQBxDcNJ6HT7-XlrBB-caZdz-iCgmg9niUYdcX-CxZwFhi3F3g8yYzvPRMhFeopoJT3YFlyqXd2q9ZWatxqqSNW8mdldintqZJxQ7-jwqAPnpIBhA7kErxMPGYKj7w",
+						"type": "string"
+					},
+					{
+						"key": "tokenType",
+						"value": "bearer",
+						"type": "string"
+					},
+					{
+						"key": "addTokenTo",
+						"value": "header",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "cd53040d-1f97-4275-83ca-ec0d0dfd8710",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "bee42971-a251-4fcf-815b-67ee70abc712",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "accessToken",
+				"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI5Rm5UcVlVRkxnbTFIbTJIOThnWEJhWnpPcXBnMFlWU1NvNHBESlVuNXZ3In0.eyJqdGkiOiJjMWM2OGE0Mi0xODg4LTQyYWEtOTBjOC0xY2U5ZDE5YjIwMjIiLCJleHAiOjE1NzEyNTY3NTEsIm5iZiI6MCwiaWF0IjoxNTcxMjU2NDUxLCJpc3MiOiJodHRwczovL3Nzby1kZXYucGF0aGZpbmRlci5nb3YuYmMuY2EvYXV0aC9yZWFsbXMvamJkNnJueHciLCJhdWQiOiJDSEVTIiwic3ViIjoiZWNkNzZmNjctOTc1Zi00OTQ5LWI5MzItZTI0NzYyNWI2ZmJlIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiTVNTQ19TRVJWSUNFX0NMSUVOVCIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6IjYzMzJlMWI0LWJmNjctNGYwYi04ODQ1LTljMTk0MjFhZDM4MiIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7Ik1TU0NfU0VSVklDRV9DTElFTlQiOnsicm9sZXMiOlsiQ09NTU9OX1NFUlZJQ0VTIl19LCJDSEVTIjp7InJvbGVzIjpbIkVNQUlMRVIiXX19LCJzY29wZSI6IiIsImNsaWVudEhvc3QiOiIxNDIuMjQuNzEuMjUyIiwiY2xpZW50SWQiOiJNU1NDX1NFUlZJQ0VfQ0xJRU5UIiwiY2xpZW50QWRkcmVzcyI6IjE0Mi4yNC43MS4yNTIifQ.IhS7V570IHDEie_J9W_nhbCVszYGA0B6IoQgPsFG5EroW3iU6d8Fv4SiXQNu6fJ7cZadANti7tH86aYW7i2NCgpsADXGGKlFnho3y6cvHPa4tnZC7s0iyGbDWBYdI6DFSjNOKRsv_8hup5VUG6Z_O7FbMYtKNbg_f9T3jgfLpI9LYG78f9-wY6aG10LXHSS4RnbGGuHuGU70yMf12Rhsi1EqNa4644jhj52Gu1NZ0PEmRPO6_jybpxrTMVtSr_WsTxhQzczYv7_pAI-ZhifvbsrqcIbDYrGQGTNV-BdY-i3UxiFG1JLQe4P_OWfSoB_aD4OSD_a6-Hnun9sRY-5vCA",
+				"type": "string"
+			},
+			{
+				"key": "tokenType",
+				"value": "bearer",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "98e2ba8d-9d08-4969-8d5d-df8c4238dbf8",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "81f01bbf-e6af-4978-9ec8-4026751ed7d5",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
 	"protocolProfileBehavior": {}
 }
