@@ -20,7 +20,8 @@
               <p>
                 <v-icon>info</v-icon>This will search for preferences that meet the search criteria (ie, things labelled with "password", or "secret", or othewise specified) that have the
                 <strong>sensitiveDataInd</strong> flag set to
-                <strong>false</strong>.
+                <strong>false</strong>. <br>
+                Supply a Regular Expression for the search term if desired.
               </p>
               <v-form ref="form" v-model="valid" lazy-validation>
                 <v-container>
@@ -29,7 +30,7 @@
                       <v-text-field
                         v-model="prefRegex"
                         :rules="regexRules"
-                        label="Preference Name Search Criteria"
+                        label="Preference Name Search Criteria (Regex)"
                         required
                         :mandatory="true"
                       ></v-text-field>
@@ -94,6 +95,7 @@
                     </tbody>
                   </template>
                 </v-simple-table>
+                <p v-if="insecurePasswordsList && insecurePasswordsList.length == 0">No results could be found for this search.</p>
               </div>
             </v-card-text>
           </v-card>
@@ -112,7 +114,7 @@ export default {
       webadeEnvironments: ['INT', 'TEST', 'PROD'],
       searching: false,
       valid: false,
-      prefRegex: '',
+      prefRegex: 'secret|password',
       regexRules: [v => !!v || 'Enter a Regex to search on'],
       environment: '',
       environmentRules: [v => !!v || 'Environment is required'],
