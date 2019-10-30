@@ -73,6 +73,36 @@ const utils = {
   // Returns only app acronym based roles
   filterAppAcronymRoles: roles => roles.filter(role => !role.match(/offline_access|uma_authorization|WEBADE_CFG_READ|WEBADE_CFG_READ_ALL/)),
 
+  // From the big list of webade configs, return all APPLICATION preferences that match the search critera in the name
+  // that are not masked
+  filterForInsecurePrefs: (webadeConfigsList, searchCriteria) => {
+    if (webadeConfigsList) {
+      // From all the configs, get out the preferences
+      // filter on the search criteria and the sensitiveDataInd field
+      const regex = new RegExp(searchCriteria, 'gi');
+      const applications = webadeConfigsList.applicationConfigurations.map(apps =>
+        ({
+          applicationAcronym: apps.applicationAcronym,
+          applicationName: apps.applicationName,
+          applicationDescription: apps.applicationDescription,
+          enabled: apps.enabledInd,
+          preferences: apps.applicationPreferences.filter(pref =>
+            pref.sensitiveDataInd == false &&
+            pref.name.match(regex)
+          )
+        }));
+      const filteredPrefs = applications.filter(app =>
+        app.preferences && app.preferences.length > 0
+      );
+
+      // Return the list of objects sorted alphabetically
+      return filteredPrefs.sort((a, b) => a.applicationAcronym.localeCompare(b.applicationAcronym));
+    } else {
+      log.error('filterForInsecurePrefs', 'Error in supplied webade configuration list');
+      throw new Error('Unable to fetch preferences - Error in supplied webade configuration list');
+    }
+  },
+
   // From the big list of webade configs, return mapped dependencies for a specific acronym
   filterWebAdeDependencies: (webadeConfigsList, acronym) => {
     if (webadeConfigsList && webadeConfigsList.applicationConfigurations) {

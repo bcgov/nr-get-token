@@ -141,5 +141,22 @@ Body: ${JSON.stringify(response.data, null, 2)}`;
       console.log(`Failed to get webade dependencies for ${acronym} in ${webAdeEnv} - ${e}`); // eslint-disable-line no-console
       throw e;
     }
+  },
+
+  async getInsecurePasswords(webAdeEnv, searchCriteria) {
+    try {
+
+      const url = `${ApiRoutes.WEBADE}/${webAdeEnv}/${ApiRoutes.WEBADE_PREFS_INSECURE}`;
+      const response = await apiAxios.get(url, {
+        params: {
+          searchCriteria: searchCriteria
+        }
+      });
+      return response.data;
+    } catch (e) {
+      console.log(`Failed to get webade prefs in ${webAdeEnv} - ${e}`); // eslint-disable-line no-console
+      throw e;
+    }
+
   }
 };

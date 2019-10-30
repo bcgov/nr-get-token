@@ -8,7 +8,8 @@ export const ApiRoutes = Object.freeze({
   WEBADE: `${apiRoot}/webAde`,
   WEBADE_CFG : 'appConfig',
   WEBADE_CONFIGFORM: `${apiRoot}/webAde/configForm`,
-  WEBADE_DEP : 'dependencies'
+  WEBADE_DEP : 'dependencies',
+  WEBADE_PREFS_INSECURE : 'preferences/insecurePrefs'
 });
 
 const authRoot = `${baseRoot}/auth`;

@@ -91,6 +91,42 @@ webAde.get('/:webAdeEnv/:appAcronym/dependencies', [
   }
 });
 
+// fetches a list of all application Preferences from the webade config list that match a search criteria in the pref name
+// and have the secure indicator set to FALSE
+webAde.get('/:webAdeEnv/preferences/insecurePrefs', [
+], async (req, res) => {
+  var searchCriteria = req.query.searchCriteria;
+
+  // Check for required permissions.
+  // If the user has "WEBADE_CFG_READ_ALL" then they can get all
+  const roles = req.user.jwt.realm_access.roles;
+  let hasReadAllRole = false;
+  if (typeof roles === 'object' && roles instanceof Array) {
+    hasReadAllRole = roles.includes('WEBADE_CFG_READ_ALL');
+  }
+
+  if (!hasReadAllRole) {
+    return res.status(403).json({
+      message: 'User lacks permission to read all webade configs'
+    });
+  }
+
+  try {
+    const response = await appConfigComponent.getAppConfigs(req.params.webAdeEnv);
+    if (response) {
+      return res.status(200).json(utils.filterForInsecurePrefs(response, searchCriteria));
+    } else {
+      return res.status(404).json();
+    }
+  } catch (error) {
+    log.error(error);
+    res.status(500).json({
+      message: error.message
+    });
+    return res;
+  }
+});
+
 // gets the big array of all webade configs for a specified env
 webAde.get('/:webAdeEnv/appConfigs', [
 ], async (req, res) => {

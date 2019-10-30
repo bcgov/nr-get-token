@@ -158,9 +158,6 @@ export default {
         this.$store.commit('webadeVisualizer/setSearching', false);
       }
     },
-    sleep(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    },
     async getDependencies(tabNum) {
       // Only load the big dependency query once they go to the second tab
       // Only query for it if it hasn't been loaded already

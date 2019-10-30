@@ -128,6 +128,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  '/webAde/{webAdeEnv}/preferences/insecurePrefs':
+    get:
+      summary: Returns a list of all WebADE applicationPreferences that have the sensitiveDataInd set to false matching the search criteria regular expression
+      operationId: getInsecurePrefs
+      tags:
+        - Application Configuration
+      parameters:
+        - name: webAdeEnv
+          in: path
+          description: The ISSS WebADE environment
+          required: true
+          schema:
+            type: string
+            enum:
+              - INT
+              - TEST
+              - PROD
+        - name: searchCriteria
+          in: query
+          required: true
+          schema:
+            type: string
+            example: secret
+          description: A regular expression that will find preferences matching on their name
+      responses:
+        '200':
+          description: WebADE JSON response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InsecurePrefList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   '/webAde/{webAdeEnv}/appConfigs/':
     get:
       summary: Returns WebADE JSON response for all acronyms
@@ -380,6 +423,11 @@ components:
       items:
         $ref: '#/components/schemas/WebAdeProject'
       description: A list of dependent webade projects
+    InsecurePrefList:
+      type: array
+      items:
+        $ref: '#/components/schemas/WebAdePreferenceList'
+      description: A list of webade projects and the list preference names
     EndpointStatus:
       type: object
       required:
@@ -504,6 +552,61 @@ components:
           type: boolean
           example: true
       description: 'A WebADE project acronym, name, and description'
+    WebAdePreferenceList:
+      type: object
+      required:
+        - applicationAcronym
+        - applicationName
+        - applicationDescription
+        - preferences
+      properties:
+        applicationAcronym:
+          type: string
+          example: MSSC
+        applicationName:
+          type: string
+          example: Application Name
+        applicationDescription:
+          type: string
+          example: Application Description
+        preferences:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebadePreference'
+      description: 'A WebADE project and a list of associated preferences'
+    WebadePreference:
+      type: object
+      required:
+        - dataTypeCode
+        - description
+        - name
+        - sensitiveDataInd
+        - setName
+        - subTypeCode
+        - value
+      properties:
+        dataTypeCode:
+          type: string
+          example: STRING
+        description:
+          type: string
+          example: description of preference
+        name:
+          type: string
+          example: posse.token.service.url
+        sensitiveDataInd:
+          type: boolean
+          example: false
+        setName:
+          type: string
+          example: aqua
+        subTypeCode:
+          type: string
+          example: bootstrap-config
+        value:
+          type: string
+          example: https://j200.gov.bc.ca/ws/NrsServices/session
+      description: 'A WebADE preference object'
   responses:
     Forbidden:
       description: Lack required role to perform action
