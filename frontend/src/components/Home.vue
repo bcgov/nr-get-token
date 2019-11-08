@@ -32,7 +32,7 @@
             <v-tabs v-model="tabControl" background-color="grey lighten-3" slider-color="blue">
               <v-tab :href="`#tab-1`">Submit Application Configuration</v-tab>
               <v-tab :href="`#tab-2`">WebADE Application Configuration Viewer</v-tab>
-              <v-tab :href="`#tab-3`">Security Utils</v-tab>
+              <v-tab :href="`#tab-3`" v-if="hasReadAllWebade">Security Utils</v-tab>
             </v-tabs>
             <v-spacer></v-spacer>
 
@@ -119,7 +119,7 @@
             <v-tab-item :value="`tab-2`">
               <WebAdeVisualizer></WebAdeVisualizer>
             </v-tab-item>
-            <v-tab-item :value="`tab-3`">
+            <v-tab-item :value="`tab-3`" v-if="hasReadAllWebade">
               <SecurityUtils></SecurityUtils>
             </v-tab-item>
           </v-tabs-items>
@@ -167,7 +167,7 @@ export default {
   },
   computed: {
     ...mapGetters(['devMode']),
-    ...mapGetters('auth', ['isAuthenticated']),
+    ...mapGetters('auth', ['isAuthenticated', 'hasReadAllWebade']),
     ...mapGetters('configForm', [
       'configSubmissionSuccess',
       'configSubmissionError',
