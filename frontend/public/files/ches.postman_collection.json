@@ -18,12 +18,15 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:3000/api/v1/health",
+									"raw": "http://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/health",
 									"protocol": "http",
 									"host": [
-										"localhost"
+										"ches-master-9f0fbe-prod",
+										"pathfinder",
+										"gov",
+										"bc",
+										"ca"
 									],
-									"port": "3000",
 									"path": [
 										"api",
 										"v1",
@@ -62,12 +65,15 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/api/v1/email?",
+									"raw": "http://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/email?",
 									"protocol": "http",
 									"host": [
-										"localhost"
+										"ches-master-9f0fbe-prod",
+										"pathfinder",
+										"gov",
+										"bc",
+										"ca"
 									],
-									"port": "3000",
 									"path": [
 										"api",
 										"v1",
@@ -105,15 +111,18 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"attachments\": [\n        {\n            \"content\": \"PGI+SGVsbG8gV29ybGRcITwvYj4=\",\n            \"contentType\": \"string\",\n            \"encoding\": \"base64\",\n            \"filename\": \"testfile.txt\"\n        }\n    ],\n    \"bodyType\": \"text\",\n    \"body\": \"Hello World {{ hello }} content\",\n    \"contexts\": [\n    \t{\n    \t\t\"to\": [\n\t\t        \"email@someemail.com\"\n\t\t    ],\n\t\t    \"context\": {\n\t\t    \t\"orange\": {\n\t\t            \"target\": \"myname\"\n\t\t        },\n\t\t        \"hello\": \"myname template\"\n\t\t    },\n\t\t    \"delayTS\": 1600000000000,\n\t\t    \"tag\": \"tag\"\n    \t},\n    \t{\n    \t\t\"to\": [\n\t\t        \"gkf63839@aklqo.com\"\n\t\t    ],\n\t\t    \"context\": {\n\t\t    \t\"orange\": {\n\t\t            \"target\": \"bobsmith\"\n\t\t        },\n\t\t        \"hello\": \"bob template\"\n\t\t    },\n\t\t    \"delayTS\": 1600000000000,\n\t\t    \"tag\": \"tag\"\n    \t}\n    ],\n    \"encoding\": \"utf-8\",\n    \"from\": \"email.here@gov.bc.ca\",\n    \"priority\": \"normal\",\n    \"subject\": \"Test {{ orange.target }}\"\n}"
+									"raw": "{\n    \"attachments\": [\n        {\n            \"content\": \"PGI+SGVsbG8gV29ybGRcITwvYj4=\",\n            \"contentType\": \"string\",\n            \"encoding\": \"base64\",\n            \"filename\": \"testfile.txt\"\n        }\n    ],\n    \"bodyType\": \"text\",\n    \"body\": \"Hello World {{ hello }} content\",\n    \"contexts\": [\n    \t{\n    \t\t\"to\": [\n\t\t        \"email@someemail.com\"\n\t\t    ],\n\t\t    \"context\": {\n\t\t    \t\"orange\": {\n\t\t            \"target\": \"jujaga\"\n\t\t        },\n\t\t        \"hello\": \"jujaga template\"\n\t\t    },\n\t\t    \"delayTS\": 1600000000000,\n\t\t    \"tag\": \"tag\"\n    \t},\n    \t{\n    \t\t\"to\": [\n\t\t        \"gkf63839@aklqo.com\"\n\t\t    ],\n\t\t    \"context\": {\n\t\t    \t\"orange\": {\n\t\t            \"target\": \"lucasoneil\"\n\t\t        },\n\t\t        \"hello\": \"lucas template\"\n\t\t    },\n\t\t    \"delayTS\": 1600000000000,\n\t\t    \"tag\": \"tag\"\n    \t}\n    ],\n    \"encoding\": \"utf-8\",\n    \"from\": \"email.here@gov.bc.ca\",\n    \"priority\": \"normal\",\n    \"subject\": \"Test {{ orange.target }}\"\n}"
 								},
 								"url": {
-									"raw": "http://localhost:3000/api/v1/emailMerge?",
+									"raw": "http://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/emailMerge?",
 									"protocol": "http",
 									"host": [
-										"localhost"
+										"ches-master-9f0fbe-prod",
+										"pathfinder",
+										"gov",
+										"bc",
+										"ca"
 									],
-									"port": "3000",
 									"path": [
 										"api",
 										"v1",
@@ -144,15 +153,18 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"attachments\": [\n        {\n            \"content\": \"PGI+SGVsbG8gV29ybGRcITwvYj4=\",\n            \"contentType\": \"string\",\n            \"encoding\": \"base64\",\n            \"filename\": \"testfile.txt\"\n        }\n    ],\n    \"bodyType\": \"text\",\n    \"body\": \"Hello World {{ hello }} content\",\n    \"contexts\": [\n    \t{\n    \t\t\"to\": [\n\t\t        \"email@someemail.com\"\n\t\t    ],\n\t\t    \"context\": {\n\t\t    \t\"orange\": {\n\t\t            \"target\": \"myname\"\n\t\t        },\n\t\t        \"hello\": \"myname template\"\n\t\t    }\n    \t},\n    \t{\n    \t\t\"to\": [\n\t\t        \"gkf63839@aklqo.com\"\n\t\t    ],\n\t\t    \"context\": {\n\t\t    \t\"orange\": {\n\t\t            \"target\": \"bobsmith\"\n\t\t        },\n\t\t        \"hello\": \"bob template\"\n\t\t    },\n\t\t    \"delayTS\": 1579965760073,\n\t\t    \"tag\": \"tag\"\n    \t}\n    ],\n    \"encoding\": \"utf-8\",\n    \"from\": \"some.email@gov.bc.ca\",\n    \"priority\": \"normal\",\n    \"subject\": \"Test {{ orange.target }}\"\n}"
+									"raw": "{\n    \"attachments\": [\n        {\n            \"content\": \"PGI+SGVsbG8gV29ybGRcITwvYj4=\",\n            \"contentType\": \"string\",\n            \"encoding\": \"base64\",\n            \"filename\": \"testfile.txt\"\n        }\n    ],\n    \"bodyType\": \"text\",\n    \"body\": \"Hello World {{ hello }} content\",\n    \"contexts\": [\n    \t{\n    \t\t\"to\": [\n\t\t        \"email@someemail.com\"\n\t\t    ],\n\t\t    \"context\": {\n\t\t    \t\"orange\": {\n\t\t            \"target\": \"jujaga\"\n\t\t        },\n\t\t        \"hello\": \"jujaga template\"\n\t\t    }\n    \t},\n    \t{\n    \t\t\"to\": [\n\t\t        \"gkf63839@aklqo.com\"\n\t\t    ],\n\t\t    \"context\": {\n\t\t    \t\"orange\": {\n\t\t            \"target\": \"lucasoneil\"\n\t\t        },\n\t\t        \"hello\": \"lucas template\"\n\t\t    },\n\t\t    \"delayTS\": 1579965760073,\n\t\t    \"tag\": \"tag\"\n    \t}\n    ],\n    \"encoding\": \"utf-8\",\n    \"from\": \"some.email@gov.bc.ca\",\n    \"priority\": \"normal\",\n    \"subject\": \"Test {{ orange.target }}\"\n}"
 								},
 								"url": {
-									"raw": "http://localhost:3000/api/v1/emailMerge/preview",
+									"raw": "http://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/emailMerge/preview",
 									"protocol": "http",
 									"host": [
-										"localhost"
+										"ches-master-9f0fbe-prod",
+										"pathfinder",
+										"gov",
+										"bc",
+										"ca"
 									],
-									"port": "3000",
 									"path": [
 										"api",
 										"v1",
@@ -176,12 +188,15 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:3000/api/v1/status?txId=f80620bc-08ce-44c1-a89e-552a79cee193",
+									"raw": "http://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/status?txId=f80620bc-08ce-44c1-a89e-552a79cee193",
 									"protocol": "http",
 									"host": [
-										"localhost"
+										"ches-master-9f0fbe-prod",
+										"pathfinder",
+										"gov",
+										"bc",
+										"ca"
 									],
-									"port": "3000",
 									"path": [
 										"api",
 										"v1",
@@ -218,12 +233,15 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:3000/api/v1/status/:msgId",
+									"raw": "http://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/status/:msgId",
 									"protocol": "http",
 									"host": [
-										"localhost"
+										"ches-master-9f0fbe-prod",
+										"pathfinder",
+										"gov",
+										"bc",
+										"ca"
 									],
-									"port": "3000",
 									"path": [
 										"api",
 										"v1",
@@ -246,12 +264,15 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:3000/api/v1/cancel?txId=679e02e8-66ca-4859-8dfb-d8eed3c8d16a",
+									"raw": "http://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/cancel?txId=679e02e8-66ca-4859-8dfb-d8eed3c8d16a",
 									"protocol": "http",
 									"host": [
-										"localhost"
+										"ches-master-9f0fbe-prod",
+										"pathfinder",
+										"gov",
+										"bc",
+										"ca"
 									],
-									"port": "3000",
 									"path": [
 										"api",
 										"v1",
@@ -288,12 +309,15 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:3000/api/v1/cancel/:msgId",
+									"raw": "http://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/cancel/:msgId",
 									"protocol": "http",
 									"host": [
-										"localhost"
+										"ches-master-9f0fbe-prod",
+										"pathfinder",
+										"gov",
+										"bc",
+										"ca"
 									],
-									"port": "3000",
 									"path": [
 										"api",
 										"v1",
@@ -323,7 +347,7 @@
 		"oauth2": [
 			{
 				"key": "accessToken",
-				"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI5Rm5UcVlVRkxnbTFIbTJIOThnWEJhWnpPcXBnMFlWU1NvNHBESlVuNXZ3In0.eyJqdGkiOiI5Mjc1YTY0Ny1hMTE0LTQ0ZjUtODEwZS01ZmMyOWJlZjcxNjYiLCJleHAiOjE1NzM3ODAwMjAsIm5iZiI6MCwiaWF0IjoxNTczNzc5NzIwLCJpc3MiOiJodHRwczovL3Nzby1kZXYucGF0aGZpbmRlci5nb3YuYmMuY2EvYXV0aC9yZWFsbXMvamJkNnJueHciLCJhdWQiOlsiREdSU0MiLCJDSEVTIl0sInN1YiI6ImVjZDc2ZjY3LTk3NWYtNDk0OS1iOTMyLWUyNDc2MjViNmZiZSIsInR5cCI6IkJlYXJlciIsImF6cCI6Ik1TU0NfU0VSVklDRV9DTElFTlQiLCJhdXRoX3RpbWUiOjAsInNlc3Npb25fc3RhdGUiOiI3MWMyZmQwMi0xZDk5LTQwMjgtYWRjMS01ZWFmNDA0MzVkZjAiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJER1JTQyI6eyJyb2xlcyI6WyJHRU5FUkFUT1IiXX0sIk1TU0NfU0VSVklDRV9DTElFTlQiOnsicm9sZXMiOlsiQ09NTU9OX1NFUlZJQ0VTIl19LCJDSEVTIjp7InJvbGVzIjpbIkVNQUlMRVIiXX19LCJzY29wZSI6IiIsImNsaWVudEhvc3QiOiIxNDIuMjQuOTMuMTkyIiwiY2xpZW50SWQiOiJNU1NDX1NFUlZJQ0VfQ0xJRU5UIiwiY2xpZW50QWRkcmVzcyI6IjE0Mi4yNC45My4xOTIifQ.QdvohCeBsABVo3cfO8qr2QQNWHUBFV-0L46PnNur7iEEKOqsuYB88whDyLWLrY0eoTNtq83R67dulRoH7qOYRSAQLRMs7s8EmpN2-U7t2J5L5kA3RHyl_6zAhuC17VUZc6dBQ1243qrawF__lD7Nrn4eKzzlqQ0zWw92v5tSt7zcY2JqEiumpNhTzbKLRooDUuRnFGJuu5OdWC1COYrWbbxSRgMLUXroxA-epn_4WarOH8ThlVx7g7dHphDPM5RmoUM5tYw65fBR_rSHWEFjA6XazHkoEARCeQlfRONjroXuppN12tBku4_ixy9EpYCTh15FPFHaZ8bJbHM01CUUDg",
+				"value": "",
 				"type": "string"
 			},
 			{
