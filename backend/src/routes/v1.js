@@ -2,11 +2,9 @@ const router = require('express').Router();
 const path = require('path');
 const passport = require('passport');
 
-// const auth = require('./auth/auth');
-const appConfigRouter = require('./v1/appConfig');
-const appConfigFormRouter = require('./v1/appConfigForm');
+const webAdeRouter = require('./v1/webAde');
 const checksRouter = require('./v1/checks');
-const kcClientFormRouter = require('./v1/kcClientForm');
+const keyCloakRouter = require('./v1/keyCloak');
 
 // Base v1 Responder
 router.get('/', (_req, res) => {
@@ -32,19 +30,14 @@ router.get('/api-spec.yaml', (_req, res) => {
 });
 
 // WebADE Application Configurations
-router.use('/appConfig', passport.authenticate('jwt', {
+router.use('/webAde', passport.authenticate('jwt', {
   session: false
-}), appConfigRouter);
-
-// Application Configuration Form
-router.use('/appConfigForm', passport.authenticate('jwt', {
-  session: false
-}), appConfigFormRouter);
+}), webAdeRouter);
 
 // KeyCloak Client Form
-router.use('/kcClientForm', passport.authenticate('jwt', {
+router.use('/keyCloak', passport.authenticate('jwt', {
   session: false
-}), kcClientFormRouter);
+}), keyCloakRouter);
 
 // Checks
 router.use('/checks', passport.authenticate('jwt', {

@@ -102,7 +102,7 @@ Body: ${JSON.stringify(response.data, null, 2)}`;
 
   async postConfigForm(configFormBody, usingWebadeConfig) {
     try {
-      const route = usingWebadeConfig ? ApiRoutes.APPCONFIG : ApiRoutes.KCCONFIG;
+      const route = usingWebadeConfig ? ApiRoutes.WEBADE_CONFIGFORM : ApiRoutes.KCCONFIG;
       const response = await apiAxios.post(route, configFormBody, {
         headers: {
           'Content-Type': 'application/json'
@@ -117,7 +117,7 @@ Body: ${JSON.stringify(response.data, null, 2)}`;
 
   async getWebAdeConfig(webAdeEnv, acronym) {
     try {
-      const url = `${ApiRoutes.WEBADECONFIG}/${webAdeEnv}/${acronym}`;
+      const url = `${ApiRoutes.WEBADE}/${webAdeEnv}/${acronym}/${ApiRoutes.WEBADE_CFG}`;
       const response = await apiAxios.get(url);
 
       return response.data;
@@ -129,5 +129,34 @@ Body: ${JSON.stringify(response.data, null, 2)}`;
       console.log(`Failed to get webade app config for ${acronym} in ${webAdeEnv} - ${e}`); // eslint-disable-line no-console
       throw e;
     }
+  },
+
+  async getWebAdeDependencies(webAdeEnv, acronym) {
+    try {
+
+      const url = `${ApiRoutes.WEBADE}/${webAdeEnv}/${acronym}/${ApiRoutes.WEBADE_DEP}`;
+      const response = await apiAxios.get(url);
+      return response.data;
+    } catch (e) {
+      console.log(`Failed to get webade dependencies for ${acronym} in ${webAdeEnv} - ${e}`); // eslint-disable-line no-console
+      throw e;
+    }
+  },
+
+  async getInsecurePasswords(webAdeEnv, searchCriteria) {
+    try {
+
+      const url = `${ApiRoutes.WEBADE}/${webAdeEnv}/${ApiRoutes.WEBADE_PREFS_INSECURE}`;
+      const response = await apiAxios.get(url, {
+        params: {
+          searchCriteria: searchCriteria
+        }
+      });
+      return response.data;
+    } catch (e) {
+      console.log(`Failed to get webade prefs in ${webAdeEnv} - ${e}`); // eslint-disable-line no-console
+      throw e;
+    }
+
   }
 };

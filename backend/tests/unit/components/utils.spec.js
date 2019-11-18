@@ -169,7 +169,7 @@ describe('toPascalCase', () => {
 
 describe('filterAppAcronymRoles', () => {
   it('should return the filtered acronym list', () => {
-    const roles = ['offline_access','uma_authorization','WEBADE_CFG_READ','WEBADE_CFG_READ_ALL','DOMO','MSSC'];
+    const roles = ['offline_access', 'uma_authorization', 'WEBADE_CFG_READ', 'WEBADE_CFG_READ_ALL', 'DOMO', 'MSSC'];
     const result = utils.filterAppAcronymRoles(roles);
 
     expect(result).toBeTruthy();
@@ -181,5 +181,40 @@ describe('filterAppAcronymRoles', () => {
     const result = utils.filterAppAcronymRoles(roles);
     expect(result).toBeTruthy();
     expect(result).toHaveLength(0);
+  });
+});
+
+const webadeList = require('./fixtures/webadeList.json');
+const webadeListWithInsecurePrefs = require('./fixtures/webadeListWithInsecurePrefs.json');
+
+describe('filterForInsecurePrefs', () => {
+  it('should return a list of webade configs with insecure prefs', async () => {
+
+    const result = await utils.filterForInsecurePrefs(webadeListWithInsecurePrefs, 'password|secret');
+
+    expect(result).toBeTruthy();
+    expect(result).toHaveLength(2);
+    expect(result[0].applicationAcronym).toEqual('ALTERNATE_API');
+    expect(result[1].applicationAcronym).toEqual('TEST_APP');
+    expect(result[0].preferences).toHaveLength(2);
+    expect(result[1].preferences).toHaveLength(1);
+  });
+
+  it('should not return a list of webade configs when there are 0 insecure prefs', async () => {
+
+    const result = await utils.filterForInsecurePrefs(webadeList, 'password|secret');
+
+    expect(result).toHaveLength(0);
+  });
+});
+
+describe('filterWebAdeDependencies', () => {
+  it('should return a list of webade config dependencies', async () => {
+
+    const result = await utils.filterWebAdeDependencies(webadeList, 'DMS');
+
+    expect(result).toBeTruthy();
+    expect(result).toHaveLength(1);
+    expect(result[0].applicationAcronym).toEqual('EXAMPLE2_API');
   });
 });

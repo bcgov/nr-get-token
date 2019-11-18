@@ -32,6 +32,7 @@
             <v-tabs v-model="tabControl" background-color="grey lighten-3" slider-color="blue">
               <v-tab :href="`#tab-1`">Submit Application Configuration</v-tab>
               <v-tab :href="`#tab-2`">WebADE Application Configuration Viewer</v-tab>
+              <v-tab :href="`#tab-3`" v-if="hasReadAllWebade">Security Utils</v-tab>
             </v-tabs>
             <v-spacer></v-spacer>
 
@@ -118,6 +119,9 @@
             <v-tab-item :value="`tab-2`">
               <WebAdeVisualizer></WebAdeVisualizer>
             </v-tab-item>
+            <v-tab-item :value="`tab-3`" v-if="hasReadAllWebade">
+              <SecurityUtils></SecurityUtils>
+            </v-tab-item>
           </v-tabs-items>
         </v-card>
       </v-col>
@@ -142,7 +146,8 @@ import ApiCheck from './ApiCheck';
 import ConfigForm from './ConfigForm';
 import ConfigGeneratedJson from './ConfigGeneratedJson';
 import HealthCheck from './HealthCheck';
-import WebAdeVisualizer from './WebAdeVisualizer';
+import WebAdeVisualizer from './webAdeVisualizer/WebAdeVisualizer';
+import SecurityUtils from './webAdeVisualizer/SecurityUtils';
 
 export default {
   name: 'home',
@@ -151,7 +156,8 @@ export default {
     ConfigGeneratedJson,
     ApiCheck,
     HealthCheck,
-    WebAdeVisualizer
+    WebAdeVisualizer,
+    SecurityUtils
   },
   data() {
     return {
@@ -161,7 +167,7 @@ export default {
   },
   computed: {
     ...mapGetters(['devMode']),
-    ...mapGetters('auth', ['isAuthenticated']),
+    ...mapGetters('auth', ['isAuthenticated', 'hasReadAllWebade']),
     ...mapGetters('configForm', [
       'configSubmissionSuccess',
       'configSubmissionError',

@@ -113,6 +113,12 @@ const appConfig = {
     };
   },
 
+  /**
+   * Send an application configuration json to the specified webade system.
+   * @param {object} configForm - The specifications from which to create the webade config.
+   * @param {string} publicKey - The encryption key from the client side to encode the password.
+   * @param {string} userId - The identifier of the user from the client side doing this webade update.
+   */
   postAppConfig: async (configForm, publicKey, userId) => {
     const webadeEnv = configForm.clientEnvironment;
     const endpoint = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.endpoint`);
@@ -156,6 +162,50 @@ const appConfig = {
     }
   },
 
+  /**
+   * Fetch all application configurations from webade.
+   * @param {string} webadeEnv - Which ISSS webade env.
+   */
+  getAppConfigs: async (webadeEnv) => {
+    const endpoint = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.endpoint`);
+    const username = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.username`);
+    const password = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.password`);
+
+    // Get a token with the getok service client
+    const token = await utils.getWebAdeToken(username, password, 'WEBADE-REST', webadeEnv);
+    if (!token || token.error) {
+      log.error('postAppConfig', 'Unable to acquire access_token');
+      throw new Error('Unable to acquire access_token');
+    }
+
+    const path = '/applicationConfigurations';
+
+    try {
+
+      // Get the app configurations array
+      const webAdeUrl = endpoint + path;
+      const webAdeResponse = await axios.get(webAdeUrl, {
+        headers: {
+          'Authorization': `Bearer ${token.access_token}`,
+          'Content-Type': 'application/json; charset=utf-8'
+        }
+      });
+      log.verbose('getAppConfigs', utils.prettyStringify(webAdeResponse.data));
+      return webAdeResponse.data;
+    } catch (error) {
+      log.error('getAppConfigs', error.message);
+      if (error.response) {
+        log.error('getAppConfigs', error.response.status);
+        throw new Error(`WebADE ${path} returned an error. ${JSON.stringify(error.response.data)}`);
+      }
+    }
+  },
+
+  /**
+   * Fetch a specific acronym's application configurations from webade.
+   * @param {string} webadeEnv - Which ISSS webade env.
+   * @param {string} applicationAcronym - The app specifier.
+   */
   getAppConfig: async (webadeEnv, applicationAcronym) => {
     const endpoint = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.endpoint`);
     const username = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.username`);

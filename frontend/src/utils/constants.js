@@ -2,11 +2,14 @@ const baseRoot = '/api';
 
 const apiRoot = `${baseRoot}/v1`;
 export const ApiRoutes = Object.freeze({
-  APPCONFIG: `${apiRoot}/appConfigForm`,
   DOCS: `${apiRoot}/docs`,
   HEALTH: `${apiRoot}/checks/status`,
-  KCCONFIG: `${apiRoot}/kcClientForm`,
-  WEBADECONFIG: `${apiRoot}/appConfig`
+  KCCONFIG: `${apiRoot}/keyCloak/configForm`,
+  WEBADE: `${apiRoot}/webAde`,
+  WEBADE_CFG : 'appConfig',
+  WEBADE_CONFIGFORM: `${apiRoot}/webAde/configForm`,
+  WEBADE_DEP : 'dependencies',
+  WEBADE_PREFS_INSECURE : 'preferences/insecurePrefs'
 });
 
 const authRoot = `${baseRoot}/auth`;
