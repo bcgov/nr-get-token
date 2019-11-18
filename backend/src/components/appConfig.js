@@ -193,9 +193,9 @@ const appConfig = {
       log.verbose('getAppConfigs', utils.prettyStringify(webAdeResponse.data));
       return webAdeResponse.data;
     } catch (error) {
-      log.error('getAppConfigs', error.response.status);
+      log.error('getAppConfigs', error.message);
       if (error.response) {
-        log.error(error.response.status);
+        log.error('getAppConfigs', error.response.status);
         throw new Error(`WebADE ${path} returned an error. ${JSON.stringify(error.response.data)}`);
       }
     }
