@@ -73,8 +73,12 @@ const utils = {
   // Returns only app acronym based roles
   filterAppAcronymRoles: roles => roles.filter(role => !role.match(/offline_access|uma_authorization|WEBADE_CFG_READ|WEBADE_CFG_READ_ALL/)),
 
-  // From the big list of webade configs, return all APPLICATION preferences that match the search critera in the name
-  // that are not masked
+
+  /**
+  * From the big list of webade configs, return all APPLICATION preferences that match the search critera in the name that are not masked
+  * @param {string} webadeConfigsList - The array of all the webade configs.
+  * @param {string} searchCriteria - The regex to search through the preference name on.
+  */
   filterForInsecurePrefs: (webadeConfigsList, searchCriteria) => {
     if (webadeConfigsList) {
       // From all the configs, get out the preferences
@@ -92,7 +96,7 @@ const utils = {
           )
         }));
       const filteredPrefs = applications.filter(app =>
-        app.preferences && app.preferences.length > 0
+        app.preferences && app.preferences.length
       );
 
       // Return the list of objects sorted alphabetically
@@ -103,7 +107,11 @@ const utils = {
     }
   },
 
-  // From the big list of webade configs, return mapped dependencies for a specific acronym
+  /**
+  * From the big list of webade configs, return mapped dependencies for a specific acronym
+  * @param {string} webadeConfigsList - The array of all the webade configs.
+  * @param {string} acronym - Which acronym to filter on.
+  */
   filterWebAdeDependencies: (webadeConfigsList, acronym) => {
     if (webadeConfigsList && webadeConfigsList.applicationConfigurations) {
       // From all the configs, find the ones where

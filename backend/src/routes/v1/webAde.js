@@ -39,7 +39,7 @@ webAde.get('/:webAdeEnv/:appAcronym/appConfig', [
     if (response) {
       return res.status(200).json(response);
     } else {
-      return res.status(404).json();
+      return res.status(404).end();
     }
   } catch (error) {
     log.error(error);
@@ -80,7 +80,7 @@ webAde.get('/:webAdeEnv/:appAcronym/dependencies', [
     if (response) {
       return res.status(200).json(utils.filterWebAdeDependencies(response, req.params.appAcronym));
     } else {
-      return res.status(404).json();
+      return res.status(404).end();
     }
   } catch (error) {
     log.error(error);
@@ -116,7 +116,7 @@ webAde.get('/:webAdeEnv/preferences/insecurePrefs', [
     if (response) {
       return res.status(200).json(utils.filterForInsecurePrefs(response, searchCriteria));
     } else {
-      return res.status(404).json();
+      return res.status(404).end();
     }
   } catch (error) {
     log.error(error);
@@ -148,7 +148,7 @@ webAde.get('/:webAdeEnv/appConfigs', [
     if (response) {
       return res.status(200).json(response);
     } else {
-      return res.status(404).json();
+      return res.status(404).end();
     }
   } catch (error) {
     log.error(error);
