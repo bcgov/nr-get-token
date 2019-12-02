@@ -12,7 +12,7 @@
       </a>
 
       <v-toolbar-title>
-        <v-btn class="title hidden-sm-and-down" color="text" text>{{ appTitle }}</v-btn>
+        <v-btn class="title hidden-sm-and-down" color="text" text>{{ appTitle }} - NEW CODE</v-btn>
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
