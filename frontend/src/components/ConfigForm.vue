@@ -111,7 +111,7 @@
           required
           :value="userAppCfg.applicationDescription"
           v-on:keyup.stop="updateAppCfgField('applicationDescription', $event.target.value)"
-          :counter="fieldValidations.DESCRIPTION_MAX_LENGTH"
+          :counter="usingWebadeConfig ? fieldValidations.DESCRIPTION_MAX_LENGTH : fieldValidations.DESCRIPTION_MAX_LENGTH_KC"
           :rules="applicationDescriptionRules"
         ></v-text-field>
         <div v-if="usingWebadeConfig">
@@ -428,9 +428,12 @@ export default {
       ],
       applicationDescriptionRules: [
         v => !!v || 'Description is required',
-        v =>
-          v.length <= FieldValidations.DESCRIPTION_MAX_LENGTH ||
-          `Description must be ${FieldValidations.DESCRIPTION_MAX_LENGTH} characters or less`
+        v => {
+          const max = this.usingWebadeConfig
+            ? FieldValidations.DESCRIPTION_MAX_LENGTH
+            : FieldValidations.DESCRIPTION_MAX_LENGTH_KC;
+          return v.length <= max || `Description must be ${max} characters or less`;
+        }
       ],
       snackbar: {
         on: false,
