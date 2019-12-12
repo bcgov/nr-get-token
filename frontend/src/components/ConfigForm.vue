@@ -64,34 +64,13 @@
       <v-form v-model="step1Valid">
         <v-row>
           <v-col cols="12" md="7">
-            <v-text-field
+            <v-select
+              :items="acronyms"
               label="Application Acronym"
-              required
               :value="userAppCfg.applicationAcronym"
-              v-on:keyup.stop="updateAppCfgField('applicationAcronym', $event.target.value)"
-              :counter="fieldValidations.ACRONYM_MAX_LENGTH"
+              v-on:change="updateAppCfgField('applicationAcronym', $event)"
               :rules="applicationAcronymRules"
-            >
-              <template v-slot:append-outer>
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on }">
-                    <v-icon v-on="on">help_outline</v-icon>
-                  </template>
-                  The Application Acronym must comply with the following format:
-                  <ul>
-                    <li>UPPERCASE LETTERS ONLY</li>
-                    <li>Underscores may be placed between letters</li>
-                    <li>Must begin and end with a letter</li>
-                    <li>At least {{ fieldValidations.ACRONYM_MIN_LENGTH }} characters</li>
-                    <li>
-                      Examples:
-                      <em>ABCD</em>,
-                      <em>ABCD_WXYZ</em>
-                    </li>
-                  </ul>
-                </v-tooltip>
-              </template>
-            </v-text-field>
+            ></v-select>
           </v-col>
         </v-row>
         <v-row>
@@ -111,7 +90,7 @@
           required
           :value="userAppCfg.applicationDescription"
           v-on:keyup.stop="updateAppCfgField('applicationDescription', $event.target.value)"
-          :counter="fieldValidations.DESCRIPTION_MAX_LENGTH"
+          :counter="usingWebadeConfig ? fieldValidations.DESCRIPTION_MAX_LENGTH : fieldValidations.DESCRIPTION_MAX_LENGTH_KC"
           :rules="applicationDescriptionRules"
         ></v-text-field>
         <div v-if="usingWebadeConfig">
@@ -408,18 +387,7 @@ export default {
       webadeEnvironments: ['INT', 'TEST', 'PROD'],
       keycloakEnvironments: ['DEV', 'TEST', 'PROD'],
       userAppCfg: this.$store.state.configForm.userAppCfg,
-      applicationAcronymRules: [
-        v => !!v || 'Acronym is required',
-        v =>
-          v.length <= FieldValidations.ACRONYM_MAX_LENGTH ||
-          `Acronym must be ${FieldValidations.ACRONYM_MAX_LENGTH} characters or less`,
-        v =>
-          /^(?:[A-Z]{2,}[_]?)+[A-Z]{1,}$/g.test(v) ||
-          'Incorrect format. Hover over ? for details.',
-        v =>
-          this.acronyms.includes(v) ||
-          `You are only authorized to use acronym(s) ${this.acronyms}`
-      ],
+      applicationAcronymRules: [v => !!v || 'Acronym is required'],
       applicationNameRules: [
         v => !!v || 'Name is required',
         v =>
@@ -428,9 +396,14 @@ export default {
       ],
       applicationDescriptionRules: [
         v => !!v || 'Description is required',
-        v =>
-          v.length <= FieldValidations.DESCRIPTION_MAX_LENGTH ||
-          `Description must be ${FieldValidations.DESCRIPTION_MAX_LENGTH} characters or less`
+        v => {
+          const max = this.usingWebadeConfig
+            ? FieldValidations.DESCRIPTION_MAX_LENGTH
+            : FieldValidations.DESCRIPTION_MAX_LENGTH_KC;
+          return (
+            v.length <= max || `Description must be ${max} characters or less`
+          );
+        }
       ],
       snackbar: {
         on: false,
