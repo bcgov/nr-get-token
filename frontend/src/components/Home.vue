@@ -1,6 +1,13 @@
 <template>
   <v-container v-if="!isAuthenticated">
     <h1>Not Logged In</h1>
+    <p>
+      For information about onboarding to a common service, see the
+      <a
+        href="https://github.com/bcgov/nr-get-token/wiki/Onboarding-Process"
+        target="_blank"
+      >onboarding documentation</a>
+    </p>
   </v-container>
 
   <v-container v-else>
@@ -62,13 +69,7 @@
                   <v-spacer></v-spacer>
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
-                      <v-btn
-                        class="getHealthCheck"
-                        flat
-                        icon
-                        v-on="on"
-                        @click="getHealthCheck"
-                      >
+                      <v-btn class="getHealthCheck" flat icon v-on="on" @click="getHealthCheck">
                         <v-icon>cached</v-icon>
                       </v-btn>
                     </template>
@@ -197,6 +198,10 @@ export default {
 </script>
 
 <style>
+h1 {
+  margin-bottom: 10px;
+}
+
 .sectionCard {
   margin-bottom: 20px;
 }
