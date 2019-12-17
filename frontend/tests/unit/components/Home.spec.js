@@ -34,11 +34,6 @@ describe('Home.vue', () => {
   });
 
   it('has the app config panel', () => {
-    expect(wrapper.html()).toBe('<div class="container"><h1>Not Logged In</h1></div>');
+    expect(wrapper.html()).toContain('<div class="container"><h1>Not Logged In</h1>');
   });
-
-  // it('dispatches "getHealthCheckStatus" when the refresh button is clicked', () => {
-  //   wrapper.find('.getHealthCheck').trigger('click');
-  //   expect(actions.getHealthCheckStatus).toHaveBeenCalled();
-  // });
 });
