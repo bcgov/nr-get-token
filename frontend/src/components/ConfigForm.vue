@@ -23,6 +23,13 @@
         href="mailto:NR.CommonServiceShowcase@gov.bc.ca?subject=GETOK Registration for <acronym> - <idir>"
       >Register New App</v-btn>
       <v-btn color="primary" @click="appConfigStep = 2" :disabled="!hasAcronyms">Next</v-btn>
+      <p class="caption">
+        For more information please see the
+        <a
+          href="https://github.com/bcgov/nr-get-token/wiki/Onboarding-Process"
+          target="_blank"
+        >onboarding documentation</a>
+      </p>
     </v-stepper-content>
 
     <v-stepper-step :complete="appConfigStep > 2" step="2">
