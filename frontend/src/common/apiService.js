@@ -1,6 +1,7 @@
 import axios from 'axios';
 import AuthService from '@/common/authService';
 import { ApiRoutes } from '@/utils/constants';
+import { CommonServiceTypes } from '@/utils/commonServices.js';
 
 // Buffer concurrent requests while refresh token is being acquired
 let isRefreshing = false;
@@ -100,9 +101,9 @@ Body: ${JSON.stringify(response.data, null, 2)}`;
     }
   },
 
-  async postConfigForm(configFormBody, usingWebadeConfig) {
+  async postConfigForm(configFormBody) {
     try {
-      const route = usingWebadeConfig ? ApiRoutes.WEBADE_CONFIGFORM : ApiRoutes.KCCONFIG;
+      const route = configFormBody.commonServiceType === CommonServiceTypes.WEBADE ? ApiRoutes.WEBADE_CONFIGFORM : ApiRoutes.KCCONFIG;
       const response = await apiAxios.post(route, configFormBody, {
         headers: {
           'Content-Type': 'application/json'

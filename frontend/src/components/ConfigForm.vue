@@ -41,14 +41,11 @@
       <v-btn
         class="ma-2"
         color="primary"
-        @click="setChes(); appConfigStep = 3"
+        @click="setKC(); appConfigStep = 3"
         :disabled="!hasAcronyms"
       >
-        <v-icon left>email</v-icon>Common Hosted Email
-      </v-btn>
-      <v-btn class="ma-2" color="primary" @click="appConfigStep = 3" :disabled="true">
-        <v-icon left>insert_drive_file</v-icon>Common Hosted Document
-      </v-btn>
+        <v-icon left>vpn_key</v-icon>Keycloak-secured Common Services
+      </v-btn><br>
       <v-btn
         class="ma-2"
         color="primary"
@@ -64,7 +61,8 @@
 
     <v-stepper-step :complete="appConfigStep > 3" step="3">
       Set up Application
-      <small>Pick application and service client details</small>
+      <small>Pick application and service client details
+                {{usingWebadeConfig}} {{commonServiceType}}</small>
     </v-stepper-step>
 
     <v-stepper-content step="3">
@@ -102,7 +100,7 @@
         ></v-text-field>
         <div v-if="usingWebadeConfig">
           <v-select
-            :items="commonServices"
+            :items="commonServices.services"
             label="Common Service(s) Required"
             multiple
             chips
@@ -112,7 +110,7 @@
           ></v-select>
         </div>
 
-        <v-btn text @click="usingWebade(false); appConfigStep = 2">Back</v-btn>
+        <v-btn text @click="setWebade(); appConfigStep = 2">Back</v-btn>
         <v-btn color="primary" @click="appConfigStep = 4" :disabled="!step1Valid">Next</v-btn>
       </v-form>
     </v-stepper-content>
@@ -360,7 +358,7 @@
 
 <script>
 import axios from 'axios';
-import commonServiceList from '@/utils/commonServices.js';
+import { CommonServiceTypes, CommonServiceList } from '@/utils/commonServices.js';
 import { FieldValidations, CommonServiceRoutes } from '@/utils/constants.js';
 import cryptico from 'cryptico-js';
 import Vue from 'vue';
@@ -384,8 +382,8 @@ export default {
       appConfigStep: 1,
       step1Valid: false,
       step2Valid: false,
-      commonServices: commonServiceList
-        .filter(serv => serv.type === 'webade')
+      commonServices: CommonServiceList
+        .filter(serv => serv.type === CommonServiceTypes.WEBADE)
         .map(serv => ({
           text: serv.name,
           value: serv.abbreviation,
@@ -429,6 +427,7 @@ export default {
       'ephemeralPasswordRSAKey',
       'configSubmissionSuccess',
       'configSubmissionError',
+      'commonServiceType',
       'usingWebadeConfig',
       'existingWebAdeConfig'
     ]),
@@ -439,20 +438,17 @@ export default {
     },
     apiLinks: function() {
       return this.userAppCfg.commonServices.map(item =>
-        commonServiceList.find(service => service.abbreviation === item)
+        CommonServiceList.find(service => service.abbreviation === item)
       );
     }
   },
   methods: {
-    async usingWebade(val) {
-      this.$store.commit('configForm/setUsingWebadeConfig', val);
-    },
     async setWebade() {
-      this.usingWebade(true);
+      this.$store.commit('configForm/setCommonServiceType', CommonServiceTypes.WEBADE);
     },
-    async setChes() {
-      this.usingWebade(false);
-      this.userAppCfg.commonServices = ['CHES'];
+    async setKC() {
+      this.$store.commit('configForm/setCommonServiceType', CommonServiceTypes.KEYCLOAK);
+      this.userAppCfg.commonServices = [CommonServiceTypes.KEYCLOAK];
     },
     async submitConfig() {
       this.generatedToken = '';
