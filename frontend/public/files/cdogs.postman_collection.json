@@ -15,23 +15,13 @@
 						{
 							"name": "/health",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI5Rm5UcVlVRkxnbTFIbTJIOThnWEJhWnpPcXBnMFlWU1NvNHBESlVuNXZ3In0.eyJqdGkiOiI3OTY2YjVlZS1iMmE2LTQwNzYtYTRjMC0wMTE3NzJmM2I5NzUiLCJleHAiOjE1NzU2NzM1NTgsIm5iZiI6MCwiaWF0IjoxNTc1NjczMjU4LCJpc3MiOiJodHRwczovL3Nzby1kZXYucGF0aGZpbmRlci5nb3YuYmMuY2EvYXV0aC9yZWFsbXMvamJkNnJueHciLCJhdWQiOlsiQ0RPR1MiLCJDSEVTIl0sInN1YiI6IjMyNzNmZTA2LTM1ZWMtNDI2Yy1hYmE3LTgxYWMxNDIzZjU5OCIsInR5cCI6IkJlYXJlciIsImF6cCI6IkRHUlNDX1NFUlZJQ0VfQ0xJRU5UIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiMTZiYjQ5YTMtOWY4Yy00ZDZlLWJhNTEtNzY2OTk3MzQwZmUzIiwiYWNyIjoiMSIsInJlc291cmNlX2FjY2VzcyI6eyJDRE9HUyI6eyJyb2xlcyI6WyJHRU5FUkFUT1IiLCJ1bWFfcHJvdGVjdGlvbiJdfSwiQ0hFUyI6eyJyb2xlcyI6WyJFTUFJTEVSIiwidW1hX3Byb3RlY3Rpb24iXX0sIkRHUlNDX1NFUlZJQ0VfQ0xJRU5UIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIiwiQ09NTU9OX1NFUlZJQ0VTIl19fSwic2NvcGUiOiIiLCJjbGllbnRJZCI6IkRHUlNDX1NFUlZJQ0VfQ0xJRU5UIiwiY2xpZW50SG9zdCI6IjE0Mi4yNC45NC4xMDkiLCJjbGllbnRBZGRyZXNzIjoiMTQyLjI0Ljk0LjEwOSJ9.UsJkpqoD-zIWqdJS_O_VsQgLJJ8XH0XkrcCXZqxNhNGzqXMrt5-S59f3wQWXXFGsj8MuinrgnNjU8sAQytBd-ckp7UT1ZB4Y9_ojt9KnmyNkrlYjMgOfWefYYclwYYJqZieYEOPApcYJ24W91lqrXUSVHkhIBH80dHwllpHdXMqngYCHdQQz55dIKGOB8Bixiga7fkJOO60w77Vz0Of94n_ADYAgiZHTUB5d0FQMBElmzN9X4fXg2abcElcPFppyvdMa-JQzqgQO1Fr9_zOalUd_fiFyH54bWQcVE_FfP5wPSs5-kPWi1FkIFO9FSM-rMWQffSftTljzt6HMCxy5DA",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v1/health/",
+									"raw": "https://cdogs-master-idcqvl-dev.pathfinder.gov.bc.ca/api/v1/health/",
 									"protocol": "https",
 									"host": [
-										"cdogs-master-idcqvl-prod",
+										"cdogs-master-idcqvl-dev",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -57,16 +47,6 @@
 						{
 							"name": "/docGen",
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI5Rm5UcVlVRkxnbTFIbTJIOThnWEJhWnpPcXBnMFlWU1NvNHBESlVuNXZ3In0.eyJqdGkiOiJiNDIxMmYxYy1jNDIwLTQ2MjQtYWRhYS0yMmQyYjZjMDk0MzgiLCJleHAiOjE1NzYxOTU1NjAsIm5iZiI6MCwiaWF0IjoxNTc2MTk1MjYwLCJpc3MiOiJodHRwczovL3Nzby1kZXYucGF0aGZpbmRlci5nb3YuYmMuY2EvYXV0aC9yZWFsbXMvamJkNnJueHciLCJhdWQiOlsiQ0RPR1MiLCJDSEVTIl0sInN1YiI6IjMyNzNmZTA2LTM1ZWMtNDI2Yy1hYmE3LTgxYWMxNDIzZjU5OCIsInR5cCI6IkJlYXJlciIsImF6cCI6IkRHUlNDX1NFUlZJQ0VfQ0xJRU5UIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiNDY3YWU0NjktMTdiOC00Yjk3LWIyYTYtNjhhYjk0ZThiMmM1IiwiYWNyIjoiMSIsInJlc291cmNlX2FjY2VzcyI6eyJDRE9HUyI6eyJyb2xlcyI6WyJHRU5FUkFUT1IiLCJ1bWFfcHJvdGVjdGlvbiJdfSwiQ0hFUyI6eyJyb2xlcyI6WyJFTUFJTEVSIiwidW1hX3Byb3RlY3Rpb24iXX0sIkRHUlNDX1NFUlZJQ0VfQ0xJRU5UIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIiwiQ09NTU9OX1NFUlZJQ0VTIl19fSwic2NvcGUiOiIiLCJjbGllbnRJZCI6IkRHUlNDX1NFUlZJQ0VfQ0xJRU5UIiwiY2xpZW50SG9zdCI6IjE0Mi4yNC43NC44NSIsImNsaWVudEFkZHJlc3MiOiIxNDIuMjQuNzQuODUifQ.WyedL3_G2CBz5JiPbzIvks-_3UQ8Ul9uETPO3f0yaPSIAUG1WNCCCfnLoYKyb_e4xPQt-vjkklAofaPkOP6OTkFQM0gGhEPrbeAoJRbgavaDGMTIP0eXsS22OjixSVtperzGqqHL5houpHIdlghRIMAYArZJkq3bKKpH9DjwpSPsL75q6N7Cr2aLMjY_pDIPKbB4xRKMOE_NaXyt4jFwHs2iYZ17FbeaIi2YUS-O88nRXqoVQWim3Xjc3tVA48GoievTayEBhq2Laa84djz33_VRHmOfGYKfSbNjY7PqfXk6_Vojwq2Foqeb-jUFOwhx4Qo30C6p4WNBTnu_yL5MiA",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [
 									{
@@ -86,10 +66,10 @@
 									}
 								},
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/v1/docGen",
+									"raw": "https://cdogs-master-idcqvl-dev.pathfinder.gov.bc.ca/v1/docGen",
 									"protocol": "https",
 									"host": [
-										"cdogs-master-idcqvl-prod",
+										"cdogs-master-idcqvl-dev",
 										"pathfinder",
 										"gov",
 										"bc",
