@@ -70,10 +70,20 @@ describe('configForm.js', () => {
     expect(store.getters.ephemeralPasswordRSAKey).toBe('test');
   });
 
-  it('updates "usingWebadeConfig" values when "setUsingWebadeConfig" is commited', () => {
-    expect(store.state.usingWebadeConfig).toBe(false);
-    store.commit('setUsingWebadeConfig', true);
-    expect(store.state.usingWebadeConfig).toBe(true);
+  it('updates "commonServiceType" values when "setCommonServiceType" is commited', () => {
+    expect(store.state.commonServiceType).toBe(undefined);
+    store.commit('setCommonServiceType', 'keycloak');
+    expect(store.state.userAppCfg.commonServiceType).toBe('keycloak');
+    expect(store.getters.commonServiceType).toBe('keycloak');
+  });
+
+  it('returns "false" from "usingWebadeConfig" when "commonServiceType" is KC', () => {
+    store.commit('setCommonServiceType', 'keycloak');
+    expect(store.getters.usingWebadeConfig).toBe(false);
+  });
+
+  it('returns "true" from "usingWebadeConfig" when "commonServiceType" is WEBADE', () => {
+    store.commit('setCommonServiceType', 'webade');
     expect(store.getters.usingWebadeConfig).toBe(true);
   });
 

@@ -1,5 +1,6 @@
 import cryptico from 'cryptico-js';
 import ApiService from '@/common/apiService';
+import { CommonServiceTypes } from '@/utils/commonServices.js';
 
 export default {
   namespaced: true,
@@ -7,11 +8,11 @@ export default {
     configSubmissionSuccess: '',
     configSubmissionError: '',
     configSubmissionInProgress: false,
-    usingWebadeConfig: false,
     userAppCfg: {
       applicationAcronym: '',
       applicationName: '',
       applicationDescription: '',
+      commonServiceType: '',
       commonServices: [],
       deploymentMethod: '',
       clientEnvironment: ''
@@ -25,7 +26,8 @@ export default {
     configSubmissionError: state => state.configSubmissionError,
     configSubmissionInProgress: state => state.configSubmissionInProgress,
     configFormSubmissionResult: state => state.configFormSubmissionResult,
-    usingWebadeConfig: state => state.usingWebadeConfig,
+    commonServiceType: state => state.userAppCfg.commonServiceType,
+    usingWebadeConfig: state => state.userAppCfg.commonServiceType === CommonServiceTypes.WEBADE,
     ephemeralPasswordRSAKey: state => state.ephemeralPasswordRSAKey,
     existingWebAdeConfig: state => JSON.stringify(state.existingWebAdeConfig, null, 2),
     appConfigAsString: state => {
@@ -165,8 +167,8 @@ export default {
     setEphemeralPasswordRSAKey: (state, ephemeralPasswordRSAKey) => {
       state.ephemeralPasswordRSAKey = ephemeralPasswordRSAKey;
     },
-    setUsingWebadeConfig: (state, usingWebadeConfig) => {
-      state.usingWebadeConfig = usingWebadeConfig;
+    setCommonServiceType: (state, val) => {
+      state.userAppCfg.commonServiceType = val;
     },
     setExistingWebAdeConfig: (state, val) => {
       state.existingWebAdeConfig = val, null, 2;
@@ -188,7 +190,7 @@ export default {
         passwordPublicKey: cryptico.publicKeyString(ephemeralRSAKey)
       };
       try {
-        const response = await ApiService.postConfigForm(body, context.state.usingWebadeConfig);
+        const response = await ApiService.postConfigForm(body);
         if (!response || !response.generatedPassword) {
           throw new Error('Config form POST response is blank or does not include the password');
         }
@@ -207,7 +209,7 @@ export default {
       } catch (error) {
         context.commit(
           'setConfigSubmissionError',
-          context.state.usingWebadeConfig ? 'An error occurred while attempting to update the application configuration in WebADE.'
+          context.state.commonServiceType === CommonServiceTypes.WEBADE ? 'An error occurred while attempting to update the application configuration in WebADE.'
             : 'An error occurred while attempting to create a service client in Keycloak.'
         );
       }
