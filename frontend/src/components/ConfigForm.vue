@@ -45,7 +45,13 @@
         :disabled="!hasAcronyms"
       >
         <v-icon left>vpn_key</v-icon>Keycloak-secured Common Services
-      </v-btn><br>
+      </v-btn>
+      <div class="underbutton">
+        Keycloak grants access to:
+        <ul>
+          <li v-for="item in kcServices" v-bind:key="item.name">{{item.name}}</li>
+        </ul>
+      </div>
       <v-btn
         class="ma-2"
         color="primary"
@@ -61,8 +67,10 @@
 
     <v-stepper-step :complete="appConfigStep > 3" step="3">
       Set up Application
-      <small>Pick application and service client details
-                {{usingWebadeConfig}} {{commonServiceType}}</small>
+      <small>
+        Pick application and service client details
+        {{usingWebadeConfig}} {{commonServiceType}}
+      </small>
     </v-stepper-step>
 
     <v-stepper-content step="3">
@@ -110,7 +118,7 @@
           ></v-select>
         </div>
 
-        <v-btn text @click="setWebade(); appConfigStep = 2">Back</v-btn>
+        <v-btn text @click="setKC(); appConfigStep = 2">Back</v-btn>
         <v-btn color="primary" @click="appConfigStep = 4" :disabled="!step1Valid">Next</v-btn>
       </v-form>
     </v-stepper-content>
@@ -313,16 +321,16 @@
                   </p>
                   <ul>
                     <li v-for="item in apiLinks" v-bind:key="item.name">
-                      {{item.name}}
+                      <strong>{{item.name}}</strong>
                       <v-btn small color="primary" dark :href="item.apiDocLink" target="_blank">
-                        Try it out
+                        See API docs
                         <v-icon right dark>open_in_new</v-icon>
                       </v-btn>
                       <br />Download Postman collection:
                       <a
                         class="buttonLink"
-                        href="/files/ches.postman_collection.json"
-                        download="ches.postman_collection.json"
+                        :href="`/files/${item.postmanCollection}`"
+                        :download="item.postmanCollection"
                         target="_blank"
                       >
                         <v-btn text icon color="primary">
@@ -358,7 +366,10 @@
 
 <script>
 import axios from 'axios';
-import { CommonServiceTypes, CommonServiceList } from '@/utils/commonServices.js';
+import {
+  CommonServiceTypes,
+  CommonServiceList
+} from '@/utils/commonServices.js';
 import { FieldValidations, CommonServiceRoutes } from '@/utils/constants.js';
 import cryptico from 'cryptico-js';
 import Vue from 'vue';
@@ -382,13 +393,13 @@ export default {
       appConfigStep: 1,
       step1Valid: false,
       step2Valid: false,
-      commonServices: CommonServiceList
-        .filter(serv => serv.type === CommonServiceTypes.WEBADE)
-        .map(serv => ({
-          text: serv.name,
-          value: serv.abbreviation,
-          disabled: serv.disabled
-        })),
+      commonServices: CommonServiceList.filter(
+        serv => serv.type === CommonServiceTypes.WEBADE
+      ).map(serv => ({
+        text: serv.name,
+        value: serv.abbreviation,
+        disabled: serv.disabled
+      })),
       webadeEnvironments: ['INT', 'TEST', 'PROD'],
       keycloakEnvironments: ['DEV', 'TEST', 'PROD'],
       userAppCfg: this.$store.state.configForm.userAppCfg,
@@ -437,18 +448,37 @@ export default {
         : '';
     },
     apiLinks: function() {
-      return this.userAppCfg.commonServices.map(item =>
-        CommonServiceList.find(service => service.abbreviation === item)
+      if (this.usingWebadeConfig) {
+        // If webade, return selected common services
+        return this.userAppCfg.commonServices.map(item =>
+          CommonServiceList.find(service => service.abbreviation === item)
+        );
+      } else {
+        // If keyclok, return all KC common services
+        return this.kcServices;
+      }
+    },
+    kcServices: function() {
+      return CommonServiceList.filter(
+        service => service.type === CommonServiceTypes.KEYCLOAK
       );
     }
   },
   methods: {
     async setWebade() {
-      this.$store.commit('configForm/setCommonServiceType', CommonServiceTypes.WEBADE);
+      this.$store.commit(
+        'configForm/setCommonServiceType',
+        CommonServiceTypes.WEBADE
+      );
     },
     async setKC() {
-      this.$store.commit('configForm/setCommonServiceType', CommonServiceTypes.KEYCLOAK);
-      this.userAppCfg.commonServices = [CommonServiceTypes.KEYCLOAK];
+      this.$store.commit(
+        'configForm/setCommonServiceType',
+        CommonServiceTypes.KEYCLOAK
+      );
+      this.userAppCfg.commonServices = this.kcServices.map(
+        svc => svc.abbreviation
+      );
     },
     async submitConfig() {
       this.generatedToken = '';
@@ -558,5 +588,9 @@ export default {
 <style scoped>
 .commonSvcBtn {
   min-height: 100px;
+}
+.underbutton {
+  padding-left: 20px;
+  margin-bottom: 15px;
 }
 </style>
