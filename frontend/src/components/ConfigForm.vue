@@ -44,7 +44,7 @@
         @click="setKC(); appConfigStep = 3"
         :disabled="!hasAcronyms"
       >
-        <v-icon left>vpn_key</v-icon>Keycloak-secured Common Services
+        <v-icon left>vpn_key</v-icon>Keycloak-Secured Common Services
       </v-btn>
       <div class="underbutton">
         Keycloak grants access to:

@@ -209,7 +209,7 @@ export default {
       } catch (error) {
         context.commit(
           'setConfigSubmissionError',
-          context.state.commonServiceType === 'webade' ? 'An error occurred while attempting to update the application configuration in WebADE.'
+          context.state.commonServiceType === CommonServiceTypes.WEBADE ? 'An error occurred while attempting to update the application configuration in WebADE.'
             : 'An error occurred while attempting to create a service client in Keycloak.'
         );
       }
