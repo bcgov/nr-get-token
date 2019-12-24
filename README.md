@@ -9,7 +9,7 @@
 
 Natural Resources Get Token (GETOK) will automate the process for Development teams to get setup to use **Common Services**.
 
-To learn more about **Common Services** available including [hosted email](https://github.com/bcgov/common-hosted-email-service), [messaging](https://github.com/bcgov/nr-messaging-service-showcase) and [document generation](https://github.com/bcgov/document-generation-showcase) and to see them in action, visit the [Common Services Showcase](https://bcgov.github.io/common-service-showcase/) page.
+To learn more about the **Common Services** available visit the [Common Services Showcase](https://bcgov.github.io/common-service-showcase/) page.
 
 GETOK can also be used to get setup with WebADE services published on [https://apistore.nrs.gov.bc.ca/store/](https://apistore.nrs.gov.bc.ca/store/). GETOK has a service client GETOK_SERVICE which is granted the WEBADE-REST "profileRole" of APPLICATION_ADMINISTRATOR. This allows the GETOK_SERVICE to create new WebADE service Clients.
 
