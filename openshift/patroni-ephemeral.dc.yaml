@@ -273,6 +273,10 @@ parameters:
   description: The name of this instance of the application
   displayName: Application Instance Name
   required: true
+- name: NAMESPACE
+  description: Target namespace reference (i.e. 'k8vopl-dev')
+  displayName: Target Namespace
+  required: true
 - name: IMAGE_REGISTRY
   description: The base OpenShift docker registry
   displayName: Docker Image Registry
