@@ -2,22 +2,45 @@
 apiVersion: v1
 kind: Template
 labels:
-  template: "${REPO_NAME}-template"
   app: "${APP_NAME}-${JOB_NAME}"
+  template: "${REPO_NAME}-template"
 metadata:
   name: "${REPO_NAME}-backend-dc"
 objects:
+- apiVersion: secops.pathfinder.gov.bc.ca/v1alpha1
+  kind: NetworkSecurityPolicy
+  metadata:
+    name: "${APP_NAME}-${JOB_NAME}-pods-to-k8s-api-${NAMESPACE}"
+  spec:
+    description: |
+      Allow pods to talk to the internal K8S api
+    source:
+      - - $namespace=${NAMESPACE}
+    destination:
+      - - int:network=internal-cluster-api-endpoint
+- kind: NetworkSecurityPolicy
+  apiVersion: secops.pathfinder.gov.bc.ca/v1alpha1
+  metadata:
+    name: "${APP_NAME}-backend-${JOB_NAME}-pods-to-egress-${NAMESPACE}"
+  spec:
+    description: |
+      Allow backend pods to open connections to the internet
+    source:
+      - - "app=${APP_NAME}-${JOB_NAME}"
+        - "deploymentconfig=${APP_NAME}-backend-${JOB_NAME}"
+        - role=backend
+    destination:
+      - - ext:network=any
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
-    annotations:
-      openshift.io/generated-by: OpenShiftNewApp
     name: "${APP_NAME}-backend-${JOB_NAME}"
   spec:
     replicas: 2
     selector:
       app: "${APP_NAME}-${JOB_NAME}"
       deploymentconfig: "${APP_NAME}-backend-${JOB_NAME}"
+      role: backend
     strategy:
       type: Recreate
       recreateParams:
@@ -53,11 +76,10 @@ objects:
       resources: {}
     template:
       metadata:
-        annotations:
-          openshift.io/generated-by: OpenShiftNewApp
         labels:
           app: "${APP_NAME}-${JOB_NAME}"
           deploymentconfig: "${APP_NAME}-backend-${JOB_NAME}"
+          role: backend
       spec:
         containers:
         - image: docker-registry.default.svc:5000/${NAMESPACE}/${REPO_NAME}-backend:${JOB_NAME}
@@ -194,8 +216,6 @@ objects:
 - apiVersion: v1
   kind: Service
   metadata:
-    annotations:
-      openshift.io/generated-by: OpenShiftNewApp
     name: "${APP_NAME}-backend-${JOB_NAME}"
   spec:
     ports:
@@ -206,11 +226,10 @@ objects:
     selector:
       app: "${APP_NAME}-${JOB_NAME}"
       deploymentconfig: "${APP_NAME}-backend-${JOB_NAME}"
+      role: backend
 - apiVersion: v1
   kind: Route
   metadata:
-    annotations:
-      openshift.io/host.generated: 'true'
     name: "${APP_NAME}-backend-${JOB_NAME}"
   spec:
     host: "${HOST_ROUTE}"

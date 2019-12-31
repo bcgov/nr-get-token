@@ -19,6 +19,19 @@ labels:
   app.kubernetes.io/version: '10'
   cluster-name: "${INSTANCE}"
 objects:
+- kind: NetworkSecurityPolicy
+  apiVersion: secops.pathfinder.gov.bc.ca/v1alpha1
+  metadata:
+    name: "${NAME}-${INSTANCE}-pods-to-cluster-${NAMESPACE}"
+  spec:
+    description: |
+      Allow backend pods to open connections to the internet
+    source:
+      - - "cluster-name=${INSTANCE}"
+        - "statefulset=${NAME}-${INSTANCE}"
+    destination:
+      - - "cluster-name=${INSTANCE}"
+        - "statefulset=${NAME}-${INSTANCE}"
 - apiVersion: v1
   kind: Service
   metadata:
