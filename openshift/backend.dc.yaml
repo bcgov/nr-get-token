@@ -7,17 +7,6 @@ labels:
 metadata:
   name: "${REPO_NAME}-backend-dc"
 objects:
-- apiVersion: secops.pathfinder.gov.bc.ca/v1alpha1
-  kind: NetworkSecurityPolicy
-  metadata:
-    name: "${APP_NAME}-${JOB_NAME}-pods-to-k8s-api-${NAMESPACE}"
-  spec:
-    description: |
-      Allow pods to talk to the internal K8S api
-    source:
-      - - $namespace=${NAMESPACE}
-    destination:
-      - - int:network=internal-cluster-api-endpoint
 - kind: NetworkSecurityPolicy
   apiVersion: secops.pathfinder.gov.bc.ca/v1alpha1
   metadata:
@@ -26,7 +15,8 @@ objects:
     description: |
       Allow backend pods to open connections to the internet
     source:
-      - - "app=${APP_NAME}-${JOB_NAME}"
+      - - "$namespace=${NAMESPACE}"
+        - "app=${APP_NAME}-${JOB_NAME}"
         - "deploymentconfig=${APP_NAME}-backend-${JOB_NAME}"
         - role=backend
     destination:
@@ -39,11 +29,13 @@ objects:
     description: |
       Allow backend pods to open connections to patroni cluster
     source:
-      - - "app=${APP_NAME}-${JOB_NAME}"
+      - - "$namespace=${NAMESPACE}"
+        - "app=${APP_NAME}-${JOB_NAME}"
         - "deploymentconfig=${APP_NAME}-backend-${JOB_NAME}"
         - role=backend
     destination:
-      - - "cluster-name=${JOB_NAME}"
+      - - "$namespace=${NAMESPACE}"
+        - "cluster-name=${JOB_NAME}"
         - "statefulset=patroni-${JOB_NAME}"
         - role=master
 - apiVersion: v1
