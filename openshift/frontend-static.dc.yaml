@@ -7,6 +7,20 @@ labels:
 metadata:
   name: "${REPO_NAME}-frontend-dc"
 objects:
+- kind: NetworkSecurityPolicy
+  apiVersion: secops.pathfinder.gov.bc.ca/v1alpha1
+  metadata:
+    name: "${APP_NAME}-frontend-${JOB_NAME}-pods-to-egress-${NAMESPACE}"
+  spec:
+    description: |
+      Allow frontend pods to open connections to the internet
+    source:
+      - - "$namespace=${NAMESPACE}"
+        - "app=${APP_NAME}-${JOB_NAME}"
+        - "deploymentconfig=${APP_NAME}-frontend-${JOB_NAME}"
+        - role=frontend
+    destination:
+      - - ext:network=any
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
