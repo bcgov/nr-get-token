@@ -33,6 +33,8 @@ objects:
         - "app=${APP_NAME}-${JOB_NAME}"
         - "deploymentconfig=${APP_NAME}-backend-${JOB_NAME}"
         - role=backend
+      - - "$namespace=${NAMESPACE}"
+        - "openshift.io/deployer-pod.type=hook-mid"
     destination:
       - - "$namespace=${NAMESPACE}"
         - "cluster-name=${JOB_NAME}"
