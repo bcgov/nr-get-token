@@ -388,7 +388,8 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
         echo "Processing Patroni StatefulSet.."
         def dcPatroniTemplate = openshift.process('-f',
           'openshift/patroni.dc.yaml',
-          "INSTANCE=${JOB_NAME}"
+          "INSTANCE=${JOB_NAME}",
+          "NAMESPACE=${projectEnv}"
         )
 
         echo "Applying Patroni StatefulSet..."
