@@ -31,6 +31,21 @@ objects:
         - role=backend
     destination:
       - - ext:network=any
+- kind: NetworkSecurityPolicy
+  apiVersion: secops.pathfinder.gov.bc.ca/v1alpha1
+  metadata:
+    name: "${APP_NAME}-backend-${JOB_NAME}-pods-to-patroni-master-${NAMESPACE}"
+  spec:
+    description: |
+      Allow backend pods to open connections to patroni cluster
+    source:
+      - - "app=${APP_NAME}-${JOB_NAME}"
+        - "deploymentconfig=${APP_NAME}-backend-${JOB_NAME}"
+        - role=backend
+    destination:
+      - - "cluster-name=${JOB_NAME}"
+        - "statefulset=patroni-${JOB_NAME}"
+        - role=master
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
