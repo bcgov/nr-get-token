@@ -19,18 +19,44 @@ labels:
   app.kubernetes.io/version: '10'
   cluster-name: "${INSTANCE}"
 objects:
+- apiVersion: secops.pathfinder.gov.bc.ca/v1alpha1
+  kind: NetworkSecurityPolicy
+  metadata:
+    name: "${APP_NAME}-${INSTANCE}-sa-deployer-to-k8s-api-${NAMESPACE}"
+  spec:
+    description: |
+      Allow pods to talk to the internal K8S api
+    source:
+      - - "$namespace=${NAMESPACE}"
+        - "@app:k8s:serviceaccountname=deployer"
+    destination:
+      - - int:network=internal-cluster-api-endpoint
+- apiVersion: secops.pathfinder.gov.bc.ca/v1alpha1
+  kind: NetworkSecurityPolicy
+  metadata:
+    name: "${APP_NAME}-${INSTANCE}-sa-${NAME}-${INSTANCE}-to-k8s-api-${NAMESPACE}"
+  spec:
+    description: |
+      Allow patroni cluster to talk to the internal K8S api
+    source:
+      - - "$namespace=${NAMESPACE}"
+        - "@app:k8s:serviceaccountname=${NAME}-${INSTANCE}"
+    destination:
+      - - int:network=internal-cluster-api-endpoint
 - kind: NetworkSecurityPolicy
   apiVersion: secops.pathfinder.gov.bc.ca/v1alpha1
   metadata:
     name: "${NAME}-${INSTANCE}-pods-to-cluster-${NAMESPACE}"
   spec:
     description: |
-      Allow backend pods to open connections to the internet
+      Allow patroni pods to open connections to other cluster pods
     source:
-      - - "cluster-name=${INSTANCE}"
+      - - "$namespace=${NAMESPACE}"
+        - "cluster-name=${INSTANCE}"
         - "statefulset=${NAME}-${INSTANCE}"
     destination:
-      - - "cluster-name=${INSTANCE}"
+      - - "$namespace=${NAMESPACE}"
+        - "cluster-name=${INSTANCE}"
         - "statefulset=${NAME}-${INSTANCE}"
 - apiVersion: v1
   kind: Service

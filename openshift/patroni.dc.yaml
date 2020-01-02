@@ -22,7 +22,7 @@ objects:
 - apiVersion: secops.pathfinder.gov.bc.ca/v1alpha1
   kind: NetworkSecurityPolicy
   metadata:
-    name: "${APP_NAME}-${JOB_NAME}-sa-deployer-to-k8s-api-${NAMESPACE}"
+    name: "${NAME}-${INSTANCE}-sa-deployer-to-k8s-api-${NAMESPACE}"
   spec:
     description: |
       Allow pods to talk to the internal K8S api
@@ -34,7 +34,7 @@ objects:
 - apiVersion: secops.pathfinder.gov.bc.ca/v1alpha1
   kind: NetworkSecurityPolicy
   metadata:
-    name: "${APP_NAME}-${JOB_NAME}-sa-${NAME}-${INSTANCE}-to-k8s-api-${NAMESPACE}"
+    name: "${NAME}-${INSTANCE}-sa-${NAME}-${INSTANCE}-to-k8s-api-${NAMESPACE}"
   spec:
     description: |
       Allow patroni cluster to talk to the internal K8S api
