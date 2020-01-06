@@ -318,10 +318,10 @@ components:
         name:
           type: string
           example: Messaging Service Showcase
-        webadePermission:
+        permissionWebade:
           type: boolean
           example: true
-        webadeNrosDmsPermission:
+        permissionWebadeNrosDms:
           type: boolean
           example: false
     AppConfig:
