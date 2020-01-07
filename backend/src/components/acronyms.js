@@ -12,8 +12,9 @@ const acronyms = {
    */
   getAcronym: async (applicationAcronym) => {
     if (!applicationAcronym) {
-      log.error('getAcronym', 'No app acronym supplied to getAcronym');
-      throw new Error('No app acronym supplied to getAcronym');
+      const errMsg = 'No app acronym supplied to getAcronym';
+      log.error('getAcronym', errMsg);
+      throw new Error(errMsg);
     }
     try {
       const acronymDetails = await acronymService.find(applicationAcronym);

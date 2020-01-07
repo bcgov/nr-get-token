@@ -26,8 +26,8 @@ module.exports = {
 
   down: (queryInterface) => {
     return Promise.all([
-      queryInterface.removeColumn('acronym', 'permissionWebade'),
-      queryInterface.removeColumn('acronym', 'permissionWebadeNrosDms')
+      queryInterface.removeColumn('acronym', 'permissionWebadeNrosDms'),
+      queryInterface.removeColumn('acronym', 'permissionWebade')
     ]);
   }
 };
