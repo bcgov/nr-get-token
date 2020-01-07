@@ -2,6 +2,7 @@ const log = require('npmlog');
 
 const webAde = require('express').Router();
 const utils = require('../../components/utils');
+const permissionHelpers = require('../../components/permissionHelpers');
 const appConfigComponent = require('../../components/appConfig');
 
 const {
@@ -160,7 +161,7 @@ webAde.post('/configForm', [
   } = req.body;
 
   // Check if this is allowed, return the error message if not
-  const err = utils.checkWebAdePostPermissions(req.user.jwt, configForm);
+  const err = permissionHelpers.checkWebAdePostPermissions(req.user.jwt, configForm);
   if (err) {
     return res.status(403).json({
       message: err
