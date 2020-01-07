@@ -26,11 +26,13 @@ module.exports = (sequelize, DataTypes) => {
     permissionWebade: {
       allowNull: false,
       comment: 'Flag stating whether this acronym can use WebADE',
+      defaultValue: false,
       type: DataTypes.BOOLEAN
     },
     permissionWebadeNrosDms: {
       allowNull: false,
       comment: 'Flag stating whether this acronym can grant access to NROS documents through DMS',
+      defaultValue: false,
       type: DataTypes.BOOLEAN
     }
   }, {
