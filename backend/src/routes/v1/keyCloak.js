@@ -23,8 +23,6 @@ keyCloak.post('/configForm', [
 ], async (req, res) => {
   // Validate for Bad Requests
   const errors = validationResult(req);
-  console.log(req.body);
-  console.log(errors);
   if (!errors.isEmpty()) {
     return res.status(400).json({
       errors: errors.array(),

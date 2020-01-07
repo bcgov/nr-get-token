@@ -5,6 +5,7 @@ const passport = require('passport');
 const webAdeRouter = require('./v1/webAde');
 const checksRouter = require('./v1/checks');
 const keyCloakRouter = require('./v1/keyCloak');
+const acronymsRouter = require('./v1/acronyms');
 
 // Base v1 Responder
 router.get('/', (_req, res) => {
@@ -43,5 +44,11 @@ router.use('/keyCloak', passport.authenticate('jwt', {
 router.use('/checks', passport.authenticate('jwt', {
   session: false
 }), checksRouter);
+
+// Acronyms
+router.use('/acronyms', passport.authenticate('jwt', {
+  session: false
+}), acronymsRouter);
+
 
 module.exports = router;
