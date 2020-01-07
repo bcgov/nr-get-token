@@ -69,10 +69,6 @@ const utils = {
   // Returns a string in Pascal Case
   toPascalCase: str => str.toLowerCase().replace(/\b\w/g, t => t.toUpperCase()),
 
-  // TODO: this is likely soon to be refactored out, as we will be pulling acronyms from the DB, not from access roles
-  // Returns only app acronym based roles
-  filterAppAcronymRoles: roles => roles.filter(role => !role.match(/offline_access|uma_authorization|WEBADE_CFG_READ|WEBADE_CFG_READ_ALL/)),
-
   /**
   * From the big list of webade configs, return all APPLICATION preferences that match the search critera in the name that are not masked
   * @param {string} webadeConfigsList - The array of all the webade configs.
@@ -133,44 +129,6 @@ const utils = {
     } else {
       log.error('filterWebAdeDependencies', 'Error in supplied webade configuration list');
       throw new Error('Unable to fetch dependencies - Error in supplied webade configuration list');
-    }
-  },
-
-  /**
-  * Is this call allowed to be made for the acronym it's being made for?
-  * @param {string} token - The user's token from the request.
-  * @param {string} acronym - The app acronym.
-  * @returns {string} Error Message - Undefined if permitted, a string of the error message to return if not permitted.
-  */
-  checkAcronymPermission: (token, applicationAcronym) => {
-    // TODO: a lot of this role checking is duplicate, but as we will be moving acronym management to the DB soon all this will need to be refactored anyways
-
-    // Get Acronyms from user token
-    let acronyms = [];
-    const roles = token.realm_access.roles;
-    if (typeof roles === 'object' && roles instanceof Array) {
-      acronyms = utils.filterAppAcronymRoles(roles);
-    }
-
-    // Do they have access to the Acronym they are trying to POST
-    const appAcronym = applicationAcronym;
-    if (!acronyms.includes(applicationAcronym)) {
-      log.verbose(`User not authorized for acronym ${applicationAcronym}. Token: ${utils.prettyStringify(token)}`);
-      return `User lacks permission for '${appAcronym}' acronym`;
-    }
-  },
-
-  /**
-  * Is this call allowed to post the WebADE config details?
-  * @param {string} token - The user's token from the request.
-  * @param {string} configForm - The form posted to the post enpoint.
-  * @returns {string} Error Message - Undefined if permitted, a string of the error message to return if not permitted.
-  */
-  checkWebAdePostPermissions: (token, configForm) => {
-    // Do they have access to the Acronym they are trying to POST
-    const acronymAccessError = utils.checkAcronymPermission(token, configForm.applicationAcronym);
-    if (acronymAccessError) {
-      return acronymAccessError;
     }
   }
 };

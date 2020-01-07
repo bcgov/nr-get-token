@@ -9,6 +9,7 @@ const {
   userService
 } = require('../services');
 const utils = require('./utils');
+const permissionHelpers = require('./permissionHelpers');
 
 const auth = {
   // Check if JWT Access Token has expired
@@ -103,7 +104,7 @@ const auth = {
       // Add keycloak authorized acronyms if they don't already exist
       let acronymList = [];
       if (typeof roles === 'object' && roles instanceof Array) {
-        acronymList = utils.filterAppAcronymRoles(roles);
+        acronymList = permissionHelpers.filterAppAcronymRoles(roles);
       }
       await acronymService.findOrCreateList(acronymList);
 
