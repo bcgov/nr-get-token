@@ -154,6 +154,18 @@ describe('prettyStringify', () => {
     expect(result).toBeTruthy();
     expect(result).toEqual('{\n    "foo": "bar"\n}');
   });
+
+  it('should return "null" for null', () => {
+    const result = utils.prettyStringify(null);
+
+    expect(result).toEqual('null');
+  });
+
+  it('should return undefined for undefined', () => {
+    const result = utils.prettyStringify(undefined);
+
+    expect(result).toBeUndefined();
+  });
 });
 
 describe('toPascalCase', () => {
@@ -216,5 +228,62 @@ describe('filterWebAdeDependencies', () => {
     expect(result).toBeTruthy();
     expect(result).toHaveLength(1);
     expect(result[0].applicationAcronym).toEqual('EXAMPLE2_API');
+  });
+});
+
+const configForm = require('./fixtures/configForm.json');
+const sampleToken = require('./fixtures/token.json');
+
+describe('checkAcronymPermission', () => {
+  it('should return no error when user has permission for acronym', async () => {
+    // Token has a WORG scope
+    const result = utils.checkAcronymPermission(sampleToken, 'WORG');
+    expect(result).toBeUndefined();
+  });
+
+  it('should return an error when user does not have permission for acronym', async () => {
+    // oken has no scope for ABCD
+    const result = utils.checkAcronymPermission(sampleToken, 'ABCD');
+    expect(result).toEqual('User lacks permission for \'ABCD\' acronym');
+  });
+
+  it('should return an error when user has no acronym permissions', async () => {
+    // Token has no roles
+    const tokenCopy = JSON.parse(JSON.stringify(sampleToken));
+    tokenCopy.realm_access.roles = [];
+    const result = utils.checkAcronymPermission(tokenCopy, 'WORG');
+    expect(result).toEqual('User lacks permission for \'WORG\' acronym');
+  });
+
+  it('should return an error when the token has a non-array roles', async () => {
+    // Token has no roles
+    const tokenCopy = JSON.parse(JSON.stringify(sampleToken));
+    tokenCopy.realm_access.roles = 'SOMETHING_WRONG';
+    const result = utils.checkAcronymPermission(tokenCopy, 'WORG');
+    expect(result).toEqual('User lacks permission for \'WORG\' acronym');
+  });
+});
+
+describe('checkWebAdePostPermissions', () => {
+  it('should return no error when user has permission for acronym', async () => {
+    // ConfigForm is for WORG, and token has a WORG scope
+    const result = utils.checkWebAdePostPermissions(sampleToken, configForm);
+    expect(result).toBeUndefined();
+  });
+
+  it('should return an error when user does not have permission for acronym', async () => {
+    // ConfigForm is for ABCD, and token has no scope for that
+    const cfgCopy = JSON.parse(JSON.stringify(configForm));
+    cfgCopy.applicationAcronym = 'ABCD';
+    const result = utils.checkWebAdePostPermissions(sampleToken, cfgCopy);
+    expect(result).toEqual('User lacks permission for \'ABCD\' acronym');
+  });
+
+  it('should return an error when user has no acronym permissions', async () => {
+    // ConfigForm is for ABCD, and token has no scope for that
+    const tokenCopy = JSON.parse(JSON.stringify(sampleToken));
+    tokenCopy.realm_access.roles = [];
+    const result = utils.checkWebAdePostPermissions(tokenCopy, configForm);
+    expect(result).toEqual('User lacks permission for \'WORG\' acronym');
   });
 });

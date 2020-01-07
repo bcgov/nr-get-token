@@ -19,6 +19,38 @@ security:
   - bearerAuth: []
   - OpenID: []
 paths:
+  '/acronyms/{acronym}':
+    get:
+      summary: Returns the details that GETOK stores about an application acronym
+      operationId: getAcronym
+      tags:
+        - Acronyms
+      parameters:
+        - name: acronym
+          in: path
+          description: Name of the project
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Acronym details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcronymDetail'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /checks/status:
     get:
       summary: Returns status of correspondent APIs
@@ -277,6 +309,21 @@ components:
       type: openIdConnect
       openIdConnectUrl: 'https://example.com/.well-known/openid-configuration'
   schemas:
+    AcronymDetail:
+      type: object
+      properties:
+        acronym:
+          type: string
+          example: MSSC
+        name:
+          type: string
+          example: Messaging Service Showcase
+        permissionWebade:
+          type: boolean
+          example: true
+        permissionWebadeNrosDms:
+          type: boolean
+          example: false
     AppConfig:
       type: object
       properties:

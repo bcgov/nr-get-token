@@ -12,7 +12,6 @@ const {
 // fetches the app config json for a acronym in a specified env
 webAde.get('/:webAdeEnv/:appAcronym/appConfig', [
 ], async (req, res) => {
-
   // TODO: a lot of this role checking is duplicate, but as we will be moving acronym management to the DB soon all this will need to be refactored anyways
 
   // Check for required permissions. Can only fetch cfgs for the acronyms you are associated with
@@ -176,24 +175,18 @@ webAde.post('/configForm', [
       message: 'Validation failed'
     });
   }
-
-  // Check for required permission
-  let acronyms = [];
-  const roles = req.user.jwt.realm_access.roles;
-  if (typeof roles === 'object' && roles instanceof Array) {
-    acronyms = utils.filterAppAcronymRoles(roles);
-  }
-
   const {
     configForm,
     passwordPublicKey: publicKey
   } = req.body;
 
-  const appAcronym = configForm.applicationAcronym;
-  if (!acronyms.includes(configForm.applicationAcronym)) {
+  // Check if this is allowed, return the error message if not
+  const err = utils.checkWebAdePostPermissions(req.user.jwt, configForm);
+  if(err) {
     return res.status(403).json({
-      message: `User lacks permission for '${appAcronym}' acronym`
+      message: err
     });
+
   }
 
   try {
