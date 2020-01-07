@@ -22,6 +22,16 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       comment: 'Name of the application acronym',
       type: DataTypes.STRING(64)
+    },
+    permissionWebade: {
+      allowNull: false,
+      comment: 'Flag stating whether this acronym can use WebADE',
+      type: DataTypes.BOOLEAN
+    },
+    permissionWebadeNrosDms: {
+      allowNull: false,
+      comment: 'Flag stating whether this acronym can grant access to NROS documents through DMS',
+      type: DataTypes.BOOLEAN
     }
   }, {
     comment: 'List of all valid application acronyms',
