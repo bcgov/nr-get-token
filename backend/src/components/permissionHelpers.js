@@ -5,7 +5,7 @@ const utils = require('./utils');
 const permissionHelpers = {
   // TODO: this is likely soon to be refactored out, as we will be pulling acronyms from the DB, not from access roles
   // Returns only app acronym based roles
-  filterAppAcronymRoles: roles => roles.filter(role => !role.match(/offline_access|uma_authorization|WEBADE_CFG_READ|WEBADE_CFG_READ_ALL/)),
+  filterAppAcronymRoles: roles => roles.filter(role => !role.match(/offline_access|uma_authorization|WEBADE_CFG_READ|WEBADE_CFG_READ_ALL|WEBADE_PERMISSION|WEBADE_PERMISSION_NROS_DMS/)),
 
   /**
   * Is this call allowed to be made for the acronym it's being made for?
@@ -40,32 +40,37 @@ const permissionHelpers = {
   * @returns {string} Error Message - Undefined if permitted, a string of the error message to return if not permitted.
   */
   checkWebAdePostPermissions: (token, configForm, acronymData, desiredUserRoles = []) => {
-    // Do they have access to the Acronym they are trying to POST
-    let acronymAccessError = permissionHelpers.checkAcronymPermission(token, configForm.applicationAcronym);
-    if (acronymAccessError) {
-      return acronymAccessError;
-    }
-
-    // Do they have the specified scopes
-    let roleError = undefined;
-    desiredUserRoles.forEach((role) => {
-      if (!token.realm_access.roles.includes(role)) {
-        roleError = `User is not permitted to submit WebADE config, missing role ${role}`;
-        return;
+    try {
+      // Do they have access to the Acronym they are trying to POST
+      let acronymAccessError = permissionHelpers.checkAcronymPermission(token, configForm.applicationAcronym);
+      if (acronymAccessError) {
+        return acronymAccessError;
       }
-    });
-    if(roleError) {
-      return roleError;
-    }
 
-    // Is this acronym allowed to post webade
-    if (!acronymData.permissionWebade) {
-      return `Acronym '${acronymData.acronym}' is not permitted to submit WebADE configs`;
-    }
+      // Do they have the specified scopes
+      let roleError = undefined;
+      desiredUserRoles.forEach((role) => {
+        if (!token.realm_access.roles.includes(role)) {
+          roleError = `User is not permitted to submit WebADE config, missing role ${role}`;
+          return;
+        }
+      });
+      if (roleError) {
+        return roleError;
+      }
 
-    // If trying to do it, is this acronym allowed special access to NROS DMs
-    if (desiredUserRoles.includes('WEBADE_PERMISSION_NROS_DMS') && !acronymData.permissionWebadeNrosDms) {
-      return `Acronym '${acronymData.acronym}' is not permitted special access to NROS DMS`;
+      // Is this acronym allowed to post webade
+      if (!acronymData.permissionWebade) {
+        return `Acronym '${acronymData.acronym}' is not permitted to submit WebADE configs`;
+      }
+
+      // If trying to do it, is this acronym allowed special access to NROS DMs
+      if (desiredUserRoles.includes('WEBADE_PERMISSION_NROS_DMS') && !acronymData.permissionWebadeNrosDms) {
+        return `Acronym '${acronymData.acronym}' is not permitted special access to NROS DMS`;
+      }
+    } catch (error) {
+      log.error(`Error occurred determening permission for WebADE POST. Error: ${error}`);
+      return 'Failed to determine permission for WebADE access';
     }
   }
 };

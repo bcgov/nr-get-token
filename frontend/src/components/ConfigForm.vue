@@ -52,16 +52,18 @@
           <li v-for="item in kcServices" v-bind:key="item.name">{{item.name}}</li>
         </ul>
       </div>
-      <v-btn
-        class="ma-2"
-        color="primary"
-        @click="setWebade(); appConfigStep = 3"
-        :disabled="!hasAcronyms"
-      >
-        <v-icon left>save</v-icon>Legacy (WebADE)
-      </v-btn>
-      <br />
-      <br />
+      <div v-if="hasWebadePermission">
+        <v-btn
+          class="ma-2"
+          color="primary"
+          @click="setWebade(); appConfigStep = 3"
+          :disabled="!hasAcronyms"
+        >
+          <v-icon left>save</v-icon>Legacy (WebADE)
+        </v-btn>
+        <br />
+        <br />
+      </div>
       <v-btn text @click="appConfigStep = 1">Back</v-btn>
     </v-stepper-content>
 
@@ -431,7 +433,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('auth', ['acronyms', 'hasAcronyms']),
+    ...mapGetters('auth', ['acronyms', 'hasAcronyms', 'hasWebadePermission']),
     ...mapGetters('configForm', [
       'appConfigAsString',
       'configFormSubmissionResult',

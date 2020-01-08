@@ -75,7 +75,8 @@ const utils = {
   * @param {string} searchCriteria - The regex to search through the preference name on.
   */
   filterForInsecurePrefs: (webadeConfigsList, searchCriteria) => {
-    if (webadeConfigsList) {
+    if (webadeConfigsList && webadeConfigsList.applicationConfigurations
+      && webadeConfigsList.applicationConfigurations.length) {
       // From all the configs, get out the preferences
       // filter on the search criteria and the sensitiveDataInd field
       const regex = new RegExp(searchCriteria, 'gi');

@@ -113,4 +113,9 @@ describe('checkWebAdePostPermissions', () => {
     const result = permissionHelpers.checkWebAdePostPermissions(tokenCopy, configForm, adCopy, ['WEBADE_PERMISSION', 'WEBADE_PERMISSION_NROS_DMS']);
     expect(result).toEqual('Acronym \'WORG\' is not permitted special access to NROS DMS');
   });
+
+  it('should return a generic error when an error occurs checking', async () => {
+    const result = permissionHelpers.checkWebAdePostPermissions(sampleToken, configForm, undefined);
+    expect(result).toEqual('Failed to determine permission for WebADE access');
+  });
 });

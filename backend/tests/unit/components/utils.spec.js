@@ -195,10 +195,12 @@ describe('filterForInsecurePrefs', () => {
   });
 
   it('should not return a list of webade configs when there are 0 insecure prefs', async () => {
-
     const result = await utils.filterForInsecurePrefs(webadeList, 'password|secret');
-
     expect(result).toHaveLength(0);
+  });
+
+  it('should exception on an empty list', () => {
+    expect(() => { utils.filterForInsecurePrefs([], 'password|secret'); }).toThrow(Error);
   });
 });
 
@@ -210,5 +212,9 @@ describe('filterWebAdeDependencies', () => {
     expect(result).toBeTruthy();
     expect(result).toHaveLength(1);
     expect(result[0].applicationAcronym).toEqual('EXAMPLE2_API');
+  });
+
+  it('should throw on bad input', async () => {
+    expect(() => { utils.filterWebAdeDependencies(undefined, 'DMS'); }).toThrow(Error);
   });
 });

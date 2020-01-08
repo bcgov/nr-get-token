@@ -6,10 +6,14 @@ export default {
   state: {
     acronyms: [],
     hasReadAllWebade: false,
+    hasWebadePermission: false,
+    hasWebadeNrosDmsPermission: false,
     isAuthenticated: localStorage.getItem('jwtToken') !== null
   },
   getters: {
     acronyms: state => state.acronyms,
+    hasWebadePermission: state => state.hasWebadePermission,
+    hasWebadeNrosDmsPermission: state => state.hasWebadeNrosDmsPermission,
     hasReadAllWebade: state => state.hasReadAllWebade,
     isAuthenticated: state => state.isAuthenticated,
     hasAcronyms: state => state.acronyms && state.acronyms.length,
@@ -24,8 +28,10 @@ export default {
 
         // TODO: this will require re-conceptualizing as acronyms will come from the DB, not the access roles in the future.
         if (typeof roles === 'object' && roles instanceof Array) {
-          state.acronyms = roles.filter(role => !role.match(/offline_access|uma_authorization|WEBADE_CFG_READ|WEBADE_CFG_READ_ALL/));
+          state.acronyms = roles.filter(role => !role.match(/offline_access|uma_authorization|WEBADE_CFG_READ|WEBADE_CFG_READ_ALL|WEBADE_PERMISSION|WEBADE_PERMISSION_NROS_DMS/));
           state.hasReadAllWebade = roles.some(role => role === 'WEBADE_CFG_READ_ALL');
+          state.hasWebadePermission = roles.some(role => role === 'WEBADE_PERMISSION');
+          state.hasWebadeNrosDmsPermission = roles.some(role => role === 'WEBADE_PERMISSION_NROS_DMS');
         } else {
           state.acronyms = [];
         }
