@@ -2,7 +2,6 @@ const log = require('npmlog');
 
 const webAde = require('express').Router();
 const utils = require('../../components/utils');
-const permissionHelpers = require('../../components/permissionHelpers');
 const appConfigComponent = require('../../components/appConfig');
 
 const {
@@ -161,7 +160,7 @@ webAde.post('/configForm', [
   } = req.body;
 
   // Check if this is allowed, return the error message if not
-  const err = permissionHelpers.checkWebAdePostPermissions(req.user.jwt, configForm);
+  const err = appConfigComponent.getPermissionError(req.user.jwt, configForm);
   if (err) {
     log.debug('/configForm', `No permission to Post WebADE config: ${err}`);
     return res.status(403).json({
