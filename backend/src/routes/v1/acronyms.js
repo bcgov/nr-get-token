@@ -1,14 +1,14 @@
 const log = require('npmlog');
 
 const webAde = require('express').Router();
-const utils = require('../../components/utils');
+const permissionHelpers = require('../../components/permissionHelpers');
 const acronymComponent = require('../../components/acronyms');
 
 // fetches the acronym details
 webAde.get('/:appAcronym', [
 ], async (req, res) => {
   // Check for required permissions. Can only fetch details for the acronyms you are associated with
-  const permissionErr = utils.checkAcronymPermission(req.user.jwt, req.params.appAcronym);
+  const permissionErr = permissionHelpers.checkAcronymPermission(req.user.jwt, req.params.appAcronym);
   if (permissionErr) {
     return res.status(403).json({
       message: permissionErr
