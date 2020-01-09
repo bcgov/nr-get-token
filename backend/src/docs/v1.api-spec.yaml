@@ -428,7 +428,7 @@ components:
           type: array
           items:
             type: string
-            example: CMSG
+            example: cmsg
           description: An array of applicationAcronyms
         passwordPublicKey:
           type: string

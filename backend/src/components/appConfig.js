@@ -3,9 +3,11 @@ const config = require('config');
 const log = require('npmlog');
 
 const {
+  acronymService,
   lifecycleService
 } = require('../services');
 const utils = require('./utils');
+const permissionHelper = require('./permissionHelpers');
 
 const appConfig = {
   // Constructs a WebADE Application Configuration based on the request body
@@ -160,6 +162,35 @@ const appConfig = {
         throw new Error(`WebADE ${path} returned an error. ${JSON.stringify(error.response.data)}`);
       }
     }
+  },
+
+  /**
+   * Return a permission error if the user is not allowed to do this. Undefined if no error
+   * @param {string} token - the user's token
+   * @param {string} applicationAcronym - The app specifier.
+   */
+  getPermissionError: async (token, configForm) => {
+    const acronym = configForm.applicationAcronym;
+    if (!acronym) {
+      const errMsg = 'No app acronym determined during permission check';
+      log.error('getPermissionError', errMsg);
+      return errMsg;
+    }
+
+    // Get the stored app acronym details from the getok db
+    const acronymDetails = await acronymService.find(acronym);
+    if (!acronymDetails) {
+      return `Acronym ${acronym} could not be found in GETOK database`;
+    }
+
+    // Figure out what permissions are required based on the request
+    const desiredUserRoles = ['WEBADE_PERMISSION'];
+    if (configForm.commonServices && configForm.commonServices.includes('nros-dms')) {
+      desiredUserRoles.push('WEBADE_PERMISSION_NROS_DMS');
+    }
+
+    // Can this call be made?
+    return permissionHelper.checkWebAdePostPermissions(token, configForm, acronymDetails, desiredUserRoles);
   },
 
   /**
