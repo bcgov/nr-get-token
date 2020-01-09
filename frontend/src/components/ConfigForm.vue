@@ -110,7 +110,7 @@
         ></v-text-field>
         <div v-if="usingWebadeConfig">
           <v-select
-            :items="commonServices.services"
+            :items="commonServices"
             label="Common Service(s) Required"
             multiple
             chips
@@ -472,6 +472,8 @@ export default {
         'configForm/setCommonServiceType',
         CommonServiceTypes.WEBADE
       );
+      // Clear any common services, they will be set by the user using the drop down if desired
+      this.userAppCfg.commonServices = [];
     },
     async setKC() {
       this.$store.commit(
