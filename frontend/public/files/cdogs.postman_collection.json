@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "0a974d4f-dab1-4b1d-a253-be3f76d17562",
+		"_postman_id": "23a09894-70a2-4138-b39a-09552b543fd4",
 		"name": "Common Document Generation Service",
 		"description": "CDOGS - A Document Generation common service",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -18,10 +18,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-dev.pathfinder.gov.bc.ca/api/v1/health/",
+									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v1/health",
 									"protocol": "https",
 									"host": [
-										"cdogs-master-idcqvl-dev",
+										"cdogs-master-idcqvl-prod",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -30,8 +30,7 @@
 									"path": [
 										"api",
 										"v1",
-										"health",
-										""
+										"health"
 									]
 								}
 							},
@@ -66,16 +65,17 @@
 									}
 								},
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-dev.pathfinder.gov.bc.ca/v1/docGen",
+									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v1/docGen",
 									"protocol": "https",
 									"host": [
-										"cdogs-master-idcqvl-dev",
+										"cdogs-master-idcqvl-prod",
 										"pathfinder",
 										"gov",
 										"bc",
 										"ca"
 									],
 									"path": [
+										"api",
 										"v1",
 										"docGen"
 									]
