@@ -165,10 +165,10 @@ const appConfig = {
   },
 
   /**
-  * Return a permission error if the user is not allowed to do this. Undefined if no error
-  * @param {string} token - the user's token
-  * @param {string} applicationAcronym - The app specifier.
-  */
+   * Return a permission error if the user is not allowed to do this. Undefined if no error
+   * @param {string} token - the user's token
+   * @param {string} applicationAcronym - The app specifier.
+   */
   getPermissionError: async (token, configForm) => {
     const acronym = configForm.applicationAcronym;
     if (!acronym) {
