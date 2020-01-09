@@ -3,8 +3,8 @@ const config = require('config');
 const log = require('npmlog');
 
 const {
-  lifecycleService,
-  acronymService
+  acronymService,
+  lifecycleService
 } = require('../services');
 const utils = require('./utils');
 const permissionHelper = require('./permissionHelpers');

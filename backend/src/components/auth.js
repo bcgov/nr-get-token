@@ -8,8 +8,8 @@ const {
   acronymService,
   userService
 } = require('../services');
-const utils = require('./utils');
 const permissionHelpers = require('./permissionHelpers');
+const utils = require('./utils');
 
 const auth = {
   // Check if JWT Access Token has expired

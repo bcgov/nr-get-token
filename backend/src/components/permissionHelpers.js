@@ -26,7 +26,7 @@ const permissionHelpers = {
     // Do they have access to the Acronym they are trying to POST
     const appAcronym = applicationAcronym;
     if (!acronyms.includes(applicationAcronym)) {
-      log.verbose(`User not authorized for acronym ${applicationAcronym}. Token: ${utils.prettyStringify(token)}`);
+      log.verbose('checkAcronymPermission', `User not authorized for acronym ${applicationAcronym}. Token: ${utils.prettyStringify(token)}`);
       return `User lacks permission for '${appAcronym}' acronym`;
     }
   },

@@ -3,6 +3,10 @@ const log = require('npmlog');
 
 const permissionHelpers = require('../../../src/components/permissionHelpers');
 
+const acronymDetail = require('./fixtures/acronymDetail.json');
+const configForm = require('./fixtures/configForm.json');
+const sampleToken = require('./fixtures/token.json');
+
 log.level = config.get('server.logLevel');
 
 describe('filterAppAcronymRoles', () => {
@@ -21,11 +25,6 @@ describe('filterAppAcronymRoles', () => {
     expect(result).toHaveLength(0);
   });
 });
-
-const configForm = require('./fixtures/configForm.json');
-const sampleToken = require('./fixtures/token.json');
-const acronymDetail = require('./fixtures/acronymDetail.json');
-
 
 describe('checkAcronymPermission', () => {
   it('should return no error when user has permission for acronym', async () => {
@@ -104,7 +103,7 @@ describe('checkWebAdePostPermissions', () => {
     expect(result).toEqual('Acronym \'WORG\' is not permitted to submit WebADE configs');
   });
 
-  it('should return an error when acronym is not allowed to do special NROS DMS', async () => {
+  it('should return an error when acronym is not allowed to do special NROS DMS', () => {
     // Set acronym detail to not allow webade
     const tokenCopy = JSON.parse(JSON.stringify(sampleToken));
     tokenCopy.realm_access.roles.push(...['WEBADE_PERMISSION', 'WEBADE_PERMISSION_NROS_DMS']);

@@ -7,8 +7,8 @@ const MockAdapter = require('axios-mock-adapter');
 
 const appConfig = require('../../../src/components/appConfig');
 const {
-  lifecycleService,
-  acronymService
+  acronymService,
+  lifecycleService
 } = require('../../../src/services');
 const utils = require('../../../src/components/utils');
 
@@ -247,9 +247,9 @@ describe('getAppConfig', () => {
 });
 
 describe('getPermissionError', () => {
-  const tokenFixture = require('./fixtures/token.json');
   const acronymDetailFixture = require('./fixtures/acronymDetail.json');
   const configFormFixture = require('./fixtures/configForm.json');
+  const tokenFixture = require('./fixtures/token.json');
 
   // Spy/mock the DB access 'find' method on the acronym table
   const spy = jest.spyOn(acronymService, 'find');
