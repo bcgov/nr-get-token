@@ -211,7 +211,7 @@ export default {
         context.commit(
           'setConfigSubmissionError',
           context.getters.usingWebadeConfig ? 'An error occurred while attempting to update the application configuration in WebADE.'
-            : 'An error occurred while attempting to create a service client in Keycloak. '
+            : 'An error occurred while attempting to create a service client in Keycloak.'
         );
       }
     },
