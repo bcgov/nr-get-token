@@ -160,7 +160,7 @@ webAde.post('/configForm', [
   } = req.body;
 
   // Check if this is allowed, return the error message if not
-  const err = appConfigComponent.getPermissionError(req.user.jwt, configForm);
+  const err = await appConfigComponent.getPermissionError(req.user.jwt, configForm);
   if (err) {
     log.debug('/configForm', `No permission to Post WebADE config: ${err}`);
     return res.status(403).json({
