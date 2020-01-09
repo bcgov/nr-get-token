@@ -176,6 +176,7 @@ export default {
   },
   actions: {
     async submitConfigForm(context) {
+
       context.commit('setConfigSubmissionInProgress');
 
       const uniqueSeed =
@@ -209,7 +210,7 @@ export default {
       } catch (error) {
         context.commit(
           'setConfigSubmissionError',
-          context.state.commonServiceType === CommonServiceTypes.WEBADE ? 'An error occurred while attempting to update the application configuration in WebADE.'
+          context.getters.usingWebadeConfig ? 'An error occurred while attempting to update the application configuration in WebADE.'
             : 'An error occurred while attempting to create a service client in Keycloak.'
         );
       }

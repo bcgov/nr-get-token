@@ -8,6 +8,7 @@ const {
   acronymService,
   userService
 } = require('../services');
+const permissionHelpers = require('./permissionHelpers');
 const utils = require('./utils');
 
 const auth = {
@@ -103,7 +104,7 @@ const auth = {
       // Add keycloak authorized acronyms if they don't already exist
       let acronymList = [];
       if (typeof roles === 'object' && roles instanceof Array) {
-        acronymList = utils.filterAppAcronymRoles(roles);
+        acronymList = permissionHelpers.filterAppAcronymRoles(roles);
       }
       await acronymService.findOrCreateList(acronymList);
 

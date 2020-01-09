@@ -103,7 +103,7 @@ Body: ${JSON.stringify(response.data, null, 2)}`;
 
   async postConfigForm(configFormBody) {
     try {
-      const route = configFormBody.commonServiceType === CommonServiceTypes.WEBADE ? ApiRoutes.WEBADE_CONFIGFORM : ApiRoutes.KCCONFIG;
+      const route = configFormBody.configForm.commonServiceType === CommonServiceTypes.WEBADE ? ApiRoutes.WEBADE_CONFIGFORM : ApiRoutes.KCCONFIG;
       const response = await apiAxios.post(route, configFormBody, {
         headers: {
           'Content-Type': 'application/json'

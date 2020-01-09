@@ -7,6 +7,7 @@ const MockAdapter = require('axios-mock-adapter');
 
 const appConfig = require('../../../src/components/appConfig');
 const {
+  acronymService,
   lifecycleService
 } = require('../../../src/services');
 const utils = require('../../../src/components/utils');
@@ -243,4 +244,59 @@ describe('getAppConfig', () => {
       }
     });
   });
+});
+
+describe('getPermissionError', () => {
+  const acronymDetailFixture = require('./fixtures/acronymDetail.json');
+  const configFormFixture = require('./fixtures/configForm.json');
+  const tokenFixture = require('./fixtures/token.json');
+
+  // Spy/mock the DB access 'find' method on the acronym table
+  const spy = jest.spyOn(acronymService, 'find');
+  jest.mock('../../../src/services/acronym');
+
+  afterEach(() => {
+    spy.mockClear();
+  });
+
+  it('should return no error message if permissions are all good', async () => {
+    acronymService.find.mockResolvedValue(acronymDetailFixture);
+
+    const tokenCopy = JSON.parse(JSON.stringify(tokenFixture));
+    tokenCopy.realm_access.roles.push(...['WEBADE_PERMISSION', 'WEBADE_PERMISSION_NROS_DMS']);
+
+    const configFormCopy = JSON.parse(JSON.stringify(configFormFixture));
+    configFormCopy.commonServices.push('nros-dms');
+
+    const result = await appConfig.getPermissionError(tokenCopy, configFormCopy);
+
+    expect(result).toBeUndefined();
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return an error if lacking permissions', async () => {
+    acronymService.find.mockResolvedValue(acronymDetailFixture);
+
+    const result = await appConfig.getPermissionError(tokenFixture, configFormFixture);
+
+    expect(result).toEqual('User is not permitted to submit WebADE config, missing role WEBADE_PERMISSION');
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return an error message if acronym cannot be found', async () => {
+    acronymService.find.mockResolvedValue(undefined);
+
+    const result = await appConfig.getPermissionError(tokenFixture, configFormFixture);
+
+    expect(result).toEqual('Acronym WORG could not be found in GETOK database');
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return an error message if no acronym is supplied', async () => {
+    const result = await appConfig.getPermissionError(null, { applicationAcronym: undefined });
+
+    expect(result).toEqual('No app acronym determined during permission check');
+    expect(spy).toHaveBeenCalledTimes(0);
+  });
+
 });
