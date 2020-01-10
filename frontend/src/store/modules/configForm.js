@@ -122,23 +122,23 @@ export default {
                 applicationCode: 'CMSG',
                 name: 'SENDER'
               }
-            )
+            );
           }
           if (state.userAppCfg.commonServices.includes('nros-dms')) {
             newAppCfg.profiles[0].profileRoles.push(
               {
-                "applicationCode": "DMS",
-                "name": "CONTRIBUTOR"
+                'applicationCode': 'DMS',
+                'name': 'CONTRIBUTOR'
               },
               {
-                "applicationCode": "DMS",
-                "name": "STAFF_USER_READ"
+                'applicationCode': 'DMS',
+                'name': 'STAFF_USER_READ'
               },
               {
-                "applicationCode": "NRS_AS",
-                "name": "READ_ANY_DMS"
+                'applicationCode': 'NRS_AS',
+                'name': 'READ_ANY_DMS'
               }
-            )
+            );
           }
 
           newAppCfg.serviceClients[0].authorizations = [{

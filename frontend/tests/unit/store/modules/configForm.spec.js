@@ -137,7 +137,7 @@ describe('configForm.js - WebADE configs', () => {
       applicationName: 'Document Generation',
       applicationDescription: 'A sample application description test',
       commonServices: []
-    }
+    };
 
     const config = store.getters.appConfigAsString;
     expect(config).toBeTruthy();
@@ -150,7 +150,7 @@ describe('configForm.js - WebADE configs', () => {
       applicationName: 'Document Generation',
       applicationDescription: 'A sample application description test',
       commonServices: ['cmsg']
-    }
+    };
 
     const config = store.getters.appConfigAsString;
     expect(config).toBeTruthy();
@@ -163,7 +163,7 @@ describe('configForm.js - WebADE configs', () => {
       applicationName: 'Mines Digital Services',
       applicationDescription: 'The technologies that support mine oversight',
       commonServices: ['nros-dms']
-    }
+    };
 
     const config = store.getters.appConfigAsString;
     expect(config).toBeTruthy();
@@ -176,7 +176,7 @@ describe('configForm.js - WebADE configs', () => {
       applicationName: 'Document Generation',
       applicationDescription: 'A sample application description test',
       deploymentMethod: 'deploymentManual'
-    }
+    };
 
     const configWithNoServicesCopy = JSON.parse(JSON.stringify(configWithNoServices));
     configWithNoServicesCopy.serviceClients[0].secret = '${WORG_SERVICE_CLIENT.password}';
