@@ -82,7 +82,21 @@ describe('configForm.js', () => {
   it('updates "existingWebAdeConfig" values when "setExistingWebAdeConfig" is commited', () => {
     expect(store.state.existingWebAdeConfig).toBe('');
     store.commit('setExistingWebAdeConfig', { test: '123' });
-    expect(store.state.existingWebAdeConfig).toBeTruthy();
+    expect(store.getters.existingWebAdeConfig).toBeTruthy();
+  });
+
+  it('updates "userAppCfg" values when "updateUserAppCfg" is commited', () => {
+    store.commit('updateUserAppCfg', { test: 123 });
+    expect(store.state.userAppCfg).toStrictEqual({
+      applicationAcronym: '',
+      applicationName: '',
+      applicationDescription: '',
+      commonServiceType: '',
+      commonServices: [],
+      deploymentMethod: '',
+      clientEnvironment: '',
+      test: 123
+    });
   });
 
   it('returns "false" from "usingWebadeConfig" when "commonServiceType" is KC', () => {
