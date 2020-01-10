@@ -101,7 +101,7 @@ export default {
 
           newAppCfg.profiles = [{
             name: `${newAppCfg.applicationAcronym}_PROFILE`,
-            description: `Can send an email with the ${newAppCfg.applicationAcronym} app`,
+            description: `Common service access profile for ${newAppCfg.applicationAcronym} app`,
             secureByOrganization: false,
             availibleTo: [
               'SCL'
@@ -112,13 +112,34 @@ export default {
               {
                 applicationCode: newAppCfg.applicationAcronym,
                 name: `${newAppCfg.applicationAcronym}_ROLE`
-              },
+              }
+            ]
+          }];
+
+          if (state.userAppCfg.commonServices.includes('cmsg')) {
+            newAppCfg.profiles[0].profileRoles.push(
               {
                 applicationCode: 'CMSG',
                 name: 'SENDER'
               }
-            ]
-          }];
+            )
+          }
+          if (state.userAppCfg.commonServices.includes('nros-dms')) {
+            newAppCfg.profiles[0].profileRoles.push(
+              {
+                "applicationCode": "DMS",
+                "name": "CONTRIBUTOR"
+              },
+              {
+                "applicationCode": "DMS",
+                "name": "STAFF_USER_READ"
+              },
+              {
+                "applicationCode": "NRS_AS",
+                "name": "READ_ANY_DMS"
+              }
+            )
+          }
 
           newAppCfg.serviceClients[0].authorizations = [{
             profileName: `${newAppCfg.applicationAcronym}_PROFILE`,
