@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const path = require('path');
 const passport = require('passport');
+const YAML = require('yamljs');
 
 const webAdeRouter = require('./v1/webAde');
 const checksRouter = require('./v1/checks');
@@ -28,6 +29,11 @@ router.get('/docs', (_req, res) => {
 // OpenAPI YAML Spec
 router.get('/api-spec.yaml', (_req, res) => {
   res.sendFile(path.join(__dirname, '../docs/v1.api-spec.yaml'));
+});
+
+// OpenAPI JSON Spec
+router.get('/api-spec.json', (_req, res) => {
+  res.status(200).json(YAML.load(path.join(__dirname, '../docs/v1.api-spec.yaml')));
 });
 
 // WebADE Application Configurations
