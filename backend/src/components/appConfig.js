@@ -86,13 +86,34 @@ const appConfig = {
           {
             applicationCode: newAppCfg.applicationAcronym,
             name: `${newAppCfg.applicationAcronym}_ROLE`
-          },
+          }
+        ]
+      }];
+
+      if (configForm.commonServices.includes('cmsg')) {
+        newAppCfg.profiles[0].profileRoles.push(
           {
             applicationCode: 'CMSG',
             name: 'SENDER'
           }
-        ]
-      }];
+        );
+      }
+      if (configForm.commonServices.includes('nros-dms')) {
+        newAppCfg.profiles[0].profileRoles.push(
+          {
+            'applicationCode': 'DMS',
+            'name': 'CONTRIBUTOR'
+          },
+          {
+            'applicationCode': 'DMS',
+            'name': 'STAFF_USER_READ'
+          },
+          {
+            'applicationCode': 'NRS_AS',
+            'name': 'READ_ANY_DMS'
+          }
+        );
+      }
 
       newAppCfg.serviceClients[0].authorizations = [{
         profileName: `${newAppCfg.applicationAcronym}_PROFILE`,
