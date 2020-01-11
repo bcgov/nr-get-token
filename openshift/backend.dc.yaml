@@ -203,6 +203,26 @@ objects:
               secretKeyRef:
                 key: password
                 name: getok-sc-keycloakint-secret
+          - name: SC_KC_TEST_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: getok-sc-keycloaktest-secret
+          - name: SC_KC_TEST_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: getok-sc-keycloaktest-secret
+          - name: SC_KC_PROD_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: getok-sc-keycloakprod-secret
+          - name: SC_KC_PROD_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: getok-sc-keycloakprod-secret
           envFrom:
           - configMapRef:
               name: getok-oidc-config

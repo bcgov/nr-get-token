@@ -85,6 +85,19 @@ oc create -n k8vopl-<env> secret generic getok-sc-keycloakint-secret \
   --from-literal=password=<password>
 ```
 
+```sh
+oc create -n k8vopl-<env> secret generic getok-sc-keycloaktest-secret \
+  --type=kubernetes.io/basic-auth \
+  --from-literal=username=<username> \
+  --from-literal=password=<password>
+```
+
+```sh
+oc create -n k8vopl-<env> secret generic getok-sc-keycloakprod-secret \
+  --type=kubernetes.io/basic-auth \
+  --from-literal=username=<username> \
+  --from-literal=password=<password>
+```
 
 ## Build Config & Deployment
 
