@@ -395,13 +395,6 @@ export default {
       appConfigStep: 1,
       step1Valid: false,
       step2Valid: false,
-      commonServices: CommonServiceList.filter(
-        serv => serv.type === CommonServiceTypes.WEBADE
-      ).map(serv => ({
-        text: serv.name,
-        value: serv.abbreviation,
-        disabled: serv.disabled
-      })),
       webadeEnvironments: ['INT', 'TEST', 'PROD'],
       keycloakEnvironments: ['DEV', 'TEST', 'PROD'],
       userAppCfg: this.$store.state.configForm.userAppCfg,
@@ -433,7 +426,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('auth', ['acronyms', 'hasAcronyms', 'hasWebadePermission']),
+    ...mapGetters('auth', [
+      'acronyms',
+      'hasAcronyms',
+      'hasWebadePermission',
+      'hasWebadeNrosDmsPermission'
+    ]),
     ...mapGetters('configForm', [
       'appConfigAsString',
       'configFormSubmissionResult',
@@ -459,6 +457,17 @@ export default {
         // If keyclok, return all KC common services
         return this.kcServices;
       }
+    },
+    commonServices: function() {
+      return CommonServiceList.filter(
+        serv =>
+          serv.type === CommonServiceTypes.WEBADE &&
+          (serv.abbreviation != 'nros-dms' || this.hasWebadeNrosDmsPermission)
+      ).map(serv => ({
+        text: serv.name,
+        value: serv.abbreviation,
+        disabled: serv.disabled
+      }));
     },
     kcServices: function() {
       return CommonServiceList.filter(

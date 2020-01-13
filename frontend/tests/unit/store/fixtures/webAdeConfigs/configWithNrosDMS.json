@@ -1,0 +1,85 @@
+{
+  "@type": "http://webade.gov.bc.ca/applicationConfiguration",
+  "applicationAcronym": "MDS",
+  "custodianNumber": 0,
+  "applicationName": "Mines Digital Services",
+  "applicationDescription": "The technologies that support mine oversight",
+  "applicationObjectPrefix": null,
+  "enabledInd": true,
+  "distributeTypeCd": null,
+  "managementEnabledInd": false,
+  "applicationVersion": null,
+  "reportedWebadeVersion": null,
+  "actions": [
+    {
+      "name": "MDS_ACTION",
+      "description": "MDS action",
+      "privilegedInd": false
+    }
+  ],
+  "roles": [
+    {
+      "name": "MDS_ROLE",
+      "description": "MDS Role",
+      "actionNames": [
+        "MDS_ACTION"
+      ]
+    }
+  ],
+  "wdePreferences": [],
+  "applicationPreferences": [],
+  "globalPreferences": [],
+  "defaultUserPreferences": [],
+  "profiles": [
+    {
+      "name": "MDS_PROFILE",
+      "description": "Common service access profile for MDS app",
+      "secureByOrganization": false,
+      "availibleTo": [
+        "SCL"
+      ],
+      "effectiveDate": 1506582000000,
+      "expiryDate": 253402243200000,
+      "profileRoles": [
+        {
+          "applicationCode": "MDS",
+          "name": "MDS_ROLE"
+        },
+        {
+          "applicationCode": "DMS",
+          "name": "CONTRIBUTOR"
+        },
+        {
+          "applicationCode": "DMS",
+          "name": "STAFF_USER_READ"
+        },
+        {
+          "applicationCode": "NRS_AS",
+          "name": "READ_ANY_DMS"
+        }
+      ]
+    }
+  ],
+  "serviceClients": [
+    {
+      "accountName": "MDS_SERVICE_CLIENT",
+      "secret": "••••••••",
+      "oauthScopes": [],
+      "oauthGrantTypes": [],
+      "oauthRedirectUrls": [],
+      "oauthAccessTokenValidity": null,
+      "oauthRefreshTokenValidity": null,
+      "oauthAdditionalInformation": "{\"autoapprove\":\"true\"}",
+      "authorizations": [
+        {
+          "profileName": "MDS_PROFILE",
+          "profileDescription": "Test profile description",
+          "effectiveDate": 1506629523000,
+          "expiryDate": 253402243200000,
+          "enabled": true
+        }
+      ]
+    }
+  ],
+  "groupAuthorizations": []
+}

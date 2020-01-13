@@ -1,0 +1,34 @@
+{
+  "@type": "http://webade.gov.bc.ca/applicationConfiguration",
+  "applicationAcronym": "WORG",
+  "custodianNumber": 0,
+  "applicationName": "Document Generation",
+  "applicationDescription": "A sample application description test",
+  "applicationObjectPrefix": null,
+  "enabledInd": true,
+  "distributeTypeCd": null,
+  "managementEnabledInd": false,
+  "applicationVersion": null,
+  "reportedWebadeVersion": null,
+  "actions": [],
+  "roles": [],
+  "wdePreferences": [],
+  "applicationPreferences": [],
+  "globalPreferences": [],
+  "defaultUserPreferences": [],
+  "profiles": [],
+  "serviceClients": [
+    {
+      "accountName": "WORG_SERVICE_CLIENT",
+      "secret": "••••••••",
+      "oauthScopes": [],
+      "oauthGrantTypes": [],
+      "oauthRedirectUrls": [],
+      "oauthAccessTokenValidity": null,
+      "oauthRefreshTokenValidity": null,
+      "oauthAdditionalInformation": "{\"autoapprove\":\"true\"}",
+      "authorizations": []
+    }
+  ],
+  "groupAuthorizations": []
+}

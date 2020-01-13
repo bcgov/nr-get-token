@@ -33,7 +33,11 @@ oc create -n k8vopl-<env> configmap getok-sc-config \
   --from-literal=SC_GETOK_ENDPOINT_PROD=https://api.nrs.gov.bc.ca/webade-api/v1 \
   --from-literal=SC_MSSC_ENDPOINT=https://i1api.nrs.gov.bc.ca/cmsg-messaging-api/v1 \
   --from-literal=SC_KC_INT_ENDPOINT=https://sso-dev.pathfinder.gov.bc.ca \
-  --from-literal=SC_KC_INT_REALM=jbd6rnxw
+  --from-literal=SC_KC_TEST_ENDPOINT=https://sso-test.pathfinder.gov.bc.ca \
+  --from-literal=SC_KC_PROD_ENDPOINT=https://sso.pathfinder.gov.bc.ca \
+  --from-literal=SC_KC_INT_REALM=jbd6rnxw\
+  --from-literal=SC_KC_TEST_REALM=jbd6rnxw\
+  --from-literal=SC_KC_PROD_REALM=jbd6rnxw
 ```
 
 ### Secrets
@@ -85,6 +89,19 @@ oc create -n k8vopl-<env> secret generic getok-sc-keycloakint-secret \
   --from-literal=password=<password>
 ```
 
+```sh
+oc create -n k8vopl-<env> secret generic getok-sc-keycloaktest-secret \
+  --type=kubernetes.io/basic-auth \
+  --from-literal=username=<username> \
+  --from-literal=password=<password>
+```
+
+```sh
+oc create -n k8vopl-<env> secret generic getok-sc-keycloakprod-secret \
+  --type=kubernetes.io/basic-auth \
+  --from-literal=username=<username> \
+  --from-literal=password=<password>
+```
 
 ## Build Config & Deployment
 

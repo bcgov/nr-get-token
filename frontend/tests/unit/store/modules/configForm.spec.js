@@ -1,7 +1,9 @@
+
+import { cloneDeep } from 'lodash';
 import { createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
+
 import configFormStore from '@/store/modules/configForm';
-import { cloneDeep } from 'lodash';
 
 describe('configForm.js', () => {
   let store;
@@ -77,6 +79,26 @@ describe('configForm.js', () => {
     expect(store.getters.commonServiceType).toBe('keycloak');
   });
 
+  it('updates "existingWebAdeConfig" values when "setExistingWebAdeConfig" is commited', () => {
+    expect(store.state.existingWebAdeConfig).toBe('');
+    store.commit('setExistingWebAdeConfig', { test: '123' });
+    expect(store.getters.existingWebAdeConfig).toBeTruthy();
+  });
+
+  it('updates "userAppCfg" values when "updateUserAppCfg" is commited', () => {
+    store.commit('updateUserAppCfg', { test: 123 });
+    expect(store.state.userAppCfg).toStrictEqual({
+      applicationAcronym: '',
+      applicationName: '',
+      applicationDescription: '',
+      commonServiceType: '',
+      commonServices: [],
+      deploymentMethod: '',
+      clientEnvironment: '',
+      test: 123
+    });
+  });
+
   it('returns "false" from "usingWebadeConfig" when "commonServiceType" is KC', () => {
     store.commit('setCommonServiceType', 'keycloak');
     expect(store.getters.usingWebadeConfig).toBe(false);
@@ -85,6 +107,83 @@ describe('configForm.js', () => {
   it('returns "true" from "usingWebadeConfig" when "commonServiceType" is WEBADE', () => {
     store.commit('setCommonServiceType', 'webade');
     expect(store.getters.usingWebadeConfig).toBe(true);
+  });
+});
+
+describe('configForm.js - WebADE configs', () => {
+  let store;
+
+  const configBlank = require('../fixtures/webAdeConfigs/configBlank.json');
+  const configWithCmsg = require('../fixtures/webAdeConfigs/configWithCmsg.json');
+  const configWithNoServices = require('../fixtures/webAdeConfigs/configWithNoServices.json');
+  const configWithNrosDMS = require('../fixtures/webAdeConfigs/configWithNrosDMS.json');
+
+  beforeEach(() => {
+    const localVue = createLocalVue();
+    localVue.use(Vuex);
+
+    store = new Vuex.Store(cloneDeep(configFormStore));
+  });
+
+  it('returns the expected WebADE App config based on the user entered details - totally blank', () => {
+    const config = store.getters.appConfigAsString;
+    expect(config).toBeTruthy();
+    expect(config).toEqual(JSON.stringify(configBlank, null, 2));
+  });
+
+  it('returns the expected WebADE App config based on the user entered details - no services', () => {
+    store.state.userAppCfg = {
+      applicationAcronym: 'WORG',
+      applicationName: 'Document Generation',
+      applicationDescription: 'A sample application description test',
+      commonServices: []
+    };
+
+    const config = store.getters.appConfigAsString;
+    expect(config).toBeTruthy();
+    expect(config).toEqual(JSON.stringify(configWithNoServices, null, 2));
+  });
+
+  it('returns the expected WebADE App config based on the user entered details - cmsg', () => {
+    store.state.userAppCfg = {
+      applicationAcronym: 'WORG',
+      applicationName: 'Document Generation',
+      applicationDescription: 'A sample application description test',
+      commonServices: ['cmsg']
+    };
+
+    const config = store.getters.appConfigAsString;
+    expect(config).toBeTruthy();
+    expect(config).toEqual(JSON.stringify(configWithCmsg, null, 2));
+  });
+
+  it('returns the expected WebADE App config based on the user entered details - nros-dms', () => {
+    store.state.userAppCfg = {
+      applicationAcronym: 'MDS',
+      applicationName: 'Mines Digital Services',
+      applicationDescription: 'The technologies that support mine oversight',
+      commonServices: ['nros-dms']
+    };
+
+    const config = store.getters.appConfigAsString;
+    expect(config).toBeTruthy();
+    expect(config).toEqual(JSON.stringify(configWithNrosDMS, null, 2));
+  });
+
+  it('returns the expected WebADE App config with a placeholder secret for the manual deployment mode', () => {
+    store.state.userAppCfg = {
+      applicationAcronym: 'WORG',
+      applicationName: 'Document Generation',
+      applicationDescription: 'A sample application description test',
+      deploymentMethod: 'deploymentManual'
+    };
+
+    const configWithNoServicesCopy = JSON.parse(JSON.stringify(configWithNoServices));
+    configWithNoServicesCopy.serviceClients[0].secret = '${WORG_SERVICE_CLIENT.password}';
+
+    const config = store.getters.appConfigAsString;
+    expect(config).toBeTruthy();
+    expect(config).toEqual(JSON.stringify(configWithNoServicesCopy, null, 2));
   });
 
 });

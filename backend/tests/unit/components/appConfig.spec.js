@@ -20,7 +20,7 @@ const pubKey = cryptico.generateRSAKey(uniqueSeed, 1024);
 const pubKeyString = cryptico.publicKeyString(pubKey);
 
 describe('buildWebAdeCfg', () => {
-  it('should yield a configuration and encrypted password with a common service', async () => {
+  it('should yield a configuration and encrypted password with cmsg', async () => {
     const result = await appConfig.buildWebAdeCfg({
       applicationAcronym: 'TEST',
       applicationName: 'name',
@@ -38,6 +38,42 @@ describe('buildWebAdeCfg', () => {
     expect(result.webAdeCfg.actions.length).toBeGreaterThan(0);
     expect(result.webAdeCfg.roles.length).toBeGreaterThan(0);
     expect(result.webAdeCfg.profiles.length).toBeGreaterThan(0);
+    expect(result.webAdeCfg.profiles[0].profileRoles).toStrictEqual([{
+      applicationCode: 'TEST',
+      name: 'TEST_ROLE'
+    },
+    {
+      applicationCode: 'CMSG',
+      name: 'SENDER'
+    }]);
+  });
+
+  it('should yield a configuration and encrypted password with nros-dms', async () => {
+    const result = await appConfig.buildWebAdeCfg({
+      applicationAcronym: 'TEST',
+      applicationName: 'name',
+      applicationDescription: 'description',
+      commonServices: ['nros-dms'],
+      deploymentMethod: 'deploymentDirect',
+      clientEnvironment: 'INT'
+    }, pubKeyString);
+
+    expect(result.webAdeCfg.profiles[0].profileRoles).toStrictEqual([{
+      applicationCode: 'TEST',
+      name: 'TEST_ROLE'
+    },
+    {
+      applicationCode: 'DMS',
+      name: 'CONTRIBUTOR'
+    },
+    {
+      applicationCode: 'DMS',
+      name: 'STAFF_USER_READ'
+    },
+    {
+      applicationCode: 'NRS_AS',
+      name: 'READ_ANY_DMS'
+    }]);
   });
 
   it('should yield a configuration and encrypted password without a common service', async () => {
@@ -238,6 +274,64 @@ describe('getAppConfig', () => {
     expect(result).toEqual(response);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(resourceToGet, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json; charset=utf-8'
+      }
+    });
+  });
+});
+
+describe('getAppConfigs', () => {
+  const token = '00000000-0000-0000-0000-000000000000';
+  const url = config.get('serviceClient.getokInt.endpoint') + '/applicationConfigurations';
+
+  const spy = jest.spyOn(axios, 'get');
+
+  afterEach(() => {
+    spy.mockClear();
+  });
+
+  it('should error if unable to acquire access token', async () => {
+    utils.getWebAdeToken = jest.fn().mockReturnValue({
+      error: 'error'
+    });
+
+    await expect(appConfig.getAppConfigs('INT')).rejects.toThrowError('Unable to acquire access_token');
+    expect(spy).toHaveBeenCalledTimes(0);
+  });
+
+  it('should error if WebADE GET returned an error', async () => {
+    utils.getWebAdeToken = jest.fn().mockResolvedValue({
+      access_token: token
+    });
+
+    mockAxios.onGet(url).reply(500);
+
+    await expect(appConfig.getAppConfigs('INT')).rejects.toThrowError();
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(url, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json; charset=utf-8'
+      }
+    });
+  });
+
+  it('should yield a response upon successful WebADE get', async () => {
+    utils.getWebAdeToken = jest.fn().mockResolvedValue({
+      access_token: token
+    });
+
+    const response = 'webAdeResponseObject';
+    mockAxios.onGet(url).reply(200, response);
+
+    const result = await appConfig.getAppConfigs('INT');
+
+    expect(result).toBeTruthy();
+    expect(result).toEqual(response);
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(url, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json; charset=utf-8'

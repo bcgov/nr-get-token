@@ -22,6 +22,14 @@ export const CommonServiceList = Object.freeze([{
   disabled: true
 },
 {
+  abbreviation: 'nros-dms',
+  type: webade,
+  shortName: 'nros-dms',
+  name: 'NROS Folder Read-all Access in DMS',
+  apiDocLink: 'https://i1apistore.nrs.gov.bc.ca/store/apis/info?name=dms-api&version=v1&provider=admin',
+  disabled: false
+},
+{
   abbreviation: 'dgen',
   type: webade,
   shortName: 'dgen-api',
