@@ -7,16 +7,22 @@
 
     <v-stepper-content step="1">
       <div v-if="hasAcronyms">
-        You are authorized to submit configurations for these applications:
-        <ul>
-          <li v-for="(acronym, index) in acronyms" :key="index">{{ acronym }}</li>
-        </ul>
+        You are authorized to submit configurations for these applications. Please select the acronym of the application to submit access for:
+        <v-radio-group v-model="radios" :mandatory="false">
+          <v-radio
+            :label="acronym"
+            :value="acronym"
+            v-for="(acronym, index) in acronyms"
+            :key="index"
+          ></v-radio>
+        </v-radio-group>
         <p>Click next or register a new application.</p>
       </div>
       <div v-else>
         <p>You are not authorized for any applications</p>
         <p>Please register for a new application.</p>
       </div>
+
       <v-btn
         class="ma-2"
         color="success"
@@ -76,18 +82,7 @@
     </v-stepper-step>
 
     <v-stepper-content step="3">
-      <v-form v-model="step1Valid">
-        <v-row>
-          <v-col cols="12" md="7">
-            <v-select
-              :items="acronyms"
-              label="Application Acronym"
-              :value="userAppCfg.applicationAcronym"
-              v-on:change="updateAppCfgField('applicationAcronym', $event)"
-              :rules="applicationAcronymRules"
-            ></v-select>
-          </v-col>
-        </v-row>
+      <v-form v-model="step3Valid">
         <v-row>
           <v-col cols="12" md="9">
             <v-text-field
@@ -121,7 +116,7 @@
         </div>
 
         <v-btn text @click="setKC(); appConfigStep = 2">Back</v-btn>
-        <v-btn color="primary" @click="appConfigStep = 4" :disabled="!step1Valid">Next</v-btn>
+        <v-btn color="primary" @click="appConfigStep = 4" :disabled="!step3Valid">Next</v-btn>
       </v-form>
     </v-stepper-content>
 
@@ -132,7 +127,7 @@
     </v-stepper-step>
 
     <v-stepper-content step="4">
-      <v-form v-model="step2Valid">
+      <v-form v-model="step4Valid">
         <v-row>
           <v-col cols="12" md="7">
             <v-select
@@ -174,7 +169,7 @@
           v-if="!usingWebadeConfig || userAppCfg.deploymentMethod === 'deploymentDirect'"
         >
           <template v-slot:activator="{ on }">
-            <v-btn color="success" :disabled="!step2Valid" v-on="on" @click="getWebAdeConfig">Submit</v-btn>
+            <v-btn color="success" :disabled="!step4Valid" v-on="on" @click="getWebAdeConfig">Submit</v-btn>
           </template>
           <v-card>
             <v-card-title class="headline">Are you sure?</v-card-title>
@@ -393,8 +388,8 @@ export default {
       fieldValidations: FieldValidations,
       appConfig: '',
       appConfigStep: 1,
-      step1Valid: false,
-      step2Valid: false,
+      step3Valid: false,
+      step4Valid: false,
       webadeEnvironments: ['INT', 'TEST', 'PROD'],
       keycloakEnvironments: ['DEV', 'TEST', 'PROD'],
       userAppCfg: this.$store.state.configForm.userAppCfg,
