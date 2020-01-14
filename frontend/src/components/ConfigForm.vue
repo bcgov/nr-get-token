@@ -8,7 +8,7 @@
     <v-stepper-content step="1">
       <div v-if="hasAcronyms">
         You are authorized to submit configurations for these applications. Please select the acronym of the application to submit access for:
-        <v-radio-group v-model="radios" :mandatory="false">
+        <v-radio-group v-model="radios" :mandatory="false" class="ml-3">
           <v-radio
             :label="acronym"
             :value="acronym"
@@ -16,7 +16,6 @@
             :key="index"
           ></v-radio>
         </v-radio-group>
-        <p>Click next or register a new application.</p>
       </div>
       <div v-else>
         <p>You are not authorized for any applications</p>
@@ -24,13 +23,13 @@
       </div>
 
       <v-btn
-        class="ma-2"
+        class="mr-2"
         color="success"
         href="mailto:NR.CommonServiceShowcase@gov.bc.ca?subject=GETOK Registration for <acronym> - <idir>"
       >Register New App</v-btn>
       <v-btn color="primary" @click="appConfigStep = 2" :disabled="!hasAcronyms">Next</v-btn>
-      <p class="caption">
-        For more information please see the
+      <p class="caption my-2">
+        For more information, please see the
         <a
           href="https://github.com/bcgov/nr-get-token/wiki/Onboarding-Process"
           target="_blank"
