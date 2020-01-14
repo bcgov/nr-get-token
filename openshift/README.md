@@ -35,8 +35,8 @@ oc create -n k8vopl-<env> configmap getok-sc-config \
   --from-literal=SC_KC_INT_ENDPOINT=https://sso-dev.pathfinder.gov.bc.ca \
   --from-literal=SC_KC_TEST_ENDPOINT=https://sso-test.pathfinder.gov.bc.ca \
   --from-literal=SC_KC_PROD_ENDPOINT=https://sso.pathfinder.gov.bc.ca \
-  --from-literal=SC_KC_INT_REALM=jbd6rnxw\
-  --from-literal=SC_KC_TEST_REALM=jbd6rnxw\
+  --from-literal=SC_KC_INT_REALM=jbd6rnxw \
+  --from-literal=SC_KC_TEST_REALM=jbd6rnxw \
   --from-literal=SC_KC_PROD_REALM=jbd6rnxw
 ```
 
