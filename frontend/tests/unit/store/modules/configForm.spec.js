@@ -3,6 +3,7 @@ import { cloneDeep } from 'lodash';
 import { createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 
+import ApiService from '@/common/apiService';
 import configFormStore from '@/store/modules/configForm';
 
 describe('configForm.js', () => {
@@ -186,4 +187,48 @@ describe('configForm.js - WebADE configs', () => {
     expect(config).toEqual(JSON.stringify(configWithNoServicesCopy, null, 2));
   });
 
+});
+
+describe('configForm.js - getAcronymDetails action', () => {
+  let store;
+  beforeEach(() => {
+    const localVue = createLocalVue();
+    localVue.use(Vuex);
+
+    store = new Vuex.Store(cloneDeep(configFormStore));
+  });
+
+  const spy = jest.spyOn(ApiService, 'getAcronymDetails');
+  jest.mock('../../../../src/common/apiService');
+
+  afterEach(() => {
+    spy.mockClear();
+  });
+
+  it('returns acronym details from the api service call', async () => {
+    const acronymDetails = { test: 123 };
+    ApiService.getAcronymDetails.mockResolvedValue(acronymDetails);
+    await store.dispatch('getAcronymDetails', 'WORG')
+
+    expect(store.getters.selectedAcronymDetails).toEqual(acronymDetails);
+    expect(store.getters.configSubmissionError).toEqual('');
+  });
+
+  it('sets the config form error if the acronym api service call returns nothing', async () => {
+    ApiService.getAcronymDetails.mockResolvedValue(null);
+    await store.dispatch('getAcronymDetails', 'WORG')
+
+    expect(store.getters.selectedAcronymDetails).toBeNull();
+    expect(store.getters.configSubmissionError).toEqual('An error occurred fetching application details for WORG');
+  });
+
+  it('sets the config form error if the acronym api service call throws', async () => {
+    ApiService.getAcronymDetails.mockImplementation(() => {
+      throw new Error();
+    });
+    await store.dispatch('getAcronymDetails', 'WORG')
+
+    expect(store.getters.selectedAcronymDetails).toBeNull();
+    expect(store.getters.configSubmissionError).toEqual('An error occurred fetching application details for WORG');
+  });
 });

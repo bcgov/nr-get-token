@@ -89,6 +89,17 @@ export default {
     }
   },
 
+  async getAcronymDetails(acronym) {
+    try {
+      const url = `${ApiRoutes.ACRONYM}/${acronym}`;
+      const response = await apiAxios.get(url);
+      return response.data;
+    } catch (e) {
+      console.log(`Failed to fetch from API - ${e}`); // eslint-disable-line no-console
+      throw e;
+    }
+  },
+
   async getApiCheck(route) {
     try {
       const response = await apiAxios.get(route);
