@@ -6,41 +6,47 @@
     </v-stepper-step>
 
     <v-stepper-content step="1">
-      <div v-if="hasAcronyms">
-        You are authorized to submit configurations for these applications. Please select the acronym of the application to submit access for:
-        <v-radio-group
-          v-model="radios"
-          :mandatory="false"
-          class="ml-3"
-          :value="userAppCfg.applicationAcronym"
-          v-on:change="updateAppCfgField('applicationAcronym', $event)"
-        >
-          <v-radio
-            v-for="(acronym, index) in acronyms"
-            :key="index"
-            :value="acronym"
-            :label="acronym"
-          ></v-radio>
-        </v-radio-group>
-      </div>
-      <div v-else>
-        <p>You are not authorized for any applications</p>
-        <p>Please register for a new application.</p>
-      </div>
+      <v-form v-model="step1Valid">
+        <div v-if="hasAcronyms">
+          You are authorized to submit configurations for these applications. Please select the acronym of the application to submit access for:
+          <v-radio-group
+            v-model="radios"
+            :mandatory="true"
+            class="ml-3"
+            :value="userAppCfg.applicationAcronym"
+            v-on:change="updateAppCfgField('applicationAcronym', $event)"
+          >
+            <v-radio
+              v-for="(acronym, index) in acronyms"
+              :key="index"
+              :value="acronym"
+              :label="acronym"
+            ></v-radio>
+          </v-radio-group>
+        </div>
+        <div v-else>
+          <p>You are not authorized for any applications</p>
+          <p>Please register for a new application.</p>
+        </div>
 
-      <v-btn
-        class="mr-2"
-        color="success"
-        href="mailto:NR.CommonServiceShowcase@gov.bc.ca?subject=GETOK Registration for <acronym> - <idir>"
-      >Register New App</v-btn>
-      <v-btn color="primary" @click="appConfigStep = 2" :disabled="!hasAcronyms">Next</v-btn>
-      <p class="caption my-2">
-        For more information, please see the
-        <a
-          href="https://github.com/bcgov/nr-get-token/wiki/Onboarding-Process"
-          target="_blank"
-        >onboarding documentation</a>
-      </p>
+        <v-btn
+          class="mr-2"
+          color="success"
+          href="mailto:NR.CommonServiceShowcase@gov.bc.ca?subject=GETOK Registration for <acronym> - <idir>"
+        >Register New App</v-btn>
+        <v-btn
+          color="primary"
+          @click="appConfigStep = 2"
+          :disabled="!hasAcronyms || !step1Valid"
+        >Next</v-btn>
+        <p class="caption my-2">
+          For more information, please see the
+          <a
+            href="https://github.com/bcgov/nr-get-token/wiki/Onboarding-Process"
+            target="_blank"
+          >onboarding documentation</a>
+        </p>
+      </v-form>
     </v-stepper-content>
 
     <v-stepper-step :complete="appConfigStep > 2" step="2">
@@ -88,7 +94,8 @@
 
     <v-stepper-content step="3">
       <v-form v-model="step3Valid">
-        Application Acronym: <strong>{{ userAppCfg.applicationAcronym }}</strong>
+        Application Acronym:
+        <strong>{{ userAppCfg.applicationAcronym }}</strong>
         <v-row>
           <v-col cols="12" md="9">
             <v-text-field
@@ -394,6 +401,7 @@ export default {
       fieldValidations: FieldValidations,
       appConfig: '',
       appConfigStep: 1,
+      step1Valid: false,
       step3Valid: false,
       step4Valid: false,
       webadeEnvironments: ['INT', 'TEST', 'PROD'],
