@@ -8,12 +8,18 @@
     <v-stepper-content step="1">
       <div v-if="hasAcronyms">
         You are authorized to submit configurations for these applications. Please select the acronym of the application to submit access for:
-        <v-radio-group v-model="radios" :mandatory="false" class="ml-3">
+        <v-radio-group
+          v-model="radios"
+          :mandatory="false"
+          class="ml-3"
+          :value="userAppCfg.applicationAcronym"
+          v-on:change="updateAppCfgField('applicationAcronym', $event)"
+        >
           <v-radio
-            :label="acronym"
-            :value="acronym"
             v-for="(acronym, index) in acronyms"
             :key="index"
+            :value="acronym"
+            :label="acronym"
           ></v-radio>
         </v-radio-group>
       </div>
@@ -82,6 +88,7 @@
 
     <v-stepper-content step="3">
       <v-form v-model="step3Valid">
+        Application Acronym: <strong>{{ userAppCfg.applicationAcronym }}</strong>
         <v-row>
           <v-col cols="12" md="9">
             <v-text-field
