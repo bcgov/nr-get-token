@@ -474,7 +474,7 @@ export default {
       return CommonServiceList.filter(
         serv =>
           serv.type === CommonServiceTypes.WEBADE &&
-          (serv.abbreviation != 'nros-dms' || this.showWebadeNrosDmsOption)
+          (serv.abbreviation !== 'nros-dms' || this.showWebadeNrosDmsOption)
       ).map(serv => ({
         text: serv.name,
         value: serv.abbreviation,

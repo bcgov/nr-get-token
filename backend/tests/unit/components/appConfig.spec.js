@@ -74,7 +74,8 @@ describe('buildWebAdeCfg', () => {
       {
         applicationCode: 'NRS_AS',
         name: 'READ_ANY_DMS'
-      }]);
+      }
+    ]);
   });
 
   it('should yield a configuration and encrypted password without a common service', async () => {
