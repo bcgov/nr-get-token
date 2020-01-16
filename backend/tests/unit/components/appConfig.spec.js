@@ -58,22 +58,24 @@ describe('buildWebAdeCfg', () => {
       clientEnvironment: 'INT'
     }, pubKeyString);
 
-    expect(result.webAdeCfg.profiles[0].profileRoles).toStrictEqual([{
-      applicationCode: 'TEST',
-      name: 'TEST_ROLE'
-    },
-    {
-      applicationCode: 'DMS',
-      name: 'CONTRIBUTOR'
-    },
-    {
-      applicationCode: 'DMS',
-      name: 'STAFF_USER_READ'
-    },
-    {
-      applicationCode: 'NRS_AS',
-      name: 'READ_ANY_DMS'
-    }]);
+    expect(result.webAdeCfg.profiles[0].profileRoles).toStrictEqual([
+      {
+        applicationCode: 'TEST',
+        name: 'TEST_ROLE'
+      },
+      {
+        applicationCode: 'DMS',
+        name: 'CONTRIBUTOR'
+      },
+      {
+        applicationCode: 'DMS',
+        name: 'STAFF_USER_READ'
+      },
+      {
+        applicationCode: 'NRS_AS',
+        name: 'READ_ANY_DMS'
+      }
+    ]);
   });
 
   it('should yield a configuration and encrypted password without a common service', async () => {

@@ -2,6 +2,7 @@ const baseRoot = '/api';
 
 const apiRoot = `${baseRoot}/v1`;
 export const ApiRoutes = Object.freeze({
+  ACRONYMS: `${apiRoot}/acronyms`,
   DOCS: `${apiRoot}/docs`,
   HEALTH: `${apiRoot}/checks/status`,
   KCCONFIG: `${apiRoot}/keyCloak/configForm`,

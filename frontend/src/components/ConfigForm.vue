@@ -6,30 +6,47 @@
     </v-stepper-step>
 
     <v-stepper-content step="1">
-      <div v-if="hasAcronyms">
-        You are authorized to submit configurations for these applications:
-        <ul>
-          <li v-for="(acronym, index) in acronyms" :key="index">{{ acronym }}</li>
-        </ul>
-        <p>Click next or register a new application.</p>
-      </div>
-      <div v-else>
-        <p>You are not authorized for any applications</p>
-        <p>Please register for a new application.</p>
-      </div>
-      <v-btn
-        class="ma-2"
-        color="success"
-        href="mailto:NR.CommonServiceShowcase@gov.bc.ca?subject=GETOK Registration for <acronym> - <idir>"
-      >Register New App</v-btn>
-      <v-btn color="primary" @click="appConfigStep = 2" :disabled="!hasAcronyms">Next</v-btn>
-      <p class="caption">
-        For more information please see the
-        <a
-          href="https://github.com/bcgov/nr-get-token/wiki/Onboarding-Process"
-          target="_blank"
-        >onboarding documentation</a>
-      </p>
+      <v-form v-model="step1Valid">
+        <div v-if="hasAcronyms">
+          You are authorized to submit configurations for these applications. Please select the acronym of the application to submit access for:
+          <v-radio-group
+            v-model="acronymRadios"
+            :mandatory="true"
+            class="ml-3"
+            :value="userAppCfg.applicationAcronym"
+            v-on:change="updateAppCfgField('applicationAcronym', $event)"
+          >
+            <v-radio
+              v-for="(acronym, index) in acronyms"
+              :key="index"
+              :value="acronym"
+              :label="acronym"
+            ></v-radio>
+          </v-radio-group>
+        </div>
+        <div v-else>
+          <p>You are not authorized for any applications</p>
+          <p>Please register for a new application.</p>
+        </div>
+
+        <v-btn
+          class="mr-2"
+          color="success"
+          href="mailto:NR.CommonServiceShowcase@gov.bc.ca?subject=GETOK Registration for <acronym> - <idir>"
+        >Register New App</v-btn>
+        <v-btn
+          color="primary"
+          @click="getAcronymDetails(); appConfigStep = 2"
+          :disabled="!hasAcronyms || !step1Valid"
+        >Next</v-btn>
+        <p class="caption my-2">
+          For more information, please see the
+          <a
+            href="https://bcgov.github.io/common-service-showcase/#GETOK"
+            target="_blank"
+          >onboarding documentation</a>
+        </p>
+      </v-form>
     </v-stepper-content>
 
     <v-stepper-step :complete="appConfigStep > 2" step="2">
@@ -52,7 +69,7 @@
           <li v-for="item in kcServices" v-bind:key="item.name">{{item.name}}</li>
         </ul>
       </div>
-      <div v-if="hasWebadePermission">
+      <div v-if="showWebadeOption">
         <v-btn
           class="ma-2"
           color="primary"
@@ -64,7 +81,7 @@
         <br />
         <br />
       </div>
-      <v-btn text @click="appConfigStep = 1">Back</v-btn>
+      <v-btn text @click="clearSelectedAcronymDetails(); appConfigStep = 1">Back</v-btn>
     </v-stepper-content>
 
     <v-stepper-step :complete="appConfigStep > 3" step="3">
@@ -76,18 +93,9 @@
     </v-stepper-step>
 
     <v-stepper-content step="3">
-      <v-form v-model="step1Valid">
-        <v-row>
-          <v-col cols="12" md="7">
-            <v-select
-              :items="acronyms"
-              label="Application Acronym"
-              :value="userAppCfg.applicationAcronym"
-              v-on:change="updateAppCfgField('applicationAcronym', $event)"
-              :rules="applicationAcronymRules"
-            ></v-select>
-          </v-col>
-        </v-row>
+      <v-form v-model="step3Valid">
+        Application Acronym:
+        <strong>{{ userAppCfg.applicationAcronym }}</strong>
         <v-row>
           <v-col cols="12" md="9">
             <v-text-field
@@ -121,7 +129,7 @@
         </div>
 
         <v-btn text @click="setKC(); appConfigStep = 2">Back</v-btn>
-        <v-btn color="primary" @click="appConfigStep = 4" :disabled="!step1Valid">Next</v-btn>
+        <v-btn color="primary" @click="appConfigStep = 4" :disabled="!step3Valid">Next</v-btn>
       </v-form>
     </v-stepper-content>
 
@@ -132,7 +140,7 @@
     </v-stepper-step>
 
     <v-stepper-content step="4">
-      <v-form v-model="step2Valid">
+      <v-form v-model="step4Valid">
         <v-row>
           <v-col cols="12" md="7">
             <v-select
@@ -174,7 +182,7 @@
           v-if="!usingWebadeConfig || userAppCfg.deploymentMethod === 'deploymentDirect'"
         >
           <template v-slot:activator="{ on }">
-            <v-btn color="success" :disabled="!step2Valid" v-on="on" @click="getWebAdeConfig">Submit</v-btn>
+            <v-btn color="success" :disabled="!step4Valid" v-on="on" @click="getWebAdeConfig">Submit</v-btn>
           </template>
           <v-card>
             <v-card-title class="headline">Are you sure?</v-card-title>
@@ -394,7 +402,8 @@ export default {
       appConfig: '',
       appConfigStep: 1,
       step1Valid: false,
-      step2Valid: false,
+      step3Valid: false,
+      step4Valid: false,
       webadeEnvironments: ['INT', 'TEST', 'PROD'],
       keycloakEnvironments: ['DEV', 'TEST', 'PROD'],
       userAppCfg: this.$store.state.configForm.userAppCfg,
@@ -422,7 +431,9 @@ export default {
         color: 'info'
       },
       generatedToken: '',
-      generatedTokenError: ''
+      generatedTokenError: '',
+      showWebadeOption: false,
+      showWebadeNrosDmsOption: false
     };
   },
   computed: {
@@ -440,7 +451,8 @@ export default {
       'configSubmissionError',
       'commonServiceType',
       'usingWebadeConfig',
-      'existingWebAdeConfig'
+      'existingWebAdeConfig',
+      'selectedAcronymDetails'
     ]),
     displayClient: function() {
       return this.configFormSubmissionResult
@@ -462,7 +474,7 @@ export default {
       return CommonServiceList.filter(
         serv =>
           serv.type === CommonServiceTypes.WEBADE &&
-          (serv.abbreviation != 'nros-dms' || this.hasWebadeNrosDmsPermission)
+          (serv.abbreviation !== 'nros-dms' || this.showWebadeNrosDmsOption)
       ).map(serv => ({
         text: serv.name,
         value: serv.abbreviation,
@@ -476,6 +488,11 @@ export default {
     }
   },
   methods: {
+    clearSelectedAcronymDetails() {
+      this.$store.dispatch('configForm/getAcronymDetails', null);
+      this.showWebadeOption = false;
+      this.showWebadeNrosDmsOption = false;
+    },
     async setWebade() {
       this.$store.commit(
         'configForm/setCommonServiceType',
@@ -564,6 +581,21 @@ export default {
       });
 
       display.appendChild(fragment);
+    },
+    async getAcronymDetails() {
+      await this.$store.dispatch(
+        'configForm/getAcronymDetails',
+        this.userAppCfg.applicationAcronym
+      );
+      if (this.selectedAcronymDetails) {
+        this.showWebadeOption =
+          this.hasWebadePermission &&
+          this.selectedAcronymDetails.permissionWebade;
+
+        this.showWebadeNrosDmsOption =
+          this.hasWebadeNrosDmsPermission &&
+          this.selectedAcronymDetails.permissionWebadeNrosDms;
+      }
     },
     updateAppCfgField(field, value) {
       this.$store.commit('configForm/updateUserAppCfg', {

@@ -19,7 +19,8 @@ export default {
     },
     configFormSubmissionResult: null,
     ephemeralPasswordRSAKey: null,
-    existingWebAdeConfig: ''
+    existingWebAdeConfig: '',
+    selectedAcronymDetails: null
   },
   getters: {
     configSubmissionSuccess: state => state.configSubmissionSuccess,
@@ -30,6 +31,7 @@ export default {
     usingWebadeConfig: state => state.userAppCfg.commonServiceType === CommonServiceTypes.WEBADE,
     ephemeralPasswordRSAKey: state => state.ephemeralPasswordRSAKey,
     existingWebAdeConfig: state => JSON.stringify(state.existingWebAdeConfig, null, 2),
+    selectedAcronymDetails: state => state.selectedAcronymDetails,
     appConfigAsString: state => {
       // these are the hardcoded WebADE cfg values users do not enter
       const defaultAppCfg = {
@@ -194,6 +196,9 @@ export default {
     setExistingWebAdeConfig: (state, val) => {
       state.existingWebAdeConfig = val, null, 2;
     },
+    setSelectedAcronymDetails: (state, val) => {
+      state.selectedAcronymDetails = val, null, 2;
+    },
   },
   actions: {
     async submitConfigForm(context) {
@@ -245,6 +250,21 @@ export default {
       } catch (error) {
         context.commit('setExistingWebAdeConfig', `An error occurred getting the existing WebADE configuration for ${payload.acronym} in ${payload.webAdeEnv}`);
       }
+    },
+    async getAcronymDetails(context, acronym) {
+      try {
+        let response = null;
+        if (acronym) {
+          response = await ApiService.getAcronymDetails(acronym);
+          if (!response) {
+            throw new Error();
+          }
+        }
+        context.commit('setSelectedAcronymDetails', response);
+      } catch (error) {
+        context.commit('setConfigSubmissionError', `An error occurred fetching application details for ${acronym}`);
+      }
+
     }
   }
 };
