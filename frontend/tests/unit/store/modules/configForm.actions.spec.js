@@ -90,3 +90,33 @@ describe('configForm.js - getWebAdeConfig action', () => {
     expect(store.getters.existingWebAdeConfig).toEqual('"An error occurred getting the existing WebADE configuration for ABC in INT"');
   });
 });
+
+
+describe('configForm.js - submitConfigForm action', () => {
+  let store;
+  beforeEach(() => {
+    const localVue = createLocalVue();
+    localVue.use(Vuex);
+
+    store = new Vuex.Store(cloneDeep(configFormStore));
+  });
+
+  const spy = jest.spyOn(ApiService, 'postConfigForm');
+  jest.mock('../../../../src/common/apiService');
+
+  afterEach(() => {
+    spy.mockClear();
+  });
+
+  //TODO: need full tests here
+
+  it('returns an error message if the api call fails', async () => {
+    ApiService.postConfigForm.mockImplementation(() => {
+      throw new Error();
+    });
+    await store.dispatch('submitConfigForm');
+
+    expect(store.getters.ephemeralPasswordRSAKey).toBeTruthy();
+    expect(store.getters.configSubmissionError).toEqual('An error occurred while attempting to create a service client in Keycloak.');
+  });
+});
