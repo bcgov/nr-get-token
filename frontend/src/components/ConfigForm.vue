@@ -488,8 +488,8 @@ export default {
     }
   },
   methods: {
-    async clearSelectedAcronymDetails() {
-      await this.$store.dispatch('configForm/getAcronymDetails', null);
+    clearSelectedAcronymDetails() {
+      this.$store.dispatch('configForm/getAcronymDetails', null);
       this.showWebadeOption = false;
       this.showWebadeNrosDmsOption = false;
     },
