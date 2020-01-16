@@ -91,7 +91,7 @@ export default {
 
   async getAcronymDetails(acronym) {
     try {
-      const url = `${ApiRoutes.ACRONYM}/${acronym}`;
+      const url = `${ApiRoutes.ACRONYMS}/${acronym}`;
       const response = await apiAxios.get(url);
       return response.data;
     } catch (e) {

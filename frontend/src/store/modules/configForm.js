@@ -253,11 +253,15 @@ export default {
     },
     async getAcronymDetails(context, acronym) {
       try {
-        const response = await ApiService.getAcronymDetails(acronym);
-        if (!response) {
-          context.commit('setConfigSubmissionError', `An error occurred fetching application details for ${acronym}`);
+        if (acronym) {
+          const response = await ApiService.getAcronymDetails(acronym);
+          if (!response) {
+            context.commit('setConfigSubmissionError', `An error occurred fetching application details for ${acronym}`);
+          }
+          context.commit('setSelectedAcronymDetails', response);
+        } else {
+          context.commit('setSelectedAcronymDetails', null);
         }
-        context.commit('setSelectedAcronymDetails', response);
       } catch (error) {
         context.commit('setConfigSubmissionError', `An error occurred fetching application details for ${acronym}`);
       }

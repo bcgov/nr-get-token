@@ -10,7 +10,7 @@
         <div v-if="hasAcronyms">
           You are authorized to submit configurations for these applications. Please select the acronym of the application to submit access for:
           <v-radio-group
-            v-model="radios"
+            v-model="acronymRadios"
             :mandatory="true"
             class="ml-3"
             :value="userAppCfg.applicationAcronym"
@@ -36,7 +36,7 @@
         >Register New App</v-btn>
         <v-btn
           color="primary"
-          @click="appConfigStep = 2"
+          @click="getAcronymDetails(); appConfigStep = 2"
           :disabled="!hasAcronyms || !step1Valid"
         >Next</v-btn>
         <p class="caption my-2">
@@ -69,7 +69,7 @@
           <li v-for="item in kcServices" v-bind:key="item.name">{{item.name}}</li>
         </ul>
       </div>
-      <div v-if="hasWebadePermission">
+      <div v-if="showWebadeOption">
         <v-btn
           class="ma-2"
           color="primary"
@@ -81,7 +81,7 @@
         <br />
         <br />
       </div>
-      <v-btn text @click="appConfigStep = 1">Back</v-btn>
+      <v-btn text @click="clearSelectedAcronymDetails(); appConfigStep = 1">Back</v-btn>
     </v-stepper-content>
 
     <v-stepper-step :complete="appConfigStep > 3" step="3">
@@ -431,7 +431,9 @@ export default {
         color: 'info'
       },
       generatedToken: '',
-      generatedTokenError: ''
+      generatedTokenError: '',
+      showWebadeOption: false,
+      showWebadeNrosDmsOption: false
     };
   },
   computed: {
@@ -449,7 +451,8 @@ export default {
       'configSubmissionError',
       'commonServiceType',
       'usingWebadeConfig',
-      'existingWebAdeConfig'
+      'existingWebAdeConfig',
+      'selectedAcronymDetails'
     ]),
     displayClient: function() {
       return this.configFormSubmissionResult
@@ -471,7 +474,7 @@ export default {
       return CommonServiceList.filter(
         serv =>
           serv.type === CommonServiceTypes.WEBADE &&
-          (serv.abbreviation != 'nros-dms' || this.hasWebadeNrosDmsPermission)
+          (serv.abbreviation != 'nros-dms' || this.showWebadeNrosDmsOption)
       ).map(serv => ({
         text: serv.name,
         value: serv.abbreviation,
@@ -485,6 +488,11 @@ export default {
     }
   },
   methods: {
+    async clearSelectedAcronymDetails() {
+      await this.$store.dispatch('configForm/getAcronymDetails', null);
+      this.showWebadeOption = false;
+      this.showWebadeNrosDmsOption = false;
+    },
     async setWebade() {
       this.$store.commit(
         'configForm/setCommonServiceType',
@@ -573,6 +581,22 @@ export default {
       });
 
       display.appendChild(fragment);
+    },
+    async getAcronymDetails() {
+      await this.$store.dispatch(
+        'configForm/getAcronymDetails',
+        this.userAppCfg.applicationAcronym
+      );
+      if (this.selectedAcronymDetails) {
+        this.showWebadeOption =
+          this.hasWebadePermission &&
+          this.selectedAcronymDetails.permissionWebade;
+
+        this.showWebadeNrosDmsOption =
+          this.hasWebadeNrosDmsPermission &&
+          this.selectedAcronymDetails.permissionWebadeNrosDms;
+      }
+      alert(JSON.stringify(this.selectedAcronymDetails));
     },
     updateAppCfgField(field, value) {
       this.$store.commit('configForm/updateUserAppCfg', {
