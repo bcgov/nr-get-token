@@ -42,7 +42,7 @@
         <p class="caption my-2">
           For more information, please see the
           <a
-            href="https://github.com/bcgov/nr-get-token/wiki/Onboarding-Process"
+            href="https://bcgov.github.io/common-service-showcase/#GETOK"
             target="_blank"
           >onboarding documentation</a>
         </p>
@@ -596,7 +596,6 @@ export default {
           this.hasWebadeNrosDmsPermission &&
           this.selectedAcronymDetails.permissionWebadeNrosDms;
       }
-      alert(JSON.stringify(this.selectedAcronymDetails));
     },
     updateAppCfgField(field, value) {
       this.$store.commit('configForm/updateUserAppCfg', {
