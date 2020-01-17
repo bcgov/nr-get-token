@@ -34,6 +34,33 @@ const utils = {
     }
   },
 
+  // Returns the response body of a keycloak token request
+  async getKeyCloakToken(username, password, tokenEndpoint) {
+    try {
+      const params = new URLSearchParams();
+      params.append('grant_type', 'client_credentials');
+
+      const options = {
+        method: 'POST',
+        auth: {
+          username: username,
+          password: password
+        },
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        data: params,
+        url: tokenEndpoint,
+      };
+
+      const response = await axios.post(options);
+
+      log.verbose('getKeyCloakToken', utils.prettyStringify(response));
+      return response.data;
+    } catch (error) {
+      log.error('getKeyCloakToken', error.message);
+      return error.response.data;
+    }
+  },
+
   // Returns OIDC Discovery values
   async getOidcDiscovery() {
     if (!discovery) {
