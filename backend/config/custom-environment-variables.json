@@ -33,10 +33,11 @@
       "username": "SC_GETOKPROD_USERNAME",
       "password": "SC_GETOKPROD_PASSWORD"
     },
-    "mssc": {
-      "endpoint": "SC_MSSC_ENDPOINT",
-      "username": "SC_MSSC_USERNAME",
-      "password": "SC_MSSC_PASSWORD"
+    "ches": {
+      "tokenEndpoint": "CHES_TOKEN_ENDPOINT",
+      "emailEndpoint": "CHES_EMAIL_ENDPOINT",
+      "username": "CHES_SC_USERNAME",
+      "password": "CHES_SC_PASSWORD"
     },
     "keyCloak": {
       "DEV": {

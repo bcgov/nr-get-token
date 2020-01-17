@@ -76,7 +76,7 @@ oc create -n k8vopl-<env> secret generic getok-sc-getokprod-secret \
 ```
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-sc-mssc-secret \
+oc create -n k8vopl-<env> secret generic getok-sc-ches-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>
