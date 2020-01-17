@@ -24,7 +24,9 @@
       "username": "username",
       "password": "password"
     },
-    "mssc": {
+    "ches": {
+      "tokenEndpoint": "keycloak",
+      "emailEndpoint": "openshift",
       "username": "username",
       "password": "password"
     },

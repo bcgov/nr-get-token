@@ -22,8 +22,11 @@
     "getokProd": {
       "endpoint": "https://api.nrs.gov.bc.ca/webade-api/v1"
     },
-    "mssc": {
-      "endpoint": "https://i1api.nrs.gov.bc.ca/cmsg-messaging-api/v1"
+    "ches": {
+      "tokenEndpoint": "redacted",
+      "emailEndpoint": "https://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api/v1/email",
+      "username": "redacted",
+      "password": "redacted"
     },
     "keyCloak": {
       "DEV": {

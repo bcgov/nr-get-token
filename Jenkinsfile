@@ -364,7 +364,7 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
       openshift.selector('secret', "getok-sc-keycloakint-secret").exists() &&
       openshift.selector('secret', "getok-sc-keycloaktest-secret").exists() &&
       openshift.selector('secret', "getok-sc-keycloakprod-secret").exists() &&
-      openshift.selector('secret', "getok-sc-mssc-secret").exists())) {
+      openshift.selector('secret', "getok-sc-ches-secret").exists())) {
         echo 'Some ConfigMaps and/or Secrets are missing. Please consult the openshift readme for details.'
         throw e
       }
