@@ -1,5 +1,6 @@
 const axios = require('axios');
 const config = require('config');
+const jwt = require('jsonwebtoken');
 const log = require('npmlog');
 
 const utils = require('./utils');
@@ -29,37 +30,36 @@ const checks = {
     return result;
   },
 
-  getMsscStatus: async () => {
-    const username = config.get('serviceClient.mssc.username');
-    const password = config.get('serviceClient.mssc.password');
+  getCHESStatus: async () => {
+    const username = config.get('serviceClient.ches.username');
+    const password = config.get('serviceClient.ches.password');
+    const tokenEndpoint = config.get('serviceClient.ches.tokenEndpoint');
 
     const result = {
       authenticated: false,
       authorized: false,
-      endpoint: config.get('serviceClient.mssc.endpoint'),
+      endpoint: config.get('serviceClient.ches.emailEndpoint'),
       healthCheck: false,
-      name: 'Common Messaging API'
+      name: 'Common Hosted Email Service'
     };
 
     try {
-      const webAdeResponse = await utils.getWebAdeToken(username, password, 'CMSG');
-
-      result.authorized = 'scope' in webAdeResponse &&
-        webAdeResponse.scope.includes('CMSG.CREATEMESSAGE');
-
-      if ('access_token' in webAdeResponse) {
-        result.authenticated = true;
-
-        await axios.get(result.endpoint, {
-          headers: {
-            'Authorization': `Bearer ${webAdeResponse.access_token}`
-          }
-        });
-
-        result.healthCheck = true;
+      const tokenResponse = await utils.getKeyCloakToken(username, password, tokenEndpoint);
+      if (tokenResponse) {
+        const decoded = jwt.decode(tokenResponse.access_token);
+        if (decoded) {
+          result.authorized = true;
+          result.authenticated = decoded.resource_access.CHES.roles.includes('EMAILER');
+          await axios.get(result.endpoint, {
+            headers: {
+              'Authorization': `Bearer ${decoded}`
+            }
+          });
+          result.healthCheck = true;
+        }
       }
     } catch (error) {
-      log.error('getMsscStatus', error.message);
+      log.error('getCHESStatus', error.message);
     }
 
     return result;
@@ -69,7 +69,7 @@ const checks = {
     checks.getWebAdeOauth2Status('INT'),
     checks.getWebAdeOauth2Status('TEST'),
     checks.getWebAdeOauth2Status('PROD'),
-    checks.getMsscStatus()
+    checks.getChesStatus()
   ])
 };
 

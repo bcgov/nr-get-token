@@ -187,12 +187,12 @@ objects:
             valueFrom:
               secretKeyRef:
                 key: username
-                name: getok-ches-sc-secret
+                name: getok-sc-ches-secret
           - name: CHES_SC_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: password
-                name: getok-ches-sc-secret
+                name: getok-sc-ches-secret
           - name: SC_KC_INT_USERNAME
             valueFrom:
               secretKeyRef:
