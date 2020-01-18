@@ -34,7 +34,7 @@ objects:
         - "deploymentconfig=${APP_NAME}-backend-${JOB_NAME}"
         - role=backend
       - - "$namespace=${NAMESPACE}"
-        - "openshift.io/deployer-pod.type=hook-mid"
+        - "openshift.io/deployer-pod.type=hook-pre"
     destination:
       - - "$namespace=${NAMESPACE}"
         - "cluster-name=${JOB_NAME}"
@@ -51,10 +51,10 @@ objects:
       deploymentconfig: "${APP_NAME}-backend-${JOB_NAME}"
       role: backend
     strategy:
-      type: Recreate
-      recreateParams:
+      type: Rolling
+      rollingParams:
         timeoutSeconds: 600
-        mid:
+        pre:
           failurePolicy: Abort
           execNewPod:
             command:
