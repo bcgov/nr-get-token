@@ -36,6 +36,7 @@
     "ches": {
       "tokenEndpoint": "CHES_TOKEN_ENDPOINT",
       "emailEndpoint": "CHES_EMAIL_ENDPOINT",
+      "healthEndpoint": "CHES_HEALTH_ENDPOINT",
       "username": "CHES_SC_USERNAME",
       "password": "CHES_SC_PASSWORD"
     },

@@ -91,6 +91,7 @@ For more details, please consult the config library [documentation](https://gith
 | `SC_GETOKPROD_PASSWORD` | Service client password (PROD env) |
 | `CHES_TOKEN_ENDPOINT` | Keycloak token endpoint (YAMS Realm) for common service token fetching |
 | `CHES_EMAIL_ENDPOINT` | CHES endpoint for sending email |
+| `CHES_HEALTH_ENDPOINT` | CHES health check endpoint |
 | `CHES_SC_USERNAME` | YAMS service client username |
 | `CHES_SC_PASSWORD` | YAMS service client password |
 
