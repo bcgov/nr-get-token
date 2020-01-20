@@ -38,7 +38,7 @@ const checks = {
     const result = {
       authenticated: false,
       authorized: false,
-      endpoint: config.get('serviceClient.ches.emailEndpoint'),
+      endpoint: config.get('serviceClient.ches.healthEndpoint'),
       healthCheck: false,
       name: 'Common Hosted Email Service'
     };
@@ -52,7 +52,7 @@ const checks = {
           result.authenticated = decoded.resource_access.CHES.roles.includes('EMAILER');
           await axios.get(result.endpoint, {
             headers: {
-              'Authorization': `Bearer ${decoded}`
+              'Authorization': `Bearer ${tokenResponse.access_token}`
             }
           });
           result.healthCheck = true;
@@ -69,7 +69,7 @@ const checks = {
     checks.getWebAdeOauth2Status('INT'),
     checks.getWebAdeOauth2Status('TEST'),
     checks.getWebAdeOauth2Status('PROD'),
-    checks.getChesStatus()
+    checks.getCHESStatus()
   ])
 };
 

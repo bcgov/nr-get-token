@@ -111,16 +111,7 @@ describe('getKeyCloakToken', () => {
     expect(result.data).toBeTruthy();
     expect(result.data.access_token).toEqual('hsdfs79fsdiufhew89ijsdf9.dshufu9dshf98dsfhsdf.89sdhfs8d9hfuh');
     expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenCalledWith({
-      method: 'POST',
-      auth: {
-        username: username,
-        password: password
-      },
-      headers: { 'content-type': 'application/x-www-form-urlencoded' },
-      data: params,
-      url: endpoint,
-    });
+    expect(spy).toHaveBeenCalledWith('https://sso-dev.pathfinder.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token', 'grant_type=client_credentials', { 'auth': { 'password': 'ceb27390-e68e-4ef5-a5c4-b376ea17c8f0', 'username': 'GETOK_SERVICE_CLIENT' }, 'headers': { 'content-type': 'application/x-www-form-urlencoded' }, 'method': 'POST' });
   });
 
   it('should gracefully fail if endpoint is down', async () => {

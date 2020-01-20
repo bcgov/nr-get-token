@@ -3,6 +3,7 @@ const config = require('config');
 const cryptico = require('cryptico-js');
 const generator = require('generate-password');
 const log = require('npmlog');
+const qs = require('querystring');
 
 let discovery = null;
 
@@ -37,8 +38,9 @@ const utils = {
   // Returns the response body of a keycloak token request
   async getKeyCloakToken(username, password, tokenEndpoint) {
     try {
-      const params = new URLSearchParams();
-      params.append('grant_type', 'client_credentials');
+      const requestBody = {
+        grant_type: 'client_credentials'
+      };
 
       const options = {
         method: 'POST',
@@ -47,15 +49,13 @@ const utils = {
           password: password
         },
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
-        data: params,
-        url: tokenEndpoint,
       };
 
-      const response = await axios.post(options);
-
-      log.verbose('getKeyCloakToken', utils.prettyStringify(response));
+      const response = await axios.post(tokenEndpoint, qs.stringify(requestBody), options);
+      log.verbose('getKeyCloakToken', utils.prettyStringify(response.data));
       return response.data;
     } catch (error) {
+      log.error(JSON.stringify(error));
       log.error('getKeyCloakToken', error.message);
       return error.response.data;
     }
