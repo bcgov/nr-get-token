@@ -497,6 +497,8 @@ components:
       required:
         - applicationAcronym
         - comments
+        - from
+        - idir
       properties:
         applicationAcronym:
           type: string
@@ -504,6 +506,12 @@ components:
         comments:
           type: string
           example: My team has 10 members
+        from:
+          type: string
+          example: jsmith@gov.bc.ca
+        idir:
+          type: string
+          example: jsmith
     DependencyList:
       type: array
       items:
