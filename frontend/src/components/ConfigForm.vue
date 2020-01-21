@@ -29,11 +29,7 @@
           <p>Please register for a new application.</p>
         </div>
 
-        <v-btn
-          class="mr-2"
-          color="success"
-          href="mailto:NR.CommonServiceShowcase@gov.bc.ca?subject=GETOK Registration for <acronym> - <idir>"
-        >Register New App</v-btn>
+        <RegistrationForm></RegistrationForm>
         <v-btn
           color="primary"
           @click="getAcronymDetails(); appConfigStep = 2"
@@ -375,22 +371,27 @@
 </template>
 
 <script>
-import axios from 'axios';
 import {
   CommonServiceTypes,
   CommonServiceList
 } from '@/utils/commonServices.js';
 import { FieldValidations, CommonServiceRoutes } from '@/utils/constants.js';
+import RegistrationForm from './RegistrationForm';
+
+import axios from 'axios';
+var jsdiff = require('diff');
 import cryptico from 'cryptico-js';
 import Vue from 'vue';
 import VueClipboard from 'vue-clipboard2';
 import { mapGetters } from 'vuex';
-var jsdiff = require('diff');
 
 VueClipboard.config.autoSetContainer = true;
 Vue.use(VueClipboard);
 
 export default {
+  components: {
+    RegistrationForm
+  },
   data() {
     return {
       shownPassword: '••••••••',
