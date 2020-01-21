@@ -1,4 +1,3 @@
-//const config = require('config');
 const log = require('npmlog');
 
 const {
@@ -9,7 +8,7 @@ const {
 const email = require('express').Router();
 const emailComponent = require('../../components/email');
 
-email.post('/email', [
+email.post('/', [
   body('applicationAcronym').isString(),
   body('comments').isString(),
   body('from').isString(),
