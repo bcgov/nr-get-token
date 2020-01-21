@@ -89,7 +89,7 @@ paths:
             schema:
               $ref: '#/components/schemas/ContactForm'
       responses:
-        '200':
+        '201':
           description: Email Successfully Sent
         '401':
           $ref: '#/components/responses/UnauthorizedError'

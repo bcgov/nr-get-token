@@ -7,6 +7,7 @@ const {
 } = require('express-validator');
 
 const email = require('express').Router();
+const emailComponent = require('../../components/email');
 
 email.post('/email', [
   body('applicationAcronym').isString(),
@@ -23,9 +24,8 @@ email.post('/email', [
     });
   }
   try {
-    return res.status(200).json({
-      123: 123
-    });
+    const emailCallRes = await emailComponent.sendContactEmail(req.body.applicationAcronym, req.body.comments, req.body.from, req.body.idir);
+    return res.status(201).json(emailCallRes);
   } catch (error) {
     log.error(error);
     res.status(500).json({
