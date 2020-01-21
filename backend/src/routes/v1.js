@@ -16,6 +16,7 @@ router.get('/', (_req, res) => {
       '/appConfigForm',
       '/checks',
       '/docs',
+      '/email',
       '/kcClientForm'
     ]
   });
