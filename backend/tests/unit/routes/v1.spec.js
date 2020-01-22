@@ -13,6 +13,7 @@ describe('/api/v1', () => {
         '/appConfigForm',
         '/checks',
         '/docs',
+        '/email',
         '/kcClientForm'
       ]
     });
