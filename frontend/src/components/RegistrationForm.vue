@@ -92,10 +92,8 @@ export default {
           'Incorrect format. Hover over ? for details.'
       ],
       comments: '',
-      emailAddress: 'lucas.oneil@gov.bc.ca',
       errorOccurred: false,
       fieldValidations: FieldValidations,
-      idir: 'loneil',
       registrationDialog: false,
       valid: false
     };
