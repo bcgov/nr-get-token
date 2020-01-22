@@ -6,19 +6,25 @@ export default {
   state: {
     acronyms: [],
     hasReadAllWebade: false,
-    hasWebadePermission: false,
     hasWebadeNrosDmsPermission: false,
-    isAuthenticated: localStorage.getItem('jwtToken') !== null
+    hasWebadePermission: false,
+    isAuthenticated: localStorage.getItem('jwtToken') !== null,
+    userInfo: {
+      emailAddress: '',
+      idir: '',
+      name: ''
+    }
   },
   getters: {
     acronyms: state => state.acronyms,
-    hasWebadePermission: state => state.hasWebadePermission,
-    hasWebadeNrosDmsPermission: state => state.hasWebadeNrosDmsPermission,
-    hasReadAllWebade: state => state.hasReadAllWebade,
-    isAuthenticated: state => state.isAuthenticated,
     hasAcronyms: state => state.acronyms && state.acronyms.length,
+    hasReadAllWebade: state => state.hasReadAllWebade,
+    hasWebadeNrosDmsPermission: state => state.hasWebadeNrosDmsPermission,
+    hasWebadePermission: state => state.hasWebadePermission,
+    isAuthenticated: state => state.isAuthenticated,
     jwtToken: () => localStorage.getItem('jwtToken'),
-    refreshToken: () => localStorage.getItem('refreshToken')
+    refreshToken: () => localStorage.getItem('refreshToken'),
+    userInfo: state => state.userInfo
   },
   mutations: {
     setJwtToken: (state, token = null) => {
@@ -35,6 +41,11 @@ export default {
         } else {
           state.acronyms = [];
         }
+
+        // Get user info from initial token on login
+        state.userInfo.emailAddress = payload.email;
+        state.userInfo.idir = payload.preferred_username;
+        state.userInfo.name = payload.name;
 
         state.isAuthenticated = true;
         localStorage.setItem('jwtToken', token);

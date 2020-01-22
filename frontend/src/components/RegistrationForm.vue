@@ -23,9 +23,9 @@
           <v-form ref="form" v-model="valid" lazy-validation>
             <p class="mb-0">
               My Email:
-              <strong>{{emailAddress}}</strong>
+              <strong>{{userInfo.emailAddress}}</strong>
               <br />My IDIR:
-              <strong>{{idir}}</strong>
+              <strong>{{userInfo.idir}}</strong>
             </p>
             <v-row>
               <v-col cols="12" sm="6">
@@ -76,6 +76,7 @@
 <script>
 import ApiService from '@/common/apiService';
 import { FieldValidations } from '@/utils/constants.js';
+import { mapGetters } from 'vuex';
 
 export default {
   data: function() {
@@ -91,13 +92,16 @@ export default {
           'Incorrect format. Hover over ? for details.'
       ],
       comments: '',
-      errorOccurred: false,
       emailAddress: 'lucas.oneil@gov.bc.ca',
+      errorOccurred: false,
       fieldValidations: FieldValidations,
       idir: 'loneil',
       registrationDialog: false,
       valid: false
     };
+  },
+  computed: {
+    ...mapGetters('auth', ['userInfo'])
   },
   methods: {
     async cancel() {
@@ -117,7 +121,8 @@ export default {
           });
           if (response) {
             this.registrationDialog = false;
-            this.$store.commit('configForm/setConfigSubmissionSuccess',
+            this.$store.commit(
+              'configForm/setConfigSubmissionSuccess',
               `Registration request sent successfully. You will be emailed back at ${this.emailAddress} when authorized`
             );
           } else {
