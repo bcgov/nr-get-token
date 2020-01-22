@@ -114,14 +114,14 @@ export default {
           const response = await ApiService.sendRegistrationEmail({
             applicationAcronym: this.applicationAcronym,
             comments: this.comments,
-            from: this.emailAddress,
-            idir: this.idir
+            from: this.userInfo.emailAddress,
+            idir: this.userInfo.idir
           });
           if (response) {
             this.registrationDialog = false;
             this.$store.commit(
               'configForm/setConfigSubmissionSuccess',
-              `Registration request sent successfully. You will be emailed back at ${this.emailAddress} when authorized`
+              `Registration request sent successfully. You will be emailed back at ${this.userInfo.emailAddress} when authorized`
             );
           } else {
             this.errorOccurred = true;
