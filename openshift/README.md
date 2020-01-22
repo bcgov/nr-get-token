@@ -37,7 +37,10 @@ oc create -n k8vopl-<env> configmap getok-sc-config \
   --from-literal=SC_KC_PROD_ENDPOINT=https://sso.pathfinder.gov.bc.ca \
   --from-literal=SC_KC_INT_REALM=jbd6rnxw \
   --from-literal=SC_KC_TEST_REALM=jbd6rnxw \
-  --from-literal=SC_KC_PROD_REALM=jbd6rnxw
+  --from-literal=SC_KC_PROD_REALM=jbd6rnxw \
+  --from-literal=CHES_TOKEN_ENDPOINT=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token \
+  --from-literal=CHES_EMAIL_ENDPOINT=https://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api/v1/email \
+  --from-literal=CHES_HEALTH_ENDPOINT=http://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api/v1/health
 ```
 
 ### Secrets
