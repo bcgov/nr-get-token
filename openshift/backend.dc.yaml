@@ -34,7 +34,7 @@ objects:
         - "deploymentconfig=${APP_NAME}-backend-${JOB_NAME}"
         - role=backend
       - - "$namespace=${NAMESPACE}"
-        - "openshift.io/deployer-pod.type=hook-mid"
+        - "openshift.io/deployer-pod.type=hook-pre"
     destination:
       - - "$namespace=${NAMESPACE}"
         - "cluster-name=${JOB_NAME}"
@@ -51,10 +51,10 @@ objects:
       deploymentconfig: "${APP_NAME}-backend-${JOB_NAME}"
       role: backend
     strategy:
-      type: Recreate
-      recreateParams:
+      type: Rolling
+      rollingParams:
         timeoutSeconds: 600
-        mid:
+        pre:
           failurePolicy: Abort
           execNewPod:
             command:
@@ -183,16 +183,16 @@ objects:
               secretKeyRef:
                 key: password
                 name: getok-sc-getokprod-secret
-          - name: SC_MSSC_USERNAME
+          - name: CHES_SC_USERNAME
             valueFrom:
               secretKeyRef:
                 key: username
-                name: getok-sc-mssc-secret
-          - name: SC_MSSC_PASSWORD
+                name: getok-sc-ches-secret
+          - name: CHES_SC_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: password
-                name: getok-sc-mssc-secret
+                name: getok-sc-ches-secret
           - name: SC_KC_INT_USERNAME
             valueFrom:
               secretKeyRef:

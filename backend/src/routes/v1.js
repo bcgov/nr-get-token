@@ -3,10 +3,11 @@ const path = require('path');
 const passport = require('passport');
 const YAML = require('yamljs');
 
-const webAdeRouter = require('./v1/webAde');
-const checksRouter = require('./v1/checks');
-const keyCloakRouter = require('./v1/keyCloak');
 const acronymsRouter = require('./v1/acronyms');
+const checksRouter = require('./v1/checks');
+const emailRouter = require('./v1/email');
+const keyCloakRouter = require('./v1/keyCloak');
+const webAdeRouter = require('./v1/webAde');
 
 // Base v1 Responder
 router.get('/', (_req, res) => {
@@ -15,6 +16,7 @@ router.get('/', (_req, res) => {
       '/appConfigForm',
       '/checks',
       '/docs',
+      '/email',
       '/kcClientForm'
     ]
   });
@@ -36,25 +38,30 @@ router.get('/api-spec.json', (_req, res) => {
   res.status(200).json(YAML.load(path.join(__dirname, '../docs/v1.api-spec.yaml')));
 });
 
-// WebADE Application Configurations
-router.use('/webAde', passport.authenticate('jwt', {
+// Acronyms
+router.use('/acronyms', passport.authenticate('jwt', {
   session: false
-}), webAdeRouter);
-
-// KeyCloak Client Form
-router.use('/keyCloak', passport.authenticate('jwt', {
-  session: false
-}), keyCloakRouter);
+}), acronymsRouter);
 
 // Checks
 router.use('/checks', passport.authenticate('jwt', {
   session: false
 }), checksRouter);
 
-// Acronyms
-router.use('/acronyms', passport.authenticate('jwt', {
+// Email
+router.use('/email', passport.authenticate('jwt', {
   session: false
-}), acronymsRouter);
+}), emailRouter);
+
+// KeyCloak Client Form
+router.use('/keyCloak', passport.authenticate('jwt', {
+  session: false
+}), keyCloakRouter);
+
+// WebADE Application Configurations
+router.use('/webAde', passport.authenticate('jwt', {
+  session: false
+}), webAdeRouter);
 
 
 module.exports = router;
