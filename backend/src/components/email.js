@@ -29,11 +29,11 @@ const email = {
       if (response.status == 201) {
         return response.data;
       } else {
-        throw new Error(`Error calling email endpoint ${emailEndpoint}. Response Code: ${response.status}`);
+        throw new Error(`Error from POST to CHES. Response Code: ${response.status}`);
       }
     } catch (error) {
       log.error('sendContactEmail', error.message);
-      throw new Error(`Error calling email endpoint ${emailEndpoint}.`);
+      throw new Error(`Error calling email endpoint ${emailEndpoint}. Error: ${error.message}`);
     }
   },
 };
