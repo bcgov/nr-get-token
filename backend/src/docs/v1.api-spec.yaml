@@ -340,6 +340,9 @@ components:
         acronym:
           type: string
           example: MSSC
+        description:
+          type: string
+          example: This application sends emails for the common service team
         name:
           type: string
           example: Messaging Service Showcase
