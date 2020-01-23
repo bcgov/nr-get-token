@@ -108,9 +108,7 @@ paths:
       tags:
         - KeyCloak Service Client Configuration
       requestBody:
-        description: >-
-          Form fields required to generate a minimal KeyCloak Service Client
-          Configuration
+        description: Form fields required to generate a KeyCloak Service Client
         required: true
         content:
           application/json:

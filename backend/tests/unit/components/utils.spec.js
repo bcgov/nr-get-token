@@ -90,9 +90,10 @@ describe('getKeyCloakToken', () => {
   });
 
   it('should call KC endpoint to get a token', async () => {
+    const tkn = 'hsdfs79fsdiufhew89ijsdf9.dshufu9dshf98dsfhsdf.89sdhfs8d9hfuh';
     mockAxios.onPost().reply(200, {
       data: {
-        'access_token': 'hsdfs79fsdiufhew89ijsdf9.dshufu9dshf98dsfhsdf.89sdhfs8d9hfuh',
+        'access_token': tkn,
         'expires_in': 300,
         'refresh_expires_in': 1800,
         'refresh_token': 'sdklfjkdskjf87.sdiohfsduh8.sdfioj898',
@@ -109,7 +110,7 @@ describe('getKeyCloakToken', () => {
     params.append('grant_type', 'client_credentials');
 
     expect(result.data).toBeTruthy();
-    expect(result.data.access_token).toEqual('hsdfs79fsdiufhew89ijsdf9.dshufu9dshf98dsfhsdf.89sdhfs8d9hfuh');
+    expect(result.data.access_token).toEqual(tkn);
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
