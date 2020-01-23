@@ -30,7 +30,7 @@ const checks = {
     return result;
   },
 
-  getCHESStatus: async () => {
+  getChesStatus: async () => {
     const username = config.get('serviceClient.ches.username');
     const password = config.get('serviceClient.ches.password');
     const tokenEndpoint = config.get('serviceClient.ches.tokenEndpoint');
@@ -59,7 +59,7 @@ const checks = {
         }
       }
     } catch (error) {
-      log.error('getCHESStatus', error.message);
+      log.error('getChesStatus', error.message);
     }
 
     return result;
@@ -69,7 +69,7 @@ const checks = {
     checks.getWebAdeOauth2Status('INT'),
     checks.getWebAdeOauth2Status('TEST'),
     checks.getWebAdeOauth2Status('PROD'),
-    checks.getCHESStatus()
+    checks.getChesStatus()
   ])
 };
 

@@ -55,7 +55,7 @@ describe('getWebAdeOauth2Status', () => {
   });
 });
 
-describe('getCHESStatus', () => {
+describe('getChesStatus', () => {
   const endpoint = config.get('serviceClient.ches.tokenEndpoint');
   const username = config.get('serviceClient.ches.username');
   const password = config.get('serviceClient.ches.password');
@@ -86,7 +86,7 @@ describe('getCHESStatus', () => {
       data: { '123': 'abc' }
     });
 
-    const result = await checks.getCHESStatus();
+    const result = await checks.getChesStatus();
 
     expect(result).toBeTruthy();
     expect(result.authenticated).toBeTruthy();
@@ -102,7 +102,7 @@ describe('getCHESStatus', () => {
       'error_description': 'Invalid client secret'
     });
 
-    const result = await checks.getCHESStatus();
+    const result = await checks.getChesStatus();
 
     expect(result).toBeTruthy();
     expect(result.authenticated).toBeFalsy();
