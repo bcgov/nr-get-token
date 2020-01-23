@@ -74,6 +74,63 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /email:
+    post:
+      summary: Sends an application registration request email
+      operationId: email
+      tags:
+        - Email
+      requestBody:
+        description: >-
+          Form fields representing the contact information to email
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactForm'
+      responses:
+        '201':
+          description: Email Successfully Sent
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /keyCloak/configForm:
+    post:
+      summary: Submit a proposed application to KeyCloak
+      operationId: kcConfigFormPost
+      tags:
+        - KeyCloak Service Client Configuration
+      requestBody:
+        description: Form fields required to generate a KeyCloak Service Client
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KcConfigForm'
+      responses:
+        '200':
+          description: Service Client Credentials and Endpoint information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KcConfigResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   '/webAde/{webAdeEnv}/{acronym}/appConfig/':
     get:
       summary: >-
@@ -81,7 +138,7 @@ paths:
         environment
       operationId: appConfigGetAcronym
       tags:
-        - Application Configuration
+        - WebADE Application Configuration
       parameters:
         - name: acronym
           in: path
@@ -123,7 +180,7 @@ paths:
       summary: Returns a list of other WebADE acronyms that reference the one supplied
       operationId: getDependencies
       tags:
-        - Application Configuration
+        - WebADE Application Configuration
       parameters:
         - name: acronym
           in: path
@@ -165,7 +222,7 @@ paths:
       summary: Returns a list of all WebADE applicationPreferences that have the sensitiveDataInd set to false matching the search criteria regular expression
       operationId: getInsecurePrefs
       tags:
-        - Application Configuration
+        - WebADE Application Configuration
       parameters:
         - name: webAdeEnv
           in: path
@@ -208,7 +265,7 @@ paths:
       summary: Returns WebADE JSON response for all acronyms
       operationId: appConfigGetAll
       tags:
-        - Application Configuration
+        - WebADE Application Configuration
       parameters:
         - name: webAdeEnv
           in: path
@@ -242,7 +299,7 @@ paths:
       summary: Submit a proposed application
       operationId: appConfigFormPost
       tags:
-        - Application Configuration
+        - WebADE Application Configuration
       requestBody:
         description: Form fields required to generate a minimal Application Configuration
         required: true
@@ -257,38 +314,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppConfigResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /keyCloak/configForm:
-    post:
-      summary: Submit a proposed application to KeyCloak
-      operationId: kcConfigFormPost
-      tags:
-        - KeyCloak Service Client Configuration
-      requestBody:
-        description: >-
-          Form fields required to generate a minimal KeyCloak Service Client
-          Configuration
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/KcConfigForm'
-      responses:
-        '200':
-          description: Service Client Credentials and Endpoint information
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/KcConfigResponse'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '403':
@@ -465,6 +490,26 @@ components:
           type: string
           description: Contains the service client name that was written to WebADE
           example: DOMO_SERVICE_CLIENT
+    ContactForm:
+      type: object
+      required:
+        - applicationAcronym
+        - comments
+        - from
+        - idir
+      properties:
+        applicationAcronym:
+          type: string
+          example: MSSC
+        comments:
+          type: string
+          example: My team has 10 members
+        from:
+          type: string
+          example: jsmith@gov.bc.ca
+        idir:
+          type: string
+          example: jsmith
     DependencyList:
       type: array
       items:

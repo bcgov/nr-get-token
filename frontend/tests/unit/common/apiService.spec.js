@@ -47,3 +47,21 @@ describe.skip('getHealthCheck()', () => {
   });
 });
 
+describe('sendRegistrationEmail()', () => {
+  const spy = jest.spyOn(ApiService.apiAxios, 'post');
+
+  beforeEach(() => {
+    ApiService.apiAxios.interceptors.response.eject(ApiService.intercept);
+  });
+
+  afterEach(() => {
+    spy.mockClear();
+  });
+
+  it('calls `sendRegistrationEmail() endpoint with a route', async () => {
+    mockAxios.onPost('/api/v1/email').reply(201, { hello: 'world' });
+    const res = await ApiService.sendRegistrationEmail(apiCheckFixture.route);
+
+    expect(res).toEqual({ hello: 'world' });
+  });
+});

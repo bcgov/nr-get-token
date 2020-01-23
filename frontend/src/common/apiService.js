@@ -170,5 +170,19 @@ Body: ${JSON.stringify(response.data, null, 2)}`;
       throw e;
     }
 
-  }
+  },
+
+  async sendRegistrationEmail(registrationForm) {
+    try {
+      const response = await apiAxios.post(ApiRoutes.EMAIL, registrationForm, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      return response.data;
+    } catch (e) {
+      console.log(`Failed to post email registration form - ${e}`); // eslint-disable-line no-console
+      throw e;
+    }
+  },
 };

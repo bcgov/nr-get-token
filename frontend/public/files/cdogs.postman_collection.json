@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "23a09894-70a2-4138-b39a-09552b543fd4",
+		"_postman_id": "f0283d8e-98bb-4ad9-8ca4-f6a0733e3771",
 		"name": "Common Document Generation Service",
 		"description": "CDOGS - A Document Generation common service",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -78,6 +78,37 @@
 										"api",
 										"v1",
 										"docGen"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "FileTypes",
+					"item": [
+						{
+							"name": "/fileTypes",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v1/fileTypes",
+									"protocol": "https",
+									"host": [
+										"cdogs-master-idcqvl-prod",
+										"pathfinder",
+										"gov",
+										"bc",
+										"ca"
+									],
+									"path": [
+										"api",
+										"v1",
+										"fileTypes"
 									]
 								}
 							},

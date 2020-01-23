@@ -44,7 +44,7 @@ objects:
       openshift.io/generated-by: OpenShiftNewBuild
     name: "${REPO_NAME}-frontend-${JOB_NAME}"
   spec:
-    completionDeadlineSeconds: 600
+    completionDeadlineSeconds: 900
     successfulBuildsHistoryLimit: 3
     failedBuildsHistoryLimit: 3
     nodeSelector:
