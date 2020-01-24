@@ -25,9 +25,10 @@ module.exports = {
     }
   },
 
-  async updateName(acronym, name) {
+  async updateDetails(acronym, name, description) {
     return await db.Acronym.update({
-      name: name
+      name: name,
+      description: description
     }, {
       where: {
         acronym: acronym
