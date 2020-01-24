@@ -1,5 +1,6 @@
 const log = require('npmlog');
 
+const { acronymService } = require('../services');
 
 class KeyCloakServiceClientManager {
   constructor(realmAdminService) {
@@ -10,7 +11,7 @@ class KeyCloakServiceClientManager {
     this.svc = realmAdminService;
   }
 
-  async manage({applicationAcronym, applicationName, applicationDescription, commonServices}) {
+  async manage({ applicationAcronym, applicationName, applicationDescription, commonServices }) {
     log.info('KeyCloakServiceClientManager.manage ', `${applicationAcronym}, ${applicationName}, ${applicationDescription}, [${commonServices}]`);
     if (!applicationAcronym) {
       log.error('KeyCloakServiceClientManager - no applicationAcronymprovided.');
@@ -86,6 +87,9 @@ class KeyCloakServiceClientManager {
 
     // now go get the lob client secret, and we will return it
     const clientSecret = await this.svc.getClientSecret(serviceClient.id);
+
+    // Update the acronym details stored in the GETOK DB
+    await acronymService.updateDetails(applicationAcronym, applicationName, applicationDescription);
 
     // return information for logging in as this new service client.
     return {

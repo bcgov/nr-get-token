@@ -6,6 +6,7 @@ const log = require('npmlog');
 
 const KeyCloakServiceClientManager = require('../../../src/components/keyCloakServiceClientMgr');
 const RealmAdminService = require('../../../src/components/realmAdminSvc');
+const { acronymService } = require('../../../src/services');
 
 log.level = config.get('server.logLevel');
 
@@ -42,6 +43,7 @@ beforeEach(() => {
 });
 
 describe('KeyCloakServiceClientManager create', () => {
+  acronymService.updateDetails = jest.fn().mockResolvedValue();
 
   it('should throw an error without realmAdminService', async () => {
     expect(() => {
@@ -58,6 +60,12 @@ describe('KeyCloakServiceClientManager create', () => {
 });
 
 describe('KeyCloakServiceClientManager manage', () => {
+  acronymService.updateDetails = jest.fn().mockResolvedValue();
+  const spyAcronym = jest.spyOn(acronymService, 'updateDetails');
+
+  afterEach(() => {
+    spyAcronym.mockClear();
+  });
 
   it('should throw an error without applicationAcronym', async () => {
     const mgr = new KeyCloakServiceClientManager(realmAdminService);
@@ -86,6 +94,7 @@ describe('KeyCloakServiceClientManager manage', () => {
   it('should return a Service Client Manager', async () => {
     const mgr = new KeyCloakServiceClientManager(realmAdminService);
     const r = await mgr.manage(form);
+    expect(spyAcronym).toHaveBeenCalledTimes(1);
     expect(r).toBeTruthy();
     expect(r.generatedPassword).toBeTruthy();
     expect(r.generatedServiceClient).toBeTruthy();

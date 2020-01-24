@@ -21,7 +21,12 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       allowNull: false,
       comment: 'Name of the application acronym',
-      type: DataTypes.STRING(64)
+      type: DataTypes.STRING(120)
+    },
+    description: {
+      allowNull: false,
+      comment: 'Description of the application',
+      type: DataTypes.STRING(255)
     },
     permissionWebade: {
       allowNull: false,
