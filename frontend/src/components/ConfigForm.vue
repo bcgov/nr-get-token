@@ -596,6 +596,15 @@ export default {
         this.showWebadeNrosDmsOption =
           this.hasWebadeNrosDmsPermission &&
           this.selectedAcronymDetails.permissionWebadeNrosDms;
+
+        this.updateAppCfgField(
+          'applicationName',
+          this.selectedAcronymDetails.name
+        );
+        this.updateAppCfgField(
+          'applicationDescription',
+          this.selectedAcronymDetails.description
+        );
       }
     },
     updateAppCfgField(field, value) {
