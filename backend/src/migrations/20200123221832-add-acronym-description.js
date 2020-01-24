@@ -10,12 +10,30 @@ module.exports = {
           defaultValue: 'None Entered',
           type: Sequelize.STRING(255)
         }
+      ),
+      queryInterface.changeColumn(
+        'acronym',
+        'name',
+        {
+          allowNull: false,
+          comment: 'Name of the application acronym',
+          type: Sequelize.STRING(120)
+        }
       )
     ]);
   },
 
-  down: (queryInterface) => {
+  down: (queryInterface, Sequelize) => {
     return Promise.all([
+      queryInterface.changeColumn(
+        'acronym',
+        'name',
+        {
+          allowNull: false,
+          comment: 'Name of the application acronym',
+          type: Sequelize.STRING(64)
+        }
+      ),
       queryInterface.removeColumn('acronym', 'description')
     ]);
   }
