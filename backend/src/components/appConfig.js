@@ -172,6 +172,8 @@ const appConfig = {
 
       await lifecycleService.create(configForm.applicationAcronym, generatedConfig.webAdeCfg, webadeEnv, userId);
 
+      await acronymService.updateDetails(configForm.applicationAcronym, configForm.applicationName, configForm.applicationDescription);
+
       return {
         webAdeResponse: webAdeResponse.data,
         generatedPassword: generatedConfig.encryptedPassword,

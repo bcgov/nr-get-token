@@ -54,6 +54,6 @@ describe('getAcronym', () => {
       throw new Error();
     });
 
-    await expect(acronyms.getAcronym(undefined)).rejects.toThrow();
+    await expect(acronyms.getAcronym('TEST')).rejects.toThrow();
   });
 });

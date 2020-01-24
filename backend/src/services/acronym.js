@@ -9,7 +9,7 @@ module.exports = {
     });
   },
 
-  async findOrCreateList(acronymList, name = '') {
+  async findOrCreateList(acronymList, name = '', description = '') {
     if (typeof acronymList === 'object' && acronymList instanceof Array) {
       return Promise.all(acronymList.map(acronym => {
         return db.Acronym.findCreateFind({
@@ -17,16 +17,18 @@ module.exports = {
             acronym: acronym
           },
           defaults: {
-            name: name
+            name: name,
+            description: description
           }
         });
       }));
     }
   },
 
-  async updateName(acronym, name) {
+  async updateDetails(acronym, name, description) {
     return await db.Acronym.update({
-      name: name
+      name: name,
+      description: description
     }, {
       where: {
         acronym: acronym

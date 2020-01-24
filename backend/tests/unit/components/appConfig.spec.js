@@ -104,13 +104,16 @@ describe('postAppConfig', () => {
   const url = config.get('serviceClient.getokInt.endpoint') + '/applicationConfigurations';
 
   lifecycleService.create = jest.fn().mockResolvedValue();
+  acronymService.updateDetails = jest.fn().mockResolvedValue();
 
   const spy = jest.spyOn(axios, 'post');
   const spyLifecycle = jest.spyOn(lifecycleService, 'create');
+  const spyAcronym = jest.spyOn(acronymService, 'updateDetails');
 
   afterEach(() => {
     spy.mockClear();
     spyLifecycle.mockClear();
+    spyAcronym.mockClear();
   });
 
   it('should error if unable to acquire access token', async () => {
@@ -200,6 +203,8 @@ describe('postAppConfig', () => {
     });
     expect(spyLifecycle).toHaveBeenCalledTimes(1);
     expect(spyLifecycle).toHaveBeenCalledWith(appAcronym, generatedConfig.webAdeCfg, webadeEnv, userId);
+    expect(spyAcronym).toHaveBeenCalledTimes(1);
+    expect(spyAcronym).toHaveBeenCalledWith(appAcronym, 'name', 'description');
   });
 });
 
