@@ -108,7 +108,27 @@ describe('configForm.js - submitConfigForm action', () => {
     spy.mockClear();
   });
 
-  //TODO: need full tests here
+  it('sucessfully sets the returned client/pw', async () => {
+    ApiService.postConfigForm.mockResolvedValue({ generatedServiceClient: 'WORG_SERVICE_CLIENT', generatedPassword: 'abcd' });
+    await store.dispatch('submitConfigForm');
+
+    expect(store.getters.configSubmissionError).toEqual('');
+    expect(store.getters.configSubmissionSuccess).toBeTruthy();
+  });
+
+  it('returns an error message if the api call has no response', async () => {
+    ApiService.postConfigForm.mockResolvedValue(undefined);
+    await store.dispatch('submitConfigForm');
+
+    expect(store.getters.configSubmissionError).toEqual('An error occurred while attempting to create a service client in Keycloak.');
+  });
+
+  it('returns an error message if the api call has no response password', async () => {
+    ApiService.postConfigForm.mockResolvedValue({ generatedPassword: '' });
+    await store.dispatch('submitConfigForm');
+
+    expect(store.getters.configSubmissionError).toEqual('An error occurred while attempting to create a service client in Keycloak.');
+  });
 
   it('returns an error message if the api call fails', async () => {
     ApiService.postConfigForm.mockImplementation(() => {
