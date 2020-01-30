@@ -173,6 +173,8 @@ import HealthCheck from './HealthCheck';
 import WebAdeVisualizer from './webAdeVisualizer/WebAdeVisualizer';
 import SecurityUtils from './webAdeVisualizer/SecurityUtils';
 
+console.log(CommonServiceList);
+
 export default {
   name: 'home',
   components: {
