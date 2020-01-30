@@ -1,15 +1,15 @@
 <template>
   <v-container v-if="!isAuthenticated">
-    <v-row>
+    <v-row class="ma-md-5">
       <v-col cols="12" md="8" offset-md="2">
         <h2>Please log in to manage your access to any of the following Common Services:</h2>
-        <ul>
+        <ul class="mt-md-5">
           <li
-            v-for="(item) in CommonServiceList"
+            v-for="(item) in KeycloakCommonServiceList"
             :key="item.name"
           >{{item.abbreviation.toUpperCase()}} - {{item.name}}</li>
         </ul>
-        <div class="text-center" style="margin: 20px">
+        <div class="text-center py-5">
           <v-btn
             color="primary"
             class="login-btn"
@@ -31,6 +31,7 @@
       </v-col>
     </v-row>
   </v-container>
+
   <v-container v-else>
     <v-row>
       <v-col cols="4">
@@ -186,7 +187,9 @@ export default {
   data() {
     return {
       authRoutes: AuthRoutes,
-      CommonServiceList: CommonServiceList,
+      KeycloakCommonServiceList: CommonServiceList.filter(function(x) {
+        return x.type == 'keycloak';
+      }),
       dialog: false,
       tabControl: 'tab-1'
     };
@@ -202,6 +205,10 @@ export default {
     ])
   },
   methods: {
+    clearStorage() {
+      this.$store.commit('auth/setJwtToken');
+      this.$store.commit('auth/setRefreshToken');
+    },
     getHealthCheck() {
       this.$store.dispatch('checks/getHealthCheckStatus');
     }
