@@ -1,6 +1,6 @@
 <template>
   <v-container v-if="!isAuthenticated">
-    <v-row class="ma-md-5">
+    <v-row class="ma-md-12">
       <v-col cols="12" md="8" offset-md="2">
         <h2>Please log in to manage your access to any of the following Common Services:</h2>
         <ul class="mt-md-5">
@@ -9,7 +9,7 @@
             :key="item.name"
           >{{item.abbreviation.toUpperCase()}} - {{item.name}}</li>
         </ul>
-        <div class="text-center py-5">
+        <div class="text-center pt-12">
           <v-btn
             color="primary"
             class="login-btn"
@@ -21,13 +21,6 @@
             <span>Login</span>
           </v-btn>
         </div>
-        <p>
-          For information about onboarding to a common service, see the
-          <a
-            href="https://github.com/bcgov/nr-get-token/wiki/Onboarding-Process"
-            target="_blank"
-          >onboarding documentation</a>
-        </p>
       </v-col>
     </v-row>
   </v-container>
@@ -187,9 +180,7 @@ export default {
   data() {
     return {
       authRoutes: AuthRoutes,
-      KeycloakCommonServiceList: CommonServiceList.filter(function(x) {
-        return x.type == 'keycloak';
-      }),
+      KeycloakCommonServiceList: CommonServiceList.filter( x => x.type === 'keycloak' ),
       dialog: false,
       tabControl: 'tab-1'
     };

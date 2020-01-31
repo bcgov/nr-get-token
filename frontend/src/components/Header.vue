@@ -12,7 +12,7 @@
       </a>
 
       <v-toolbar-title>
-        <v-btn class="title hidden-sm-and-down" color="text" text>{{ appTitle }}</v-btn>
+        <v-btn class="title hidden-sm-and-down" color="text" text>Common Service Get Token</v-btn>
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
@@ -21,7 +21,6 @@
         <v-btn v-if="devMode" text id="nav-profile" :href="authRoutes.TOKEN">Token</v-btn>
         <v-btn text id="nav-logout" @click="clearStorage" :href="authRoutes.LOGOUT">Logout</v-btn>
       </div>
-      <v-btn v-else text id="nav-login" @click="clearStorage" :href="authRoutes.LOGIN">Login</v-btn>
     </v-toolbar>
   </header>
 </template>

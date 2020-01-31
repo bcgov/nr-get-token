@@ -9,6 +9,7 @@
         <v-btn text id="footer-accessibility" href="http://gov.bc.ca/webaccessibility">Accessibility</v-btn>
         <v-btn text id="footer-copyright" href="http://gov.bc.ca/copyright">Copyright</v-btn>
         <v-btn text href="https://www2.gov.bc.ca/gov/content/home/contact-us">Contact Us</v-btn>
+        <v-btn text href="https://bcgov.github.io/common-service-showcase">Common Service Showcase</v-btn>
       </v-row>
     </v-container>
   </v-footer>
@@ -29,6 +30,9 @@ export default {};
   .footer .v-btn {
     color: #fff;
     text-decoration: none;
+    text-transform: capitalize;
+    font-size: 80%;
+    font-weight: 300;
   }
   .v-btn--active.footer:before,
   .v-btn.footer:focus:before,
