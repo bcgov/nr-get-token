@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import Vuetify from 'vuetify';
 import Vuex from 'vuex';
 import { mount, createLocalVue } from '@vue/test-utils';
@@ -31,8 +32,7 @@ describe('SecurityUtils.vue', () => {
     wrapper.vm.environment = '';
     wrapper.vm.prefRegex = '';
 
-    //TODO: fix race condition
-    return new Promise(resolve => setTimeout(resolve, ms));
+    await Vue.nextTick();
 
     await wrapper.vm.search();
 
