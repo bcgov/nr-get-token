@@ -11,9 +11,7 @@
         >
       </a>
 
-      <v-toolbar-title>
-        <v-btn class="title hidden-sm-and-down" color="text" text>{{ appTitle }}</v-btn>
-      </v-toolbar-title>
+      <v-toolbar-title class="title hidden-sm-and-down ml-md-3" color="text" text>{{ appTitle }}</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
@@ -51,16 +49,12 @@ export default {
 
 
 <style scoped>
-.gov-header .title {
-  color: #fff;
-  text-decoration: none;
-}
-
 .gov-header .v-toolbar {
   background-color: rgb(0, 51, 102);
   border-bottom: 2px solid rgb(252, 186, 25);
 }
 
+.gov-header .title,
 .gov-header .v-btn,
 .v-btn--active.title:before,
 .v-btn.title:focus:before,
@@ -68,9 +62,7 @@ export default {
   color: #fff;
   background: none;
 }
-.gov-header .v-btn.title{
-  text-transform: none;
-}
+
 
 .secondary_color {
   background-color: var(--v-secondary-base);

@@ -32,7 +32,6 @@ export default {};
     text-decoration: none;
     text-transform: capitalize;
     font-size: 80%;
-    font-weight: normal;
   }
   .v-btn--active.footer:before,
   .v-btn.footer:focus:before,
