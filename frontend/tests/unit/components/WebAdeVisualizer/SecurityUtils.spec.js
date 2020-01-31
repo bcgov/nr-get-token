@@ -27,8 +27,13 @@ describe('SecurityUtils.vue', () => {
   });
 
   it('does not search if the form is not valid', async () => {
+
     wrapper.vm.environment = '';
     wrapper.vm.prefRegex = '';
+
+    //TODO: fix race condition
+    return new Promise(resolve => setTimeout(resolve, ms));
+
     await wrapper.vm.search();
 
     expect(wrapper.vm.searching).toBe(false);
