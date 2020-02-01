@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import Vuetify from 'vuetify';
 import Vuex from 'vuex';
 import { mount, createLocalVue } from '@vue/test-utils';
@@ -27,8 +28,12 @@ describe('SecurityUtils.vue', () => {
   });
 
   it('does not search if the form is not valid', async () => {
+
     wrapper.vm.environment = '';
     wrapper.vm.prefRegex = '';
+
+    await Vue.nextTick();
+
     await wrapper.vm.search();
 
     expect(wrapper.vm.searching).toBe(false);

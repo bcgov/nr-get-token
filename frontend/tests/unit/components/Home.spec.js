@@ -34,6 +34,6 @@ describe('Home.vue', () => {
   });
 
   it('has the app config panel', () => {
-    expect(wrapper.html()).toContain('<div class="container"><h1>Not Logged In</h1>');
+    expect(wrapper.html()).toContain('Please log in');
   });
 });

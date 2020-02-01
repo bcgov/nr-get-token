@@ -1,13 +1,28 @@
 <template>
   <v-container v-if="!isAuthenticated">
-    <h1>Not Logged In</h1>
-    <p>
-      For information about onboarding to a common service, see the
-      <a
-        href="https://github.com/bcgov/nr-get-token/wiki/Onboarding-Process"
-        target="_blank"
-      >onboarding documentation</a>
-    </p>
+    <v-row class="ma-md-12">
+      <v-col cols="12" md="8" offset-md="2">
+        <h2>Please log in to manage your access to any of the following Common Services:</h2>
+        <ul class="mt-md-5">
+          <li
+            v-for="(item) in KeycloakCommonServiceList"
+            :key="item.name"
+          >{{item.abbreviation.toUpperCase()}} - {{item.name}}</li>
+        </ul>
+        <div class="text-center pt-12">
+          <v-btn
+            color="primary"
+            class="login-btn"
+            id="auth-login"
+            @click="clearStorage"
+            :href="authRoutes.LOGIN"
+            medium
+          >
+            <span>Login</span>
+          </v-btn>
+        </div>
+      </v-col>
+    </v-row>
   </v-container>
 
   <v-container v-else>
@@ -143,6 +158,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { CommonServiceList } from '@/utils/commonServices.js';
+import { AuthRoutes } from '@/utils/constants.js';
 import ApiCheck from './ApiCheck';
 import ConfigForm from './ConfigForm';
 import ConfigGeneratedJson from './ConfigGeneratedJson';
@@ -162,6 +179,8 @@ export default {
   },
   data() {
     return {
+      authRoutes: AuthRoutes,
+      KeycloakCommonServiceList: CommonServiceList.filter( x => x.type === 'keycloak' ),
       dialog: false,
       tabControl: 'tab-1'
     };
@@ -177,6 +196,10 @@ export default {
     ])
   },
   methods: {
+    clearStorage() {
+      this.$store.commit('auth/setJwtToken');
+      this.$store.commit('auth/setRefreshToken');
+    },
     getHealthCheck() {
       this.$store.dispatch('checks/getHealthCheckStatus');
     }

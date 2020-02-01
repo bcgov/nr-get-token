@@ -1,4 +1,4 @@
-# Natural Resources Get Token [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE) [![Quality Gate](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/gate?key=nr-get-token)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token)
+# Common Service Get Token [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE) [![Quality Gate](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/gate?key=nr-get-token)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token)
 
 [![Bugs](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/measure?key=nr-get-token&metric=bugs)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token)
 [![Vulnerabilities](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/measure?key=nr-get-token&metric=vulnerabilities)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token)
@@ -7,7 +7,7 @@
 [![Lines](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/measure?key=nr-get-token&metric=lines)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token)
 [![Duplication](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/measure?key=nr-get-token&metric=duplicated_lines_density)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token)
 
-Natural Resources Get Token (GETOK) will automate the process for Development teams to get setup to use **Common Services**.
+Common Service Get Token (GETOK) will automate the process for Development teams to get setup to use **Common Services**.
 
 To learn more about the **Common Services** available visit the [Common Services Showcase](https://bcgov.github.io/common-service-showcase/) page.
 
@@ -15,7 +15,7 @@ GETOK can also be used to get setup with WebADE Services published on [https://a
 
 > The first deployment of this webade-cfg information had to be done manually using the process we are replacing. See [Bitbucket GETOK Repo](https://apps.nrs.gov.bc.ca/int/stash/projects/GETOK/repos/getok-webade-cfg/browse) for the package that was used for the first deployment. Subsequent deployment to modify this can be done through the WEBADE-REST-API endpoints.
 
-Natural Resources Get Token (GETOK will be a front end access point for authorized IDIR users to request the ability to create and update their application's WebADE service Client. GETOK will allow authorized IDIR users to grant Developers that ability for their app and for a common service. Once approved a developer will be able to create and deploy WebADE service client application configuration instantly to gain access to common service APIs like email notifications, document management, or document generation.
+Common Service Get Token (GETOK will be a front end access point for authorized IDIR users to request the ability to create and update their application's WebADE service Client. GETOK will allow authorized IDIR users to grant Developers that ability for their app and for a common service. Once approved a developer will be able to create and deploy WebADE service client application configuration instantly to gain access to common service APIs like email notifications, document management, or document generation.
 
 ## Directory Structure
 

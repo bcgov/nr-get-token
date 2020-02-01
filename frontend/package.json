@@ -2,7 +2,7 @@
   "name": "nr-get-token-frontend",
   "version": "0.1.0",
   "private": true,
-  "description": "Natural Resources Get Token",
+  "description": "Common Service Get Token",
   "author": "NR Common Service Showcase <NR.CommonServiceShowcase@gov.bc.ca>",
   "scripts": {
     "serve": "node_modules/.bin/vue-cli-service serve",
