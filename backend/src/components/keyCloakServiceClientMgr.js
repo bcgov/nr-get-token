@@ -149,7 +149,7 @@ class KeyCloakServiceClientManager {
       return detailObject;
 
     } else {
-      log.debug('KeyCloakServiceClientManager.fetchClient', `No service client found for ${applicationAcronym}`);
+      log.debug('KeyCloakServiceClientManager.fetchClient', 'No service client id');
       return undefined;
     }
   }
