@@ -3,7 +3,7 @@ title: Get Token Developer Guide
 description: Capabilities, OAuth Security, API Endpoints, Example Code
 ---
 
-Natural Resources Get Token is an application and API for generating new WebADE service clients with access to certain common services. The goal of this application is to streamline and facilitate the onboarding process for developers to gain access to common services.
+Common Service Get Token is an application and API for generating new WebADE service clients with access to certain common services. The goal of this application is to streamline and facilitate the onboarding process for developers to gain access to common services.
 
 WebADE may be accessed programatically via the WebADE-API. Get Token directly communicates with the WebADE API via a RESTFul interface in order to update application configurations. A description of the API can be found in [NRM API Store](https://apistore.nrs.gov.bc.ca/store/apis/info?name=WebADE-api&provider=admin&version=v1)
 

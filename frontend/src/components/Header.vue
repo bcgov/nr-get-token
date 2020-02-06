@@ -11,9 +11,7 @@
         >
       </a>
 
-      <v-toolbar-title>
-        <v-btn class="title hidden-sm-and-down" color="text" text>{{ appTitle }}</v-btn>
-      </v-toolbar-title>
+      <v-toolbar-title class="title hidden-sm-and-down ml-md-3" color="text" text>{{ appTitle }}</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
@@ -21,7 +19,6 @@
         <v-btn v-if="devMode" text id="nav-profile" :href="authRoutes.TOKEN">Token</v-btn>
         <v-btn text id="nav-logout" @click="clearStorage" :href="authRoutes.LOGOUT">Logout</v-btn>
       </div>
-      <v-btn v-else text id="nav-login" @click="clearStorage" :href="authRoutes.LOGIN">Login</v-btn>
     </v-toolbar>
   </header>
 </template>
@@ -52,16 +49,12 @@ export default {
 
 
 <style scoped>
-.gov-header .title {
-  color: #fff;
-  text-decoration: none;
-}
-
 .gov-header .v-toolbar {
   background-color: rgb(0, 51, 102);
   border-bottom: 2px solid rgb(252, 186, 25);
 }
 
+.gov-header .title,
 .gov-header .v-btn,
 .v-btn--active.title:before,
 .v-btn.title:focus:before,
@@ -69,6 +62,7 @@ export default {
   color: #fff;
   background: none;
 }
+
 
 .secondary_color {
   background-color: var(--v-secondary-base);
