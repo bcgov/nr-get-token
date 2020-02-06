@@ -2,6 +2,8 @@ const log = require('npmlog');
 
 const { acronymService } = require('../services');
 
+const COMMON_SVC_COMPOSITE = 'COMMON_SERVICES';
+
 class KeyCloakServiceClientManager {
   constructor(realmAdminService) {
     if (!realmAdminService) {
@@ -31,7 +33,7 @@ class KeyCloakServiceClientManager {
     }
 
     const clientId = `${applicationAcronym.toUpperCase()}_SERVICE_CLIENT`;
-    const clientRoleName = 'COMMON_SERVICES';
+    const clientRoleName = COMMON_SVC_COMPOSITE;
 
     const clients = await this.svc.getClients();
     let serviceClient = clients.find(x => x.clientId === clientId);
@@ -97,6 +99,59 @@ class KeyCloakServiceClientManager {
       generatedServiceClient: serviceClient.clientId,
       oidcTokenUrl: this.svc.tokenUrl
     };
+  }
+
+  async fetchClient(applicationAcronym) {
+    log.info('KeyCloakServiceClientManager.fetchClient ', applicationAcronym);
+    if (!applicationAcronym) {
+      log.error('KeyCloakServiceClientManager.fetchClient - no applicationAcronym provided.');
+      throw new Error('Cannot manage service clients in KeyCloak realm: applicationAcronym required.');
+    }
+
+    const clients = await this.svc.getClients();
+
+    const clientId = `${applicationAcronym.toUpperCase()}_SERVICE_CLIENT`;
+    const serviceClient = clients.find(x => x.clientId === clientId);
+
+    const detailObject = this.makeClientDetails(serviceClient);
+    if (detailObject) {
+      return detailObject;
+    } else {
+      log.debug('KeyCloakServiceClientManager.fetchClient', `No service client found for ${applicationAcronym}`);
+      return undefined;
+
+    }
+  }
+
+  async makeClientDetails(serviceClient) {
+    if (serviceClient && serviceClient.id) {
+      // get the service account user.
+      const serviceAccountUser = await this.svc.getServiceAccountUser(serviceClient.id);
+      const roleComposites = await this.svc.getRoleComposites(serviceClient.id, COMMON_SVC_COMPOSITE);
+
+      // return desired info for the GETOK API for this service client.
+      const detailObject = {
+        id: serviceClient.id,
+        clientId: serviceClient.clientId,
+        enabled: serviceClient.enabled,
+        name: serviceClient.name,
+        description: serviceClient.description,
+        serviceAccountEmail: serviceAccountUser ? serviceAccountUser.email : ''
+      };
+      if (roleComposites && roleComposites.length) {
+        detailObject.commonServiceRoles = roleComposites
+          .filter(role => role.name != 'uma_protection')
+          .map(role => ({
+            name: role.name,
+            description: role.description
+          }));
+      }
+      return detailObject;
+
+    } else {
+      log.debug('KeyCloakServiceClientManager.fetchClient', `No service client found for ${applicationAcronym}`);
+      return undefined;
+    }
   }
 }
 

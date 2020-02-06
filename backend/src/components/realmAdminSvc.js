@@ -5,7 +5,7 @@ const tokenProvider = require('axios-token-interceptor');
 
 
 class RealmAdminService {
-  constructor({realmId, realmBaseUrl, clientId, clientSecret}) {
+  constructor({ realmId, realmBaseUrl, clientId, clientSecret }) {
     log.info('RealmAdminService ', `${realmId}, ${realmBaseUrl}, ${clientId}, secret`);
     if (!realmId || !realmBaseUrl || !clientId || !clientSecret) {
       log.error('RealmAdminService - invalid configuration.');
@@ -164,7 +164,7 @@ class RealmAdminService {
       'description': description
     };
 
-    const requestBody = {...defaults, ...applicationDetails};
+    const requestBody = { ...defaults, ...applicationDetails };
     const response = await this.axios.post(
       `${this.realmAdminUrl}/clients`,
       JSON.stringify(requestBody),
@@ -200,7 +200,7 @@ class RealmAdminService {
       'description': description
     };
 
-    const requestBody = {...client, ...applicationDetails};
+    const requestBody = { ...client, ...applicationDetails };
     await this.axios.put(
       `${this.realmAdminUrl}/clients/${client.id}`,
       JSON.stringify(requestBody),
@@ -336,6 +336,26 @@ class RealmAdminService {
       log.error('RealmAdminService.addServiceAccountRole', JSON.stringify(e));
       throw e;
     });
+    return response.data;
+  }
+
+  async getRoleComposites(clientId, roleName) {
+    if (!clientId) {
+      log.error('RealmAdminService getRoleComposites clientId parameter is null.');
+      throw new Error('Cannot get role composites for client roles: clientId parameter cannot be null.');
+    }
+    if (!roleName) {
+      log.error('RealmAdminService getRoleComposites roleName parameter is null.');
+      throw new Error('Cannot get service composites for client roles: roleName parameter cannot be null.');
+    }
+
+    const url = `${this.realmAdminUrl}/clients/${clientId}/roles/${roleName}/composites`;
+    log.error(url);
+    const response = await this.axios.get(url)
+      .catch(e => {
+        log.error('RealmAdminService.getRoleComposites', JSON.stringify(e));
+        throw e;
+      });
     return response.data;
   }
 
