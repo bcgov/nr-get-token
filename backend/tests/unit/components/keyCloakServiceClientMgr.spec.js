@@ -18,11 +18,12 @@ jest.mock('../../../src/components/realmAdminSvc', () => {
   return jest.fn().mockImplementation(() => {
     return {
       tokenUrl: 'https://tokenurl',
-      getClients: () => { return []; },
+      getClients: () => { return [{ id: 1, clientId: 'ZZZ_SERVICE_CLIENT' }]; },
       createClient: () => { return { id: '1', clientId: 'generatedserviceclientid' }; },
       getClientRoles: () => { return []; },
       addClientRole: () => { return []; },
       setRoleComposites: () => { },
+      getRoleComposites: () => { return [{ id: '456', name: 'GENERATOR', description: 'This role is.' }]; },
       getServiceAccountUser: () => { return { id: '2', 'clientId': '1' }; },
       addServiceAccountRole: () => { },
       getClientSecret: () => { return { value: 'itsasecret' }; }
@@ -101,5 +102,28 @@ describe('KeyCloakServiceClientManager manage', () => {
     expect(r.oidcTokenUrl).toBeTruthy();
     expect(r.generatedServiceClient).toEqual('generatedserviceclientid');
   }, 10000);
+
+});
+
+describe('KeyCloakServiceClientManager fetchClient', () => {
+  it('should throw an error without applicationAcronym', async () => {
+    const mgr = new KeyCloakServiceClientManager(realmAdminService);
+    await expect(mgr.fetchClient(undefined)).rejects.toThrow();
+  });
+
+  it('should return a Service Client', async () => {
+    const mgr = new KeyCloakServiceClientManager(realmAdminService);
+    const r = await mgr.fetchClient('ZZZ');
+    expect(r).toBeTruthy();
+    expect(r.id).toEqual(1);
+    expect(r.clientId).toEqual('ZZZ_SERVICE_CLIENT');
+  });
+
+  it('should return undefined if a service client not found', async () => {
+    const mgr = new KeyCloakServiceClientManager(realmAdminService);
+    const r = await mgr.fetchClient('XXX');
+    expect(r).toBeFalsy();
+    expect(r).toBeUndefined();
+  });
 
 });

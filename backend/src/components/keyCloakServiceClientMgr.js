@@ -113,7 +113,8 @@ class KeyCloakServiceClientManager {
     const clientId = `${applicationAcronym.toUpperCase()}_SERVICE_CLIENT`;
     const serviceClient = clients.find(x => x.clientId === clientId);
 
-    const detailObject = this.makeClientDetails(serviceClient);
+    const detailObject = await this.makeClientDetails(serviceClient);
+
     if (detailObject) {
       return detailObject;
     } else {

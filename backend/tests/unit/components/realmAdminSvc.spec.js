@@ -465,7 +465,7 @@ describe('RealmAdminService addServiceAccountRole', () => {
   });
 });
 
-describe('RealmAdminService addServiceAccountRole', () => {
+describe('RealmAdminService setRoleComposites', () => {
 
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
@@ -506,4 +506,32 @@ describe('RealmAdminService addServiceAccountRole', () => {
     const result = await svc.setRoleComposites({ id: '1' }, 'theRole', [{ id: '2' }]);
     expect(result).toBeTruthy();
   });
+});
+
+describe('RealmAdminService getRoleComposites', () => {
+
+  it('should throw an error if no clientId provided', async () => {
+    const svc = new RealmAdminService(realmConfig);
+    await expect(svc.getRoleComposites(undefined, '')).rejects.toThrow();
+  });
+  it('should throw an error if no role name provided', async () => {
+    const svc = new RealmAdminService(realmConfig);
+    await expect(svc.getRoleComposites('abc-123', '')).rejects.toThrow();
+  });
+
+  it('should return composite roles', async () => {
+    const svc = new RealmAdminService(realmConfig);
+    svc.axios = axios.create();
+    mockAxios.onGet(`${svc.realmAdminUrl}/clients/1/roles/theRole/composites`).reply(204, 'yes returned');
+
+    const result = await svc.getRoleComposites('1', 'theRole');
+    expect(result).toBeTruthy();
+  });
+
+  it('should throw an error when realm url is bad...', async () => {
+    const svc = new RealmAdminService(realmConfig);
+    mockAxios.onGet(svc.realmAdminUrl).reply(500);
+    await expect(svc.getRoleComposites('1', 'theRole')).rejects.toThrow();
+  });
+
 });
