@@ -370,6 +370,18 @@ components:
       type: openIdConnect
       openIdConnectUrl: 'https://example.com/.well-known/openid-configuration'
   schemas:
+    AccessRole:
+      type: object
+      required:
+        - roleName
+        - description
+      properties:
+        roleName:
+          type: string
+          example: EMAILER
+        description:
+          type: string
+          example: This role allows email sending via CHES
     AcronymDetail:
       type: object
       properties:
@@ -643,7 +655,7 @@ components:
         commonServiceRoles:
           type: array
           items:
-            $ref: '#/components/schemas/Role'
+            $ref: '#/components/schemas/AccessRole'
           description: An array of Common Service roles the client currently has
     KcConfigForm:
       type: object
@@ -704,18 +716,6 @@ components:
           type: string
           description: Contains the service client name that was written to WebADE
           example: CHES_SERVICE_CLIENT
-    Role:
-      type: object
-      required:
-        - roleName
-        - description
-      properties:
-        roleName:
-          type: string
-          example: EMAILER
-        description:
-          type: string
-          example: This role allows email sending via CHES
     WebAdeProject:
       type: object
       required:

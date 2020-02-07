@@ -102,9 +102,9 @@ class KeyCloakServiceClientManager {
   }
 
   async fetchClient(applicationAcronym) {
-    log.info('KeyCloakServiceClientManager.fetchClient ', applicationAcronym);
+    log.info('KeyCloakServiceClientManager.fetchClient', applicationAcronym);
     if (!applicationAcronym) {
-      log.error('KeyCloakServiceClientManager.fetchClient - no applicationAcronym provided.');
+      log.error('KeyCloakServiceClientManager.fetchClient', 'No applicationAcronym provided.');
       throw new Error('Cannot manage service clients in KeyCloak realm: applicationAcronym required.');
     }
 
@@ -141,7 +141,7 @@ class KeyCloakServiceClientManager {
       };
       if (roleComposites && roleComposites.length) {
         detailObject.commonServiceRoles = roleComposites
-          .filter(role => role.name != 'uma_protection')
+          .filter(role => role.name !== 'uma_protection')
           .map(role => ({
             name: role.name,
             description: role.description

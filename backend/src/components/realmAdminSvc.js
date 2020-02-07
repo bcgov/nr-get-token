@@ -341,11 +341,11 @@ class RealmAdminService {
 
   async getRoleComposites(clientId, roleName) {
     if (!clientId) {
-      log.error('RealmAdminService getRoleComposites clientId parameter is null.');
+      log.error('RealmAdminService.getRoleComposites', 'clientId parameter is null.');
       throw new Error('Cannot get role composites for client roles: clientId parameter cannot be null.');
     }
     if (!roleName) {
-      log.error('RealmAdminService getRoleComposites roleName parameter is null.');
+      log.error('RealmAdminService.getRoleComposites', 'roleName parameter is null.');
       throw new Error('Cannot get service composites for client roles: roleName parameter cannot be null.');
     }
 

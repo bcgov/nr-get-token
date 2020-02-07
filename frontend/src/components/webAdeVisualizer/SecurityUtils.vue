@@ -96,7 +96,7 @@
                   </template>
                 </v-simple-table>
                 <p
-                  v-if="insecurePasswordsList && insecurePasswordsList.length == 0"
+                  v-if="insecurePasswordsList && !insecurePasswordsList.length"
                 >No results could be found for this search.</p>
               </div>
             </v-card-text>
