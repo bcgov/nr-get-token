@@ -1,23 +1,25 @@
 <template>
   <v-btn class="mr-2" color="success" @click="registrationDialog = true">
-    Register New App
+    Register a new app
     <v-dialog v-model="registrationDialog" persistent max-width="700">
       <v-card>
         <v-card-title class="headline">
-          <v-icon class="mr-2">email</v-icon>Register New App
+          <v-icon class="mr-2">email</v-icon>Register a New Application
         </v-card-title>
         <v-card-text>
           <v-alert :value="errorOccurred" tile type="error" transition="scale-transition">
-            An error occurred while attempting to send registration message.
-            <br />You can manually send a contact email to
+            An error occurred while attempting to Register your application.
+            <br />You can also register your application by sending an email to
             <a
               class="white--text"
               href="mailto:NR.CommonServiceShowcase@gov.bc.ca?subject=GETOK Registration for <acronym> - <idir>"
-            >NR.CommonServiceShowcase@gov.bc.ca</a> (please supply acronym and IDIR in your email)
+            >NR.CommonServiceShowcase@gov.bc.ca</a><br />
+            Please include your Acronym as well as your IDIR username in your email.
           </v-alert>
           <p>
-            Please supply the acronym of the application you wish to register (along with any optional comments)
-            and a communication will be passed along to authorize you for that application.
+            Please enter an acronym for the application you are registering.<br />
+            Use the optional Comments field to describe your project or indicate relavant branch / ministries.<br />
+            This message is sent to the Common Service Showcase Team to authorize you for that application.
           </p>
 
           <v-form ref="form" v-model="valid" lazy-validation>
@@ -121,7 +123,7 @@ export default {
             this.registrationDialog = false;
             this.$store.commit(
               'configForm/setConfigSubmissionSuccess',
-              `Registration request sent successfully. You will be emailed back at ${this.userInfo.emailAddress} when authorized`
+              `Your Registration was sent successfully. You will be sent an email to ${this.userInfo.emailAddress} when your application has been authorized.`
             );
           } else {
             this.errorOccurred = true;
