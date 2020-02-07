@@ -8,7 +8,9 @@ module.exports = {
     const userObj = await userService.find(keycloakId);
 
     // Remove passwords from service clients
-    appConfig.serviceClients.forEach(sc => delete sc.secret);
+    if (appConfig.serviceClients) {
+      appConfig.serviceClients.forEach(sc => delete sc.secret);
+    }
 
     let lifecycleHistory;
     await db.sequelize.transaction(async t => {

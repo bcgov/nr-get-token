@@ -5,6 +5,9 @@ const log = require('npmlog');
 const KeyCloakServiceClientManager = require('../../components/keyCloakServiceClientMgr');
 const RealmAdminService = require('../../components/realmAdminSvc');
 const permissionHelpers = require('../../components/permissionHelpers');
+const {
+  lifecycleService
+} = require('../../services');
 
 const {
   body,
@@ -49,6 +52,9 @@ keyCloak.post('/configForm', [
 
     const response = await kcScMgr.manage(configForm);
     const encryptedPassword = cryptico.encrypt(response.generatedPassword, publicKey).cipher;
+
+    // Write a lifecycle record
+    await lifecycleService.create(configForm.applicationAcronym, configForm, configForm.clientEnvironment, req.user.jwt.sub);
     return res.status(200).json({
       oidcTokenUrl: response.oidcTokenUrl,
       generatedServiceClient: response.generatedServiceClient,

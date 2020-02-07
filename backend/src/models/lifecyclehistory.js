@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(4),
       validate: {
         isIn: [
-          ['INT', 'TEST', 'PROD']
+          ['INT', 'TEST', 'PROD', 'DEV']
         ]
       }
     }
