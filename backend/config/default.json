@@ -33,6 +33,14 @@
       "DEV": {
         "endpoint": "https://sso-dev.pathfinder.gov.bc.ca",
         "realm": "98r0z7rz"
+      },
+      "TEST": {
+        "endpoint": "https://sso-test.pathfinder.gov.bc.ca",
+        "realm": "98r0z7rz"
+      },
+      "PROD": {
+        "endpoint": "https://sso.pathfinder.gov.bc.ca",
+        "realm": "98r0z7rz"
       }
     }
   }
