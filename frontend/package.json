@@ -7,10 +7,11 @@
   "scripts": {
     "serve": "node_modules/.bin/vue-cli-service serve",
     "build": "node_modules/.bin/vue-cli-service build",
+    "test": "npm run test:unit",
     "test:unit": "node_modules/.bin/vue-cli-service test:unit --verbose",
     "lint": "node_modules/.bin/vue-cli-service lint --no-fix",
-    "clean": "rm -rf coverage dist",
     "lint:fix": "node_modules/.bin/vue-cli-service lint --fix",
+    "clean": "rm -rf coverage dist",
     "pretest:unit": "npm run lint",
     "purge": "rm -rf node_modules",
     "rebuild": "npm run clean && npm run build",
