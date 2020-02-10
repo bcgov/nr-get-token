@@ -5,8 +5,7 @@ const permissionHelpers = require('../../components/permissionHelpers');
 const auditComponent = require('../../components/audit');
 
 // fetches audit history for an application
-audit.get('/:appAcronym', [
-], async (req, res) => {
+audit.get('/:appAcronym', async (req, res) => {
   // Check for required permissions. Can only fetch details for the acronyms you are associated with
   const permissionErr = permissionHelpers.checkAcronymPermission(req.user.jwt, req.params.appAcronym);
   if (permissionErr) {
