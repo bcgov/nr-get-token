@@ -4,6 +4,7 @@ const passport = require('passport');
 const YAML = require('yamljs');
 
 const acronymsRouter = require('./v1/acronyms');
+const auditRouter = require('./v1/audit');
 const checksRouter = require('./v1/checks');
 const emailRouter = require('./v1/email');
 const keyCloakRouter = require('./v1/keyCloak');
@@ -14,6 +15,7 @@ router.get('/', (_req, res) => {
   res.status(200).json({
     endpoints: [
       '/appConfigForm',
+      '/audit',
       '/checks',
       '/docs',
       '/email',
@@ -37,6 +39,12 @@ router.get('/api-spec.yaml', (_req, res) => {
 router.get('/api-spec.json', (_req, res) => {
   res.status(200).json(YAML.load(path.join(__dirname, '../docs/v1.api-spec.yaml')));
 });
+
+// Audit
+router.use('/audit', passport.authenticate('jwt', {
+  session: false
+}), auditRouter);
+
 
 // Acronyms
 router.use('/acronyms', passport.authenticate('jwt', {

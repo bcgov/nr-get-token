@@ -1,11 +1,11 @@
 const log = require('npmlog');
 
-const acronyms = require('express').Router();
+const audit = require('express').Router();
 const permissionHelpers = require('../../components/permissionHelpers');
-const acronymComponent = require('../../components/acronyms');
+const auditComponent = require('../../components/audit');
 
-// fetches the acronym details
-acronyms.get('/:appAcronym', [
+// fetches audit history for an application
+audit.get('/:appAcronym', [
 ], async (req, res) => {
   // Check for required permissions. Can only fetch details for the acronyms you are associated with
   const permissionErr = permissionHelpers.checkAcronymPermission(req.user.jwt, req.params.appAcronym);
@@ -16,7 +16,7 @@ acronyms.get('/:appAcronym', [
   }
 
   try {
-    const response = await acronymComponent.getAcronym(req.params.appAcronym);
+    const response = await auditComponent.getHistoryByAcronym(req.params.appAcronym);
     if (response) {
       return res.status(200).json(response);
     } else {
@@ -31,4 +31,4 @@ acronyms.get('/:appAcronym', [
   }
 });
 
-module.exports = acronyms;
+module.exports = audit;
