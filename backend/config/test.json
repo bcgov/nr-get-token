@@ -35,6 +35,14 @@
       "DEV": {
         "username": "username",
         "password": "password"
+      },
+      "TEST": {
+        "username": "username",
+        "password": "password"
+      },
+      "PROD": {
+        "username": "username",
+        "password": "password"
       }
     }
   }

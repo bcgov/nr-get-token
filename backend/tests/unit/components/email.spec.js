@@ -10,6 +10,10 @@ const mockAxios = new MockAdapter(axios);
 
 log.level = config.get('server.logLevel');
 
+const tokenEndpoint = config.get('serviceClient.ches.tokenEndpoint');
+const scUser = config.get('serviceClient.ches.username');
+const scPw = config.get('serviceClient.ches.password');
+
 describe('sendContactEmail', () => {
   // Spy/mock the get token function
   const utilSpy = jest.spyOn(utils, 'getKeyCloakToken');
@@ -43,7 +47,7 @@ describe('sendContactEmail', () => {
     expect(result).toEqual(res);
 
     expect(utilSpy).toHaveBeenCalledTimes(1);
-    expect(utilSpy).toHaveBeenCalledWith('username', 'password', 'keycloak');
+    expect(utilSpy).toHaveBeenCalledWith(scUser, scPw, tokenEndpoint);
     expect(axiosSpy).toHaveBeenCalledTimes(1);
   });
 
@@ -57,7 +61,7 @@ describe('sendContactEmail', () => {
       .toThrow('Error calling email endpoint openshift. Error: Request failed with status code 403');
 
     expect(utilSpy).toHaveBeenCalledTimes(1);
-    expect(utilSpy).toHaveBeenCalledWith('username', 'password', 'keycloak');
+    expect(utilSpy).toHaveBeenCalledWith(scUser, scPw, tokenEndpoint);
     expect(axiosSpy).toHaveBeenCalledTimes(1);
   });
 
@@ -71,7 +75,7 @@ describe('sendContactEmail', () => {
       .toThrow('Error calling email endpoint openshift. Error: TOKENERR');
 
     expect(utilSpy).toHaveBeenCalledTimes(1);
-    expect(utilSpy).toHaveBeenCalledWith('username', 'password', 'keycloak');
+    expect(utilSpy).toHaveBeenCalledWith(scUser, scPw, tokenEndpoint);
     expect(axiosSpy).toHaveBeenCalledTimes(0);
   });
 });

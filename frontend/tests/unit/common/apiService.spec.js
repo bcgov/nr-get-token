@@ -27,17 +27,15 @@ describe('getAPICheck()', () => {
     });
     const res = await ApiService.getApiCheck(apiCheckFixture.route);
 
+    expect(res).toContain(`URL: ${apiCheckFixture.route}`);
     // TODO: see about re-adding these conditions
-    // expect(res).toContain(`URL: ${apiCheckFixture.route}`);
-    // eslint-disable-next-line no-console
-    console.log(res);
     // expect(axios.get).toHaveBeenCalledWith(apiCheckFixture.route);
     // expect(axios.get).toHaveBeenCalledTimes(1);
   });
 });
 
 describe.skip('getHealthCheck()', () => {
-  it('calls `getHealthCheck() endpoint', async () => {
+  it('calls getHealthCheck() endpoint', async () => {
     axios.get.mockResolvedValueOnce({ data: healthCheckFixture });
     const check = await ApiService.getHealthCheck();
 
