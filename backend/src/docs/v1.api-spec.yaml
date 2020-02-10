@@ -19,6 +19,38 @@ security:
   - bearerAuth: []
   - OpenID: []
 paths:
+  '/audit/{acronym}':
+    get:
+      summary: Returns the history that GETOK stores about actions done on behalf of an acronym
+      operationId: getAudit
+      tags:
+        - Audit
+      parameters:
+        - name: acronym
+          in: path
+          description: Name of the project
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Audit history details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditHistoryList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   '/acronyms/{acronym}':
     get:
       summary: Returns the details that GETOK stores about an application acronym
@@ -370,18 +402,29 @@ components:
       type: openIdConnect
       openIdConnectUrl: 'https://example.com/.well-known/openid-configuration'
   schemas:
-    AccessRole:
+    AuditHistoryList:
+      type: array
+      items:
+        $ref: '#/components/schemas/AuditHistory'
+      description: An array of audit history items
+    AuditHistory:
       type: object
-      required:
-        - roleName
-        - description
       properties:
-        roleName:
+        date:
           type: string
-          example: EMAILER
-        description:
+          example: 1581363820
+        acronym:
           type: string
-          example: This role allows email sending via CHES
+          example: MSSC
+        user:
+          type: string
+          example: jsmith@idir
+        environment:
+          type: string
+          example: DEV
+        details:
+          type: string
+          example: details string/object, subject to change
     AcronymDetail:
       type: object
       properties:
@@ -655,7 +698,7 @@ components:
         commonServiceRoles:
           type: array
           items:
-            $ref: '#/components/schemas/AccessRole'
+            $ref: '#/components/schemas/Role'
           description: An array of Common Service roles the client currently has
     KcConfigForm:
       type: object
@@ -716,6 +759,18 @@ components:
           type: string
           description: Contains the service client name that was written to WebADE
           example: CHES_SERVICE_CLIENT
+    Role:
+      type: object
+      required:
+        - roleName
+        - description
+      properties:
+        roleName:
+          type: string
+          example: EMAILER
+        description:
+          type: string
+          example: This role allows email sending via CHES
     WebAdeProject:
       type: object
       required:
