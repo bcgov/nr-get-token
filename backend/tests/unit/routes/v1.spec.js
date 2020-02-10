@@ -11,6 +11,7 @@ describe('/api/v1', () => {
     expect(response.body).toEqual({
       endpoints: [
         '/appConfigForm',
+        '/audit',
         '/checks',
         '/docs',
         '/email',
