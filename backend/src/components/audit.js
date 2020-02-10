@@ -9,8 +9,9 @@ const audit = {
   /**
    * Fetch a specific acronym's history details from GETOK database.
    * @param {string} applicationAcronym - The app specifier.
+   * @returns {object[]} An array containing the history of `applicationAcronym`.
    */
-  getHistoryByAcronym: async (applicationAcronym) => {
+  getHistoryByAcronym: async applicationAcronym => {
     if (!applicationAcronym) {
       const errMsg = 'No app acronym supplied to getHistoryByAcronym';
       log.error('getHistoryByAcronym', errMsg);
