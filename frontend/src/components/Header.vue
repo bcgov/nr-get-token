@@ -49,7 +49,7 @@ export default {
 
 
 <style scoped>
-.gov-header .v-toolbar {
+header.gov-header .v-toolbar {
   background-color: rgb(0, 51, 102);
   border-bottom: 2px solid rgb(252, 186, 25);
 }
