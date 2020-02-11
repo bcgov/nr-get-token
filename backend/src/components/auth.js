@@ -64,7 +64,7 @@ const auth = {
         }
       );
 
-      log.verbose('renew', utils.prettyStringify(response.data));
+      log.verbose('renew', JSON.stringify(response.data));
       result.jwt = response.data.access_token;
       result.refreshToken = response.data.refresh_token;
     } catch (error) {

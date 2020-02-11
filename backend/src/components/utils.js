@@ -27,7 +27,7 @@ const utils = {
         }
       });
 
-      log.verbose('getWebAdeToken', utils.prettyStringify(response.data));
+      log.verbose('getWebAdeToken', JSON.stringify(response.data));
       return response.data;
     } catch (error) {
       log.error('getWebAdeToken', error.message);
@@ -67,7 +67,7 @@ const utils = {
       try {
         const response = await axios.get(config.get('oidc.discovery'));
 
-        log.verbose('getOidcDiscovery', utils.prettyStringify(response.data));
+        log.verbose('getOidcDiscovery', JSON.stringify(response.data));
         discovery = response.data; // eslint-disable-line require-atomic-updates
       } catch (error) {
         log.error('getOidcDiscovery', `OIDC Discovery failed - ${error.message}`);
