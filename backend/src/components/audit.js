@@ -1,8 +1,8 @@
 const log = require('npmlog');
 
-// const {
-//   auditService
-// } = require('../services');
+const {
+  auditService
+} = require('../services');
 const utils = require('./utils');
 
 const audit = {
@@ -18,17 +18,26 @@ const audit = {
       throw new Error(errMsg);
     }
     try {
-      //const history = await auditService.find(applicationAcronym);
-      const history = [1, 2, 3];
+      const history = await auditService.findHistory(applicationAcronym);
+      //const history = [1, 2, 3];
       log.verbose('getHistoryByAcronym', utils.prettyStringify(history));
       if (history) {
-        return history;
+        const hsts = history.Lifecycles.map(lc => {
+          const hst = {};
+          hst.date = lc.createdAt;
+          hst.acronym = history.acronym;
+          hst.user = lc.LifecycleHistories[0].User.username;
+          hst.environment = lc.env;
+          hst.details = lc.appConfig;
+          return hst;
+        });
+        return hsts;
       } else {
         return [];
       }
     } catch (error) {
       log.error('getHistoryByAcronym', error.message);
-      throw new Error(`An error occured fetching acronym history from GETOK database. ${error.message}`);
+      throw new Error(`An error occured fetching audit history from GETOK database. ${error.message}`);
     }
   }
 };
