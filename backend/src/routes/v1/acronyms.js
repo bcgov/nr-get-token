@@ -8,7 +8,7 @@ const acronymComponent = require('../../components/acronyms');
 acronyms.get('/:appAcronym', [
 ], async (req, res) => {
   // Check for required permissions. Can only fetch details for the acronyms you are associated with
-  const permissionErr = permissionHelpers.checkAcronymPermission(req.user.jwt, req.params.appAcronym);
+  const permissionErr = await permissionHelpers.checkAcronymPermission(req.user.jwt, req.params.appAcronym);
   if (permissionErr) {
     return res.status(403).json({
       message: permissionErr

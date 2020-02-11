@@ -213,7 +213,7 @@ const appConfig = {
     }
 
     // Can this call be made?
-    return permissionHelper.checkWebAdePostPermissions(token, configForm, acronymDetails, desiredUserRoles);
+    return await permissionHelper.checkWebAdePostPermissions(token, configForm, acronymDetails, desiredUserRoles);
   },
 
   /**

@@ -2,6 +2,7 @@ const config = require('config');
 const log = require('npmlog');
 
 const permissionHelpers = require('../../../src/components/permissionHelpers');
+const { userService } = require('../../../src/services');
 
 const acronymDetail = require('./fixtures/acronymDetail.json');
 const configForm = require('./fixtures/configForm.json');
@@ -27,94 +28,138 @@ describe('filterAppAcronymRoles', () => {
 });
 
 describe('checkAcronymPermission', () => {
-  it('should return no error when user has permission for acronym', async () => {
-    // Token has a WORG scope
+  const spy = jest.fn();
+
+  beforeAll(() => {
+    userService.getUserAcronymList = spy;
+  });
+
+  afterEach(() => {
+    spy.mockReset();
+  });
+
+  it('should return undefined when user has permission for acronym', () => {
+    spy.mockResolvedValue(['MSSC', 'WORG']);
     const result = permissionHelpers.checkAcronymPermission(sampleToken, 'WORG');
-    expect(result).toBeUndefined();
+    expect(result).resolves.toBeUndefined();
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  it('should return an error when user does not have permission for acronym', async () => {
-    // oken has no scope for ABCD
+  it('should return an error string when user does not have permission for acronym', () => {
+    spy.mockResolvedValue(['MSSC', 'WORG']);
     const result = permissionHelpers.checkAcronymPermission(sampleToken, 'ABCD');
-    expect(result).toEqual('User lacks permission for \'ABCD\' acronym');
+    expect(result).resolves.toEqual('User lacks permission for \'ABCD\' acronym');
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  it('should return an error when user has no acronym permissions', async () => {
-    // Token has no roles
-    const tokenCopy = JSON.parse(JSON.stringify(sampleToken));
-    tokenCopy.realm_access.roles = [];
-    const result = permissionHelpers.checkAcronymPermission(tokenCopy, 'WORG');
-    expect(result).toEqual('User lacks permission for \'WORG\' acronym');
-  });
-
-  it('should return an error when the token has a non-array roles', async () => {
-    // Token has no roles
-    const tokenCopy = JSON.parse(JSON.stringify(sampleToken));
-    tokenCopy.realm_access.roles = 'SOMETHING_WRONG';
-    const result = permissionHelpers.checkAcronymPermission(tokenCopy, 'WORG');
-    expect(result).toEqual('User lacks permission for \'WORG\' acronym');
+  it('should return an error string when user has no acronym permissions', () => {
+    spy.mockResolvedValue([]);
+    const result = permissionHelpers.checkAcronymPermission(sampleToken, 'WORG');
+    expect(result).resolves.toEqual('User lacks permission for \'WORG\' acronym');
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 });
 
 describe('checkWebAdePostPermissions', () => {
-  it('should return no error when user has permission for acrony and acronym is allowed', async () => {
-    // ConfigForm is for WORG, and token has a WORG scope, acronym WORG has true for webade
-    const result = permissionHelpers.checkWebAdePostPermissions(sampleToken, configForm, acronymDetail);
-    expect(result).toBeUndefined();
+  const spy = jest.spyOn(permissionHelpers, 'checkAcronymPermission');
+
+  beforeEach(() => {
+    spy.mockReset();
   });
 
-  it('should return no error when user has both special scopes', async () => {
+  afterAll(() => {
+    spy.mockRestore();
+  });
+
+  it('should return undefined when user has permission for acronym and acronym is allowed', () => {
     // ConfigForm is for WORG, and token has a WORG scope, acronym WORG has true for webade
+    spy.mockResolvedValue(undefined);
+
+    const result = permissionHelpers.checkWebAdePostPermissions(sampleToken, configForm, acronymDetail);
+
+    expect(result).resolves.toBeUndefined();
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return no error when user has both special scopes', () => {
+    // ConfigForm is for WORG, and token has a WORG scope, acronym WORG has true for webade
+    spy.mockResolvedValue(undefined);
     const tokenCopy = JSON.parse(JSON.stringify(sampleToken));
     tokenCopy.realm_access.roles.push(...['WEBADE_PERMISSION', 'WEBADE_PERMISSION_NROS_DMS']);
+
     const result = permissionHelpers.checkWebAdePostPermissions(tokenCopy, configForm, acronymDetail, ['WEBADE_PERMISSION', 'WEBADE_PERMISSION_NROS_DMS']);
-    expect(result).toBeUndefined();
+    expect(result).resolves.toBeUndefined();
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  it('should return an error when user does not have permission for acronym', async () => {
+  it('should return an error when user does not have permission for acronym', () => {
     // ConfigForm is for ABCD, and token has no scope for that
+    spy.mockResolvedValue('User lacks permission for \'ABCD\' acronym');
     const cfgCopy = JSON.parse(JSON.stringify(configForm));
     cfgCopy.applicationAcronym = 'ABCD';
+
     const result = permissionHelpers.checkWebAdePostPermissions(sampleToken, cfgCopy, acronymDetail);
-    expect(result).toEqual('User lacks permission for \'ABCD\' acronym');
+
+    expect(result).resolves.toEqual('User lacks permission for \'ABCD\' acronym');
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  it('should return an error when user has no acronym permissions', async () => {
+  it('should return an error when user has no acronym permissions', () => {
     // ConfigForm is for ABCD, and token has no scope for that
+    spy.mockResolvedValue('User lacks permission for \'WORG\' acronym');
     const tokenCopy = JSON.parse(JSON.stringify(sampleToken));
     tokenCopy.realm_access.roles = [];
+
     const result = permissionHelpers.checkWebAdePostPermissions(tokenCopy, configForm, acronymDetail);
-    expect(result).toEqual('User lacks permission for \'WORG\' acronym');
+
+    expect(result).resolves.toEqual('User lacks permission for \'WORG\' acronym');
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  it('should return no error when user lacks a desired scope', async () => {
+  it('should return no error when user lacks a desired scope', () => {
     // Token is missing WEBADE_PERMISSION_NROS_DMS, and that is required for this operation
+    spy.mockResolvedValue(undefined);
     const tokenCopy = JSON.parse(JSON.stringify(sampleToken));
     tokenCopy.realm_access.roles.push('WEBADE_PERMISSION');
+
     const result = permissionHelpers.checkWebAdePostPermissions(tokenCopy, configForm, acronymDetail, ['WEBADE_PERMISSION', 'WEBADE_PERMISSION_NROS_DMS']);
-    expect(result).toEqual('User is not permitted to submit WebADE config, missing role WEBADE_PERMISSION_NROS_DMS');
+
+    expect(result).resolves.toEqual('User is not permitted to submit WebADE config, missing role WEBADE_PERMISSION_NROS_DMS');
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  it('should return an error when acronym is not allowed to use webADE', async () => {
+  it('should return an error when acronym is not allowed to use webADE', () => {
     // Set acronym detail to not allow webade
+    spy.mockResolvedValue(undefined);
     const adCopy = JSON.parse(JSON.stringify(acronymDetail));
     adCopy.permissionWebade = false;
+
     const result = permissionHelpers.checkWebAdePostPermissions(sampleToken, configForm, adCopy);
-    expect(result).toEqual('Acronym \'WORG\' is not permitted to submit WebADE configs');
+
+    expect(result).resolves.toEqual('Acronym \'WORG\' is not permitted to submit WebADE configs');
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
   it('should return an error when acronym is not allowed to do special NROS DMS', () => {
     // Set acronym detail to not allow webade
+    spy.mockResolvedValue(undefined);
     const tokenCopy = JSON.parse(JSON.stringify(sampleToken));
     tokenCopy.realm_access.roles.push(...['WEBADE_PERMISSION', 'WEBADE_PERMISSION_NROS_DMS']);
     const adCopy = JSON.parse(JSON.stringify(acronymDetail));
     adCopy.permissionWebadeNrosDms = false;
+
     const result = permissionHelpers.checkWebAdePostPermissions(tokenCopy, configForm, adCopy, ['WEBADE_PERMISSION', 'WEBADE_PERMISSION_NROS_DMS']);
-    expect(result).toEqual('Acronym \'WORG\' is not permitted special access to NROS DMS');
+
+    expect(result).resolves.toEqual('Acronym \'WORG\' is not permitted special access to NROS DMS');
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  it('should return a generic error when an error occurs checking', async () => {
+  it('should return a generic error when an error occurs during checking', () => {
+    spy.mockImplementation(() => { throw new Error('bad'); });
+
     const result = permissionHelpers.checkWebAdePostPermissions(sampleToken, configForm, undefined);
-    expect(result).toEqual('Failed to determine permission for WebADE access');
+
+    expect(result).resolves.toEqual('Failed to determine permission for WebADE access');
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 });
