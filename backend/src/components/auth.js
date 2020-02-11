@@ -4,14 +4,26 @@ const jsonwebtoken = require('jsonwebtoken');
 const log = require('npmlog');
 const qs = require('querystring');
 
-const {
-  acronymService,
-  userService
-} = require('../services');
+const { acronymService, userService } = require('../services');
 const permissionHelpers = require('./permissionHelpers');
 const utils = require('./utils');
 
 const auth = {
+  /**
+   *  @function getUserAcronyms
+   *  @param {object} req An Express request object
+   *  @param {object} _res An Express response object
+   *  @param {function} next A callback function
+   */
+  async getUserAcronyms(req, _res, next) {
+    if (req.user && !auth.isTokenExpired(req.user.jwt)) {
+      const acronyms = await userService.getUserAcronymList(req.user.id);
+      req.user.acronyms = Array.isArray(acronyms) ? acronyms : [];
+    }
+
+    next();
+  },
+
   // Check if JWT Access Token has expired
   isTokenExpired(token) {
     const now = Date.now().valueOf() / 1000;

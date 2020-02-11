@@ -1,7 +1,6 @@
 const log = require('npmlog');
 const utils = require('./utils');
 
-
 const permissionHelpers = {
   // TODO: this is likely soon to be refactored out, as we will be pulling acronyms from the DB, not from access roles
   // Returns only app acronym based roles

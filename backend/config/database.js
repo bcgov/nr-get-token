@@ -2,10 +2,6 @@ const config = require('config');
 const log = require('npmlog');
 const Sequelize = require('sequelize');
 
-log.addLevel('debug', 1500, {
-  fg: 'cyan'
-});
-
 module.exports = {
   username: config.get('db.username'),
   password: config.get('db.password'),
@@ -20,7 +16,7 @@ module.exports = {
   },
   dialect: 'postgres',
   isolationLevel: Sequelize.Transaction.SERIALIZABLE,
-  logging: query => log.debug('Database', query),
+  logging: query => log.verbose('Database', query),
   migrationStorageTableName: 'sequelize_meta',
   pool: {
     max: 5,
