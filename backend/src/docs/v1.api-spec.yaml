@@ -412,7 +412,7 @@ components:
       properties:
         date:
           type: string
-          example: 1581363820
+          example: 2019-08-22T18:43:07.393Z
         acronym:
           type: string
           example: MSSC
