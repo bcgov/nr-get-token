@@ -1,8 +1,6 @@
 const log = require('npmlog');
 
-const {
-  auditService
-} = require('../services');
+const { auditService } = require('../services');
 const utils = require('./utils');
 
 const audit = {
@@ -22,13 +20,13 @@ const audit = {
       log.verbose('getHistoryByAcronym', utils.prettyStringify(history));
       if (history) {
         const hsts = history.Lifecycles.map(lc => {
-          const hst = {};
-          hst.date = lc.createdAt;
-          hst.acronym = history.acronym;
-          hst.user = lc.LifecycleHistories[0].User.username;
-          hst.environment = lc.env;
-          hst.details = lc.appConfig;
-          return hst;
+          return {
+            acronym: history.acronym,
+            date: lc.createdAt,
+            details: lc.appConfig,
+            environment: lc.env,
+            user: lc.LifecycleHistories[0].User.username
+          };
         });
         return hsts;
       } else {
