@@ -19,7 +19,6 @@ const audit = {
     }
     try {
       const history = await auditService.findHistory(applicationAcronym);
-      //const history = [1, 2, 3];
       log.verbose('getHistoryByAcronym', utils.prettyStringify(history));
       if (history) {
         const hsts = history.Lifecycles.map(lc => {
