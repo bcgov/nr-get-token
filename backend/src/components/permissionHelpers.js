@@ -64,7 +64,6 @@ const permissionHelpers = {
         return `Acronym '${acronymData.acronym}' is not permitted special access to NROS DMS`;
       }
     } catch (error) {
-      console.log(error);
       log.error(`Error occurred determining permission for WebADE POST. Error: ${error}`);
       return 'Failed to determine permission for WebADE access';
     }

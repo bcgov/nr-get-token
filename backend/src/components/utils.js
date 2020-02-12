@@ -52,7 +52,7 @@ const utils = {
       };
 
       const response = await axios.post(tokenEndpoint, qs.stringify(requestBody), options);
-      log.verbose('getKeyCloakToken', utils.prettyStringify(response.data));
+      log.verbose('getKeyCloakToken', JSON.stringify(response.data));
       return response.data;
     } catch (error) {
       log.error(JSON.stringify(error));
@@ -89,9 +89,6 @@ const utils = {
       encryptedPassword: cryptico.encrypt(pw, key).cipher
     };
   },
-
-  // Returns a pretty JSON representation of an object
-  prettyStringify: (obj, indent = 2) => JSON.stringify(obj, null, indent),
 
   // Returns a string in Pascal Case
   toPascalCase: str => str.toLowerCase().replace(/\b\w/g, t => t.toUpperCase()),

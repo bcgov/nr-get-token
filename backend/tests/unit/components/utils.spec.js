@@ -187,38 +187,6 @@ describe('generateEncryptPassword', () => {
   });
 });
 
-describe('prettyStringify', () => {
-  const obj = {
-    foo: 'bar'
-  };
-
-  it('should return a formatted json string with 2 space indent', () => {
-    const result = utils.prettyStringify(obj);
-
-    expect(result).toBeTruthy();
-    expect(result).toEqual('{\n  "foo": "bar"\n}');
-  });
-
-  it('should return a formatted json string with 4 space indent', () => {
-    const result = utils.prettyStringify(obj, 4);
-
-    expect(result).toBeTruthy();
-    expect(result).toEqual('{\n    "foo": "bar"\n}');
-  });
-
-  it('should return "null" for null', () => {
-    const result = utils.prettyStringify(null);
-
-    expect(result).toEqual('null');
-  });
-
-  it('should return undefined for undefined', () => {
-    const result = utils.prettyStringify(undefined);
-
-    expect(result).toBeUndefined();
-  });
-});
-
 describe('toPascalCase', () => {
   it('should return a string', () => {
     const string = 'test foo bar';
