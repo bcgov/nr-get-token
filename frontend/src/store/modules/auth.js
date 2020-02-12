@@ -8,7 +8,7 @@ export default {
     hasReadAllWebade: false,
     hasWebadeNrosDmsPermission: false,
     hasWebadePermission: false,
-    isAuthenticated: localStorage.getItem('jwtToken') !== null,
+    isAuthenticated: sessionStorage.getItem('jwtToken'),
     userInfo: {
       emailAddress: '',
       idir: '',
@@ -22,7 +22,7 @@ export default {
     hasWebadeNrosDmsPermission: state => state.hasWebadeNrosDmsPermission,
     hasWebadePermission: state => state.hasWebadePermission,
     isAuthenticated: state => state.isAuthenticated,
-    jwtToken: () => localStorage.getItem('jwtToken'),
+    jwtToken: () => sessionStorage.getItem('jwtToken'),
     refreshToken: () => localStorage.getItem('refreshToken'),
     userInfo: state => state.userInfo
   },
@@ -48,11 +48,11 @@ export default {
         state.userInfo.name = payload.name;
 
         state.isAuthenticated = true;
-        localStorage.setItem('jwtToken', token);
+        sessionStorage.setItem('jwtToken', token);
       } else {
         state.acronyms = [];
         state.isAuthenticated = false;
-        localStorage.removeItem('jwtToken');
+        sessionStorage.removeItem('jwtToken');
       }
     },
     setRefreshToken: (_state, token = null) => {

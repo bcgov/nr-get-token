@@ -43,7 +43,7 @@ const intercept = apiAxios.interceptors.response.use(config => config, error => 
       AuthService.refreshAuthToken(localStorage.getItem('refreshToken'))
         .then(response => {
           if (response.jwt) {
-            localStorage.setItem('jwtToken', response.jwt);
+            sessionStorage.setItem('jwtToken', response.jwt);
             apiAxios.defaults.headers.common['Authorization'] = `Bearer ${response.jwt}`;
             originalRequest.headers['Authorization'] = `Bearer ${response.jwt}`;
           }
@@ -56,7 +56,7 @@ const intercept = apiAxios.interceptors.response.use(config => config, error => 
         })
         .catch(e => {
           processQueue(e, null);
-          localStorage.removeItem('jwtToken');
+          sessionStorage.removeItem('jwtToken');
           localStorage.removeItem('refreshToken');
           reject(e);
         })
