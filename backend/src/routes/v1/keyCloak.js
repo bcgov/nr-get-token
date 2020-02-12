@@ -5,14 +5,9 @@ const log = require('npmlog');
 const KeyCloakServiceClientManager = require('../../components/keyCloakServiceClientMgr');
 const RealmAdminService = require('../../components/realmAdminSvc');
 const permissionHelpers = require('../../components/permissionHelpers');
-const {
-  lifecycleService
-} = require('../../services');
+const { lifecycleService } = require('../../services');
 
-const {
-  body,
-  validationResult
-} = require('express-validator');
+const { body, validationResult } = require('express-validator');
 
 // submits a keycloak service client
 const keyCloak = require('express').Router();
@@ -23,7 +18,7 @@ keyCloak.get('/clients/:kcEnvironment/:appAcronym', [
   // Check for required permissions. Can only fetch client for the acronyms you are associated with
   // If the user has "KC_CLIENt_READ_ALL" then they can get all
   if (!req.user.jwt.realm_access.roles.includes('KC_CLIENT_READ_ALL')) {
-    const permissionErr = permissionHelpers.checkAcronymPermission(req.user.jwt, req.params.appAcronym);
+    const permissionErr = await permissionHelpers.checkAcronymPermission(req.user.jwt, req.params.appAcronym);
     if (permissionErr) {
       return res.status(403).json({
         message: permissionErr

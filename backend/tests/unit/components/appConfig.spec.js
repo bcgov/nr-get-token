@@ -6,13 +6,13 @@ const log = require('npmlog');
 const MockAdapter = require('axios-mock-adapter');
 
 const appConfig = require('../../../src/components/appConfig');
-const {
-  acronymService,
-  lifecycleService
-} = require('../../../src/services');
+const permissionHelpers = require('../../../src/components/permissionHelpers');
+const { acronymService, lifecycleService } = require('../../../src/services');
 const utils = require('../../../src/components/utils');
 
 log.level = config.get('server.logLevel');
+log.addLevel('debug', 1500, { fg: 'cyan' });
+
 const mockAxios = new MockAdapter(axios);
 
 const uniqueSeed = crypto.randomBytes(20).toString('hex');
@@ -354,14 +354,17 @@ describe('getPermissionError', () => {
 
   // Spy/mock the DB access 'find' method on the acronym table
   const spy = jest.spyOn(acronymService, 'find');
+  const permSpy = jest.spyOn(permissionHelpers, 'checkAcronymPermission');
   jest.mock('../../../src/services/acronym');
 
   afterEach(() => {
-    spy.mockClear();
+    spy.mockReset();
+    permSpy.mockReset();
   });
 
   it('should return no error message if permissions are all good', async () => {
-    acronymService.find.mockResolvedValue(acronymDetailFixture);
+    spy.mockResolvedValue(acronymDetailFixture);
+    permSpy.mockResolvedValue(undefined);
 
     const tokenCopy = JSON.parse(JSON.stringify(tokenFixture));
     tokenCopy.realm_access.roles.push(...['WEBADE_PERMISSION', 'WEBADE_PERMISSION_NROS_DMS']);
@@ -373,24 +376,28 @@ describe('getPermissionError', () => {
 
     expect(result).toBeUndefined();
     expect(spy).toHaveBeenCalledTimes(1);
+    expect(permSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should return an error if lacking permissions', async () => {
-    acronymService.find.mockResolvedValue(acronymDetailFixture);
+    spy.mockResolvedValue(acronymDetailFixture);
+    permSpy.mockResolvedValue(undefined);
 
     const result = await appConfig.getPermissionError(tokenFixture, configFormFixture);
 
     expect(result).toEqual('User is not permitted to submit WebADE config, missing role WEBADE_PERMISSION');
     expect(spy).toHaveBeenCalledTimes(1);
+    expect(permSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should return an error message if acronym cannot be found', async () => {
-    acronymService.find.mockResolvedValue(undefined);
+    spy.mockResolvedValue(undefined);
 
     const result = await appConfig.getPermissionError(tokenFixture, configFormFixture);
 
     expect(result).toEqual('Acronym WORG could not be found in GETOK database');
     expect(spy).toHaveBeenCalledTimes(1);
+    expect(permSpy).toHaveBeenCalledTimes(0);
   });
 
   it('should return an error message if no acronym is supplied', async () => {
@@ -398,6 +405,7 @@ describe('getPermissionError', () => {
 
     expect(result).toEqual('No app acronym determined during permission check');
     expect(spy).toHaveBeenCalledTimes(0);
+    expect(permSpy).toHaveBeenCalledTimes(0);
   });
 
 });

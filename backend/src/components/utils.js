@@ -27,7 +27,7 @@ const utils = {
         }
       });
 
-      log.verbose('getWebAdeToken', utils.prettyStringify(response.data));
+      log.verbose('getWebAdeToken', JSON.stringify(response.data));
       return response.data;
     } catch (error) {
       log.error('getWebAdeToken', error.message);
@@ -52,7 +52,7 @@ const utils = {
       };
 
       const response = await axios.post(tokenEndpoint, qs.stringify(requestBody), options);
-      log.verbose('getKeyCloakToken', utils.prettyStringify(response.data));
+      log.verbose('getKeyCloakToken', JSON.stringify(response.data));
       return response.data;
     } catch (error) {
       log.error(JSON.stringify(error));
@@ -67,7 +67,7 @@ const utils = {
       try {
         const response = await axios.get(config.get('oidc.discovery'));
 
-        log.verbose('getOidcDiscovery', utils.prettyStringify(response.data));
+        log.verbose('getOidcDiscovery', JSON.stringify(response.data));
         discovery = response.data; // eslint-disable-line require-atomic-updates
       } catch (error) {
         log.error('getOidcDiscovery', `OIDC Discovery failed - ${error.message}`);
@@ -89,9 +89,6 @@ const utils = {
       encryptedPassword: cryptico.encrypt(pw, key).cipher
     };
   },
-
-  // Returns a pretty JSON representation of an object
-  prettyStringify: (obj, indent = 2) => JSON.stringify(obj, null, indent),
 
   // Returns a string in Pascal Case
   toPascalCase: str => str.toLowerCase().replace(/\b\w/g, t => t.toUpperCase()),

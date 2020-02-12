@@ -9,6 +9,7 @@ const RealmAdminService = require('../../../src/components/realmAdminSvc');
 const { acronymService } = require('../../../src/services');
 
 log.level = config.get('server.logLevel');
+log.addLevel('debug', 1500, { fg: 'cyan' });
 
 let realmConfig = {};
 let realmAdminService = undefined;

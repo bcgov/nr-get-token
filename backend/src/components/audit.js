@@ -1,7 +1,6 @@
 const log = require('npmlog');
 
 const { auditService } = require('../services');
-const utils = require('./utils');
 
 const audit = {
   /**
@@ -17,7 +16,7 @@ const audit = {
     }
     try {
       const history = await auditService.findHistory(applicationAcronym);
-      log.verbose('getHistoryByAcronym', utils.prettyStringify(history));
+      log.verbose('getHistoryByAcronym', JSON.stringify(history));
       if (history) {
         const hsts = history.Lifecycles.map(lc => {
           return {

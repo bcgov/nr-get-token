@@ -1,13 +1,11 @@
 const log = require('npmlog');
 
 const webAde = require('express').Router();
+const permissionHelpers = require('../../components/permissionHelpers');
 const utils = require('../../components/utils');
 const appConfigComponent = require('../../components/appConfig');
 
-const {
-  body,
-  validationResult
-} = require('express-validator');
+const { body, validationResult } = require('express-validator');
 
 // fetches the app config json for a acronym in a specified env
 webAde.get('/:webAdeEnv/:appAcronym/appConfig', [
@@ -15,7 +13,7 @@ webAde.get('/:webAdeEnv/:appAcronym/appConfig', [
   // Check for required permissions. Can only fetch cfgs for the acronyms you are associated with
   // If the user has "WEBADE_CFG_READ_ALL" then they can get all
   if (!req.user.jwt.realm_access.roles.includes('WEBADE_CFG_READ_ALL')) {
-    const permissionErr = utils.checkAcronymPermission(req.user.jwt, req.params.appAcronym);
+    const permissionErr = await permissionHelpers.checkAcronymPermission(req.user.jwt, req.params.appAcronym);
     if (permissionErr) {
       return res.status(403).json({
         message: permissionErr
@@ -45,7 +43,7 @@ webAde.get('/:webAdeEnv/:appAcronym/dependencies', [
   // Check for required permissions. Can only fetch cfgs for the acronyms you are associated with
   // If the user has "WEBADE_CFG_READ_ALL" then they can get all
   if (!req.user.jwt.realm_access.roles.includes('WEBADE_CFG_READ_ALL')) {
-    const permissionErr = utils.checkAcronymPermission(req.user.jwt, req.params.appAcronym);
+    const permissionErr = await permissionHelpers.checkAcronymPermission(req.user.jwt, req.params.appAcronym);
     if (permissionErr) {
       return res.status(403).json({
         message: permissionErr

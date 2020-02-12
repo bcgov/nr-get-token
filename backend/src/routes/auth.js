@@ -1,10 +1,7 @@
 const config = require('config');
 const passport = require('passport');
 const router = require('express').Router();
-const {
-  body,
-  validationResult
-} = require('express-validator');
+const { body, validationResult } = require('express-validator');
 
 const auth = require('../components/auth');
 
@@ -20,14 +17,11 @@ router.get('/', (_req, res) => {
   });
 });
 
-router.get('/callback',
-  passport.authenticate('oidc', {
-    failureRedirect: 'error'
-  }),
-  (_req, res) => {
-    res.redirect(config.get('server.frontend'));
-  }
-);
+router.get('/callback', passport.authenticate('oidc', {
+  failureRedirect: 'error'
+}), (_req, res) => {
+  res.redirect(config.get('server.frontend'));
+});
 
 router.get('/error', (_req, res) => {
   res.status(401).json({
@@ -60,7 +54,7 @@ router.post('/refresh', [
   return res.status(200).json(refresh);
 });
 
-router.use('/token', auth.refreshJWT, auth.updateDBFromToken, async (req, res) => {
+router.use('/token', auth.refreshJWT, auth.updateDBFromToken, auth.getUserAcronyms, (req, res) => {
   if (req.user && req.user.jwt && req.user.refreshToken) {
     res.status(200).json(req.user);
   } else {

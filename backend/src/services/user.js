@@ -21,6 +21,28 @@ module.exports = {
     });
   },
 
+  async getUserAcronymList(keycloakId) {
+    const result = await db.User.findAll({
+      attributes: [],
+      include: [
+        {
+          attributes: [
+            'acronym'
+          ],
+          model: db.Acronym,
+          through: {
+            model: db.UserAcronym
+          }
+        }
+      ],
+      where: {
+        keycloakId: keycloakId
+      }
+    });
+
+    return Array.from(result[0].Acronyms, x => x.acronym);
+  },
+
   async addAcronym(keycloakId, value) {
     const acronym = await db.Acronym.findOne({
       where: {

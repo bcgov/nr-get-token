@@ -2,10 +2,7 @@ const axios = require('axios');
 const config = require('config');
 const log = require('npmlog');
 
-const {
-  acronymService,
-  lifecycleService
-} = require('../services');
+const { acronymService, lifecycleService } = require('../services');
 const utils = require('./utils');
 const permissionHelper = require('./permissionHelpers');
 
@@ -168,7 +165,7 @@ const appConfig = {
           'Content-Type': 'application/json; charset=utf-8'
         }
       });
-      log.verbose('postAppConfig', utils.prettyStringify(webAdeResponse.data));
+      log.verbose('postAppConfig', JSON.stringify(webAdeResponse.data));
 
       await lifecycleService.create(configForm.applicationAcronym, generatedConfig.webAdeCfg, webadeEnv, userId);
 
@@ -213,14 +210,15 @@ const appConfig = {
     }
 
     // Can this call be made?
-    return permissionHelper.checkWebAdePostPermissions(token, configForm, acronymDetails, desiredUserRoles);
+    return await permissionHelper.checkWebAdePostPermissions(token, configForm, acronymDetails, desiredUserRoles);
   },
 
   /**
-   * Fetch all application configurations from webade.
-   * @param {string} webadeEnv - Which ISSS webade env.
+   *  @function getAppConfigs
+   *  Fetch all application configurations from webade.
+   *  @param {string} webadeEnv - Which ISSS webade env.
    */
-  getAppConfigs: async (webadeEnv) => {
+  getAppConfigs: async webadeEnv => {
     const endpoint = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.endpoint`);
     const username = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.username`);
     const password = config.get(`serviceClient.getok${utils.toPascalCase(webadeEnv)}.password`);
@@ -235,7 +233,6 @@ const appConfig = {
     const path = '/applicationConfigurations';
 
     try {
-
       // Get the app configurations array
       const webAdeUrl = endpoint + path;
       const webAdeResponse = await axios.get(webAdeUrl, {
@@ -244,7 +241,7 @@ const appConfig = {
           'Content-Type': 'application/json; charset=utf-8'
         }
       });
-      log.verbose('getAppConfigs', utils.prettyStringify(webAdeResponse.data));
+      log.verbose('getAppConfigs', JSON.stringify(webAdeResponse.data));
       return webAdeResponse.data;
     } catch (error) {
       log.error('getAppConfigs', error.message);
@@ -284,7 +281,7 @@ const appConfig = {
           'Content-Type': 'application/json; charset=utf-8'
         }
       });
-      log.verbose('getAppConfig', utils.prettyStringify(webAdeResponse.data));
+      log.verbose('getAppConfig', JSON.stringify(webAdeResponse.data));
       return webAdeResponse.data;
     } catch (error) {
       log.error('getAppConfig', error.message);
