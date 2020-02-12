@@ -1,6 +1,23 @@
 import ApiService from '@/common/apiService';
 import AuthService from '@/common/authService';
 
+/**
+ *  @function isExpired
+ *  Checks if the JWT `token` is expired
+ *  @param {string} token JWT Token String
+ *  @returns {boolean} True if expired or doesn't exist, false otherwise
+ */
+function isExpired(token) {
+  if (token) {
+    const now = Date.now().valueOf() / 1000;
+    const jwtPayload = token.split('.')[1];
+    const payload = JSON.parse(window.atob(jwtPayload));
+
+    return payload.exp < now;
+  }
+  return true;
+}
+
 export default {
   namespaced: true,
   state: {
@@ -8,7 +25,7 @@ export default {
     hasReadAllWebade: false,
     hasWebadeNrosDmsPermission: false,
     hasWebadePermission: false,
-    isAuthenticated: sessionStorage.getItem('jwtToken'),
+    isAuthenticated: localStorage.getItem('refreshToken'),
     userInfo: {
       emailAddress: '',
       idir: '',
@@ -27,63 +44,50 @@ export default {
     userInfo: state => state.userInfo
   },
   mutations: {
+    setAcronyms: (state, acronyms = []) => {
+      if (Array.isArray(acronyms)) {
+        state.acronyms = acronyms;
+      }
+    },
     setJwtToken: (state, token = null) => {
       if (token) {
         const payload = JSON.parse(atob(token.split('.')[1]));
         const roles = payload.realm_access.roles;
 
-        // TODO: this will require re-conceptualizing as acronyms will come from the DB, not the access roles in the future.
         if (typeof roles === 'object' && roles instanceof Array) {
-          state.acronyms = roles.filter(role => !role.match(/offline_access|uma_authorization|WEBADE_CFG_READ|WEBADE_CFG_READ_ALL|WEBADE_PERMISSION|WEBADE_PERMISSION_NROS_DMS/));
           state.hasReadAllWebade = roles.some(role => role === 'WEBADE_CFG_READ_ALL');
           state.hasWebadePermission = roles.some(role => role === 'WEBADE_PERMISSION');
           state.hasWebadeNrosDmsPermission = roles.some(role => role === 'WEBADE_PERMISSION_NROS_DMS');
-        } else {
-          state.acronyms = [];
         }
 
-        // Get user info from initial token on login
         state.userInfo.emailAddress = payload.email;
         state.userInfo.idir = payload.preferred_username;
         state.userInfo.name = payload.name;
 
-        state.isAuthenticated = true;
         sessionStorage.setItem('jwtToken', token);
       } else {
-        state.acronyms = [];
-        state.isAuthenticated = false;
+        state.userInfo.emailAddress = '';
+        state.userInfo.idir = '';
+        state.userInfo.name = '';
+
         sessionStorage.removeItem('jwtToken');
       }
     },
-    setRefreshToken: (_state, token = null) => {
+    setRefreshToken: (state, token = null) => {
       if (token) {
+        state.isAuthenticated = true;
         localStorage.setItem('refreshToken', token);
       } else {
+        state.isAuthenticated = false;
         localStorage.removeItem('refreshToken');
       }
     }
   },
   actions: {
-    async getJwtToken(context) {
+    async getUser(context) {
       try {
-        if (context.getters.isAuthenticated && !!context.getters.refreshToken) {
-          const now = Date.now().valueOf() / 1000;
-          const jwtPayload = context.getters.jwtToken.split('.')[1];
-          const payload = JSON.parse(window.atob(jwtPayload));
-
-          if (payload.exp > now) {
-            const response = await AuthService.refreshAuthToken(context.getters.refreshToken);
-
-            if (response.jwt) {
-              context.commit('setJwtToken', response.jwt);
-            }
-            if (response.refreshToken) {
-              context.commit('setRefreshToken', response.refreshToken);
-            }
-            ApiService.setAuthHeader(response.jwt);
-          }
-        } else {
-          const response = await AuthService.getAuthToken();
+        if (context.getters.refreshToken && isExpired(context.getters.jwtToken)) {
+          const response = await AuthService.refreshAuthToken(context.getters.refreshToken);
 
           if (response.jwt) {
             context.commit('setJwtToken', response.jwt);
@@ -91,10 +95,22 @@ export default {
           if (response.refreshToken) {
             context.commit('setRefreshToken', response.refreshToken);
           }
-          ApiService.setAuthHeader(response.jwt);
         }
+        const response = await AuthService.getAuthToken();
+
+        if (response.acronyms) {
+          context.commit('setAcronyms', response.acronyms);
+        }
+        if (response.jwt) {
+          context.commit('setJwtToken', response.jwt);
+        }
+        if (response.refreshToken) {
+          context.commit('setRefreshToken', response.refreshToken);
+        }
+        ApiService.setAuthHeader(response.jwt);
       } catch (e) {
-        // Remove tokens from localStorage and update state
+        // Remove tokens from browser storage and update state
+        context.commit('setAcronyms');
         context.commit('setJwtToken');
         context.commit('setRefreshToken');
       }

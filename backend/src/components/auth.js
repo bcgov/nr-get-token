@@ -29,7 +29,7 @@ const auth = {
     const now = Date.now().valueOf() / 1000;
     const payload = jsonwebtoken.decode(token);
 
-    return (!!payload.exp && payload.exp < now);
+    return (payload && payload.exp && payload.exp < now);
   },
 
   // Check if JWT Refresh Token has expired
