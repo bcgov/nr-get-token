@@ -16,7 +16,7 @@ export default new Vuex.Store({
     devMode: state => state.devMode
   },
   mutations: {
-    setDevMode: (state) => {
+    setDevMode: state => {
       state.devMode = true;
     }
   }

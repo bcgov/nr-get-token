@@ -10,7 +10,6 @@
         <div v-if="hasAcronyms">
           You are authorized to submit configurations for these applications. Please select the acronym of the application to submit access for:
           <v-radio-group
-            v-model="acronymRadios"
             :mandatory="true"
             class="ml-3"
             :value="userAppCfg.applicationAcronym"
@@ -21,7 +20,7 @@
               :key="index"
               :value="acronym"
               :label="acronym"
-            ></v-radio>
+            />
           </v-radio-group>
         </div>
         <div v-else>
