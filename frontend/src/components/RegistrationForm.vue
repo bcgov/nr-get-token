@@ -7,21 +7,11 @@
           <v-icon class="mr-2">email</v-icon>Register a New Application
         </v-card-title>
         <v-card-text>
-          <v-alert :value="errorOccurred" tile type="error" transition="scale-transition">
-            An error occurred while attempting to Register your application.
-            <br />You can also register your application by sending an email to
-            <a
-              class="white--text"
-              href="mailto:NR.CommonServiceShowcase@gov.bc.ca?subject=GETOK Registration for <acronym> - <idir>"
-            >NR.CommonServiceShowcase@gov.bc.ca</a><br />
-            Please include your Acronym as well as your IDIR username in your email.
-          </v-alert>
           <p>
-            Please enter an acronym for the application you are registering.<br />
-            Use the optional Comments field to describe your project or indicate relavant branch / ministries.<br />
-            This message is sent to the Common Service Showcase Team to authorize you for that application.
+            Please enter an acronym for the application you are registering.
+            <br />Use the optional Comments field to describe your project or indicate relavant branch / ministries.
+            <br />This message is sent to the Common Service Showcase Team to authorize you for that application.
           </p>
-
           <v-form ref="form" v-model="valid" lazy-validation>
             <p class="mb-0">
               My Email:
@@ -71,6 +61,34 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- error dialog -->
+     <Dialog v-bind:show="errorOccurred">
+      <template v-slot:icon>
+        <v-icon large color="red">cancel</v-icon>
+      </template>
+      <template v-slot:text>
+        <p>
+          An error occurred while attempting to add your application.
+          <br />You can also add your application by sending an email to
+          <a
+            href="mailto:NR.CommonServiceShowcase@gov.bc.ca?subject=GETOK Registration for <acronym> - <idir>"
+          >NR.CommonServiceShowcase@gov.bc.ca</a>
+        </p>
+        <p>Please include your Acronym as well as your IDIR username in your email.</p>
+      </template>
+    </Dialog>
+
+    <!-- success dialog -->
+    <Dialog v-bind:show="registerSuccess">
+      <template v-slot:icon>
+        <v-icon large color="green">check_circle_outline</v-icon>
+      </template>
+      <template v-slot:text>
+        <p>Your Registration was sent successfully. You will be sent an email to ${this.userInfo.emailAddress} when your application has been authorized.</p>
+      </template>
+    </Dialog>
+
   </v-btn>
 </template>
 
@@ -79,8 +97,13 @@
 import ApiService from '@/common/apiService';
 import { FieldValidations } from '@/utils/constants.js';
 import { mapGetters } from 'vuex';
+import '@/assets/scss/style.scss';
+import Dialog from './Dialog.vue';
 
 export default {
+  components: {
+    Dialog
+  },
   data: function() {
     return {
       applicationAcronym: '',
@@ -97,6 +120,7 @@ export default {
       errorOccurred: false,
       fieldValidations: FieldValidations,
       registrationDialog: false,
+      registerSuccess: false,
       valid: false
     };
   },
@@ -107,10 +131,11 @@ export default {
     async cancel() {
       this.errorOccurred = false;
       this.registrationDialog = false;
+      this.registerSuccess = false;
     },
     async postRegistrationForm() {
-      this.$store.commit('configForm/clearConfigSubmissionMsgs');
       this.errorOccurred = false;
+      this.registerSuccess = false;
       if (this.$refs.form.validate()) {
         try {
           const response = await ApiService.sendRegistrationEmail({
@@ -121,10 +146,7 @@ export default {
           });
           if (response) {
             this.registrationDialog = false;
-            this.$store.commit(
-              'configForm/setConfigSubmissionSuccess',
-              `Your Registration was sent successfully. You will be sent an email to ${this.userInfo.emailAddress} when your application has been authorized.`
-            );
+            this.registerSuccess = true;
           } else {
             this.errorOccurred = true;
           }
