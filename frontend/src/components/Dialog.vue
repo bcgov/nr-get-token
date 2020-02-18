@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-if="showDialog" v-model="showDialog" width="500">
+  <v-dialog v-if="show" v-model="show" width="500">
     <v-card>
       <div class="dialog-body">
         <v-card-title class primary-title>
@@ -17,7 +17,7 @@
         </v-card-text>
       </div>
       <v-card-actions class="justify-center">
-        <v-btn class="BC-Gov-PrimaryButton mb-5" text @click="showDialog = false">
+        <v-btn class="BC-Gov-PrimaryButton mb-5" text @click="closeDialog">
           <slot name="button-text">OK</slot>
         </v-btn>
       </v-card-actions>
@@ -28,11 +28,13 @@
 <script>
 export default {
   name: 'Dialog',
-  props: ['show'],
-  data: function() {
-    return {
-      showDialog: this.show
-    };
+  props: {
+    'show': Boolean
+  },
+  methods: {
+    closeDialog (){
+      this.$emit('close-dialog');
+    }
   }
 };
 </script>

@@ -101,7 +101,8 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <Dialog v-bind:show="errorOccurred">
+
+    <Dialog v-bind:show="errorOccurred" @close-dialog="errorOccurred = false">
       <template v-slot:icon>
         <v-icon large color="red">cancel</v-icon>
       </template>
@@ -116,7 +117,8 @@
         <p>Please include your Acronym as well as your IDIR username in your email.</p>
       </template>
     </Dialog>
-    <Dialog v-bind:show="registerSuccess">
+
+    <Dialog v-bind:show="registerSuccess" @close-dialog="registerSuccess = false">
       <template v-slot:icon>
         <v-icon large color="green">check_circle_outline</v-icon>
       </template>
@@ -174,7 +176,8 @@ export default {
           const response = await ApiService.sendRegistrationEmail({
             applicationAcronym: this.applicationAcronym,
             comments: this.comments,
-            from: this.userInfo.emailAddress,
+            //from: this.userInfo.emailAddress,
+            from: 'abc',
             idir: this.userInfo.idir
           });
           if (response) {
