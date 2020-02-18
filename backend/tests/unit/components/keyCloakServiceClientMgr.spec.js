@@ -130,15 +130,15 @@ describe('KeyCloakServiceClientManager fetchClient', () => {
 
 });
 
-describe('KeyCloakServiceClientManager getUser', () => {
+describe('KeyCloakServiceClientManager findUser', () => {
   it('should throw an error without username', async () => {
     const mgr = new KeyCloakServiceClientManager(realmAdminService);
-    await expect(mgr.getUser(undefined)).rejects.toThrow();
+    await expect(mgr.findUser(undefined)).rejects.toThrow();
   });
 
   it('should return a User', async () => {
     const mgr = new KeyCloakServiceClientManager(realmAdminService);
-    const r = await mgr.getUser('me@idir');
+    const r = await mgr.findUser('me@idir');
     expect(r).toBeTruthy();
     expect(r.username).toEqual('me@idir');
   });

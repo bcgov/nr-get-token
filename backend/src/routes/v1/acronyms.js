@@ -42,8 +42,16 @@ acronyms.get('/:appAcronym/addUser/:username', [
     });
   }
 
+  if (!req.params.appAcronym || !req.params.username) {
+    res.status(400).json({
+      message: 'Must supply app acronym and user (ex: myname@idir)'
+    });
+    return res;
+  }
+
   try {
-    const response = await acronymComponent.registerUserToAcronym(req.params.appAcronym, req.params.username);
+    const token = req.headers.authorization.split(' ')[1];
+    const response = await acronymComponent.registerUserToAcronym(token, req.user.jwt.iss, req.params.appAcronym.toUpperCase(), req.params.username.toLowerCase());
     if (response) {
       return res.status(200).json(response);
     } else {

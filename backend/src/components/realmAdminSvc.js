@@ -350,7 +350,6 @@ class RealmAdminService {
     }
 
     const url = `${this.realmAdminUrl}/clients/${clientId}/roles/${roleName}/composites`;
-    log.error(url);
     const response = await this.axios.get(url)
       .catch(e => {
         log.error('RealmAdminService.getRoleComposites', JSON.stringify(e));
@@ -398,7 +397,6 @@ class RealmAdminService {
     }
 
     const url = `${this.realmAdminUrl}/users?username=${username}`;
-    log.error(url);
     const response = await this.axios.get(url)
       .catch(e => {
         log.error('RealmAdminService.getUsers', JSON.stringify(e));

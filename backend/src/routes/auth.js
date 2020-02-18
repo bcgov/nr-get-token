@@ -54,7 +54,7 @@ router.post('/refresh', [
   return res.status(200).json(refresh);
 });
 
-router.use('/token', auth.refreshJWT, auth.updateDBFromToken, auth.getUserAcronyms, (req, res) => {
+router.use('/token', auth.refreshJWT, auth.getUserAcronyms, (req, res) => {
   if (req.user && req.user.jwt && req.user.refreshToken) {
     res.status(200).json(req.user);
   } else {

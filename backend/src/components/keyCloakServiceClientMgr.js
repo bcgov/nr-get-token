@@ -155,10 +155,10 @@ class KeyCloakServiceClientManager {
     }
   }
 
-  async getUser(username) {
-    log.info('KeyCloakServiceClientManager.getUser', username);
+  async findUser(username) {
+    log.info('KeyCloakServiceClientManager.findUser', username);
     if (!username) {
-      log.error('KeyCloakServiceClientManager.getUser', 'No user provided.');
+      log.error('KeyCloakServiceClientManager.findUser', 'No user provided.');
       throw new Error('Cannot get a user in KeyCloak realm: username required.');
     }
 
@@ -168,9 +168,8 @@ class KeyCloakServiceClientManager {
       // Can only be one user by identified username (idir or github or whatever)
       return users[0];
     } else {
-      log.debug('KeyCloakServiceClientManager.getUser', `No user found for ${username}`);
+      log.debug('KeyCloakServiceClientManager.findUser', `No user found for ${username}`);
       return undefined;
-
     }
   }
 }

@@ -1,6 +1,7 @@
+const axios = require('axios');
 const log = require('npmlog');
 
-const { acronymService } = require('../services');
+const { acronymService, userService } = require('../services');
 
 const acronyms = {
   /**
@@ -24,16 +25,37 @@ const acronyms = {
     }
   },
 
-  registerUserToAcronym: async (acronym, username) => {
-    await acronymService.findOrCreateList(acronymList);
+  registerUserToAcronym: async (token, kcRealm, acronym, username) => {
+    await acronymService.findOrCreateList([acronym]);
 
-    // Add user if they don't already exist
-    await userService.findOrCreate(req.user.id, req.user.displayName, req.user._json.preferred_username);
+    // Get user details from KC
+    const url = `${kcRealm.replace('realms', 'admin/realms')}/users?username=${username}`;
+    log.debug(url);
+    const auth = `Bearer ${token}`;
+    const response = await axios.get(url, { headers: { Authorization: auth }});
+    const users = response.data;
 
-    // Add update user-acronym association from JWT roles
-    await acronymList.forEach(value => {
-      userService.addAcronym(req.user.id, value);
-    });
+    if (!users || !users.length) {
+      throw new Error(`User ${username} was not found in KC.`);
+    }
+
+    // Can only be one user by identified username (idir or github or whatever)
+    const user = users[0];
+
+    if (!user.enabled) {
+      throw new Error(`User ${username} was found in KC but is not enabled.`);
+    }
+
+    // Add user to DB if they don't already exist
+    const dbUser = await userService.findOrCreate(user.id, `${user.firstName} ${user.lastName}`, user.username);
+
+    // Add update user-acronym association
+    const dbAcronym = await userService.addAcronym(user.id, acronym);
+
+    return {
+      user: dbUser,
+      acronym: dbAcronym
+    };
   }
 };
 
