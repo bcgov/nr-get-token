@@ -33,9 +33,9 @@ describe('RegistrationForm.vue', () => {
 
     // prevent 'Unable to locate target [data-app]' warning
     // caused by dialog not having data-app attribute when mounted
-    const el = document.createElement('div')
-    el.setAttribute('data-app', true)
-    document.body.appendChild(el)
+    const el = document.createElement('div');
+    el.setAttribute('data-app', true);
+    document.body.appendChild(el);
 
   });
 
