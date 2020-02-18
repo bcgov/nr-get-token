@@ -154,6 +154,25 @@ class KeyCloakServiceClientManager {
       return undefined;
     }
   }
+
+  async getUser(username) {
+    log.info('KeyCloakServiceClientManager.getUser', username);
+    if (!username) {
+      log.error('KeyCloakServiceClientManager.getUser', 'No user provided.');
+      throw new Error('Cannot get a user in KeyCloak realm: username required.');
+    }
+
+    const users = await this.svc.getUsers(username);
+
+    if (users && users.length) {
+      // Can only be one user by identified username (idir or github or whatever)
+      return users[0];
+    } else {
+      log.debug('KeyCloakServiceClientManager.getUser', `No user found for ${username}`);
+      return undefined;
+
+    }
+  }
 }
 
 module.exports = KeyCloakServiceClientManager;
