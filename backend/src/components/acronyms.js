@@ -22,6 +22,18 @@ const acronyms = {
       log.error('getAcronym', error.message);
       throw new Error(`An error occured fetching acronym details from GETOK database. ${error.message}`);
     }
+  },
+
+  registerUserToAcronym: async (acronym, username) => {
+    await acronymService.findOrCreateList(acronymList);
+
+    // Add user if they don't already exist
+    await userService.findOrCreate(req.user.id, req.user.displayName, req.user._json.preferred_username);
+
+    // Add update user-acronym association from JWT roles
+    await acronymList.forEach(value => {
+      userService.addAcronym(req.user.id, value);
+    });
   }
 };
 

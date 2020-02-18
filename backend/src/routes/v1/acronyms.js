@@ -31,4 +31,31 @@ acronyms.get('/:appAcronym', [
   }
 });
 
+// A special administrative call to add users to acronym. This is a temporary shim until we have an actual administrative
+// section of the app in place
+acronyms.get('/:appAcronym/addUser/:username', [
+], async (req, res) => {
+  // Check for required permissions
+  if (!req.user.jwt.realm_access.roles.includes('GETOK_ADMIN_ADD_USER')) {
+    return res.status(403).json({
+      message: 'Access Denied'
+    });
+  }
+
+  try {
+    const response = await acronymComponent.registerUserToAcronym(req.params.appAcronym, req.params.username);
+    if (response) {
+      return res.status(200).json(response);
+    } else {
+      return res.status(404).end();
+    }
+  } catch (error) {
+    log.error(error);
+    res.status(500).json({
+      message: error.message
+    });
+    return res;
+  }
+});
+
 module.exports = acronyms;

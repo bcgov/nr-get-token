@@ -1,4 +1,4 @@
-const log = require('npmlog');
+fconst log = require('npmlog');
 
 const { userService } = require('../services');
 
