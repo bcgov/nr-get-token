@@ -123,7 +123,7 @@
         <v-icon large color="green">check_circle_outline</v-icon>
       </template>
       <template v-slot:text>
-        <p>Your Registration was sent successfully. You will be sent an email to ${this.userInfo.emailAddress} when your application has been authorized.</p>
+        <p>Your Registration was sent successfully. You will be sent an email to {{ userInfo.emailAddress }} when your application has been authorized.</p>
       </template>
     </Dialog>
   </v-btn>
