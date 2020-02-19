@@ -176,8 +176,7 @@ export default {
           const response = await ApiService.sendRegistrationEmail({
             applicationAcronym: this.applicationAcronym,
             comments: this.comments,
-            //from: this.userInfo.emailAddress,
-            from: 'abc',
+            from: this.userInfo.emailAddress,
             idir: this.userInfo.idir
           });
           if (response) {
