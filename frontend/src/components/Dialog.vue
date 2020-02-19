@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-if="show" v-model="show" width="500">
+  <v-dialog v-model="show" width="500">
     <v-card>
       <div class="dialog-body">
         <v-card-title class primary-title>
