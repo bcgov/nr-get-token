@@ -26,11 +26,13 @@ const acronyms = {
   },
 
   registerUserToAcronym: async (token, kcRealm, acronym, username) => {
+    acronym = acronym.toUpperCase();
+    username = username.toLowerCase();
     await acronymService.findOrCreateList([acronym]);
 
     // Get user details from KC
     const url = `${kcRealm.replace('realms', 'admin/realms')}/users?username=${username}`;
-    log.debug(url);
+    log.debug('registerUserToAcronym', url);
     const auth = `Bearer ${token}`;
     const response = await axios.get(url, { headers: { Authorization: auth }});
     const users = response.data;

@@ -51,7 +51,7 @@ acronyms.get('/:appAcronym/addUser/:username', [
 
   try {
     const token = req.headers.authorization.split(' ')[1];
-    const response = await acronymComponent.registerUserToAcronym(token, req.user.jwt.iss, req.params.appAcronym.toUpperCase(), req.params.username.toLowerCase());
+    const response = await acronymComponent.registerUserToAcronym(token, req.user.jwt.iss, req.params.appAcronym, req.params.username);
     if (response) {
       return res.status(200).json(response);
     } else {
