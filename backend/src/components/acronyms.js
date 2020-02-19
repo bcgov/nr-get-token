@@ -1,6 +1,7 @@
+const axios = require('axios');
 const log = require('npmlog');
 
-const { acronymService } = require('../services');
+const { acronymService, userService } = require('../services');
 
 const acronyms = {
   /**
@@ -22,6 +23,41 @@ const acronyms = {
       log.error('getAcronym', error.message);
       throw new Error(`An error occured fetching acronym details from GETOK database. ${error.message}`);
     }
+  },
+
+  registerUserToAcronym: async (token, kcRealm, acronym, username) => {
+    acronym = acronym.toUpperCase();
+    username = username.toLowerCase();
+    await acronymService.findOrCreateList([acronym]);
+
+    // Get user details from KC
+    const url = `${kcRealm.replace('realms', 'admin/realms')}/users?username=${username}`;
+    log.debug('registerUserToAcronym', url);
+    const auth = `Bearer ${token}`;
+    const response = await axios.get(url, { headers: { Authorization: auth }});
+    const users = response.data;
+
+    if (!users || !users.length) {
+      throw new Error(`User ${username} was not found in KC.`);
+    }
+
+    // Can only be one user by identified username (idir or github or whatever)
+    const user = users[0];
+
+    if (!user.enabled) {
+      throw new Error(`User ${username} was found in KC but is not enabled.`);
+    }
+
+    // Add user to DB if they don't already exist
+    const dbUser = await userService.findOrCreate(user.id, `${user.firstName} ${user.lastName}`, user.username);
+
+    // Add update user-acronym association
+    const dbAcronym = await userService.addAcronym(user.id, acronym);
+
+    return {
+      user: dbUser,
+      acronym: dbAcronym
+    };
   }
 };
 

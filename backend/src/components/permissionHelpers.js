@@ -3,10 +3,6 @@ const log = require('npmlog');
 const { userService } = require('../services');
 
 const permissionHelpers = {
-  // TODO: this is likely soon to be refactored out, as we will be pulling acronyms from the DB, not from access roles
-  // Returns only app acronym based roles
-  filterAppAcronymRoles: roles => roles.filter(role => !role.match(/offline_access|uma_authorization|WEBADE_CFG_READ|WEBADE_CFG_READ_ALL|WEBADE_PERMISSION|WEBADE_PERMISSION_NROS_DMS/)),
-
   /**
    *  @function checkAcronymPermission
    *  Is this call allowed to be made for the acronym it's being made for?

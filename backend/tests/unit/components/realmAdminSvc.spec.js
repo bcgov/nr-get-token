@@ -535,3 +535,27 @@ describe('RealmAdminService getRoleComposites', () => {
   });
 
 });
+
+describe('RealmAdminService getUsers', () => {
+
+  it('should throw an error if no username provided', async () => {
+    const svc = new RealmAdminService(realmConfig);
+    await expect(svc.getUsers(undefined, '')).rejects.toThrow();
+  });
+
+  it('should return users', async () => {
+    const svc = new RealmAdminService(realmConfig);
+    svc.axios = axios.create();
+    mockAxios.onGet(`${svc.realmAdminUrl}/users?username=me@idir`).reply(204, 'yes returned');
+
+    const result = await svc.getUsers('me@idir');
+    expect(result).toBeTruthy();
+  });
+
+  it('should throw an error when realm url is bad...', async () => {
+    const svc = new RealmAdminService(realmConfig);
+    mockAxios.onGet(svc.realmAdminUrl).reply(500);
+    await expect(svc.getUsers('me')).rejects.toThrow();
+  });
+
+});

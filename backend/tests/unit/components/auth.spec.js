@@ -4,16 +4,11 @@ const log = require('npmlog');
 const MockAdapter = require('axios-mock-adapter');
 
 const auth = require('../../../src/components/auth');
-const {
-  acronymService,
-  userService
-} = require('../../../src/services');
 const utils = require('../../../src/components/utils');
 
 log.level = config.get('server.logLevel');
 const mockAxios = new MockAdapter(axios);
 
-const userId = '00000000-0000-0000-0000-000000000000';
 const expiredToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjF9.2H0EJnt58ApysedXcvNUAy6FhgBIbDmPfq9d79qF4yQ';
 const endlessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjB9.JWKPB-5Q8rTYzl-MfhRGpP9WpDpQxC7JkIAGFMDZnpg';
 const validToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjk5OTk5OTk5OTksInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJNU1NDIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIkRPTU8iXX19.4YqQAETI2DnYVsQ7a4R998z5OUyRVcUQIAV7GY3LwG0';
@@ -108,7 +103,7 @@ describe('refreshJWT', () => {
   });
 
   it('should not have a user if no user or jwt exists', async () => {
-    const result = await auth.refreshJWT({}, null, () => {});
+    const result = await auth.refreshJWT({}, null, () => { });
     expect(result).toBeUndefined();
   });
 
@@ -118,7 +113,7 @@ describe('refreshJWT', () => {
         jwt: validToken,
         refreshToken: endlessToken
       }
-    }, null, () => {});
+    }, null, () => { });
     expect(result).toBeUndefined();
   });
 
@@ -128,7 +123,7 @@ describe('refreshJWT', () => {
         jwt: expiredToken,
         refreshToken: expiredToken
       }
-    }, null, () => {});
+    }, null, () => { });
     expect(result).toBeUndefined();
   });
 
@@ -143,7 +138,7 @@ describe('refreshJWT', () => {
         jwt: expiredToken,
         refreshToken: endlessToken
       }
-    }, null, () => {});
+    }, null, () => { });
     expect(result).toBeUndefined();
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(endlessToken);
@@ -160,46 +155,9 @@ describe('refreshJWT', () => {
         jwt: expiredToken,
         refreshToken: endlessToken
       }
-    }, null, () => {});
+    }, null, () => { });
     expect(result).toBeUndefined();
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(endlessToken);
-  });
-});
-
-describe('updateDBFromToken', () => {
-  it('should be a pass-through if there is no user', async () => {
-    const result = await auth.updateDBFromToken({}, null, () => {});
-    expect(result).toBeUndefined();
-  });
-
-  it('should be a pass-through if there is no jwt', async () => {
-    const result = await auth.updateDBFromToken({
-      user: {}
-    }, null, () => {});
-    expect(result).toBeUndefined();
-  });
-
-  it('should add users and acronyms to DB if they do not exist', async () => {
-    acronymService.findOrCreateList = jest.fn().mockResolvedValue();
-    userService.findOrCreate = jest.fn().mockResolvedValue();
-    userService.addAcronym = jest.fn().mockResolvedValue();
-
-    const spyFindOrCreateList = jest.spyOn(acronymService, 'findOrCreateList');
-
-    const spyFindOrCreate = jest.spyOn(userService, 'findOrCreate');
-    const spyAddAcronym = jest.spyOn(userService, 'addAcronym');
-
-    const result = await auth.updateDBFromToken({
-      user: {
-        _json: {},
-        id: userId,
-        jwt: validToken
-      }
-    }, null, () => {});
-    expect(result).toBeUndefined();
-    expect(spyFindOrCreateList).toHaveBeenCalledTimes(1);
-    expect(spyFindOrCreate).toHaveBeenCalledTimes(1);
-    expect(spyAddAcronym).toHaveBeenCalledTimes(2);
   });
 });

@@ -4,8 +4,7 @@ const jsonwebtoken = require('jsonwebtoken');
 const log = require('npmlog');
 const qs = require('querystring');
 
-const { acronymService, userService } = require('../services');
-const permissionHelpers = require('./permissionHelpers');
+const { userService } = require('../services');
 const utils = require('./utils');
 
 const auth = {
@@ -110,25 +109,8 @@ const auth = {
   // Populate and update database based on incoming JWT token
   async updateDBFromToken(req, _res, next) {
     if (req.user && req.user.jwt) {
-      const payload = jsonwebtoken.decode(req.user.jwt);
-      const roles = payload.realm_access.roles;
-
-      // Add keycloak authorized acronyms if they don't already exist
-      let acronymList = [];
-      if (typeof roles === 'object' && roles instanceof Array) {
-        acronymList = permissionHelpers.filterAppAcronymRoles(roles);
-      }
-      await acronymService.findOrCreateList(acronymList);
-
       // Add user if they don't already exist
       await userService.findOrCreate(req.user.id, req.user.displayName, req.user._json.preferred_username);
-
-      // Add update user-acronym association from JWT roles
-      await acronymList.forEach(value => {
-        userService.addAcronym(req.user.id, value);
-      });
-
-      // TODO: Consider removing user-acronym associations if they are not on JWT
     }
 
     next();
