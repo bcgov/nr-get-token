@@ -107,8 +107,14 @@ export default {
 Status: ${response.status} - ${response.statusText}
 Body: ${JSON.stringify(response.data, null, 2)}`;
     } catch (e) {
-      console.log(`Failed to fetch from API - ${e}`); // eslint-disable-line no-console
-      throw e;
+      if (e.response && e.response.data) {
+        return `URL: ${route}
+      Status: ${e.response.status} - ${e.response.statusText}
+      Body: ${JSON.stringify(e.response.data, null, 2)}`;
+      } else {
+        console.log(`Failed to fetch from API - ${e}`); // eslint-disable-line no-console
+        throw e;
+      }
     }
   },
 
