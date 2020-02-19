@@ -104,6 +104,16 @@ const auth = {
     }
 
     next();
+  },
+
+  // Populate and update database based on incoming JWT token
+  async updateDBFromToken(req, _res, next) {
+    if (req.user && req.user.jwt) {
+      // Add user if they don't already exist
+      await userService.findOrCreate(req.user.id, req.user.displayName, req.user._json.preferred_username);
+    }
+
+    next();
   }
 };
 
