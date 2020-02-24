@@ -52,5 +52,13 @@ export const CommonServiceList = Object.freeze([{
   name: 'Common Document Generation Service',
   apiDocLink: 'https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v1/docs',
   postmanCollection: 'cdogs.postman_collection.json'
+},
+{
+  abbreviation: 'CLOGS',
+  type: kc,
+  shortName: 'common-logging-service',
+  name: 'Common Logging Service',
+  apiDocLink: 'https://clogs-dev.pathfinder.gov.bc.ca/api/v1/docs',
+  postmanCollection: 'clogs.postman_collection.json'
 }]
 );

@@ -1,0 +1,148 @@
+{
+	"info": {
+		"_postman_id": "265789a2-b9a5-4999-9622-f90d61129383",
+		"name": "Common Logging Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "v1",
+			"item": [
+				{
+					"name": "Health",
+					"item": [
+						{
+							"name": "/health",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://clogs-dev.pathfinder.gov.bc.ca/api/v1/health",
+									"protocol": "https",
+									"host": [
+										"clogs-dev",
+										"pathfinder",
+										"gov",
+										"bc",
+										"ca"
+									],
+									"path": [
+										"api",
+										"v1",
+										"health"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Log",
+					"item": [
+						{
+							"name": "/log",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"level\": \"info\",\n        \"pattern\": \"%{IP:client} \\\\- %{USER:remoteUser} \\\\[%{HTTPDATE:rawTimestamp}\\\\] \\\\\\\"%{WORD:httpMethod} %{PATH:path} HTTP\\\\/%{DATA:httpVersion}\\\\\\\" %{NUMBER:httpStatus} %{NUMBER:contentLength} \\\\\\\"%{DATA:referrer}\\\\\\\" \\\\\\\"%{DATA:userAgent}\\\\\\\"\",\n        \"retention\": \"default\",\n        \"data\": \"{\\\"client\\\": \\\"172.51.124.1\\\",\\\"remoteUser\\\": \\\"-\\\",\\\"timestamp\\\": \\\"2/Jan/2020:16:04:10 +0000\\\"}\"\n    }\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://clogs-dev.pathfinder.gov.bc.ca/api/v1/log",
+									"protocol": "https",
+									"host": [
+										"clogs-dev",
+										"pathfinder",
+										"gov",
+										"bc",
+										"ca"
+									],
+									"path": [
+										"api",
+										"v1",
+										"log"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9a76ebde-efd6-4b23-91a4-a2a790b18998",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "2f94e9dd-df13-48f0-96c9-28e9443c4681",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "ec4846b0-2171-4d4e-9eb6-beea4d577a67",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "b0141f25-3a49-4424-98ea-c096029bba96",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
