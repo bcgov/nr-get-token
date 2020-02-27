@@ -359,4 +359,4 @@ parameters:
   description: The type of the persistent volume to create.
   displayName: Persistent Volume Class
   required: true
-  value: gluster-block
+  value: netapp-block-standard
