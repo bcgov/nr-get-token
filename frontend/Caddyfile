@@ -23,7 +23,7 @@
     # Use the following for production deployments
     proxy /api {$HOST_ROUTE}
 
-    log stdout
+    log / stdout "{combined}"
 
     errors stdout
 }
