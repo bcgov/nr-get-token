@@ -20,7 +20,7 @@
     "all:test": "npm run test && cd frontend && npm run test",
     "all:lint": "npm run lint && cd frontend && npm run lint",
     "all:lint-fix": "npm run lint:fix && cd frontend && npm run lint:fix",
-    "all:ci": "npm ci && cd frontend && npm ci",
+    "all:ci": "npm ci --only=production && cd frontend && npm ci",
     "all:install": "npm install && cd frontend && npm install",
     "all:clean": "npm run clean && cd frontend && npm run clean",
     "all:purge": "npm run purge && cd frontend && npm run purge",
