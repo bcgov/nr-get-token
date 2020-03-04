@@ -18,17 +18,17 @@ Using GETOK simplifies the process of managing Keycloak clients, roles and crden
 
 ## WebADE
 
-GETOK can also be used to get setup with WebADE Services published on [https://apistore.nrs.gov.bc.ca/store/](https://apistore.nrs.gov.bc.ca/store/).
+GETOK can also be used to get setup with WebADE Services published on [https://apistore.nrs.gov.bc.ca/store/](https://apistore.nrs.gov.bc.ca/store/). More information on WebADE can be found [here](http://www.webade.org).
 
 Get Token directly communicates with the WebADE API via a RESTFul interface in order to update application configurations.
 GETOK has a service client GETOK_SERVICE which is granted the WEBADE-REST "profileRole" of APPLICATION_ADMINISTRATOR.
 A description of the API can be found in [NRM API Store](https://apistore.nrs.gov.bc.ca/store/apis/info?name=WebADE-api&provider=admin&version=v1)
 
-The WebADE-API is secured using OAuth2 security. Anonymous access to the WebADE-API is not permitted. Users of WebADE-API must have one of more of the appropriate OAuth2 scopes in order to access the API. More information on WebADE can be found [here](http://www.webade.org).
-
 > The first deployment of this webade-cfg information had to be done manually using the process we are replacing. See [Bitbucket GETOK Repo](https://apps.nrs.gov.bc.ca/int/stash/projects/GETOK/repos/getok-webade-cfg/browse) for the package that was used for the first deployment. Subsequent deployment to modify this can be done through the WEBADE-REST-API endpoints.
 
-### Security
+### OAuth2 Scope
+
+The WebADE-API is secured using OAuth2 security. Anonymous access to the WebADE-API is not permitted. Users of WebADE-API must have one of more of the appropriate OAuth2 scopes in order to access the API.
 
 Before developing applications which leverage the WebADE-API, ensure that you have a valid WebADE service client which is authorized to use WebADE-API first. You will also need the appropriate scopes granted to your service client before you will be able to proceed with the WebADE-API endpoint. Please ensure that you are familiar with OAuth2 authentication flow before proceeding with accessing the API.
 
