@@ -1,4 +1,5 @@
 const compression = require('compression');
+const config = require('config');
 const express = require('express');
 const log = require('npmlog');
 const morgan = require('morgan');
@@ -15,16 +16,21 @@ const state = {
 
 const app = express();
 app.use(compression());
-app.use(express.json({ limit: '30mb' }));
+app.use(express.json({ limit: config.get('server.bodyLimit') }));
 app.use(express.urlencoded({ extended: true }));
 
 // Logging Setup
-log.level = 'info';
-log.addLevel('debug', 1500, {
-  fg: 'cyan'
-});
+log.level = config.get('server.logLevel');
+log.addLevel('debug', 1500, { fg: 'cyan' });
 
-app.use(morgan('dev'));
+// Print out configuration settings in verbose startup
+log.verbose('Config', JSON.stringify(config));
+
+// Skip if running tests
+if (process.env.NODE_ENV !== 'test') {
+  // Add Morgan endpoint logging
+  app.use(morgan(config.get('server.morganFormat')));
+}
 
 // Use Keycloak OIDC Middleware
 app.use(keycloak.middleware());

@@ -63,7 +63,7 @@ objects:
                 failureThreshold: 3
                 httpGet:
                   path: "${ROUTE_PATH}"
-                  port: 8000
+                  port: 8080
                   scheme: HTTP
                 initialDelaySeconds: 10
                 periodSeconds: 60
@@ -71,13 +71,13 @@ objects:
                 timeoutSeconds: 1
               name: "${APP_NAME}-app-${JOB_NAME}"
               ports:
-                - containerPort: 8000
+                - containerPort: 8080
                   protocol: TCP
               readinessProbe:
                 failureThreshold: 3
                 httpGet:
                   path: "${ROUTE_PATH}"
-                  port: 8000
+                  port: 8080
                   scheme: HTTP
                 initialDelaySeconds: 10
                 periodSeconds: 10
@@ -107,23 +107,13 @@ objects:
                     secretKeyRef:
                       key: password
                       name: app-keycloak-secret
-                - name: CDOGS_CLIENTID
-                  valueFrom:
-                    secretKeyRef:
-                      key: username
-                      name: cdogs-service-secret
-                - name: CDOGS_CLIENTSECRET
-                  valueFrom:
-                    secretKeyRef:
-                      key: password
-                      name: cdogs-service-secret
               envFrom:
                 - configMapRef:
-                    name: dgrsc-frontend-config
+                    name: getok-frontend-config
                 - configMapRef:
-                    name: dgrsc-server-config
+                    name: getok-server-config
                 - configMapRef:
-                    name: dgrsc-services-config
+                    name: getok-sc-config
           restartPolicy: Always
           terminationGracePeriodSeconds: 30
       test: false
@@ -144,10 +134,10 @@ objects:
       name: "${APP_NAME}-app-${JOB_NAME}"
     spec:
       ports:
-        - name: 8000-tcp
-          port: 8000
+        - name: 8080-tcp
+          port: 8080
           protocol: TCP
-          targetPort: 8000
+          targetPort: 8080
       selector:
         app: "${APP_NAME}-${JOB_NAME}"
         deploymentconfig: "${APP_NAME}-app-${JOB_NAME}"
@@ -161,7 +151,7 @@ objects:
       host: "${ROUTE_HOST}"
       path: "${ROUTE_PATH}"
       port:
-        targetPort: 8000-tcp
+        targetPort: 8080-tcp
       tls:
         insecureEdgeTerminationPolicy: Redirect
         termination: edge

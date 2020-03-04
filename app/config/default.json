@@ -1,0 +1,28 @@
+{
+  "db": {
+    "database": "getok",
+    "host": "localhost"
+  },
+  "frontend": {
+    "apiPath": "api/v1",
+    "basePath" : "/app",
+    "keycloak": {
+      "clientId": "getok-frontend",
+      "realm": "vehizw2t",
+      "serverUrl": "https://sso-dev.pathfinder.gov.bc.ca/auth"
+    }
+  },
+  "server": {
+    "basePath" : "/app",
+    "bodyLimit": "30mb",
+    "hostUrl": "http://localhost:8080",
+    "keycloak": {
+      "clientId": "getok",
+      "realm": "vehizw2t",
+      "serverUrl": "https://sso-dev.pathfinder.gov.bc.ca/auth"
+    },
+    "logLevel": "debug",
+    "morganFormat": "combined",
+    "port": "8080"
+  }
+}

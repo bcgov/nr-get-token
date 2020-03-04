@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 /** Module dependencies */
+const config = require('config');
 const http = require('http');
 const log = require('npmlog');
 
@@ -58,7 +59,7 @@ const onListening = () => {
 };
 
 /** Get port from environment and store in Express. */
-const port = normalizePort('8000');
+const port = normalizePort(config.get('server.port'));
 app.set('port', port);
 
 /** Create HTTP server. */
