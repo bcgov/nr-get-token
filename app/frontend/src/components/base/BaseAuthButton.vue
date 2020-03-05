@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$keycloak.ready">
+  <div v-if="$keycloak && $keycloak.ready">
     <v-btn v-if="$keycloak.authenticated" color="secondary" class="login-btn" @click="logout">
       <v-icon :left="$vuetify.breakpoint.smAndUp">mdi-logout</v-icon>
       <span v-if="$vuetify.breakpoint.smAndUp">Logout</span>
@@ -16,12 +16,12 @@ export default {
   name: 'BaseAuthButton',
   methods: {
     login() {
-      if (this.$keycloak.ready) {
+      if (this.$keycloak && this.$keycloak.ready) {
         window.location.replace(this.$keycloak.createLoginUrl());
       }
     },
     logout() {
-      if (this.$keycloak.ready) {
+      if (this.$keycloak && this.$keycloak.ready) {
         window.location.replace(this.$keycloak.createLogoutUrl());
       }
     }
