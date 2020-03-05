@@ -52,7 +52,7 @@ async function loadConfig() {
 
     // Mount the configuration as a prototype for easier access from Vue
     const config = JSON.parse(sessionStorage.getItem(storageKey));
-    Vue.prototype.$config = config;
+    Vue.prototype.$config = Object.freeze(config);
 
     if (!config || !config.keycloak ||
       !config.keycloak.clientId || !config.keycloak.realm || !config.keycloak.serverUrl) {
