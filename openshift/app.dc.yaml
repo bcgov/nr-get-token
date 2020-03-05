@@ -149,12 +149,12 @@ objects:
                   valueFrom:
                     secretKeyRef:
                       key: username
-                      name: app-keycloak-secret
+                      name: getok-keycloak-secret
                 - name: SERVER_KC_CLIENTSECRET
                   valueFrom:
                     secretKeyRef:
                       key: password
-                      name: app-keycloak-secret
+                      name: getok-keycloak-secret
               envFrom:
                 - configMapRef:
                     name: getok-frontend-config

@@ -59,6 +59,13 @@ Replace anything in angle brackets with the appropriate value!
 _Note: Publickey must be a PEM-encoded value encapsulated in double quotes in the argument. Newlines should not be re-encoded when using this command. If authentication fails, it's very likely a newline whitespace issue._
 
 ```sh
+oc create -n k8vopl-<env> secret generic getok-keycloak-secret \
+  --type=kubernetes.io/basic-auth \
+  --from-literal=username=<username> \
+  --from-literal=password=<password>
+```
+
+```sh
 oc create -n k8vopl-<env> secret generic getok-oidc-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \

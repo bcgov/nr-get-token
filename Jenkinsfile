@@ -303,6 +303,7 @@ def deployStage(String stageEnv, String projectEnv, String hostEnv, String pathE
       openshift.selector('cm', "getok-oidc-config").exists() &&
       openshift.selector('cm', "getok-sc-config").exists() &&
       openshift.selector('cm', "getok-server-config").exists() &&
+      openshift.selector('secret', "getok-keycloak-secret").exists() &&
       openshift.selector('secret', "getok-oidc-secret").exists() &&
       openshift.selector('secret', "getok-sc-getokint-secret").exists() &&
       openshift.selector('secret', "getok-sc-getoktest-secret").exists() &&
