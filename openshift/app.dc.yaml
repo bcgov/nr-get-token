@@ -168,7 +168,7 @@ objects:
         - imageChangeParams:
             automatic: true
             containerNames:
-              - "${APP_NAME}-app-${JOB_NAME}"
+              - app
             from:
               kind: ImageStreamTag
               name: "${REPO_NAME}-app:${JOB_NAME}"

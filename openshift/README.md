@@ -15,6 +15,15 @@ In order to prepare an environment, you will need to ensure that all of the foll
 *Note: Replace anything in angle brackets with the appropriate value!*
 
 ```sh
+oc create -n k8vopl-dev configmap getok-frontend-config \
+  --from-literal=FRONTEND_APIPATH=api/v1 \
+  --from-literal=FRONTEND_BASEPATH=/app \
+  --from-literal=FRONTEND_KC_CLIENTID=getok-frontend \
+  --from-literal=FRONTEND_KC_REALM=vehizw2t \
+  --from-literal=FRONTEND_KC_SERVERURL=https://sso-dev.pathfinder.gov.bc.ca/auth
+```
+
+```sh
 oc create -n k8vopl-<env> configmap getok-oidc-config \
   --from-literal=OIDC_DISCOVERY=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/vehizw2t/.well-known/openid-configuration
 ```

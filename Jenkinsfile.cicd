@@ -6,7 +6,7 @@ import bcgov.GitHubHelper
 // ------------------
 
 // Stash Names
-def BE_COV_STASH = 'backend-coverage'
+def APP_COV_STASH = 'app-coverage'
 def FE_COV_STASH = 'frontend-coverage'
 
 // --------------------
@@ -83,20 +83,20 @@ pipeline {
 
         script {
           parallel(
-            Backend: {
+            App: {
               dir('app') {
                 try {
                   timeout(10) {
                     echo 'Installing NPM Dependencies...'
                     sh 'npm ci'
 
-                    echo 'Linting and Testing Backend...'
+                    echo 'Linting and Testing App...'
                     sh 'npm run test'
 
-                    echo 'Backend Lint Checks and Tests passed'
+                    echo 'App Lint Checks and Tests passed'
                   }
                 } catch (e) {
-                  echo 'Backend Lint Checks and Tests failed'
+                  echo 'App Lint Checks and Tests failed'
                   throw e
                 }
               }
@@ -109,7 +109,7 @@ pipeline {
                     echo 'Installing NPM Dependencies...'
                     sh 'npm ci'
 
-                    echo 'Linting and Testing Backend...'
+                    echo 'Linting and Testing Frontend...'
                     sh 'npm run test'
 
                     echo 'Frontend Lint Checks and Tests passed'
@@ -125,7 +125,7 @@ pipeline {
       }
       post {
         success {
-          stash name: BE_COV_STASH, includes: 'app/coverage/**'
+          stash name: APP_COV_STASH, includes: 'app/coverage/**'
           stash name: FE_COV_STASH, includes: 'app/frontend/coverage/**'
 
           echo 'All Lint Checks and Tests passed'
@@ -180,7 +180,7 @@ pipeline {
                 },
 
                 SonarQube: {
-                  unstash BE_COV_STASH
+                  unstash APP_COV_STASH
                   unstash FE_COV_STASH
 
                   echo 'Performing SonarQube static code analysis...'
@@ -270,7 +270,8 @@ def deployStage(String stageEnv, String projectEnv, String hostEnv, String pathE
       }
 
       echo "Checking for ConfigMaps and Secrets in project ${openshift.project()}..."
-      if(!(openshift.selector('cm', "getok-oidc-config").exists() &&
+      if(!(openshift.selector('cm', "getok-frontend-config").exists() &&
+      openshift.selector('cm', "getok-oidc-config").exists() &&
       openshift.selector('cm', "getok-sc-config").exists() &&
       openshift.selector('cm', "getok-server-config").exists() &&
       openshift.selector('secret', "getok-oidc-secret").exists() &&
