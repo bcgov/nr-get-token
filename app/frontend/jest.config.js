@@ -1,8 +1,19 @@
 module.exports = {
   clearMocks: true,
-  setupFiles: ['<rootDir>/tests/unit/globalSetup.js'],
-  preset: '@vue/cli-plugin-unit-jest',
+  collectCoverage: true,
+  collectCoverageFrom: ['src/**/*.{js,vue}', '!src/main.js', '!src/plugins/*.*'],
   moduleFileExtensions: ['js', 'json', 'vue', 'jsx'],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1'
+  },
+  preset: '@vue/cli-plugin-unit-jest',
+  setupFiles: ['<rootDir>/tests/unit/globalSetup.js'],
+  snapshotSerializers: ['jest-serializer-vue'],
+  testMatch: [
+    '**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)'
+  ],
+  testResultsProcessor: 'jest-sonar-reporter',
+  testURL: 'http://localhost/',
   transform: {
     '.*\\.(vue)$': 'vue-jest',
     '^.+\\.vue$': 'vue-jest',
@@ -11,18 +22,8 @@ module.exports = {
     '^.+\\.jsx?$': 'babel-jest'
   },
   transformIgnorePatterns: ['/node_modules/'],
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1'
-  },
-  snapshotSerializers: ['jest-serializer-vue'],
-  testMatch: [
-    '**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)'
-  ],
-  testURL: 'http://localhost/',
   watchPlugins: [
     'jest-watch-typeahead/filename',
     'jest-watch-typeahead/testname'
-  ],
-  collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.{js,vue}', '!src/main.js', '!src/plugins/*.*']
+  ]
 };
