@@ -1,3 +1,4 @@
+# Editor directories and files
 .DS_Store
 .gradle
 .nyc_output
@@ -28,4 +29,4 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
-*.sw*
+*.sw?

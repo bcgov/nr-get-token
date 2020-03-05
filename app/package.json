@@ -1,0 +1,64 @@
+{
+  "name": "get-token-app",
+  "version": "1.0.0",
+  "private": true,
+  "author": "NR Common Service Showcase <NR.CommonServiceShowcase@gov.bc.ca>",
+  "bugs": {
+    "url": "https://github.com/bcgov/nr-get-token/issues"
+  },
+  "description": "Common Service Get Token",
+  "homepage": "https://github.com/bcgov/nr-get-token",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bcgov/nr-get-token.git"
+  },
+  "scripts": {
+    "serve": "nodemon ./bin/www",
+    "build": "cd frontend && npm run build",
+    "start": "node ./bin/www",
+    "test": "jest --verbose",
+    "lint": "eslint . **/www --no-fix --ext .js",
+    "lint:fix": "eslint . **/www --fix --ext .js",
+    "pretest": "npm run lint",
+    "clean": "rm -rf coverage dist",
+    "purge": "rm -rf node_modules",
+    "rebuild": "npm run clean && npm run build",
+    "reinstall": "npm run purge && npm install",
+    "all:build": "npm run build",
+    "all:start": "npm run start",
+    "all:test": "npm run test && cd frontend && npm run test",
+    "all:lint": "npm run lint && cd frontend && npm run lint",
+    "all:lint-fix": "npm run lint:fix && cd frontend && npm run lint:fix",
+    "all:ci": "npm ci --only=production && cd frontend && npm ci",
+    "all:install": "npm install && cd frontend && npm install",
+    "all:clean": "npm run clean && cd frontend && npm run clean",
+    "all:purge": "npm run purge && cd frontend && npm run purge",
+    "all:rebuild": "npm run rebuild && cd frontend && npm run rebuild",
+    "all:reinstall": "npm run reinstall && cd frontend && npm run reinstall",
+    "all:fresh-start": "npm run all:reinstall && npm run all:rebuild && npm run all:start",
+    "frontend:purge": "cd frontend && npm run purge"
+  },
+  "dependencies": {
+    "api-problem": "6.0.1",
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "config": "^3.3.0",
+    "express": "^4.17.1",
+    "keycloak-connect": "^8.0.2",
+    "morgan": "^1.9.1",
+    "npmlog": "^4.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-recommended": "^4.0.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "jest": "^24.9.0",
+    "jest-sonar-reporter": "^2.0.0",
+    "nodemon": "^2.0.2",
+    "supertest": "^4.0.2"
+  },
+  "jestSonar": {
+    "reportPath": "coverage"
+  }
+}

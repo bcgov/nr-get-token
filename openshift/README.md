@@ -15,12 +15,25 @@ In order to prepare an environment, you will need to ensure that all of the foll
 *Note: Replace anything in angle brackets with the appropriate value!*
 
 ```sh
+oc create -n k8vopl-dev configmap getok-frontend-config \
+  --from-literal=FRONTEND_APIPATH=api/v1 \
+  --from-literal=FRONTEND_BASEPATH=/app \
+  --from-literal=FRONTEND_KC_CLIENTID=getok-frontend \
+  --from-literal=FRONTEND_KC_REALM=vehizw2t \
+  --from-literal=FRONTEND_KC_SERVERURL=https://sso-dev.pathfinder.gov.bc.ca/auth
+```
+
+```sh
 oc create -n k8vopl-<env> configmap getok-oidc-config \
   --from-literal=OIDC_DISCOVERY=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/vehizw2t/.well-known/openid-configuration
 ```
 
 ```sh
 oc create -n k8vopl-<env> configmap getok-server-config \
+  --from-literal=SERVER_APIPATH=/api/v1 \
+  --from-literal=SERVER_BODYLIMIT=30mb \
+  --from-literal=SERVER_KC_REALM=vehizw2t \
+  --from-literal=SERVER_KC_SERVERURL=https://sso-dev.pathfinder.gov.bc.ca/auth \
   --from-literal=SERVER_LOGLEVEL=info \
   --from-literal=SERVER_MORGANFORMAT=combined \
   --from-literal=SERVER_PORT=8080
@@ -48,6 +61,13 @@ oc create -n k8vopl-<env> configmap getok-sc-config \
 Replace anything in angle brackets with the appropriate value!
 
 _Note: Publickey must be a PEM-encoded value encapsulated in double quotes in the argument. Newlines should not be re-encoded when using this command. If authentication fails, it's very likely a newline whitespace issue._
+
+```sh
+oc create -n k8vopl-<env> secret generic getok-keycloak-secret \
+  --type=kubernetes.io/basic-auth \
+  --from-literal=username=<username> \
+  --from-literal=password=<password>
+```
 
 ```sh
 oc create -n k8vopl-<env> secret generic getok-oidc-secret \

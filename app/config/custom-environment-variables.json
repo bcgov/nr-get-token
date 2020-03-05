@@ -1,0 +1,31 @@
+{
+  "db": {
+    "database": "DB_DATABASE",
+    "host": "DB_HOST",
+    "username": "DB_USERNAME",
+    "password": "DB_PASSWORD"
+  },
+  "frontend": {
+    "apiPath": "FRONTEND_APIPATH",
+    "basePath": "FRONTEND_BASEPATH",
+    "keycloak": {
+      "clientId": "FRONTEND_KC_CLIENTID",
+      "realm": "FRONTEND_KC_REALM",
+      "serverUrl": "FRONTEND_KC_SERVERURL"
+    }
+  },
+  "server": {
+    "apiPath": "SERVER_APIPATH",
+    "basePath" : "SERVER_BASEPATH",
+    "bodyLimit": "SERVER_BODYLIMIT",
+    "keycloak": {
+      "clientId": "SERVER_KC_CLIENTID",
+      "clientSecret": "SERVER_KC_CLIENTSECRET",
+      "realm": "SERVER_KC_REALM",
+      "serverUrl": "SERVER_KC_SERVERURL"
+    },
+    "logLevel": "SERVER_LOGLEVEL",
+    "morganFormat": "SERVER_MORGANFORMAT",
+    "port": "SERVER_PORT"
+  }
+}
