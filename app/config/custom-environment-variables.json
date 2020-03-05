@@ -16,8 +16,8 @@
   },
   "server": {
     "apiPath": "SERVER_APIPATH",
+    "basePath" : "SERVER_BASEPATH",
     "bodyLimit": "SERVER_BODYLIMIT",
-    "hostUrl": "SERVER_HOSTURL",
     "keycloak": {
       "clientId": "SERVER_KC_CLIENTID",
       "clientSecret": "SERVER_KC_CLIENTSECRET",

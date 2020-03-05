@@ -143,8 +143,6 @@ objects:
                   value: "${ROUTE_PATH}"
                 - name: SERVER_BASEPATH
                   value: "${ROUTE_PATH}"
-                - name: SERVER_HOSTURL
-                  value: https://${ROUTE_HOST}${ROUTE_PATH}
                 - name: SERVER_KC_CLIENTID
                   valueFrom:
                     secretKeyRef:

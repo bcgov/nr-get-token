@@ -16,7 +16,6 @@
     "apiPath": "/api/v1",
     "basePath" : "/app",
     "bodyLimit": "30mb",
-    "hostUrl": "http://localhost:8080",
     "keycloak": {
       "clientId": "getok",
       "realm": "vehizw2t",

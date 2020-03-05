@@ -30,6 +30,10 @@ oc create -n k8vopl-<env> configmap getok-oidc-config \
 
 ```sh
 oc create -n k8vopl-<env> configmap getok-server-config \
+  --from-literal=SERVER_APIPATH=/api/v1 \
+  --from-literal=SERVER_BODYLIMIT=30mb \
+  --from-literal=SERVER_KC_REALM=vehizw2t \
+  --from-literal=SERVER_KC_SERVERURL=https://sso-dev.pathfinder.gov.bc.ca/auth \
   --from-literal=SERVER_LOGLEVEL=info \
   --from-literal=SERVER_MORGANFORMAT=combined \
   --from-literal=SERVER_PORT=8080
