@@ -15,6 +15,7 @@
     }
   },
   "server": {
+    "apiPath": "SERVER_APIPATH",
     "bodyLimit": "SERVER_BODYLIMIT",
     "hostUrl": "SERVER_HOSTURL",
     "keycloak": {

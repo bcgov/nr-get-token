@@ -13,6 +13,7 @@
     }
   },
   "server": {
+    "apiPath": "/api/v1",
     "basePath" : "/app",
     "bodyLimit": "30mb",
     "hostUrl": "http://localhost:8080",

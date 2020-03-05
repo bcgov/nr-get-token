@@ -49,6 +49,35 @@ objects:
         resources: {}
         rollingParams:
           timeoutSeconds: 600
+          # TODO: Uncomment this when we reintroduce DB completely
+          # pre:
+          #   failurePolicy: Abort
+          #   execNewPod:
+          #     command:
+          #       - npm
+          #       - run
+          #       - migrate
+          #     containerName: "migrate"
+          #     env:
+          #       - name: NODE_ENV
+          #         value: production
+          #       - name: DB_DATABASE
+          #         valueFrom:
+          #           secretKeyRef:
+          #             key: app-db-name
+          #             name: "patroni-${JOB_NAME}-secret"
+          #       - name: DB_HOST
+          #         value: "patroni-${JOB_NAME}"
+          #       - name: DB_USERNAME
+          #         valueFrom:
+          #           secretKeyRef:
+          #             key: app-db-username
+          #             name: "patroni-${JOB_NAME}-secret"
+          #       - name: DB_PASSWORD
+          #         valueFrom:
+          #           secretKeyRef:
+          #             key: app-db-password
+          #             name: "patroni-${JOB_NAME}-secret"
       template:
         metadata:
           labels:
@@ -62,21 +91,21 @@ objects:
               livenessProbe:
                 failureThreshold: 3
                 httpGet:
-                  path: "${ROUTE_PATH}"
+                  path: "${ROUTE_PATH}/api"
                   port: 8080
                   scheme: HTTP
                 initialDelaySeconds: 10
                 periodSeconds: 60
                 successThreshold: 1
                 timeoutSeconds: 1
-              name: "${APP_NAME}-app-${JOB_NAME}"
+              name: "app"
               ports:
                 - containerPort: 8080
                   protocol: TCP
               readinessProbe:
                 failureThreshold: 3
                 httpGet:
-                  path: "${ROUTE_PATH}"
+                  path: "${ROUTE_PATH}/api"
                   port: 8080
                   scheme: HTTP
                 initialDelaySeconds: 10
@@ -91,6 +120,25 @@ objects:
                   cpu: "${CPU_LIMIT}"
                   memory: "${MEMORY_LIMIT}"
               env:
+                - name: NODE_ENV
+                  value: production
+                - name: DB_DATABASE
+                  valueFrom:
+                    secretKeyRef:
+                      key: app-db-name
+                      name: "patroni-${JOB_NAME}-secret"
+                - name: DB_HOST
+                  value: "patroni-${JOB_NAME}"
+                - name: DB_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      key: app-db-username
+                      name: "patroni-${JOB_NAME}-secret"
+                - name: DB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: app-db-password
+                      name: "patroni-${JOB_NAME}-secret"
                 - name: FRONTEND_BASEPATH
                   value: "${ROUTE_PATH}"
                 - name: SERVER_BASEPATH
@@ -112,8 +160,6 @@ objects:
                     name: getok-frontend-config
                 - configMapRef:
                     name: getok-server-config
-                - configMapRef:
-                    name: getok-sc-config
           restartPolicy: Always
           terminationGracePeriodSeconds: 30
       test: false
