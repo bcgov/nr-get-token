@@ -35,8 +35,8 @@ pipeline {
     JOB_NAME = JOB_BASE_NAME.toLowerCase()
 
     // SOURCE_REPO_* references git repository resources
-    SOURCE_REPO_RAW = "https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/master"
-    SOURCE_REPO_REF = 'master'
+    SOURCE_REPO_RAW = "https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${JOB_NAME}"
+    SOURCE_REPO_REF = "${JOB_NAME}"
     SOURCE_REPO_URL = "https://github.com/${REPO_OWNER}/${REPO_NAME}.git"
 
     // HOST_ROUTE is the full domain without the path (ie. 'appname-k8vopl-dev.pathfinder.gov.bc.ca/pr-5')
@@ -230,11 +230,11 @@ pipeline {
       }
       post {
         success {
-          createDeploymentStatus(DEV_PROJECT, 'SUCCESS', DEV_HOST, PATH_ROOT)
+          createDeploymentStatus(DEV_PROJECT, 'SUCCESS', JOB_NAME, DEV_HOST, PATH_ROOT)
           notifyStageStatus('Deploy - Dev', 'SUCCESS')
         }
         unsuccessful {
-          createDeploymentStatus(DEV_PROJECT, 'FAILURE', DEV_HOST, PATH_ROOT)
+          createDeploymentStatus(DEV_PROJECT, 'FAILURE', JOB_NAME, DEV_HOST, PATH_ROOT)
           notifyStageStatus('Deploy - Dev', 'FAILURE')
         }
       }
@@ -249,11 +249,11 @@ pipeline {
       }
       post {
         success {
-          createDeploymentStatus(TEST_PROJECT, 'SUCCESS', TEST_HOST, PATH_ROOT)
+          createDeploymentStatus(TEST_PROJECT, 'SUCCESS', JOB_NAME, TEST_HOST, PATH_ROOT)
           notifyStageStatus('Deploy - Test', 'SUCCESS')
         }
         unsuccessful {
-          createDeploymentStatus(TEST_PROJECT, 'FAILURE', TEST_HOST, PATH_ROOT)
+          createDeploymentStatus(TEST_PROJECT, 'FAILURE', JOB_NAME, TEST_HOST, PATH_ROOT)
           notifyStageStatus('Deploy - Test', 'FAILURE')
         }
       }
@@ -268,11 +268,11 @@ pipeline {
       }
       post {
         success {
-          createDeploymentStatus(PROD_PROJECT, 'SUCCESS', PROD_HOST, PATH_ROOT)
+          createDeploymentStatus(PROD_PROJECT, 'SUCCESS', JOB_NAME, PROD_HOST, PATH_ROOT)
           notifyStageStatus('Deploy - Prod', 'SUCCESS')
         }
         unsuccessful {
-          createDeploymentStatus(PROD_PROJECT, 'FAILURE', PROD_HOST, PATH_ROOT)
+          createDeploymentStatus(PROD_PROJECT, 'FAILURE', JOB_NAME, PROD_HOST, PATH_ROOT)
           notifyStageStatus('Deploy - Prod', 'FAILURE')
         }
       }
@@ -344,7 +344,7 @@ def deployStage(String stageEnv, String projectEnv, String hostEnv, String pathE
         dcPatroni.rollout().status('--watch=true')
       }
 
-      createDeploymentStatus(projectEnv, 'PENDING', hostEnv, pathEnv)
+      createDeploymentStatus(projectEnv, 'PENDING', JOB_NAME, hostEnv, pathEnv)
 
       // Wait for deployments to roll out
       timeout(10) {
@@ -388,13 +388,13 @@ def notifyStageStatus(String name, String status) {
 }
 
 // Create deployment status and pass to Jenkins-GitHub library
-def createDeploymentStatus(String environment, String status, String hostEnv, String pathEnv) {
+def createDeploymentStatus(String environment, String status, String jobName, String hostEnv, String pathEnv) {
   def ghDeploymentId = new GitHubHelper().createDeployment(
     this,
     SOURCE_REPO_REF,
     [
       'environment': environment,
-      'task': "deploy:master"
+      'task': "deploy:${jobName}"
     ]
   )
 
