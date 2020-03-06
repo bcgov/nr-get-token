@@ -9,7 +9,7 @@
           <router-link :to="{ name: 'Secure' }">Secure</router-link>
         </li>
         <li>
-          <router-link :to="{ name: 'MyApplications' }">My Applications</router-link>
+          <router-link :to="{ name: 'MyApps' }">My Applications</router-link>
         </li>
       </ul>
     </div>
