@@ -2,14 +2,16 @@
 import bcgov.GitHubHelper
 
 // ---------------
-// Stage Functions
+// Pipeline Stages
 // ---------------
+
+// Run Tests
 def runStageTests() {
-  parallel(
-    App: {
-      dir('app') {
-        try {
-          timeout(10) {
+  timeout(time: 10, unit: 'MINUTES') {
+    parallel(
+      App: {
+        dir('app') {
+          try {
             echo 'Installing NPM Dependencies...'
             sh 'npm ci'
 
@@ -17,18 +19,16 @@ def runStageTests() {
             sh 'npm run test'
 
             echo 'App Lint Checks and Tests passed'
+          } catch (e) {
+            echo 'App Lint Checks and Tests failed'
+            throw e
           }
-        } catch (e) {
-          echo 'App Lint Checks and Tests failed'
-          throw e
         }
-      }
-    },
+      },
 
-    Frontend: {
-      dir('app/frontend') {
-        try {
-          timeout(10) {
+      Frontend: {
+        dir('app/frontend') {
+          try {
             echo 'Installing NPM Dependencies...'
             sh 'npm ci'
 
@@ -36,33 +36,86 @@ def runStageTests() {
             sh 'npm run test'
 
             echo 'Frontend Lint Checks and Tests passed'
+          } catch (e) {
+            echo 'Frontend Lint Checks and Tests failed'
+            throw e
           }
-        } catch (e) {
-          echo 'Frontend Lint Checks and Tests failed'
-          throw e
         }
       }
-    }
-  )
+    )
+  }
 }
 
-// ------------------
-// Pipeline Functions
-// ------------------
+// Build Images & SonarQube Report
+def runStageBuild() {
+  openshift.withCluster() {
+    openshift.withProject(TOOLS_PROJECT) {
+      if(DEBUG_OUTPUT.equalsIgnoreCase('true')) {
+        echo "DEBUG - Using project: ${openshift.project()}"
+      }
 
-// Parameterized deploy stage
-def deployStage(String stageEnv, String projectEnv, String hostEnv, String pathEnv) {
+      parallel(
+        App: {
+          try {
+            notifyStageStatus('App', 'PENDING')
+
+            echo "Processing BuildConfig ${REPO_NAME}-app-${JOB_NAME}..."
+            def bcApp = openshift.process('-f',
+              'openshift/app.bc.yaml',
+              "REPO_NAME=${REPO_NAME}",
+              "JOB_NAME=${JOB_NAME}",
+              "SOURCE_REPO_URL=${SOURCE_REPO_URL}",
+              "SOURCE_REPO_REF=${SOURCE_REPO_REF}"
+            )
+
+            echo "Building ImageStream..."
+            openshift.apply(bcApp).narrow('bc').startBuild('-w').logs('-f')
+
+            echo "Tagging Image ${REPO_NAME}-app:latest..."
+            openshift.tag("${REPO_NAME}-app:latest",
+              "${REPO_NAME}-app:${JOB_NAME}"
+            )
+
+            echo 'App build successful'
+            notifyStageStatus('App', 'SUCCESS')
+          } catch (e) {
+            echo 'App build failed'
+            notifyStageStatus('App', 'FAILURE')
+            throw e
+          }
+        },
+
+        SonarQube: {
+          unstash APP_COV_STASH
+          unstash FE_COV_STASH
+
+          echo 'Performing SonarQube static code analysis...'
+          sh """
+          sonar-scanner \
+            -Dsonar.host.url='${SONARQUBE_URL_INT}' \
+            -Dsonar.projectKey='${REPO_NAME}-${JOB_NAME}' \
+            -Dsonar.projectName='${APP_NAME} (${JOB_NAME.toUpperCase()})'
+          """
+        }
+      )
+    }
+  }
+}
+
+// Deploy Application and Dependencies
+def runStageDeploy(String stageEnv, String projectEnv, String hostEnv, String pathEnv) {
   if (!stageEnv.equalsIgnoreCase('Dev')) {
     input("Deploy to ${projectEnv}?")
   }
-
-  notifyStageStatus("Deploy - ${stageEnv}", 'PENDING')
 
   openshift.withCluster() {
     openshift.withProject(projectEnv) {
       if(DEBUG_OUTPUT.equalsIgnoreCase('true')) {
         echo "DEBUG - Using project: ${openshift.project()}"
       }
+
+      notifyStageStatus("Deploy - ${stageEnv}", 'PENDING')
+      createDeploymentStatus(projectEnv, 'PENDING', JOB_NAME, hostEnv, pathEnv)
 
       echo "Checking for ConfigMaps and Secrets in project ${openshift.project()}..."
       if(!(openshift.selector('cm', "getok-frontend-config").exists() &&
@@ -97,7 +150,7 @@ def deployStage(String stageEnv, String projectEnv, String hostEnv, String pathE
       }
 
       // Apply Patroni Database
-      timeout(10) {
+      timeout(time: 10, unit: 'MINUTES') {
         def dcPatroniTemplate
         if(JOB_BASE_NAME.startsWith('PR-')) {
           echo "Processing Patroni StatefulSet (Ephemeral)..."
@@ -121,10 +174,8 @@ def deployStage(String stageEnv, String projectEnv, String hostEnv, String pathE
         dcPatroni.rollout().status('--watch=true')
       }
 
-      commonPipeline.createDeploymentStatus(projectEnv, 'PENDING', JOB_NAME, hostEnv, pathEnv)
-
       // Wait for deployments to roll out
-      timeout(10) {
+      timeout(time: 10, unit: 'MINUTES') {
         // Apply App Server
         echo "Tagging Image ${REPO_NAME}-app:${JOB_NAME}..."
         openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-app:${JOB_NAME}", "${REPO_NAME}-app:${JOB_NAME}")

@@ -59,7 +59,7 @@ pipeline {
       agent any
       steps {
         // Cancel any running builds in progress
-        timeout(10) {
+        timeout(time: 10, unit: 'MINUTES') {
           echo "Cancelling previous ${APP_NAME}-${JOB_NAME} builds in progress..."
           abortAllPreviousBuildInProgress(currentBuild)
         }
@@ -112,58 +112,7 @@ pipeline {
       agent any
       steps {
         script {
-          openshift.withCluster() {
-            openshift.withProject(TOOLS_PROJECT) {
-              if(DEBUG_OUTPUT.equalsIgnoreCase('true')) {
-                echo "DEBUG - Using project: ${openshift.project()}"
-              }
-
-              parallel(
-                App: {
-                  try {
-                    commonPipeline.notifyStageStatus('App', 'PENDING')
-
-                    echo "Processing BuildConfig ${REPO_NAME}-app-${JOB_NAME}..."
-                    def bcApp = openshift.process('-f',
-                      'openshift/app.bc.yaml',
-                      "REPO_NAME=${REPO_NAME}",
-                      "JOB_NAME=${JOB_NAME}",
-                      "SOURCE_REPO_URL=${SOURCE_REPO_URL}",
-                      "SOURCE_REPO_REF=${SOURCE_REPO_REF}"
-                    )
-
-                    echo "Building ImageStream..."
-                    openshift.apply(bcApp).narrow('bc').startBuild('-w').logs('-f')
-
-                    echo "Tagging Image ${REPO_NAME}-app:latest..."
-                    openshift.tag("${REPO_NAME}-app:latest",
-                      "${REPO_NAME}-app:${JOB_NAME}"
-                    )
-
-                    echo 'App build successful'
-                    commonPipeline.notifyStageStatus('App', 'SUCCESS')
-                  } catch (e) {
-                    echo 'App build failed'
-                    commonPipeline.notifyStageStatus('App', 'FAILURE')
-                    throw e
-                  }
-                },
-
-                SonarQube: {
-                  unstash APP_COV_STASH
-                  unstash FE_COV_STASH
-
-                  echo 'Performing SonarQube static code analysis...'
-                  sh """
-                  sonar-scanner \
-                    -Dsonar.host.url='${SONARQUBE_URL_INT}' \
-                    -Dsonar.projectKey='${REPO_NAME}-${JOB_NAME}' \
-                    -Dsonar.projectName='${APP_NAME} (${JOB_NAME.toUpperCase()})'
-                  """
-                }
-              )
-            }
-          }
+          commonPipeline.runStageBuild()
         }
       }
       post {
@@ -193,7 +142,7 @@ pipeline {
       agent any
       steps {
         script {
-          commonPipeline.deployStage('Dev', DEV_PROJECT, DEV_HOST, PATH_ROOT)
+          commonPipeline.runStageDeploy('Dev', DEV_PROJECT, DEV_HOST, PATH_ROOT)
         }
       }
       post {
