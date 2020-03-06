@@ -1,6 +1,51 @@
 #!groovy
 import bcgov.GitHubHelper
 
+// ---------------
+// Stage Functions
+// ---------------
+def runStageTests() {
+  parallel(
+    App: {
+      dir('app') {
+        try {
+          timeout(10) {
+            echo 'Installing NPM Dependencies...'
+            sh 'npm ci'
+
+            echo 'Linting and Testing App...'
+            sh 'npm run test'
+
+            echo 'App Lint Checks and Tests passed'
+          }
+        } catch (e) {
+          echo 'App Lint Checks and Tests failed'
+          throw e
+        }
+      }
+    },
+
+    Frontend: {
+      dir('app/frontend') {
+        try {
+          timeout(10) {
+            echo 'Installing NPM Dependencies...'
+            sh 'npm ci'
+
+            echo 'Linting and Testing Frontend...'
+            sh 'npm run test'
+
+            echo 'Frontend Lint Checks and Tests passed'
+          }
+        } catch (e) {
+          echo 'Frontend Lint Checks and Tests failed'
+          throw e
+        }
+      }
+    }
+  )
+}
+
 // ------------------
 // Pipeline Functions
 // ------------------
