@@ -72,6 +72,9 @@ pipeline {
             echo 'DEBUG - All pipeline environment variables:'
             echo sh(returnStdout: true, script: 'env')
           }
+
+          // Load Common Code as Global Variable
+          commonPipeline = load "${WORKSPACE}/openshift/commonPipeline.groovy"
         }
       }
     }
@@ -79,9 +82,9 @@ pipeline {
     stage('Tests') {
       agent any
       steps {
-        notifyStageStatus('Tests', 'PENDING')
-
         script {
+          commonPipeline.notifyStageStatus('Tests', 'PENDING')
+
           parallel(
             App: {
               dir('app') {
@@ -125,15 +128,20 @@ pipeline {
       }
       post {
         success {
-          stash name: APP_COV_STASH, includes: 'app/coverage/**'
-          stash name: FE_COV_STASH, includes: 'app/frontend/coverage/**'
+          script {
+            stash name: APP_COV_STASH, includes: 'app/coverage/**'
+            stash name: FE_COV_STASH, includes: 'app/frontend/coverage/**'
 
-          echo 'All Lint Checks and Tests passed'
-          notifyStageStatus('Tests', 'SUCCESS')
+            echo 'All Lint Checks and Tests passed'
+            commonPipeline.notifyStageStatus('Tests', 'SUCCESS')
+          }
+
         }
         failure {
-          echo 'Some Lint Checks and Tests failed'
-          notifyStageStatus('Tests', 'FAILURE')
+          script {
+            echo 'Some Lint Checks and Tests failed'
+            commonPipeline.notifyStageStatus('Tests', 'FAILURE')
+          }
         }
       }
     }
@@ -151,7 +159,7 @@ pipeline {
               parallel(
                 App: {
                   try {
-                    notifyStageStatus('App', 'PENDING')
+                    commonPipeline.notifyStageStatus('App', 'PENDING')
 
                     echo "Processing BuildConfig ${REPO_NAME}-app-${JOB_NAME}..."
                     def bcApp = openshift.process('-f',
@@ -171,10 +179,10 @@ pipeline {
                     )
 
                     echo 'App build successful'
-                    notifyStageStatus('App', 'SUCCESS')
+                    commonPipeline.notifyStageStatus('App', 'SUCCESS')
                   } catch (e) {
                     echo 'App build failed'
-                    notifyStageStatus('App', 'FAILURE')
+                    commonPipeline.notifyStageStatus('App', 'FAILURE')
                     throw e
                   }
                 },
@@ -228,12 +236,16 @@ pipeline {
       }
       post {
         success {
-          createDeploymentStatus(DEV_PROJECT, 'SUCCESS', DEV_HOST, PATH_ROOT)
-          notifyStageStatus('Deploy - Dev', 'SUCCESS')
+          script {
+            commonPipeline.createDeploymentStatus(DEV_PROJECT, 'SUCCESS', JOB_NAME, DEV_HOST, PATH_ROOT)
+            commonPipeline.notifyStageStatus('Deploy - Dev', 'SUCCESS')
+          }
         }
         unsuccessful {
-          createDeploymentStatus(DEV_PROJECT, 'FAILURE', DEV_HOST, PATH_ROOT)
-          notifyStageStatus('Deploy - Dev', 'FAILURE')
+          script {
+            commonPipeline.createDeploymentStatus(DEV_PROJECT, 'FAILURE', JOB_NAME, DEV_HOST, PATH_ROOT)
+            commonPipeline.notifyStageStatus('Deploy - Dev', 'FAILURE')
+          }
         }
       }
     }
@@ -244,7 +256,7 @@ pipeline {
         // Comment on Pull Request if build changes to successful
         if(currentBuild.currentResult.equalsIgnoreCase('SUCCESS')) {
           echo "Posting 'SonarQube Analysis: ${SONARQUBE_URL_EXT}/dashboard?id=${REPO_NAME}-${JOB_NAME}' to Pull Request..."
-          commentOnPR("SonarQube Analysis: ${SONARQUBE_URL_EXT}/dashboard?id=${REPO_NAME}-${JOB_NAME}")
+          commonPipeline.commentOnPR("SonarQube Analysis: ${SONARQUBE_URL_EXT}/dashboard?id=${REPO_NAME}-${JOB_NAME}")
         }
       }
     }
@@ -261,7 +273,7 @@ def deployStage(String stageEnv, String projectEnv, String hostEnv, String pathE
     input("Deploy to ${projectEnv}?")
   }
 
-  notifyStageStatus("Deploy - ${stageEnv}", 'PENDING')
+  commonPipeline.notifyStageStatus("Deploy - ${stageEnv}", 'PENDING')
 
   openshift.withCluster() {
     openshift.withProject(projectEnv) {
@@ -316,7 +328,7 @@ def deployStage(String stageEnv, String projectEnv, String hostEnv, String pathE
         dcPatroni.rollout().status('--watch=true')
       }
 
-      createDeploymentStatus(projectEnv, 'PENDING', hostEnv, pathEnv)
+      commonPipeline.createDeploymentStatus(projectEnv, 'PENDING', JOB_NAME, hostEnv, pathEnv)
 
       // Wait for deployments to roll out
       timeout(10) {
@@ -340,55 +352,5 @@ def deployStage(String stageEnv, String projectEnv, String hostEnv, String pathE
         dcApp.rollout().status('--watch=true')
       }
     }
-  }
-}
-
-// --------------------
-// Supporting Functions
-// --------------------
-
-// Notify stage status and pass to Jenkins-GitHub library
-def notifyStageStatus(String name, String status) {
-  def sha1 = GIT_COMMIT
-  if(JOB_BASE_NAME.startsWith('PR-')) {
-    sha1 = GitHubHelper.getPullRequestLastCommitId(this)
-  }
-
-  GitHubHelper.createCommitStatus(
-    this, sha1, status, BUILD_URL, '', "Stage: ${name}"
-  )
-}
-
-// Create deployment status and pass to Jenkins-GitHub library
-def createDeploymentStatus(String environment, String status, String hostEnv, String pathEnv) {
-  def ghDeploymentId = new GitHubHelper().createDeployment(
-    this,
-    SOURCE_REPO_REF,
-    [
-      'environment': environment,
-      'task': "deploy:pull:${CHANGE_ID}"
-    ]
-  )
-
-  new GitHubHelper().createDeploymentStatus(
-    this,
-    ghDeploymentId,
-    status,
-    ['targetUrl': "https://${hostEnv}${pathEnv}"]
-  )
-
-  if (status.equalsIgnoreCase('SUCCESS')) {
-    echo "${environment} deployment successful at https://${hostEnv}${pathEnv}"
-  } else if (status.equalsIgnoreCase('PENDING')) {
-    echo "${environment} deployment pending..."
-  } else if (status.equalsIgnoreCase('FAILURE')) {
-    echo "${environment} deployment failed"
-  }
-}
-
-// Creates a comment and pass to Jenkins-GitHub library
-def commentOnPR(String comment) {
-  if(JOB_BASE_NAME.startsWith('PR-')) {
-    GitHubHelper.commentOnPullRequest(this, comment)
   }
 }
