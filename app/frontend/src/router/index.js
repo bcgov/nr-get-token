@@ -25,6 +25,14 @@ const router = new VueRouter({
       }
     },
     {
+      path: '/myApplications',
+      name: 'MyApplications',
+      component: () => import(/* webpackChunkName: "secure" */ '@/views/MyApplications.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/404',
       alias: '*',
       name: 'NotFound',
