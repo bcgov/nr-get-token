@@ -4,7 +4,7 @@
 // Pipeline Variables
 // ------------------
 
-// Stash Names
+// Global Variable Stash Names
 APP_COV_STASH = 'app-coverage'
 FE_COV_STASH = 'frontend-coverage'
 
