@@ -5,8 +5,8 @@
 // ------------------
 
 // Stash Names
-def APP_COV_STASH = 'app-coverage'
-def FE_COV_STASH = 'frontend-coverage'
+APP_COV_STASH = 'app-coverage'
+FE_COV_STASH = 'frontend-coverage'
 
 // --------------------
 // Declarative Pipeline
