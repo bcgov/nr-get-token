@@ -54,7 +54,7 @@ export default {
   font-weight: normal;
   min-height: 2rem;
   color: #ffffff;
-  padding: 0.5rem 1rem 0.5rem 1rem;
+  padding: 0.75rem 1rem 0.75rem 1rem;
   text-decoration: none;
 }
 
@@ -67,7 +67,7 @@ export default {
   outline-offset: 0;
 }
 
-.navigation-main .container ul .router-link-exact-active {
+.navigation-main .container ul .router-link-active {
   background-color: #7ba2cc80;
   border-bottom: 2px solid #fcba19;
   font-weight: bold;
