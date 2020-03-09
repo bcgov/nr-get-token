@@ -20,7 +20,9 @@
     "test": "jest --verbose",
     "lint": "eslint . **/www --no-fix --ext .js",
     "lint:fix": "eslint . **/www --fix --ext .js",
+    "migrate": "sequelize db:migrate",
     "pretest": "npm run lint",
+    "posttest": "node ./lcov-fix.js",
     "clean": "rm -rf coverage dist",
     "purge": "rm -rf node_modules",
     "rebuild": "npm run clean && npm run build",
@@ -45,15 +47,18 @@
     "compression": "^1.7.4",
     "config": "^3.3.0",
     "express": "^4.17.1",
-    "keycloak-connect": "^8.0.2",
+    "keycloak-connect": "^9.0.0",
     "morgan": "^1.9.1",
-    "npmlog": "^4.1.2"
+    "npmlog": "^4.1.2",
+    "pg": "^7.18.2",
+    "sequelize": "^5.21.5",
+    "sequelize-cli": "^5.5.1"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-recommended": "^4.0.0",
     "eslint-plugin-prettier": "^3.1.2",
-    "jest": "^24.9.0",
+    "jest": "^25.1.0",
     "jest-sonar-reporter": "^2.0.0",
     "nodemon": "^2.0.2",
     "supertest": "^4.0.2"

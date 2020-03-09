@@ -1,7 +1,12 @@
 module.exports = {
   clearMocks: true,
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.js', '!src/frontend/**/*.*'],
+  collectCoverageFrom: [
+    'src/**/*.js',
+    '!src/docs/*.*',
+    '!src/frontend/**/*.*',
+    '!src/migrations/*.js'
+  ],
   moduleFileExtensions: ['js', 'json'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'
