@@ -1,4 +1,3 @@
-import 'nprogress/nprogress.css';
 import NProgress from 'nprogress';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
@@ -9,12 +8,12 @@ const router = new VueRouter({
   routes: [
     {
       path: '/',
-      redirect: { name: 'Home' }
+      redirect: { name: 'About' }
     },
     {
-      path: '/home',
-      name: 'Home',
-      component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue')
+      path: '/about',
+      name: 'About',
+      component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue')
     },
     {
       path: '/secure',

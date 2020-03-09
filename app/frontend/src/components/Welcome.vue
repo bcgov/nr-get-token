@@ -74,25 +74,25 @@
 </template>
 
 <script>
-import { CommonServiceList } from '@/utils/commonServices.js';
+import { CommonServiceList, CommonServiceTypes } from '@/utils/commonServices.js';
 
 export default {
-  name: 'homepage',
+  name: 'Welcome',
   data() {
     return {
       KeycloakCommonServiceList: CommonServiceList.filter(
-        x => x.type === 'keycloak'
+        x => x.type === CommonServiceTypes.KEYCLOAK
       )
     };
   }
 };
 </script>
 
-<style>
+<style scoped>
 .v-card {
-  margin-bottom: 30px;
+  margin-bottom: 2rem;
 }
 ul li {
-  margin-bottom: 10px;
+  margin-bottom: .5rem;
 }
 </style>

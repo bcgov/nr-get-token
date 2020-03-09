@@ -3,7 +3,7 @@
     <div class="container">
       <ul>
         <li>
-          <router-link :to="{ name: 'Home' }">Home</router-link>
+          <router-link :to="{ name: 'About' }">About</router-link>
         </li>
         <li>
           <router-link :to="{ name: 'Secure' }">Secure</router-link>

@@ -1,5 +1,5 @@
 <template>
-  <v-container class="home">
+  <v-container>
     <Welcome />
   </v-container>
 </template>
@@ -7,7 +7,7 @@
 <script>
 import Welcome from '@/components/Welcome.vue';
 export default {
-  name: 'Home',
+  name: 'About',
   components: {
     Welcome
   }
