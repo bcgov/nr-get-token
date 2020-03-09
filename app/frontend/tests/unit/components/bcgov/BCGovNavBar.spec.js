@@ -20,7 +20,7 @@ describe('BCGovNavBar.vue', () => {
       stubs: ['router-link', 'router-view']
     });
 
-    expect(wrapper.text()).toContain('Home');
+    expect(wrapper.text()).toContain('About');
     expect(wrapper.text()).toContain('Secure');
   });
 });

@@ -1,9 +1,9 @@
 import { shallowMount } from '@vue/test-utils';
 import Vuetify from 'vuetify';
 
-import Home from '@/views/Home.vue';
+import About from '@/views/About.vue';
 
-describe('Home.vue', () => {
+describe('About.vue', () => {
   let vuetify;
 
   beforeEach(() => {
@@ -11,9 +11,9 @@ describe('Home.vue', () => {
   });
 
   it('renders', () => {
-    const wrapper = shallowMount(Home, {
+    const wrapper = shallowMount(About, {
       vuetify,
-      stubs: ['HelloWorld']
+      stubs: ['Welcome']
     });
 
     expect(wrapper.html()).toMatch('');
