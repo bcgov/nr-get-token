@@ -6,6 +6,7 @@ import VueKeycloakJs from '@dsb-norge/vue-keycloak-js';
 
 import App from '@/App.vue';
 import router from '@/router';
+import store from '@/store';
 import vuetify from '@/plugins/vuetify';
 
 Vue.config.productionTip = false;
@@ -29,6 +30,7 @@ loadConfig();
 function initializeApp() {
   new Vue({
     router,
+    store,
     vuetify,
     render: h => h(App)
   }).$mount('#app');
@@ -58,7 +60,7 @@ async function loadConfig() {
       !config.keycloak.clientId || !config.keycloak.realm || !config.keycloak.serverUrl) {
       throw new Error('Keycloak is misconfigured');
     }
-    await loadKeycloak(config.keycloak);
+    await loadKeycloak(config);
   } catch (err) {
     sessionStorage.removeItem(storageKey);
     throw new Error(`Failed to acquire configuration: ${err.message}`);
@@ -71,15 +73,15 @@ async function loadConfig() {
 /**
  * @function loadKeycloak
  * Applies Keycloak authentication capabilities
- * @param {object} kcConfig An object containing keycloak configuration data
+ * @param {object} config A config object
  */
-function loadKeycloak(kcConfig) {
+function loadKeycloak(config) {
   Vue.use(VueKeycloakJs, {
     init: { onLoad: 'check-sso' },
     config: {
-      clientId: kcConfig.clientId,
-      realm: kcConfig.realm,
-      url: kcConfig.serverUrl
+      clientId: config.keycloak.clientId,
+      realm: config.keycloak.realm,
+      url: config.keycloak.serverUrl
     },
     onReady: kc => {
       const timeout = 10000;
@@ -87,7 +89,7 @@ function loadKeycloak(kcConfig) {
       const instance = axios.create({ timeout: timeout });
       // API focused Axios instance with timeout and authorization header insertion
       const instanceApi = axios.create({
-        baseURL: '/api/v1',
+        baseURL: `${config.basePath}/${config.apiPath}`,
         timeout: timeout
       });
 

@@ -1,10 +1,16 @@
 <template>
   <div v-if="$keycloak && $keycloak.ready">
-    <v-btn v-if="$keycloak.authenticated" color="secondary" class="login-btn" @click="logout">
+    <v-btn
+      v-if="$keycloak.authenticated"
+      color="white"
+      class="login-btn"
+      @click="logout"
+      outlined
+    >
       <v-icon :left="$vuetify.breakpoint.smAndUp">mdi-logout</v-icon>
       <span v-if="$vuetify.breakpoint.smAndUp">Logout</span>
     </v-btn>
-    <v-btn v-else color="secondary" class="login-btn" @click="login">
+    <v-btn v-else color="white" class="login-btn" @click="login" outlined>
       <v-icon :left="$vuetify.breakpoint.smAndUp">mdi-login</v-icon>
       <span v-if="$vuetify.breakpoint.smAndUp">Login</span>
     </v-btn>
