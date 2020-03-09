@@ -20,6 +20,7 @@
     "test": "jest --verbose",
     "lint": "eslint . **/www --no-fix --ext .js",
     "lint:fix": "eslint . **/www --fix --ext .js",
+    "migrate": "sequelize db:migrate",
     "pretest": "npm run lint",
     "posttest": "node ./lcov-fix.js",
     "clean": "rm -rf coverage dist",

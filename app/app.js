@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const path = require('path');
 const Problem = require('api-problem');
 
+const db = require('./src/models');
 const keycloak = require('./src/components/keycloak');
 const v1Router = require('./src/routes/v1');
 
@@ -30,6 +31,14 @@ log.verbose('Config', JSON.stringify(config));
 if (process.env.NODE_ENV !== 'test') {
   // Add Morgan endpoint logging
   app.use(morgan(config.get('server.morganFormat')));
+
+  // Check database connection and exit if unsuccessful
+  db.sequelize.authenticate()
+    .then(() => log.info('Database connection established'))
+    .catch(err => {
+      log.error(err);
+      shutdown('DBFAIL');
+    });
 }
 
 // Use Keycloak OIDC Middleware
@@ -101,17 +110,18 @@ process.on('unhandledRejection', err => {
 /**
  * @function shutdown
  * Begins shutting down this application. It will hard exit after 3 seconds.
+ * @param {string} signal A signal
  */
-function shutdown() {
+function shutdown(signal) {
   if (!state.shutdown) {
-    log.info('Received kill signal. Shutting down...');
+    log.info(`Received ${signal} signal. Shutting down...`);
     state.shutdown = true;
     // Wait 3 seconds before hard exiting
     setTimeout(() => process.exit(), 3000);
   }
 }
 
-process.on('SIGTERM', shutdown);
-process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown, 'SIGTERM');
+process.on('SIGINT', shutdown, 'SIGINT');
 
 module.exports = app;
