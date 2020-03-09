@@ -18,13 +18,13 @@
                 <ul>
                   <li>
                     <strong>New User:</strong> Go to
-                    <router-link to="/">"Request Account"</router-link> and submit the form to add your application.
+                    <router-link :to="{ name: 'About' }">"Request Account"</router-link> and submit the form to add your application.
                     <br />* Check your email for the confirmation, then you’re ready to go!
                   </li>
                   <li>
                     <strong>Existing User:</strong> Manage your application from
-                    <router-link to="/">"My Applications"</router-link> or
-                    <router-link to="/">"Request Account"</router-link> for a new application
+                    <router-link :to="{ name: 'MyApps' }">"My Applications"</router-link> or
+                    <router-link :to="{ name: 'About' }">"Request Account"</router-link> for a new application
                   </li>
                   <li>
                     <strong>Get Token for your application:</strong> follow the order of
@@ -60,7 +60,7 @@
               <div class="pa-2 py-4">
                 <ul>
                   <li
-                    v-for="(item) in KeycloakCommonServiceList"
+                    v-for="item in KeycloakCommonServiceList"
                     :key="item.name"
                   >{{item.abbreviation.toUpperCase()}} - ({{item.name}})</li>
                 </ul>
