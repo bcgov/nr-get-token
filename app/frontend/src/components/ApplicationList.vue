@@ -1,8 +1,18 @@
 <template>
   <v-container>
-    Applications
+    <h2>My Applications</h2>
+    <p>*Submit the Request Account form to add a new application</p>
     <br />
-    <BaseActionCard linkName="Application" :linkParams="acronym">Test</BaseActionCard>
+    <v-container fluid>
+      <v-row dense>
+        <v-col cols="12" md="4" lg="2">
+          <BaseActionCard linkName="Secure">Add a New Application</BaseActionCard>
+        </v-col>
+        <v-col v-for="acr in acronyms" :key="acr.acronym" cols="12" md="4" lg="2">
+          <BaseActionCard linkName="Application" :linkParams="acr">{{acr.acronym}}</BaseActionCard>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-container>
 </template>
 
@@ -10,7 +20,7 @@
 export default {
   name: 'ApplicationList',
   data: () => ({
-    acronym: { acronym: 'XXX' }
+    acronyms: [{ acronym: 'XXX' }, { acronym: 'YYY' }, { acronym: 'ZZZ' }]
   })
 };
 </script>
