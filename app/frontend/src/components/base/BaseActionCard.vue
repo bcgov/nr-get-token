@@ -1,7 +1,7 @@
 <template>
   <router-link class="action-link" :to="{ name: linkName, params: linkParams }">
-    <v-card class="action-card" max-width="344">
-      <slot></slot>
+    <v-card class="action-card">
+      <slot />
     </v-card>
   </router-link>
 </template>
