@@ -33,6 +33,15 @@ const router = new VueRouter({
       }
     },
     {
+      path: '/apps/:acronym',
+      name: 'Application',
+      component: () => import(/* webpackChunkName: "application" */ '@/views/Application.vue'),
+      meta: {
+        requiresAuth: true
+      },
+      props: true
+    },
+    {
       path: '/404',
       alias: '*',
       name: 'NotFound',

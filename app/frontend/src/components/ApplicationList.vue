@@ -1,10 +1,16 @@
 <template>
-  <v-container>Applications</v-container>
+  <v-container>
+    Applications
+    <br />
+    <BaseActionCard linkName="Application" :linkParams="acronym">Test</BaseActionCard>
+  </v-container>
 </template>
 
 <script>
 export default {
   name: 'ApplicationList',
-  data: () => ({})
+  data: () => ({
+    acronym: { acronym: 'XXX' }
+  })
 };
 </script>
