@@ -1,12 +1,14 @@
 # Common Service Get Token
 
-This tool will automate the process for getting setup to use common services published on [https://apistore.nrs.gov.bc.ca/store/](https://apistore.nrs.gov.bc.ca/store/).
+To learn more about the **Common Services** available visit the [Common Services Showcase](https://bcgov.github.io/common-service-showcase/) page.
+
+GETOK is a web-based tool for development teams to manage their application's secure access to Common Services. Users can create and deploy Keycloak or WebADE service client application configuration instantly to gain access to common service APIs like email notifications, document management, or document generation.
 
 ## Frontend
 
 The frontend of the application is built on the [Vue.js](https://vuejs.org/) framework as a static UI layer. The web application calls to the GETOK API (see [app](../app)) for authentication and application funtionality.
 
-The frontend of the application allows users to fill in the appropriate info required to create a WebADE service client and submit it to WebADE, then test token aquisition. The backend API handles communication with the WebADE REST API to create the application configuration. The backend API also creates the password required for the service client and securely returns it to the UI (see [Password Generation](https://github.com/bcgov/nr-get-token/wiki/Password-Generation) for these details)
+The frontend of the application allows users to fill in the appropriate info required to create a service client, and then test token aquisition. The backend API handles communication with the authorization systems to create the application configuration. The backend API also creates the password required for the service client and securely returns it to the UI (see [Password Generation](https://github.com/bcgov/nr-get-token/wiki/Password-Generation) for these details).
 
 ### Vue Archetecture
 
