@@ -14,22 +14,27 @@ GTEOK is a web-based tool for development teams to manage their application's se
 ## Directory Structure
 
     .github/                   - PR and Issue templates
-    backend/                   - Node.js Backend codebase
+    app                        - Application Root
+    ├── frontend               - Frontend Root
+    │   ├── src                - Vue.js frontend web application
+    │   └── tests              - Vue.js frontend web application tests
+    ├── src                    - Node.js backend web application
+    └── tests                  - Node.js backend web application tests
     docs/                      - Documentation
-    frontend/                  - Vue.js Frontend codebase
-    openshift/                 - OpenShift-deployment specific files
+    openshift/                 - OpenShift-deployment and shared pipeline files
     CODE-OF-CONDUCT.md         - Code of Conduct
     CONTRIBUTING.md            - Contributing Guidelines
     Jenkinsfile                - Top-level Pipeline
     Jenkinsfile.cicd           - Pull-Request Pipeline
     LICENSE                    - License
+    sonar-project.properties   - SonarQube configuration
 
 ## Documentation
 
 * [Overview](docs/overview.md)
 * [Developer Guide](docs/developer-guide.md)
-* [Backend Readme](backend/README.md)
-* [Frontend Readme](frontend/README.md)
+* [Application Readme](app/README.md)
+* [Frontend Readme](app/frontend/README.md)
 * [Openshift Readme](openshift/README.md)
 * [Devops Tools Setup](https://github.com/bcgov/nr-showcase-devops-tools)
 * [Get Token Wiki](https://github.com/bcgov/nr-get-token/wiki)
