@@ -24,11 +24,19 @@
           <BaseActionCard linkName="Application" :linkParams="acr">
             <div class="app-link">
               <h3>{{acr.acronym}}</h3>
-              <p class="env-statuses">
-                Dev: aaa
-                <br />Test: bbb
-                <br />Prod: ccc
-              </p>
+              <div class="env-statuses">
+                <v-skeleton-loader
+                  type="list-item-three-line"
+                  :loading="waiting"
+                  transition="scale-transition"
+                >
+                  <p>
+                    Dev: Not
+                    <br />Test: real
+                    <br />Prod: data
+                  </p>
+                </v-skeleton-loader>
+              </div>
             </div>
           </BaseActionCard>
         </v-col>
@@ -45,8 +53,12 @@ export default {
       { acronym: 'PEN_RETRIEVAL' },
       { acronym: 'GETOK' },
       { acronym: 'MSSC' }
-    ]
-  })
+    ],
+    waiting: true
+  }),
+  mounted() {
+    setTimeout(() => this.waiting = false, 1000);
+  }
 };
 </script>
 
@@ -54,7 +66,7 @@ export default {
 .my-app-card {
   padding-right: 2rem;
   margin-bottom: 2rem;
-  min-height: 8rem;
+  min-height: 9rem;
 }
 
 .new-app h3 {
@@ -68,7 +80,6 @@ export default {
   margin-bottom: 2rem;
   font-weight: 400;
 }
-.app-link .env-statuses {
-  margin-bottom: 0;
+.app-link .env-statuses p {
 }
 </style>
