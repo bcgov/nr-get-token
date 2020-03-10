@@ -1,9 +1,16 @@
 <template>
-  <router-link class="action-link" :to="{ name: linkName, params: linkParams }">
-    <v-card class="action-card">
-      <slot />
-    </v-card>
-  </router-link>
+  <v-hover>
+    <template v-slot="{ hover }">
+      <router-link class="action-link" :to="{ name: linkName, params: linkParams }">
+        <v-card tile :elevation="hover ? 12 : 2" class="action-card mx-auto">
+          <v-system-bar />
+          <div class="px-5 py-3">
+            <slot />
+          </div>
+        </v-card>
+      </router-link>
+    </template>
+  </v-hover>
 </template>
 
 <script>
@@ -17,8 +24,15 @@ export default {
 </script>
 
 <style scoped>
-.v-card .action-card {
-  background-color: #003366;
-  border-top: 10px;
+.action-card {
+  height: 100%;
+}
+
+.v-system-bar {
+  background-color: #38598a;
+}
+
+a {
+  text-decoration: none;
 }
 </style>
