@@ -21,7 +21,9 @@ security:
 paths:
   "/audit/{acronym}":
     get:
-      summary: Returns the history that GETOK stores about actions done on behalf of an acronym
+      summary: >-
+        Returns the history that GETOK stores about actions done on behalf of an
+        acronym
       operationId: getAudit
       tags:
         - Audit
@@ -113,8 +115,7 @@ paths:
       tags:
         - Email
       requestBody:
-        description: >-
-          Form fields representing the contact information to email
+        description: Form fields representing the contact information to email
         required: true
         content:
           application/json:
@@ -142,7 +143,7 @@ paths:
       parameters:
         - name: keycloakEnv
           in: path
-          description: Keycloak realm (dev, test, prod)
+          description: "Keycloak realm (dev, test, prod)"
           required: true
           schema:
             type: string
@@ -193,6 +194,72 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "403":
           $ref: "#/components/responses/Forbidden"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/users/{keycloakId}/acronyms":
+    get:
+      summary: Returns acronyms associated with a user
+      operationId: userAcronymGet
+      tags:
+        - Users
+      parameters:
+        - name: keycloakId
+          in: path
+          description: Keycloak user GUID
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of associated acronyms
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserAcronymList"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/users/{keycloakId}/acronyms/{acronym}":
+    delete:
+      summary: Removes an acronym associated with a user
+      operationId: userAcronymDelete
+      tags:
+        - Users
+      parameters:
+        - name: keycloakId
+          in: path
+          description: Keycloak user GUID
+          required: true
+          schema:
+            type: string
+        - name: acronym
+          in: path
+          description: Acronym
+          required: true
+          schema:
+            type: string
+      responses:
+        "202":
+          $ref: "#/components/responses/Accepted"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
         default:
           description: Unexpected error
           content:
@@ -287,7 +354,10 @@ paths:
                 $ref: "#/components/schemas/Error"
   "/webAde/{webAdeEnv}/preferences/insecurePrefs":
     get:
-      summary: Returns a list of all WebADE applicationPreferences that have the sensitiveDataInd set to false matching the search criteria regular expression
+      summary: >-
+        Returns a list of all WebADE applicationPreferences that have the
+        sensitiveDataInd set to false matching the search criteria regular
+        expression
       operationId: getInsecurePrefs
       tags:
         - WebADE Application Configuration
@@ -308,7 +378,9 @@ paths:
           schema:
             type: string
             example: secret
-          description: A regular expression that will find preferences matching on their name
+          description: >-
+            A regular expression that will find preferences matching on their
+            name
       responses:
         "200":
           description: WebADE JSON response
@@ -424,7 +496,12 @@ components:
           example: DEV
         details:
           type: string
-          example: details string/object, subject to change
+          example: "details string/object, subject to change"
+    AcronymDetailList:
+      type: array
+      items:
+        $ref: "#/components/schemas/AcronymDetail"
+      description: An array of acronym detail items
     AcronymDetail:
       type: object
       properties:
@@ -675,7 +752,9 @@ components:
             - DEV
             - TEST
             - PROD
-          description: "Which KeyCloak environment the client is in - one of DEV, TEST or PROD"
+          description: >-
+            Which KeyCloak environment the client is in - one of DEV, TEST or
+            PROD
           example: TEST
         id:
           type: string
@@ -771,6 +850,22 @@ components:
         description:
           type: string
           example: This role allows email sending via CHES
+    UserAcronymList:
+      type: array
+      items:
+        $ref: "#/components/schemas/UserAcronymDetail"
+      description: An array of acronym detail items
+    UserAcronymDetail:
+      type: object
+      properties:
+        acronym:
+          type: string
+          description: The application acronym
+          example: MSSC
+        owner:
+          type: boolean
+          description: User is an owner of this acronym
+          example: false
     WebAdeProject:
       type: object
       required:
@@ -813,7 +908,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/WebadePreference"
-      description: "A WebADE project and a list of associated preferences"
+      description: A WebADE project and a list of associated preferences
     WebadePreference:
       type: object
       required:
@@ -845,9 +940,11 @@ components:
           example: bootstrap-config
         value:
           type: string
-          example: https://j200.gov.bc.ca/ws/NrsServices/session
-      description: "A WebADE preference object"
+          example: "https://j200.gov.bc.ca/ws/NrsServices/session"
+      description: A WebADE preference object
   responses:
+    Accepted:
+      description: Accepted
     Forbidden:
       description: Lack required role to perform action
     NotFound:
