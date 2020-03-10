@@ -80,6 +80,4 @@ export default {
   margin-bottom: 2rem;
   font-weight: 400;
 }
-.app-link .env-statuses p {
-}
 </style>
