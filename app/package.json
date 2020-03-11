@@ -47,6 +47,7 @@
     "compression": "^1.7.4",
     "config": "^3.3.0",
     "express": "^4.17.1",
+    "js-yaml": "^3.13.1",
     "keycloak-connect": "^9.0.0",
     "morgan": "^1.9.1",
     "npmlog": "^4.1.2",

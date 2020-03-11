@@ -69,6 +69,7 @@ app.use(`${config.get('server.basePath')}`, apiRouter);
 
 // Host the static frontend assets
 const staticFilesPath = config.get('frontend.basePath');
+app.use('/favicon.ico', (_req, res) => { res.redirect(`${staticFilesPath}/favicon.ico`); });
 app.use(staticFilesPath, express.static(path.join(__dirname, 'frontend/dist')));
 
 // Handle 500
