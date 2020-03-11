@@ -10,6 +10,7 @@ usersRouter.get('/:keycloakId/acronyms', [
   param('keycloakId', 'Must be a valid UUID')
     .exists().custom(value => validator.isUUID(value))
 ], async (req, res) => {
+  // TODO: Move this into middleware or equivalent
   // Validate for Bad Requests
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
