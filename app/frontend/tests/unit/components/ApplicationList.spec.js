@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils';
 import Vuetify from 'vuetify';
-import Vuex from 'vuex'
+import Vuex from 'vuex';
 
 import router from '@/router';
 import ApplicationList from '@/components/ApplicationList.vue';
@@ -28,8 +28,8 @@ describe('ApplicationList.vue', () => {
           getters: user.getters
         }
       }
-    })
-  })
+    });
+  });
 
   it('renders', () => {
     const wrapper = shallowMount(ApplicationList, {

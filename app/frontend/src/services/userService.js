@@ -1,9 +1,9 @@
 export default {
   /** WORK IN PROGRESS
-  * @function getUserAcronyms
-  * Fetch the acronyms the current user has access to from the DB
-  * @param {string} userGuid The current user
-  */
+   *  @function getUserAcronyms
+   *  Fetch the acronyms the current user has access to from the DB
+   *  @param {string} userGuid The current user
+   */
   async getUserAcronyms() {
     // async getUserAcronyms(userGuid) {
     // try {

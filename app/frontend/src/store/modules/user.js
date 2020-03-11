@@ -17,13 +17,13 @@ export default {
   },
   actions: {
     /**
-    * @function getUserAcronyms
-    * Fetch the acronyms the current user has access to from the DB
-    * @param {object} context The store context
-    */
+     *  @function getUserAcronyms
+     *  Fetch the acronyms the current user has access to from the DB
+     *  @param {object} context The store context
+     */
     async getUserAcronyms(context) {
       const response = await UserService.getUserAcronyms();
-      if(response) {
+      if (response) {
         context.commit('setAcronyms', response);
       }
     }

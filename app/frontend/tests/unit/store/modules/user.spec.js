@@ -1,7 +1,7 @@
+import { cloneDeep } from 'lodash';
 import { createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import userStore from '@/store/modules/user';
-import { cloneDeep } from 'lodash';
 
 
 describe('user.js', () => {

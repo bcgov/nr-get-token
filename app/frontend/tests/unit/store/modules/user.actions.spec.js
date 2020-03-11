@@ -15,9 +15,8 @@ describe('user.js - getUserAcronyms action', () => {
   });
 
   const spy = jest.spyOn(userService, 'getUserAcronyms');
-  jest.mock('../../../../src/services/userService');
 
-  afterEach(() => {
+  beforeEach(() => {
     spy.mockClear();
   });
 
