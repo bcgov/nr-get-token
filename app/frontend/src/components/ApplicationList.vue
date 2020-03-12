@@ -46,18 +46,24 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
   name: 'ApplicationList',
   data: () => ({
-    acronyms: [
-      { acronym: 'PEN_RETRIEVAL' },
-      { acronym: 'GETOK' },
-      { acronym: 'MSSC' }
-    ],
+    // TEMP for testing skeletons
     waiting: true
   }),
+  computed: {
+    ...mapGetters('user', ['acronyms'])
+  },
+  methods: {
+    ...mapActions('user', ['getUserAcronyms'])
+  },
   mounted() {
-    setTimeout(() => this.waiting = false, 1000);
+    this.getUserAcronyms();
+    // TEMP for testing skeletons
+    setTimeout(() => (this.waiting = false), 1000);
   }
 };
 </script>
