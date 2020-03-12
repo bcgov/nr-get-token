@@ -1,4 +1,6 @@
 import 'nprogress/nprogress.css';
+import '@/assets/scss/style.scss';
+
 import axios from 'axios';
 import NProgress from 'nprogress';
 import Vue from 'vue';

@@ -10,13 +10,13 @@
         <ul>
           <li>
             <strong>New User:</strong> Go to
-            <router-link :to="{ name: 'About' }">"Request Account"</router-link>and submit the form to add your application.
+            <router-link :to="{ name: 'RequestAccount' }">"Request Account"</router-link>and submit the form to add your application.
             <br />* Check your email for the confirmation, then you’re ready to go!
           </li>
           <li>
             <strong>Existing User:</strong> Manage your application from
             <router-link :to="{ name: 'MyApps' }">"My Applications"</router-link>or
-            <router-link :to="{ name: 'About' }">"Request Account"</router-link>for a new application
+            <router-link :to="{ name: 'RequestAccount' }">"Request Account"</router-link>for a new application
           </li>
           <li>
             <strong>Get Token for your application:</strong> follow the order of

@@ -1,0 +1,35 @@
+/* sticky footer */
+html,
+body {
+  height: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+}
+body > .v-content {
+  flex: 1 0 auto;
+}
+
+.BC-Gov-PrimaryButton.v-btn {
+  background-color: #003366;
+  border: none;
+  border-radius: 4px;
+  color: white !important;
+  padding: 12px 32px !important;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.BC-Gov-PrimaryButton:hover,
+.v-btn:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+.BC-Gov-PrimaryButton.light.v-btn {
+  background-color: #fff;
+  border: 2px solid #003366;
+  color: #003366 !important;
+}
