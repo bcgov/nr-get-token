@@ -6,10 +6,10 @@
           <router-link :to="{ name: 'About' }">About</router-link>
         </li>
         <li>
-          <router-link :to="{ name: 'Secure' }">Secure</router-link>
+          <router-link :to="{ name: 'MyApps' }">My Applications</router-link>
         </li>
         <li>
-          <router-link :to="{ name: 'MyApps' }">My Applications</router-link>
+          <router-link :to="{ name: 'RequestAccount' }">Request Account</router-link>
         </li>
       </ul>
     </div>
