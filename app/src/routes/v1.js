@@ -7,6 +7,7 @@ const yaml = require('js-yaml');
 
 const keycloak = require('../components/keycloak');
 const helloRouter = require('./v1/hello');
+const usersRouter = require('./v1/users');
 
 const getSpec = () => {
   const rawSpec = fs.readFileSync(path.join(__dirname, '../docs/v1.api-spec.yaml'), 'utf8');
@@ -47,5 +48,8 @@ router.get('/api-spec.json', (_req, res) => {
 
 /** Hello Router */
 router.use('/hello', keycloak.protect(), helloRouter);
+
+/** Users Router */
+router.use('/users', keycloak.protect(), usersRouter);
 
 module.exports = router;

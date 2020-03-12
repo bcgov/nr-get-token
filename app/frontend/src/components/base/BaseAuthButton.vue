@@ -28,7 +28,7 @@ export default {
     },
     logout() {
       if (this.$keycloak && this.$keycloak.ready) {
-        window.location.replace(this.$keycloak.createLogoutUrl());
+        window.location.replace(this.$keycloak.createLogoutUrl({ redirectUri: location.origin }));
       }
     }
   }

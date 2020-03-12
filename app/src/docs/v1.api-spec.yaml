@@ -209,7 +209,7 @@ paths:
       parameters:
         - name: keycloakId
           in: path
-          description: Keycloak user GUID
+          description: Keycloak user UUID
           required: true
           schema:
             type: string
@@ -241,7 +241,7 @@ paths:
       parameters:
         - name: keycloakId
           in: path
-          description: Keycloak user GUID
+          description: Keycloak user UUID
           required: true
           schema:
             type: string

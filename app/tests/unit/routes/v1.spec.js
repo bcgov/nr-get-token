@@ -38,7 +38,7 @@ describe(`GET ${basePath}/docs`, () => {
 });
 
 describe(`GET ${basePath}/api-spec.yaml`, () => {
-  it('should return the OpenAPI yaml spec', async () => {
+  it('should return the OpenAPI spec in yaml', async () => {
     const response = await request(app).get(`${basePath}/api-spec.yaml`);
 
     expect(response.statusCode).toBe(200);
@@ -51,7 +51,7 @@ describe(`GET ${basePath}/api-spec.yaml`, () => {
 });
 
 describe(`GET ${basePath}/api-spec.json`, () => {
-  it('should return the OpenAPI yaml spec', async () => {
+  it('should return the OpenAPI spec in json', async () => {
     const response = await request(app).get(`${basePath}/api-spec.json`);
 
     expect(response.statusCode).toBe(200);
