@@ -88,7 +88,7 @@
       </v-row>
     </v-form>
     <div class="justify-center pb-8">
-      <v-btn class="BC-Gov-PrimaryButton light float-left" text @click="cancel()">Reset</v-btn>
+      <v-btn class="BC-Gov-PrimaryButton light float-left" text @click="cancel()">Cancel</v-btn>
       <v-btn class="BC-Gov-PrimaryButton float-right" text @click="postRegistrationForm()">Submit</v-btn>
     </div>
 
@@ -149,6 +149,7 @@ export default {
       this.errorOccurred = false;
       this.registrationDialog = false;
       this.registerSuccess = false;
+      this.$router.push({ name: 'About'});
     },
 
     async postRegistrationForm() {
