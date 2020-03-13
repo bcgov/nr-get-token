@@ -7,16 +7,13 @@ const localVue = createLocalVue();
 localVue.use(router);
 
 
-
-
-
 describe('RequestForm.vue', () => {
 
-  console.log (localVue.options.components);
-
   it('renders', () => {
-    const wrapper = shallowMount(RequestForm, { localVue });
-
+    const wrapper = shallowMount(RequestForm, {
+      localVue,
+      stubs: ['BaseDialog']
+    });
 
     expect(wrapper.text()).toMatch('Request Account');
   });
