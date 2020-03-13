@@ -12,7 +12,7 @@ export default {
       Vue.prototype.$keycloak.authenticated) {
       return getokAxios().get(`/users/${Vue.prototype.$keycloak.subject}/acronyms`);
     } else {
-      return [];
+      return { data: [] };
     }
   }
 };
