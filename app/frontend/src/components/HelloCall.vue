@@ -28,7 +28,7 @@ export default {
     async getHello() {
       try {
         this.loading = true;
-        const response = await this.$httpApi.get('/hello');
+        const response = await this.$getok.helloService.getHello();
         this.helloData = response.data;
       } catch (e) {
         console.error(e); // eslint-disable-line no-console
