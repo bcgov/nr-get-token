@@ -16,7 +16,7 @@
             dense
             outlined
             flat
-            :value="abc"
+            :value="userInfo.idir"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -31,7 +31,7 @@
             single-line
             outlined
             flat
-            :value="def"
+            :value="userInfo.emailAddress"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -120,11 +120,14 @@
 </template>
 
 <script>
+import Vue from 'vue';
+import ApiService from '@/services/apiService';
 import { FieldValidations } from '@/utils/constants.js';
 
 export default {
   name: 'RequestForm',
   data: function() {
+
     return {
       applicationAcronym: '',
       applicationAcronymRules: [
@@ -142,14 +145,21 @@ export default {
       registrationDialog: false,
       registerSuccess: false,
       valid: false,
+      userInfo: {
+        emailAddress: Vue.prototype.$keycloak.tokenParsed.email,
+        idir:  Vue.prototype.$keycloak.tokenParsed.preferred_username,
+        name:  Vue.prototype.$keycloak.tokenParsed.name
+      }
     };
+  },
+  computed: {
   },
   methods: {
     async cancel() {
       this.errorOccurred = false;
       this.registrationDialog = false;
       this.registerSuccess = false;
-      this.$router.push({ name: 'About'});
+      this.$router.push({ name: 'About' });
     },
 
     async postRegistrationForm() {
@@ -157,7 +167,12 @@ export default {
       this.registerSuccess = false;
       if (this.$refs.form.validate()) {
         try {
-          const response = true;
+          const response = await ApiService.sendRegistrationEmail({
+            applicationAcronym: this.applicationAcronym,
+            comments: this.comments,
+            from: this.userInfo.emailAddress,
+            idir: this.userInfo.idir
+          });
           if (response) {
             this.registrationDialog = false;
             this.registerSuccess = true;
