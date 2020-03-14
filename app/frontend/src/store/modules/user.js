@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import UserService from '@/services/userService';
 
 export default {
@@ -21,10 +22,19 @@ export default {
      * Fetch the acronyms the current user has access to from the DB
      * @param {object} context The store context
      */
-    async getUserAcronyms(context) {
-      const response = await UserService.getUserAcronyms();
-      if (response) {
-        context.commit('setAcronyms', response.data);
+    getUserAcronyms(context) {
+      if (Vue.prototype.$keycloak &&
+        Vue.prototype.$keycloak.ready &&
+        Vue.prototype.$keycloak.authenticated) {
+        UserService.getUserAcronyms(Vue.prototype.$keycloak.subject)
+          .then(response => {
+            if (response && response.data) {
+              context.commit('setAcronyms', response.data);
+            }
+          })
+          .catch(error => {
+            console.error(error); // eslint-disable-line no-console
+          });
       }
     }
   }

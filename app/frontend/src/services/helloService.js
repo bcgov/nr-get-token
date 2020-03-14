@@ -1,4 +1,4 @@
-import { getokAxios } from './interceptors';
+import { getokAxios } from '@/services/interceptors';
 
 export default {
   /**

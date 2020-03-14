@@ -6,7 +6,6 @@ import VueKeycloakJs from '@dsb-norge/vue-keycloak-js';
 
 import App from '@/App.vue';
 import router from '@/router';
-import * as services from '@/services';
 import store from '@/store';
 import vuetify from '@/plugins/vuetify';
 
@@ -84,9 +83,7 @@ function loadKeycloak(config) {
       realm: config.keycloak.realm,
       url: config.keycloak.serverUrl
     },
-    onReady: () => {
-      Vue.prototype.$getok = services;
-    },
+    onReady: () => {},
     onInitError: error => {
       console.error('Keycloak failed to initialize'); // eslint-disable-line no-console
       console.error(error); // eslint-disable-line no-console

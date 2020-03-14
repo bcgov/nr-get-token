@@ -1,18 +1,17 @@
-import Vue from 'vue';
-import { getokAxios } from './interceptors';
+import validator from 'validator';
+import { getokAxios } from '@/services/interceptors';
 
 export default {
   /**
    * @function getUserAcronyms
-   * Fetch the acronyms the current user has access to
+   * Fetch the acronyms user `keycloakId` has access to
+   * @param {string} keycloakId UUID of a keycloak user
    */
-  async getUserAcronyms() {
-    if (Vue.prototype.$keycloak &&
-      Vue.prototype.$keycloak.ready &&
-      Vue.prototype.$keycloak.authenticated) {
-      return getokAxios().get(`/users/${Vue.prototype.$keycloak.subject}/acronyms`);
+  getUserAcronyms(keycloakId) {
+    if (keycloakId && validator.isUUID(keycloakId)) {
+      return getokAxios().get(`/users/${keycloakId}/acronyms`);
     } else {
-      return { data: [] };
+      Promise.reject('keycloakId must be a valid UUID');
     }
   }
 };
