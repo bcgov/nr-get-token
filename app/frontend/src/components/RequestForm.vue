@@ -121,7 +121,6 @@
 
 <script>
 import Vue from 'vue';
-import ApiService from '@/services/apiService';
 import { FieldValidations } from '@/utils/constants.js';
 
 export default {
@@ -167,12 +166,16 @@ export default {
       this.registerSuccess = false;
       if (this.$refs.form.validate()) {
         try {
-          const response = await ApiService.sendRegistrationEmail({
-            applicationAcronym: this.applicationAcronym,
-            comments: this.comments,
-            from: this.userInfo.emailAddress,
-            idir: this.userInfo.idir
-          });
+          // removed api call until i have service layer
+          const response = false;
+
+          // const response = await ApiService.sendRegistrationEmail({
+          //   applicationAcronym: this.applicationAcronym,
+          //   comments: this.comments,
+          //   from: this.userInfo.emailAddress,
+          //   idir: this.userInfo.idir
+          // });
+
           if (response) {
             this.registrationDialog = false;
             this.registerSuccess = true;
