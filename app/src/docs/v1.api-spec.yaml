@@ -111,6 +111,7 @@ paths:
   /email:
     post:
       summary: Sends an application registration request email
+      description: Leverages the CHES API to issue an email
       operationId: email
       tags:
         - Email
@@ -128,6 +129,8 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "403":
           $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
         default:
           description: Unexpected error
           content:
@@ -226,6 +229,8 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
         default:
           description: Unexpected error
           content:
@@ -661,6 +666,28 @@ components:
           type: string
           description: Contains the service client name that was written to WebADE
           example: DOMO_SERVICE_CLIENT
+    BadRequest:
+      allOf:
+        - $ref: "#/components/schemas/Problem"
+        - type: object
+          properties:
+            status:
+              example: 400
+            title:
+              example: Bad Request
+            type:
+              example: "https://httpstatuses.com/400"
+    Conflict:
+      allOf:
+        - $ref: "#/components/schemas/Problem"
+        - type: object
+          properties:
+            status:
+              example: 409
+            title:
+              example: Conflict
+            type:
+              example: "https://httpstatuses.com/409"
     ContactForm:
       type: object
       required:
@@ -671,16 +698,20 @@ components:
       properties:
         applicationAcronym:
           type: string
+          description: The requested application acronym
           example: MSSC
         comments:
           type: string
+          description: Unformatted comment text
           example: My team has 10 members
         from:
           type: string
+          description: The sender's registered email
           example: jsmith@gov.bc.ca
         idir:
           type: string
-          example: jsmith
+          description: The sender's IDIR
+          example: jsmith@idir
     DependencyList:
       type: array
       items:
@@ -728,13 +759,16 @@ components:
             $ref: "#/components/schemas/EndpointStatus"
           description: A list of Endpoint Statuses
     Error:
-      required:
-        - error
-      properties:
-        error:
-          type: string
-          description: contains a message about the failure
-          example: Something errored
+      allOf:
+        - $ref: "#/components/schemas/Problem"
+        - type: object
+          properties:
+            status:
+              example: 500
+            title:
+              example: Internal Server Error
+            type:
+              example: "https://httpstatuses.com/500"
     KcClientDetail:
       type: object
       required:
@@ -838,6 +872,36 @@ components:
           type: string
           description: Contains the service client name that was written to WebADE
           example: CHES_SERVICE_CLIENT
+    NotFound:
+      allOf:
+        - $ref: "#/components/schemas/Problem"
+        - type: object
+          properties:
+            status:
+              example: 404
+            title:
+              example: Not Found
+            type:
+              example: "https://httpstatuses.com/404"
+    Problem:
+      required:
+        - type
+        - title
+        - status
+        - detail
+      properties:
+        type:
+          type: string
+          description: "What type of problem, link to explanation of problem"
+        title:
+          type: string
+          description: "Title of problem, generally the Http Status Code description"
+        status:
+          type: string
+          description: The Http Status code
+        detail:
+          type: string
+          description: Short description of why this problem was raised.
     Role:
       type: object
       required:
@@ -866,6 +930,34 @@ components:
           type: boolean
           description: User is an owner of this acronym
           example: false
+    ValidationError:
+      allOf:
+        - $ref: "#/components/schemas/Problem"
+        - type: object
+          required:
+            - errors
+          properties:
+            errors:
+              type: array
+              items:
+                type: object
+                required:
+                  - message
+                properties:
+                  value:
+                    type: object
+                    description: Contents of the field that was in error.
+                    example: utf-8x
+                  message:
+                    type: string
+                    description: The error message for the field.
+                    example: Invalid value `encoding`.
+            status:
+              example: 422
+            title:
+              example: Unprocessable Entity
+            type:
+              example: "https://httpstatuses.com/422"
     WebAdeProject:
       type: object
       required:
@@ -945,9 +1037,41 @@ components:
   responses:
     Accepted:
       description: Accepted
+    BadRequest:
+      description: Request is missing content or is malformed
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BadRequest"
+    Conflict:
+      description: Request conflicts with server state
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Conflict"
+    Error:
+      description: Unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
     Forbidden:
       description: Lack required role to perform action
+    NoContent:
+      description: Accepted and no content
     NotFound:
       description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/NotFound"
     UnauthorizedError:
       description: Access token is missing or invalid
+    UnprocessableEntity:
+      description: >-
+        The server was unable to process the contained instructions. Generally
+        validation error(s).
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ValidationError"
