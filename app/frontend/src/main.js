@@ -83,35 +83,7 @@ function loadKeycloak(config) {
       realm: config.keycloak.realm,
       url: config.keycloak.serverUrl
     },
-    onReady: kc => {
-      const timeout = 10000;
-      // Generic Axios instance with timeout
-      const instance = axios.create({ timeout: timeout });
-      // API focused Axios instance with timeout and authorization header insertion
-      const instanceApi = axios.create({
-        baseURL: `${config.basePath}/${config.apiPath}`,
-        timeout: timeout
-      });
-
-      instanceApi.interceptors.request.use(cfg => {
-        if (kc.authenticated) {
-          cfg.headers.Authorization = `Bearer ${kc.token}`;
-        }
-        return Promise.resolve(cfg);
-      }, error => {
-        return Promise.reject(error);
-      });
-
-      instanceApi.interceptors.response.use(response => {
-        return Promise.resolve(response);
-      }, error => {
-        return Promise.reject(error);
-      });
-
-      // Make available to components
-      Vue.prototype.$http = instance;
-      Vue.prototype.$httpApi = instanceApi;
-    },
+    onReady: () => {},
     onInitError: error => {
       console.error('Keycloak failed to initialize'); // eslint-disable-line no-console
       console.error(error); // eslint-disable-line no-console
