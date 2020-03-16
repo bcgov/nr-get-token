@@ -140,7 +140,6 @@ export default {
       comments: '',
       errorOccurred: false,
       fieldValidations: FieldValidations,
-      registrationDialog: false,
       registerSuccess: false,
       valid: false,
       userInfo: {
@@ -149,11 +148,9 @@ export default {
       }
     };
   },
-  computed: {},
   methods: {
     async cancel() {
       this.errorOccurred = false;
-      this.registrationDialog = false;
       this.registerSuccess = false;
       this.$router.push({ name: 'About' });
     },
@@ -174,10 +171,7 @@ export default {
           // });
 
           if (response) {
-            this.registrationDialog = false;
             this.registerSuccess = true;
-          } else {
-            this.errorOccurred = true;
           }
         } catch (error) {
           this.errorOccurred = true;
@@ -190,7 +184,7 @@ export default {
 
 <style scoped>
 .request-form {
-  max-width: 450px;
+  max-width: 30rem;
   margin: 0 auto;
 }
 </style>

@@ -31,10 +31,10 @@ import '@/assets/scss/style.scss';
 export default {
   name: 'BaseDialog',
   props: {
-    'show': Boolean
+    show: Boolean
   },
   methods: {
-    closeDialog (){
+    closeDialog() {
       this.$emit('close-dialog');
     }
   }
