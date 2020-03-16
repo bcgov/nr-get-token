@@ -24,5 +24,36 @@
     "logLevel": "debug",
     "morganFormat": "combined",
     "port": "8080"
+  },
+  "serviceClient": {
+    "ches": {
+      "apiEndpoint": "https://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api",
+      "tokenEndpoint": "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token"
+    },
+    "keycloak": {
+      "dev": {
+        "endpoint": "https://sso-dev.pathfinder.gov.bc.ca",
+        "realm": "98r0z7rz"
+      },
+      "test": {
+        "endpoint": "https://sso-test.pathfinder.gov.bc.ca",
+        "realm": "98r0z7rz"
+      },
+      "prod": {
+        "endpoint": "https://sso.pathfinder.gov.bc.ca",
+        "realm": "98r0z7rz"
+      }
+    },
+    "webAde": {
+      "int": {
+        "endpoint": "https://i1api.nrs.gov.bc.ca/webade-api/v1"
+      },
+      "test": {
+        "endpoint": "https://t1api.nrs.gov.bc.ca/webade-api/v1"
+      },
+      "prod": {
+        "endpoint": "https://api.nrs.gov.bc.ca/webade-api/v1"
+      }
+    }
   }
 }
