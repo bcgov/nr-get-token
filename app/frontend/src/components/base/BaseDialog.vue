@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="show" width="500">
+  <v-dialog v-model="show" max-width="500">
     <v-card>
       <div class="dialog-body">
         <v-card-title class primary-title>
@@ -44,10 +44,10 @@ export default {
 <style scoped>
 .v-card__text {
   display: flex !important;
-  padding: 20px;
+  padding: 1.5rem;
 }
 .dialog-icon {
-  margin-right: 10px;
+  margin-right: 1rem;
   object-fit: contain;
   align-self: flex-start;
 }

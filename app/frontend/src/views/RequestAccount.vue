@@ -1,7 +1,9 @@
 <template>
-  <v-container>
-    <BaseSecure>Request Account</BaseSecure>
-    <RequestForm />
+  <v-container class="request-account">
+    <BaseSecure>
+      Request Account
+      <RequestForm />
+    </BaseSecure>
   </v-container>
 </template>
 

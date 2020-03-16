@@ -41,7 +41,7 @@ const router = new VueRouter({
       props: true
     },
     {
-      path: '/apps/requestAccount',
+      path: '/requestAccount',
       name: 'RequestAccount',
       component: () => import(/* webpackChunkName: "request-account" */ '@/views/RequestAccount.vue'),
       meta: {

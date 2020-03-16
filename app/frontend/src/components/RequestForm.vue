@@ -16,7 +16,7 @@
             dense
             outlined
             flat
-            :value="userInfo.idir"
+            v-model="userInfo.idir"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -31,7 +31,7 @@
             single-line
             outlined
             flat
-            :value="userInfo.emailAddress"
+            v-model="userInfo.emailAddress"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -125,8 +125,7 @@ import { FieldValidations } from '@/utils/constants.js';
 
 export default {
   name: 'RequestForm',
-  data: function() {
-
+  data() {
     return {
       applicationAcronym: '',
       applicationAcronymRules: [
@@ -146,13 +145,11 @@ export default {
       valid: false,
       userInfo: {
         emailAddress: Vue.prototype.$keycloak.tokenParsed.email,
-        idir:  Vue.prototype.$keycloak.tokenParsed.preferred_username,
-        name:  Vue.prototype.$keycloak.tokenParsed.name
+        idir: Vue.prototype.$keycloak.tokenParsed.preferred_username
       }
     };
   },
-  computed: {
-  },
+  computed: {},
   methods: {
     async cancel() {
       this.errorOccurred = false;
