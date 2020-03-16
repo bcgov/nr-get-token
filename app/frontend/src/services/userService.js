@@ -11,7 +11,7 @@ export default {
     if (keycloakId && validator.isUUID(keycloakId)) {
       return getokAxios().get(`/users/${keycloakId}/acronyms`);
     } else {
-      Promise.reject('keycloakId must be a valid UUID');
+      return Promise.reject('keycloakId must be a valid UUID');
     }
   }
 };

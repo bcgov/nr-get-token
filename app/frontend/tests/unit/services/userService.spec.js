@@ -1,6 +1,5 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import Vue from 'vue';
 
 import userService from '@/services/userService';
 
@@ -19,23 +18,7 @@ describe('getUserAcronyms', () => {
     mockAxios.reset();
   });
 
-  afterEach(() => {
-    if (Vue.prototype.$keycloak) {
-      delete Vue.prototype.$keycloak;
-    }
-  });
-
-  it('calls getUserAcronyms endpoint when logged in', async () => {
-    Object.defineProperty(Vue.prototype, '$keycloak', {
-      configurable: true, // Needed to allow deletions later
-      get() {
-        return {
-          authenticated: true,
-          ready: true,
-          subject: zeroUuid
-        };
-      }
-    });
+  it('calls getUserAcronyms endpoint with valid uuid', async () => {
     const data = [
       { acronym: 'PEN_RETRIEVAL', owner: false },
       { acronym: 'GETOK', owner: false },
@@ -43,7 +26,7 @@ describe('getUserAcronyms', () => {
     ];
     mockAxios.onGet().reply(200, data);
 
-    const result = await userService.getUserAcronyms();
+    const result = await userService.getUserAcronyms(zeroUuid);
 
     expect(result.data).toEqual(expect.any(Array));
     expect(result.data.length).toBe(3);
@@ -51,11 +34,10 @@ describe('getUserAcronyms', () => {
     expect(mockAxios.history.get.length).toBe(1);
   });
 
-  it('returns an empty array when not logged in', async () => {
-    const result = await userService.getUserAcronyms();
+  it('rejects with no keycloakId', async () => {
+    const result = () => userService.getUserAcronyms();
 
-    expect(result.data).toEqual(expect.any(Array));
-    expect(result.data.length).toBe(0);
+    await expect(result()).rejects.toEqual('keycloakId must be a valid UUID');
     expect(mockAxios.history.get.length).toBe(0);
   });
 });

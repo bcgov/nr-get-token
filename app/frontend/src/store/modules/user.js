@@ -33,6 +33,7 @@ export default {
             }
           })
           .catch(error => {
+            // TODO: Create top-level global state error message
             console.error(error); // eslint-disable-line no-console
           });
       }
