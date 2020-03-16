@@ -152,9 +152,21 @@ objects:
                     secretKeyRef:
                       key: password
                       name: getok-keycloak-secret
+                - name: SC_CHES_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      key: username
+                      name: getok-sc-ches-secret
+                - name: SC_CHES_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: password
+                      name: getok-sc-ches-secret
               envFrom:
                 - configMapRef:
                     name: getok-frontend-config
+                - configMapRef:
+                    name: getok-sc-config
                 - configMapRef:
                     name: getok-server-config
           restartPolicy: Always
