@@ -1,7 +1,6 @@
 <template>
   <v-container class="request-account">
     <BaseSecure>
-      Request Account
       <RequestForm />
     </BaseSecure>
   </v-container>
