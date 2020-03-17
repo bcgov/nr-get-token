@@ -113,7 +113,7 @@
         <v-icon large color="green">check_circle_outline</v-icon>
       </template>
       <template v-slot:text>
-        <p>Your Registration was sent successfully. You will be sent an email to {{ form.from }} when your application has been authorized.</p>
+        <p>Your request has been sent successfully. You will get an email to {{ form.from }} when it is authorized.</p>
       </template>
     </BaseDialog>
   </v-container>
