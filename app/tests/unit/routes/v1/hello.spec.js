@@ -13,7 +13,7 @@ helper.logHelper();
 describe(`GET ${basePath}`, () => {
   const getHelloSpy = jest.spyOn(helloComponent, 'getHello');
 
-  afterEach(() => {
+  beforeEach(() => {
     getHelloSpy.mockReset();
   });
 

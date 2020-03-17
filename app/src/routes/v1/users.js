@@ -8,7 +8,7 @@ const users = require('../../components/users');
 /** Returns acronyms associated with a user */
 usersRouter.get('/:keycloakId/acronyms', [
   param('keycloakId', 'Must be a valid UUID')
-    .exists().custom(value => validator.isUUID(value))
+    .custom(value => validator.isUUID(value))
 ], async (req, res) => {
   // TODO: Move this into middleware or equivalent
   // Validate for Bad Requests

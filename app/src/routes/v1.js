@@ -6,6 +6,7 @@ const router = require('express').Router();
 const yaml = require('js-yaml');
 
 const keycloak = require('../components/keycloak');
+const emailRouter = require('./v1/email');
 const helloRouter = require('./v1/hello');
 const usersRouter = require('./v1/users');
 
@@ -45,6 +46,9 @@ router.get('/api-spec.yaml', (_req, res) => {
 router.get('/api-spec.json', (_req, res) => {
   res.status(200).json(getSpec());
 });
+
+/** Email Router */
+router.use('/email', keycloak.protect(), emailRouter);
 
 /** Hello Router */
 router.use('/hello', keycloak.protect(), helloRouter);
