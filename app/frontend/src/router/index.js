@@ -16,14 +16,6 @@ const router = new VueRouter({
       component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue')
     },
     {
-      path: '/secure',
-      name: 'Secure',
-      component: () => import(/* webpackChunkName: "secure" */ '@/views/Secure.vue'),
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
       path: '/myApps',
       name: 'MyApps',
       component: () => import(/* webpackChunkName: "my-apps" */ '@/views/MyApps.vue'),

@@ -11,9 +11,6 @@
         <li>
           <router-link :to="{ name: 'RequestAccount' }">Request Account</router-link>
         </li>
-        <li>
-          <router-link :to="{ name: 'Secure' }">Secure</router-link>
-        </li>
       </ul>
     </div>
   </nav>

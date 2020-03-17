@@ -7,7 +7,6 @@ const yaml = require('js-yaml');
 
 const keycloak = require('../components/keycloak');
 const emailRouter = require('./v1/email');
-const helloRouter = require('./v1/hello');
 const usersRouter = require('./v1/users');
 
 const getSpec = () => {
@@ -49,9 +48,6 @@ router.get('/api-spec.json', (_req, res) => {
 
 /** Email Router */
 router.use('/email', keycloak.protect(), emailRouter);
-
-/** Hello Router */
-router.use('/hello', keycloak.protect(), helloRouter);
 
 /** Users Router */
 router.use('/users', keycloak.protect(), usersRouter);
