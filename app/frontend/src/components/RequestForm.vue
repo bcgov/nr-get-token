@@ -9,36 +9,36 @@
         <v-col>
           <label>IDIR</label>
           <v-text-field
-            readonly
-            hide-details="auto"
-            solo
-            single-line
+            v-model="form.idir"
             dense
+            hide-details="auto"
             outlined
             flat
-            v-model="userInfo.idir"
-          ></v-text-field>
+            readonly
+            single-line
+            solo
+          />
         </v-col>
       </v-row>
       <v-row>
         <v-col>
           <label>E-mail</label>
           <v-text-field
-            readonly
-            hide-details="auto"
-            solo
+            v-model="form.from"
             dense
-            single-line
-            outlined
             flat
-            v-model="userInfo.emailAddress"
-          ></v-text-field>
+            hide-details="auto"
+            outlined
+            readonly
+            single-line
+            solo
+          />
         </v-col>
       </v-row>
       <v-row>
         <v-col>
           <label>Application Acronym &nbsp;</label>
-          <v-tooltip bottom>
+          <v-tooltip right>
             <template v-slot:activator="{ on }">
               <v-icon v-on="on">help_outline</v-icon>
             </template>
@@ -56,18 +56,18 @@
             </ul>
           </v-tooltip>
           <v-text-field
+            v-model="form.applicationAcronym"
+            dense
+            flat
+            hide-details="auto"
             placeholder="For example: 'ABC_DEF'"
             required
             :rules="applicationAcronymRules"
-            v-model="applicationAcronym"
-            hide-details="auto"
-            solo
-            dense
             single-line
+            solo
             outlined
-            flat
           >
-            <template v-slot:append-outer></template>
+            <template v-slot:append-outer />
           </v-text-field>
         </v-col>
       </v-row>
@@ -75,15 +75,15 @@
         <v-col>
           <label>Comments (optional)</label>
           <v-textarea
-            v-model="comments"
-            rows="3"
+            v-model="form.comments"
             auto-grow
-            hide-details="auto"
             dense
-            solo
-            outlined
             flat
-          ></v-textarea>
+            hide-details="auto"
+            outlined
+            rows="3"
+            solo
+          />
         </v-col>
       </v-row>
     </v-form>
@@ -113,7 +113,7 @@
         <v-icon large color="green">check_circle_outline</v-icon>
       </template>
       <template v-slot:text>
-        <p>Your Registration was sent successfully. You will be sent an email to {{ userInfo.emailAddress }} when your application has been authorized.</p>
+        <p>Your Registration was sent successfully. You will be sent an email to {{ form.from }} when your application has been authorized.</p>
       </template>
     </BaseDialog>
   </v-container>
@@ -121,13 +121,14 @@
 
 <script>
 import Vue from 'vue';
+
+import emailService from '@/services/emailService';
 import { FieldValidations } from '@/utils/constants.js';
 
 export default {
   name: 'RequestForm',
   data() {
     return {
-      applicationAcronym: '',
       applicationAcronymRules: [
         v => !!v || 'Acronym is required',
         v =>
@@ -137,49 +138,46 @@ export default {
           /^(?:[A-Z]{2,}[_]?)+[A-Z]{1,}$/g.test(v) ||
           'Incorrect format. Hover over ? for details.'
       ],
-      comments: '',
       errorOccurred: false,
+      form: {
+        applicationAcronym: '',
+        comments: '',
+        from: Vue.prototype.$keycloak.tokenParsed.email,
+        idir: Vue.prototype.$keycloak.tokenParsed.preferred_username
+      },
       fieldValidations: FieldValidations,
       registerSuccess: false,
-      valid: false,
-      userInfo: {
-        emailAddress: Vue.prototype.$keycloak.tokenParsed.email,
-        idir: Vue.prototype.$keycloak.tokenParsed.preferred_username
-      }
+      valid: false
     };
   },
   methods: {
-    async cancel() {
-      this.errorOccurred = false;
-      this.registerSuccess = false;
+    cancel() {
       this.$router.push({ name: 'About' });
     },
 
-    async postRegistrationForm() {
+    postRegistrationForm() {
+      this.resetState();
+      if (this.$refs.form.validate()) {
+        emailService
+          .sendRegistrationEmail(this.form)
+          .then(response => {
+            if (response) {
+              this.registerSuccess = true;
+            }
+          })
+          .catch(() => {
+            this.errorOccurred = true;
+          });
+      }
+    },
+
+    resetState() {
       this.errorOccurred = false;
       this.registerSuccess = false;
-      if (this.$refs.form.validate()) {
-        try {
-          // removed api call until i have service layer
-          const response = false;
-
-          // const response = await ApiService.sendRegistrationEmail({
-          //   applicationAcronym: this.applicationAcronym,
-          //   comments: this.comments,
-          //   from: this.userInfo.emailAddress,
-          //   idir: this.userInfo.idir
-          // });
-
-          if (response) {
-            this.registerSuccess = true;
-          } else {
-            this.errorOccurred = true;
-          }
-        } catch (error) {
-          this.errorOccurred = true;
-        }
-      }
     }
+  },
+  mounted() {
+    this.resetState();
   }
 };
 </script>
