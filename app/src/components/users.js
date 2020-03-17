@@ -40,6 +40,16 @@ const users = {
         clientId: 'WORG_SERVICE_CLIENT',
         enabled: true
       }
+    }, {
+      acronym: 'MSSC',
+      dev: {
+        clientId: 'MSSC_SERVICE_CLIENT',
+        enabled: true
+      },
+      test: {
+        clientId: 'MSSC_SERVICE_CLIENT',
+        enabled: false
+      }
     }];
   }
 };
