@@ -172,6 +172,8 @@ export default {
 
           if (response) {
             this.registerSuccess = true;
+          } else {
+            this.errorOccurred = true;
           }
         } catch (error) {
           this.errorOccurred = true;
