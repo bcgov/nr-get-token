@@ -26,14 +26,13 @@ export default {
 
 <style scoped>
 .gov-footer.v-footer {
-  bottom: 0;
   background-color: #003366;
   border-top: 2px solid #fcba19;
+  flex-shrink: 0;
   min-height: 2.5rem;
   min-width: 100%;
   padding-bottom: 0;
   padding-top: 0;
-  position: absolute;
 }
 
 .gov-footer .v-btn {

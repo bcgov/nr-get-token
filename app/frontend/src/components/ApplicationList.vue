@@ -6,7 +6,7 @@
     <v-container fluid class="px-0">
       <v-row dense>
         <v-col cols="12" md="4" xl="2" class="my-app-card">
-          <BaseActionCard linkName="Secure">
+          <BaseActionCard linkName="RequestAccount">
             <div class="new-app text-center">
               <h3>Add a New Application</h3>
               <v-icon large color="blue darken-4">mdi-plus-circle</v-icon>
