@@ -31,9 +31,18 @@
                   transition="scale-transition"
                 >
                   <p>
-                    Dev: Not
-                    <br />Test: real
-                    <br />Prod: data
+                    Dev:
+                    <span
+                      :class="acr.devStatus ? 'green--text' : ''"
+                    >{{acr.devStatus ? clientExistsText : clientNotExistsText}}</span>
+                    <br />Test:
+                    <span
+                      :class="acr.testStatus ? 'green--text' : ''"
+                    >{{acr.testStatus ? clientExistsText : clientNotExistsText}}</span>
+                    <br />Prod:
+                    <span
+                      :class="acr.prodStatus ? 'green--text' : ''"
+                    >{{acr.prodStatus ? clientExistsText : clientNotExistsText}}</span>
                   </p>
                 </v-skeleton-loader>
               </div>
@@ -52,18 +61,23 @@ export default {
   name: 'ApplicationList',
   data: () => ({
     // TEMP for testing skeletons
-    waiting: true
+    waiting: true,
+    clientExistsText: 'Available',
+    clientNotExistsText: 'Not Available'
   }),
   computed: {
     ...mapGetters('user', ['acronyms'])
   },
   methods: {
-    ...mapActions('user', ['getUserAcronyms'])
+    ...mapActions('user', ['getUserAcronyms', 'fillInAcronymClientStatus'])
   },
-  mounted() {
-    this.getUserAcronyms();
-    // TEMP for testing skeletons
-    setTimeout(() => (this.waiting = false), 1000);
+  async mounted() {
+    //TODO: consider moving getUserAcronyms to on login instead of this component
+    await this.getUserAcronyms();
+
+    this.waiting = true;
+    await this.fillInAcronymClientStatus();
+    this.waiting = false;
   }
 };
 </script>
