@@ -21,6 +21,7 @@ describe('BCGovNavBar.vue', () => {
     });
 
     expect(wrapper.text()).toContain('About');
-    expect(wrapper.text()).toContain('Secure');
+    expect(wrapper.text()).toContain('My Applications');
+    expect(wrapper.text()).toContain('Request Account');
   });
 });

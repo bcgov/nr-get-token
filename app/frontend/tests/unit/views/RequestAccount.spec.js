@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils';
 import Vuetify from 'vuetify';
 
-import Secure from '@/views/Secure.vue';
+import RequestAccount from '@/views/RequestAccount.vue';
 
 describe('Secure.vue', () => {
   let vuetify;
@@ -11,9 +11,9 @@ describe('Secure.vue', () => {
   });
 
   it('renders', () => {
-    const wrapper = shallowMount(Secure, {
+    const wrapper = shallowMount(RequestAccount, {
       vuetify,
-      stubs: ['BaseSecure']
+      stubs: ['BaseSecure', 'RequestForm']
     });
 
     expect(wrapper.text()).toMatch('');

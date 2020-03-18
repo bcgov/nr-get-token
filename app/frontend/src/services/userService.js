@@ -6,6 +6,7 @@ export default {
    * @function getUserAcronyms
    * Fetch the acronyms user `keycloakId` has access to
    * @param {string} keycloakId UUID of a keycloak user
+   * @returns {Promise} An axios response
    */
   getUserAcronyms(keycloakId) {
     if (keycloakId && validator.isUUID(keycloakId)) {

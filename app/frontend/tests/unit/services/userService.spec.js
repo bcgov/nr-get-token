@@ -24,7 +24,7 @@ describe('getUserAcronyms', () => {
       { acronym: 'GETOK', owner: false },
       { acronym: 'MSSC', owner: false }
     ];
-    mockAxios.onGet().reply(200, data);
+    mockAxios.onGet(`/users/${zeroUuid}/acronyms`).reply(200, data);
 
     const result = await userService.getUserAcronyms(zeroUuid);
 
