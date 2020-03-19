@@ -19,9 +19,9 @@ export default {
       if (Array.isArray(clientsForUser) && clientsForUser.length) {
         state.acronyms.forEach(acr => {
           const clientSet = clientsForUser.find(client => client.acronym === acr.acronym);
-          acr.devStatus = (clientSet && clientSet.dev && clientSet.dev.enabled) ? true : false;
-          acr.testStatus = (clientSet && clientSet.test && clientSet.test.enabled) ? true : false;
-          acr.prodStatus = (clientSet && clientSet.prod && clientSet.prod.enabled) ? true : false;
+          acr.devStatus = clientSet && clientSet.dev && clientSet.dev.enabled;
+          acr.testStatus = clientSet && clientSet.test && clientSet.test.enabled;
+          acr.prodStatus = clientSet && clientSet.prod && clientSet.prod.enabled;
         });
       } else {
         state.acronyms.forEach(acr => {
