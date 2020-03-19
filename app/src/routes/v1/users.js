@@ -31,7 +31,7 @@ usersRouter.get('/:keycloakId/acronyms', [
 /** Returns acronym service clients associated with a user */
 usersRouter.get('/:keycloakId/acronyms/clients', [
   param('keycloakId', 'Must be a valid UUID')
-    .exists().custom(value => validator.isUUID(value))
+    .custom(value => validator.isUUID(value))
 ], async (req, res) => {
   // TODO: Move this into middleware or equivalent
   // Validate for Bad Requests

@@ -30,20 +30,7 @@
                   :loading="waiting"
                   transition="scale-transition"
                 >
-                  <p>
-                    Dev:
-                    <span
-                      :class="acr.devStatus ? 'green--text' : ''"
-                    >{{acr.devStatus ? clientExistsText : clientNotExistsText}}</span>
-                    <br />Test:
-                    <span
-                      :class="acr.testStatus ? 'green--text' : ''"
-                    >{{acr.testStatus ? clientExistsText : clientNotExistsText}}</span>
-                    <br />Prod:
-                    <span
-                      :class="acr.prodStatus ? 'green--text' : ''"
-                    >{{acr.prodStatus ? clientExistsText : clientNotExistsText}}</span>
-                  </p>
+                  <p v-html="setClientTexts(acr)" />
                 </v-skeleton-loader>
               </div>
             </div>
@@ -61,15 +48,23 @@ export default {
   name: 'ApplicationList',
   data: () => ({
     // TEMP for testing skeletons
-    waiting: true,
-    clientExistsText: 'Available',
-    clientNotExistsText: 'Not Available'
+    waiting: true
   }),
   computed: {
     ...mapGetters('user', ['acronyms'])
   },
   methods: {
-    ...mapActions('user', ['getUserAcronyms', 'fillInAcronymClientStatus'])
+    ...mapActions('user', ['getUserAcronyms', 'fillInAcronymClientStatus']),
+    setClientTexts(acronymObj) {
+      return `${this.buildClientSpan('Dev', acronymObj.devStatus)}
+              <br />${this.buildClientSpan('Test', acronymObj.testStatus)}
+              <br />${this.buildClientSpan('Prod', acronymObj.prodStatus)}`;
+    },
+    buildClientSpan(envLabel, status) {
+      const cls = status ? 'green--text' : '';
+      const txt = status ? 'Available' : 'Not Available';
+      return `${envLabel}: <span class="${cls}">${txt}</span>`;
+    }
   },
   async mounted() {
     //TODO: consider moving getUserAcronyms to on login instead of this component
