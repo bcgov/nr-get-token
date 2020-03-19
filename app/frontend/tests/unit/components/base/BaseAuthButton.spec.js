@@ -1,58 +1,66 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import Vuetify from 'vuetify';
+import Vuex from 'vuex';
 
 import BaseAuthButton from '@/components/base/BaseAuthButton.vue';
 
+const localVue = createLocalVue();
+const vuetify = new Vuetify();
+localVue.use(Vuetify);
+localVue.use(Vuex);
+
 describe('BaseAuthButton.vue', () => {
-  let localVue;
-  let mockKeycloak;
-  let vuetify;
+  let store;
 
   beforeEach(() => {
-    localVue = createLocalVue();
-    localVue.use(Vuetify);
-    vuetify = new Vuetify();
-
-    Object.defineProperty(localVue.prototype, '$keycloak', {
-      get() {
-        return mockKeycloak;
-      }
-    });
+    store = new Vuex.Store();
   });
 
   it('renders login when not authenticated', () => {
-    mockKeycloak = {
-      authenticated: false,
-      logoutFn: () => { },
-      loginFn: () => { },
-      ready: true
-    };
+    store.registerModule('auth', {
+      namespaced: true,
+      getters: {
+        authenticated: () => false,
+        createLoginUrl: () => 'test',
+        createLogoutUrl: () => 'test',
+        ready: () => true
+      }
+    });
 
-    const wrapper = shallowMount(BaseAuthButton, { localVue, vuetify });
+    const wrapper = shallowMount(BaseAuthButton, { localVue, store, vuetify });
+
     expect(wrapper.text()).toMatch('Login');
   });
 
   it('renders logout when authenticated', () => {
-    mockKeycloak = {
-      authenticated: true,
-      logoutFn: () => { },
-      loginFn: () => { },
-      ready: true
-    };
+    store.registerModule('auth', {
+      namespaced: true,
+      getters: {
+        authenticated: () => true,
+        createLoginUrl: () => 'test',
+        createLogoutUrl: () => 'test',
+        ready: () => true
+      }
+    });
 
-    const wrapper = shallowMount(BaseAuthButton, { localVue, vuetify });
+    const wrapper = shallowMount(BaseAuthButton, { localVue, store, vuetify });
+
     expect(wrapper.text()).toMatch('Logout');
   });
 
   it('renders nothing if keycloak is not ready', () => {
-    mockKeycloak = {
-      authenticated: false,
-      logoutFn: () => { },
-      loginFn: () => { },
-      ready: false
-    };
+    store.registerModule('auth', {
+      namespaced: true,
+      getters: {
+        authenticated: () => false,
+        createLoginUrl: () => 'test',
+        createLogoutUrl: () => 'test',
+        ready: () => false
+      }
+    });
 
-    const wrapper = shallowMount(BaseAuthButton, { localVue, vuetify });
+    const wrapper = shallowMount(BaseAuthButton, { localVue, store, vuetify });
+    
     expect(wrapper.text()).toBeFalsy();
   });
 });
