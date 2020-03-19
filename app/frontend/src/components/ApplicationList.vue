@@ -30,11 +30,7 @@
                   :loading="waiting"
                   transition="scale-transition"
                 >
-                  <p>
-                    Dev: Not
-                    <br />Test: real
-                    <br />Prod: data
-                  </p>
+                  <p v-html="setClientTexts(acr)" />
                 </v-skeleton-loader>
               </div>
             </div>
@@ -58,12 +54,25 @@ export default {
     ...mapGetters('user', ['acronyms'])
   },
   methods: {
-    ...mapActions('user', ['getUserAcronyms'])
+    ...mapActions('user', ['getUserAcronyms', 'fillInAcronymClientStatus']),
+    setClientTexts(acronymObj) {
+      return `${this.buildClientSpan('Dev', acronymObj.devStatus)}
+              <br />${this.buildClientSpan('Test', acronymObj.testStatus)}
+              <br />${this.buildClientSpan('Prod', acronymObj.prodStatus)}`;
+    },
+    buildClientSpan(envLabel, status) {
+      const cls = status ? 'green--text' : '';
+      const txt = status ? 'Available' : 'Not Available';
+      return `${envLabel}: <span class="${cls}">${txt}</span>`;
+    }
   },
-  mounted() {
-    this.getUserAcronyms();
-    // TEMP for testing skeletons
-    setTimeout(() => (this.waiting = false), 1000);
+  async mounted() {
+    //TODO: consider moving getUserAcronyms to on login instead of this component
+    await this.getUserAcronyms();
+
+    this.waiting = true;
+    await this.fillInAcronymClientStatus();
+    this.waiting = false;
   }
 };
 </script>

@@ -14,6 +14,22 @@ export default {
       if (Array.isArray(acronyms)) {
         state.acronyms = acronyms;
       }
+    },
+    setAcronymClientStatus: (state, clientsForUser) => {
+      if (Array.isArray(clientsForUser) && clientsForUser.length) {
+        state.acronyms.forEach(acr => {
+          const clientSet = clientsForUser.find(client => client.acronym === acr.acronym);
+          acr.devStatus = clientSet && clientSet.dev && clientSet.dev.enabled;
+          acr.testStatus = clientSet && clientSet.test && clientSet.test.enabled;
+          acr.prodStatus = clientSet && clientSet.prod && clientSet.prod.enabled;
+        });
+      } else {
+        state.acronyms.forEach(acr => {
+          acr.devStatus = false;
+          acr.testStatus = false;
+          acr.prodStatus = false;
+        });
+      }
     }
   },
   actions: {
@@ -36,6 +52,21 @@ export default {
             // TODO: Create top-level global state error message
             console.error(error); // eslint-disable-line no-console
           });
+      }
+    },
+    /**
+     * @function fillInAcronymClientStatus
+     * Fetch the service clients for the acronyms the user has
+     * @param {object} context The store context
+     */
+    async fillInAcronymClientStatus(context) {
+      try {
+        const response = await UserService.getServiceClients(
+          Vue.prototype.$keycloak.subject
+        );
+        context.commit('setAcronymClientStatus', response.data);
+      } catch (e) {
+        console.error(e); // eslint-disable-line no-console
       }
     }
   }
