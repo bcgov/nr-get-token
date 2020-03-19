@@ -75,7 +75,7 @@ export default {
 
 <style scoped>
 .v-card {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 ul li {
   margin-bottom: 0.5rem;

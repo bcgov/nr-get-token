@@ -1,11 +1,22 @@
 /* Typography */
-body .v-application {
-  font-family: -apple-system, BlinkMacSystemFont, "BCSans", "Noto Sans", Verdana, Arial, sans-serif !important;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-size: 1em;
-  line-height: 1.5em;
+.v-application {
+  font-family: -apple-system, BlinkMacSystemFont, BCSans, Roboto, Verdana, Arial, sans-serif !important;
+  line-height: 1.5;
 }
+
+h1 { font-size: 2.074em; /* (37.32px) */ }
+h2 { font-size: 1.728em; /* (31.10px) */ }
+h3 { font-size: 1.444em; /* (25.92px) */ }
+h4 { font-size: 1.2em; /* (21.60px) */ }
+
+h1, h2, h3, h4, h5 {
+  line-height: 1.2;
+}
+
+p {
+  line-height: 1.6;
+}
+
 
 /* sticky footer */
 html,

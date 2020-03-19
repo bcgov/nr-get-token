@@ -53,7 +53,6 @@ export default {
 
 .navigation-main .container ul li a {
   display: flex;
-  font-size: 0.8rem;
   font-weight: normal;
   min-height: 2rem;
   color: #ffffff;
