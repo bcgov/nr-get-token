@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import UserService from '@/services/userService';
 
 export default {
@@ -38,20 +37,17 @@ export default {
      * Fetch the acronyms the current user has access to from the DB
      * @param {object} context The store context
      */
-    getUserAcronyms(context) {
-      if (Vue.prototype.$keycloak &&
-        Vue.prototype.$keycloak.ready &&
-        Vue.prototype.$keycloak.authenticated) {
-        UserService.getUserAcronyms(Vue.prototype.$keycloak.subject)
-          .then(response => {
-            if (response && response.data) {
-              context.commit('setAcronyms', response.data);
-            }
-          })
-          .catch(error => {
-            // TODO: Create top-level global state error message
-            console.error(error); // eslint-disable-line no-console
-          });
+    async getUserAcronyms(context) {
+      try {
+        if (context.rootGetters['auth/authenticated']) {
+          const response = await UserService.getUserAcronyms(
+            context.rootGetters['auth/subject']
+          );
+          context.commit('setAcronyms', response.data);
+        }
+      } catch (error) {
+        // TODO: Create top-level global state error message
+        console.error(error); // eslint-disable-line no-console
       }
     },
     /**
@@ -61,12 +57,15 @@ export default {
      */
     async fillInAcronymClientStatus(context) {
       try {
-        const response = await UserService.getServiceClients(
-          Vue.prototype.$keycloak.subject
-        );
-        context.commit('setAcronymClientStatus', response.data);
-      } catch (e) {
-        console.error(e); // eslint-disable-line no-console
+        if (context.rootGetters['auth/authenticated']) {
+          const response = await UserService.getServiceClients(
+            context.rootGetters['auth/subject']
+          );
+          context.commit('setAcronymClientStatus', response.data);
+        }
+      } catch (error) {
+        // TODO: Create top-level global state error message
+        console.error(error); // eslint-disable-line no-console
       }
     }
   }
