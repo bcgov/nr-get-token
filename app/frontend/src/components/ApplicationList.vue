@@ -27,7 +27,7 @@
               <div class="env-statuses">
                 <v-skeleton-loader
                   type="list-item-three-line"
-                  :loading="waiting"
+                  :loading="!moduleLoaded"
                   transition="scale-transition"
                 >
                   <p v-html="setClientTexts(acr)" />
@@ -46,33 +46,24 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'ApplicationList',
-  data: () => ({
-    // TEMP for testing skeletons
-    waiting: true
-  }),
+  created() {
+    this.loadModule();
+  },
   computed: {
-    ...mapGetters('user', ['acronyms'])
+    ...mapGetters('user', ['acronyms', 'moduleLoaded'])
   },
   methods: {
-    ...mapActions('user', ['getUserAcronyms', 'fillInAcronymClientStatus']),
-    setClientTexts(acronymObj) {
-      return `${this.buildClientSpan('Dev', acronymObj.devStatus)}
-              <br />${this.buildClientSpan('Test', acronymObj.testStatus)}
-              <br />${this.buildClientSpan('Prod', acronymObj.prodStatus)}`;
-    },
+    ...mapActions('user', ['loadModule']),
     buildClientSpan(envLabel, status) {
       const cls = status ? 'green--text' : '';
       const txt = status ? 'Available' : 'Not Available';
       return `${envLabel}: <span class="${cls}">${txt}</span>`;
+    },
+    setClientTexts(acr) {
+      return `${this.buildClientSpan('Dev', acr.clientStatus && acr.clientStatus.dev)}<br />
+              ${this.buildClientSpan('Test', acr.clientStatus && acr.clientStatus.test)}<br />
+              ${this.buildClientSpan('Prod', acr.clientStatus && acr.clientStatus.prod)}`;
     }
-  },
-  async mounted() {
-    //TODO: consider moving getUserAcronyms to on login instead of this component
-    await this.getUserAcronyms();
-
-    this.waiting = true;
-    await this.fillInAcronymClientStatus();
-    this.waiting = false;
   }
 };
 </script>

@@ -1,12 +1,6 @@
 <template>
-  <div v-if="$keycloak && $keycloak.ready">
-    <v-btn
-      v-if="$keycloak.authenticated"
-      color="white"
-      class="login-btn"
-      @click="logout"
-      outlined
-    >
+  <div v-if="keycloakReady">
+    <v-btn v-if="authenticated" color="white" class="login-btn" @click="logout" outlined>
       <v-icon :left="$vuetify.breakpoint.smAndUp">mdi-logout</v-icon>
       <span v-if="$vuetify.breakpoint.smAndUp">Logout</span>
     </v-btn>
@@ -18,17 +12,29 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'BaseAuthButton',
+  computed: {
+    ...mapGetters('auth', [
+      'authenticated',
+      'createLoginUrl',
+      'createLogoutUrl',
+      'keycloakReady'
+    ])
+  },
   methods: {
     login() {
-      if (this.$keycloak && this.$keycloak.ready) {
-        window.location.replace(this.$keycloak.createLoginUrl());
+      if (this.keycloakReady) {
+        window.location.replace(this.createLoginUrl());
       }
     },
     logout() {
-      if (this.$keycloak && this.$keycloak.ready) {
-        window.location.replace(this.$keycloak.createLogoutUrl({ redirectUri: location.origin }));
+      if (this.keycloakReady) {
+        window.location.replace(
+          this.createLogoutUrl({ redirectUri: location.origin })
+        );
       }
     }
   }

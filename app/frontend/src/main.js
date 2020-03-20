@@ -8,6 +8,7 @@ import Vue from 'vue';
 import VueKeycloakJs from '@dsb-norge/vue-keycloak-js';
 
 import App from '@/App.vue';
+import auth from '@/store/modules/auth.js';
 import router from '@/router';
 import store from '@/store';
 import vuetify from '@/plugins/vuetify';
@@ -29,8 +30,11 @@ loadConfig();
 /**
  * @function initializeApp
  * Initializes and mounts the Vue instance
+ * @param {boolean} kcSuccess is Keycloak initialized successfully?
  */
-function initializeApp() {
+function initializeApp(kcSuccess = false) {
+  if (kcSuccess) store.registerModule('auth', auth);
+
   new Vue({
     router,
     store,
@@ -47,6 +51,7 @@ async function loadConfig() {
   // App publicPath is ./ - so use relative path here, will hit the backend server using relative path to root.
   const configUrl = process.env.NODE_ENV === 'production' ? 'config' : 'app/config';
   const storageKey = 'config';
+  let kcSuccess = false;
 
   try {
     // Get configuration if it isn't already in session storage
@@ -64,11 +69,12 @@ async function loadConfig() {
       throw new Error('Keycloak is misconfigured');
     }
     await loadKeycloak(config);
+    kcSuccess = true;
   } catch (err) {
     sessionStorage.removeItem(storageKey);
     throw new Error(`Failed to acquire configuration: ${err.message}`);
   } finally {
-    initializeApp();
+    initializeApp(kcSuccess);
     NProgress.done();
   }
 }
