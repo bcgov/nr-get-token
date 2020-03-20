@@ -54,15 +54,15 @@ export default {
   },
   methods: {
     ...mapActions('user', ['loadModule']),
-    setClientTexts(acronymObj) {
-      return `${this.buildClientSpan('Dev', acronymObj.devStatus)}
-              <br />${this.buildClientSpan('Test', acronymObj.testStatus)}
-              <br />${this.buildClientSpan('Prod', acronymObj.prodStatus)}`;
-    },
     buildClientSpan(envLabel, status) {
       const cls = status ? 'green--text' : '';
       const txt = status ? 'Available' : 'Not Available';
       return `${envLabel}: <span class="${cls}">${txt}</span>`;
+    },
+    setClientTexts(acr) {
+      return `${this.buildClientSpan('Dev', acr.clientStatus && acr.clientStatus.dev)}<br />
+              ${this.buildClientSpan('Test', acr.clientStatus && acr.clientStatus.test)}<br />
+              ${this.buildClientSpan('Prod', acr.clientStatus && acr.clientStatus.prod)}`;
     }
   }
 };

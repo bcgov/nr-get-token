@@ -16,19 +16,26 @@ export default {
         state.acronyms = acronyms;
       }
     },
-    setAcronymClientStatus: (state, clientsForUser) => {
-      if (Array.isArray(clientsForUser) && clientsForUser.length) {
-        state.acronyms.forEach(acr => {
-          const clientSet = clientsForUser.find(client => client.acronym === acr.acronym);
-          acr.devStatus = clientSet && clientSet.dev && clientSet.dev.enabled;
-          acr.testStatus = clientSet && clientSet.test && clientSet.test.enabled;
-          acr.prodStatus = clientSet && clientSet.prod && clientSet.prod.enabled;
+    setAcronymClientStatus: (state, userClients) => {
+      if (Array.isArray(userClients) && userClients.length) {
+        state.acronyms = state.acronyms.map(acr => {
+          const clientSet = userClients.find(client => client.acronym === acr.acronym);
+          acr.clientStatus = {
+            dev: clientSet && clientSet.dev && clientSet.dev.enabled,
+            test: clientSet && clientSet.test && clientSet.test.enabled,
+            prod: clientSet && clientSet.prod && clientSet.prod.enabled
+          };
+          return acr;
         });
       } else {
-        state.acronyms.forEach(acr => {
-          acr.devStatus = false;
-          acr.testStatus = false;
-          acr.prodStatus = false;
+
+        state.acronyms = state.acronyms.map(acr => {
+          acr.clientStatus = {
+            dev: false,
+            test: false,
+            prod: false
+          };
+          return acr;
         });
       }
     },
