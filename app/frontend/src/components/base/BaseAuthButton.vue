@@ -1,6 +1,6 @@
 <template>
   <div v-if="keycloakReady">
-    <v-btn v-if="authenticated" color="white" class="login-btn" @click="logout" outlined>
+    <v-btn v-if="authenticated" color="white" class="logout-btn" @click="logout" outlined>
       <v-icon :left="$vuetify.breakpoint.smAndUp">mdi-logout</v-icon>
       <span v-if="$vuetify.breakpoint.smAndUp">Logout</span>
     </v-btn>

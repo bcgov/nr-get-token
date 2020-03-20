@@ -88,8 +88,8 @@
       </v-row>
     </v-form>
     <div class="justify-center pb-8">
-      <v-btn class="BC-Gov-PrimaryButton light float-left" text @click="cancel()">Cancel</v-btn>
-      <v-btn class="BC-Gov-PrimaryButton float-right" text @click="postRegistrationForm()">Submit</v-btn>
+      <v-btn class="request-form-cancel-btn BC-Gov-PrimaryButton light float-left" text @click="cancel()">Cancel</v-btn>
+      <v-btn class="request-form-submit-btn BC-Gov-PrimaryButton float-right" text @click="postRegistrationForm()">Submit</v-btn>
     </div>
 
     <BaseDialog v-bind:show="errorOccurred" @close-dialog="errorOccurred = false">
@@ -120,13 +120,16 @@
 </template>
 
 <script>
-import Vue from 'vue';
+import { mapGetters } from 'vuex';
 
 import emailService from '@/services/emailService';
 import { FieldValidations } from '@/utils/constants.js';
 
 export default {
   name: 'RequestForm',
+  computed: {
+    ...mapGetters('auth', ['tokenParsed'])
+  },
   data() {
     return {
       applicationAcronymRules: [
@@ -142,8 +145,8 @@ export default {
       form: {
         applicationAcronym: '',
         comments: '',
-        from: Vue.prototype.$keycloak.tokenParsed.email,
-        idir: Vue.prototype.$keycloak.tokenParsed.preferred_username
+        from: '',
+        idir: ''
       },
       fieldValidations: FieldValidations,
       registerSuccess: false,
@@ -154,7 +157,6 @@ export default {
     cancel() {
       this.$router.push({ name: 'About' });
     },
-
     postRegistrationForm() {
       this.resetState();
       if (this.$refs.form.validate()) {
@@ -170,7 +172,12 @@ export default {
           });
       }
     },
-
+    resetForm() {
+      this.form.applicationAcronym = '';
+      this.form.comments = '';
+      this.form.from = this.tokenParsed.email;
+      this.form.idir = this.tokenParsed.preferred_username;
+    },
     resetState() {
       this.errorOccurred = false;
       this.registerSuccess = false;
@@ -178,6 +185,7 @@ export default {
   },
   mounted() {
     this.resetState();
+    this.resetForm();
   }
 };
 </script>
