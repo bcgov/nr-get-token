@@ -17,26 +17,31 @@ describe('ApplicationList.vue', () => {
 
   beforeEach(() => {
     actions = {
-      getUserAcronyms: jest.fn()
+      loadModule: jest.fn()
     };
 
     store = new Vuex.Store({
       modules: {
         user: {
           namespaced: true,
-          actions,
-          getters: user.getters
+          getters: user.getters,
+          actions
         }
       }
     });
   });
 
-  it('renders', () => {
+  afterEach(() => {
+    actions.loadModule.mockClear();
+  });
+
+  it('loads user store and renders', () => {
     const wrapper = shallowMount(ApplicationList, {
       store,
       localVue,
       stubs: ['BaseActionCard']
     });
     expect(wrapper.text()).toContain('My Applications');
+    expect(actions.loadModule).toHaveBeenCalledTimes(1);
   });
 });

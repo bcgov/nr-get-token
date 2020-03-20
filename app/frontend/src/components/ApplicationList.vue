@@ -27,7 +27,7 @@
               <div class="env-statuses">
                 <v-skeleton-loader
                   type="list-item-three-line"
-                  :loading="waiting"
+                  :loading="!moduleLoaded"
                   transition="scale-transition"
                 >
                   <p v-html="setClientTexts(acr)" />
@@ -46,15 +46,14 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'ApplicationList',
-  data: () => ({
-    // TEMP for testing skeletons
-    waiting: true
-  }),
+  created() {
+    this.loadModule();
+  },
   computed: {
-    ...mapGetters('user', ['acronyms'])
+    ...mapGetters('user', ['acronyms', 'moduleLoaded'])
   },
   methods: {
-    ...mapActions('user', ['getUserAcronyms', 'fillInAcronymClientStatus']),
+    ...mapActions('user', ['loadModule']),
     setClientTexts(acronymObj) {
       return `${this.buildClientSpan('Dev', acronymObj.devStatus)}
               <br />${this.buildClientSpan('Test', acronymObj.testStatus)}
@@ -65,14 +64,6 @@ export default {
       const txt = status ? 'Available' : 'Not Available';
       return `${envLabel}: <span class="${cls}">${txt}</span>`;
     }
-  },
-  async mounted() {
-    //TODO: consider moving getUserAcronyms to on login instead of this component
-    await this.getUserAcronyms();
-
-    this.waiting = true;
-    await this.fillInAcronymClientStatus();
-    this.waiting = false;
   }
 };
 </script>

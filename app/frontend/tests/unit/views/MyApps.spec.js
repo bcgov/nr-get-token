@@ -1,18 +1,24 @@
-import { shallowMount } from '@vue/test-utils';
+import { createLocalVue, shallowMount } from '@vue/test-utils';
 import Vuetify from 'vuetify';
+import Vuex from 'vuex';
 
 import MyApps from '@/views/MyApps.vue';
 
+const localVue = createLocalVue();
+localVue.use(Vuetify);
+localVue.use(Vuex);
+
 describe('MyApps.vue', () => {
-  let vuetify;
+  let store;
 
   beforeEach(() => {
-    vuetify = new Vuetify();
+    store = new Vuex.Store();
   });
 
   it('renders', () => {
     const wrapper = shallowMount(MyApps, {
-      vuetify,
+      store,
+      localVue,
       stubs: ['ApplicationList', 'BaseSecure']
     });
 

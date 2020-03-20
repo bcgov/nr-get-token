@@ -3,10 +3,12 @@ import UserService from '@/services/userService';
 export default {
   namespaced: true,
   state: {
-    acronyms: []
+    acronyms: [],
+    moduleLoaded: false
   },
   getters: {
-    acronyms: state => state.acronyms
+    acronyms: state => state.acronyms,
+    moduleLoaded: state => state.moduleLoaded
   },
   mutations: {
     setAcronyms: (state, acronyms = []) => {
@@ -29,9 +31,28 @@ export default {
           acr.prodStatus = false;
         });
       }
-    }
+    },
+    setModuleLoaded: (state, status) => state.moduleLoaded = status
   },
   actions: {
+    /**
+     * @function getAcronymClientStatus
+     * Fetch the service clients for the acronyms the user has
+     * @param {object} context The store context
+     */
+    async getAcronymClientStatus(context) {
+      try {
+        if (context.rootGetters['auth/authenticated']) {
+          const response = await UserService.getServiceClients(
+            context.rootGetters['auth/subject']
+          );
+          context.commit('setAcronymClientStatus', response.data);
+        }
+      } catch (error) {
+        // TODO: Create top-level global state error message
+        console.error(error); // eslint-disable-line no-console
+      }
+    },
     /**
      * @function getUserAcronyms
      * Fetch the acronyms the current user has access to from the DB
@@ -51,22 +72,17 @@ export default {
       }
     },
     /**
-     * @function fillInAcronymClientStatus
-     * Fetch the service clients for the acronyms the user has
+     * @function loadModule
+     * Dispatches all actions needed to populate the user store
      * @param {object} context The store context
      */
-    async fillInAcronymClientStatus(context) {
-      try {
-        if (context.rootGetters['auth/authenticated']) {
-          const response = await UserService.getServiceClients(
-            context.rootGetters['auth/subject']
-          );
-          context.commit('setAcronymClientStatus', response.data);
-        }
-      } catch (error) {
-        // TODO: Create top-level global state error message
-        console.error(error); // eslint-disable-line no-console
-      }
+    async loadModule(context) {
+      context.commit('setModuleLoaded', false);
+      await Promise.all([
+        context.dispatch('getUserAcronyms'),
+        context.dispatch('getAcronymClientStatus')
+      ]);
+      context.commit('setModuleLoaded', true);
     }
   }
 };

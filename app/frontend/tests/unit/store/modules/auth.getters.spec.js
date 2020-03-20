@@ -56,6 +56,10 @@ describe('auth getters', () => {
     expect(store.getters.createLogoutUrl()).toMatch('test');
   });
 
+  it('moduleLoaded should return a boolean', () => {
+    expect(store.getters.moduleLoaded).toBeTruthy();
+  });
+
   it('ready should return a boolean', () => {
     expect(store.getters.ready).toBeTruthy();
   });

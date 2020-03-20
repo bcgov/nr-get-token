@@ -7,6 +7,7 @@ export default {
     authenticated: () => Vue.prototype.$keycloak.authenticated,
     createLoginUrl: () => options => Vue.prototype.$keycloak.createLoginUrl(options),
     createLogoutUrl: () => options => Vue.prototype.$keycloak.createLogoutUrl(options),
+    moduleLoaded: () => !!Vue.prototype.$keycloak,
     ready: () => Vue.prototype.$keycloak.ready,
     realmAccess: () => Vue.prototype.$keycloak.tokenParsed.realm_access,
     resourceAccess: () => Vue.prototype.$keycloak.tokenParsed.resource_access,
