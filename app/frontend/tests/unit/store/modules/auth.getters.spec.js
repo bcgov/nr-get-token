@@ -56,12 +56,17 @@ describe('auth getters', () => {
     expect(store.getters.createLogoutUrl()).toMatch('test');
   });
 
-  it('moduleLoaded should return a boolean', () => {
-    expect(store.getters.moduleLoaded).toBeTruthy();
+  it('keycloakReady should return a boolean', () => {
+    expect(store.getters.keycloakReady).toBeTruthy();
   });
 
-  it('ready should return a boolean', () => {
-    expect(store.getters.ready).toBeTruthy();
+  it('keycloakSubject should return a string', () => {
+    expect(store.getters.keycloakSubject).toBeTruthy();
+    expect(store.getters.keycloakSubject).toMatch(zeroUuid);
+  });
+
+  it('moduleLoaded should return a boolean', () => {
+    expect(store.getters.moduleLoaded).toBeTruthy();
   });
 
   it('realmAccess should return an object', () => {
@@ -72,11 +77,6 @@ describe('auth getters', () => {
   it('resourceAccess should return an object', () => {
     expect(store.getters.resourceAccess).toBeTruthy();
     expect(typeof store.getters.resourceAccess).toBe('object');
-  });
-
-  it('subject should return a string', () => {
-    expect(store.getters.subject).toBeTruthy();
-    expect(store.getters.subject).toMatch(zeroUuid);
   });
 
   it('tokenParsed should return an object', () => {

@@ -42,12 +42,9 @@ export default {
      */
     async getAcronymClientStatus(context) {
       try {
-        if (context.rootGetters['auth/authenticated']) {
-          const response = await UserService.getServiceClients(
-            context.rootGetters['auth/subject']
-          );
-          context.commit('setAcronymClientStatus', response.data);
-        }
+        const subject = context.rootGetters['auth/keycloakSubject'];
+        const response = await UserService.getServiceClients(subject);
+        context.commit('setAcronymClientStatus', response.data);
       } catch (error) {
         // TODO: Create top-level global state error message
         console.error(error); // eslint-disable-line no-console
@@ -60,12 +57,9 @@ export default {
      */
     async getUserAcronyms(context) {
       try {
-        if (context.rootGetters['auth/authenticated']) {
-          const response = await UserService.getUserAcronyms(
-            context.rootGetters['auth/subject']
-          );
-          context.commit('setAcronyms', response.data);
-        }
+        const subject = context.rootGetters['auth/keycloakSubject'];
+        const response = await UserService.getUserAcronyms(subject);
+        context.commit('setAcronyms', response.data);
       } catch (error) {
         // TODO: Create top-level global state error message
         console.error(error); // eslint-disable-line no-console
@@ -78,10 +72,8 @@ export default {
      */
     async loadModule(context) {
       context.commit('setModuleLoaded', false);
-      await Promise.all([
-        context.dispatch('getUserAcronyms'),
-        context.dispatch('getAcronymClientStatus')
-      ]);
+      await context.dispatch('getUserAcronyms');
+      await context.dispatch('getAcronymClientStatus');
       context.commit('setModuleLoaded', true);
     }
   }

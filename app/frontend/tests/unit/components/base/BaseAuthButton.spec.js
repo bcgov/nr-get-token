@@ -23,7 +23,7 @@ describe('BaseAuthButton.vue', () => {
         authenticated: () => false,
         createLoginUrl: () => 'test',
         createLogoutUrl: () => 'test',
-        ready: () => true
+        keycloakReady: () => true
       }
     });
 
@@ -39,7 +39,7 @@ describe('BaseAuthButton.vue', () => {
         authenticated: () => true,
         createLoginUrl: () => 'test',
         createLogoutUrl: () => 'test',
-        ready: () => true
+        keycloakReady: () => true
       }
     });
 
@@ -48,19 +48,19 @@ describe('BaseAuthButton.vue', () => {
     expect(wrapper.text()).toMatch('Logout');
   });
 
-  it('renders nothing if keycloak is not ready', () => {
+  it('renders nothing if keycloak is not keycloakReady', () => {
     store.registerModule('auth', {
       namespaced: true,
       getters: {
         authenticated: () => false,
         createLoginUrl: () => 'test',
         createLogoutUrl: () => 'test',
-        ready: () => false
+        keycloakReady: () => false
       }
     });
 
     const wrapper = shallowMount(BaseAuthButton, { localVue, store, vuetify });
-    
+
     expect(wrapper.text()).toBeFalsy();
   });
 });

@@ -4,7 +4,7 @@
   </div>
   <div v-else class="text-center">
     <h1 class="mb-10">You must be logged in to use this feature.</h1>
-    <v-btn v-if="ready" color="secondary" class="login-btn" @click="login" large>
+    <v-btn v-if="keycloakReady" color="secondary" class="login-btn" @click="login" large>
       <v-icon left>mdi-login</v-icon>
       <span>Login</span>
     </v-btn>
@@ -17,11 +17,11 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'BaseSecure',
   computed: {
-    ...mapGetters('auth', ['authenticated', 'createLoginUrl', 'ready'])
+    ...mapGetters('auth', ['authenticated', 'createLoginUrl', 'keycloakReady'])
   },
   methods: {
     login() {
-      if (this.ready) {
+      if (this.keycloakReady) {
         window.location.replace(this.createLoginUrl());
       }
     }

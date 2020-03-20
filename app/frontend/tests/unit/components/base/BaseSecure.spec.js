@@ -19,7 +19,7 @@ describe('BaseSecure.vue', () => {
       getters: {
         authenticated: () => true,
         createLoginUrl: () => 'test',
-        ready: () => true
+        keycloakReady: () => true
       }
     });
 
@@ -34,7 +34,7 @@ describe('BaseSecure.vue', () => {
       getters: {
         authenticated: () => false,
         createLoginUrl: () => 'test',
-        ready: () => true
+        keycloakReady: () => true
       }
     });
 
@@ -50,7 +50,7 @@ describe('BaseSecure.vue', () => {
       getters: {
         authenticated: () => false,
         createLoginUrl: () => 'test',
-        ready: () => false
+        keycloakReady: () => false
       }
     });
 

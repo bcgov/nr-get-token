@@ -1,5 +1,5 @@
 <template>
-  <div v-if="ready">
+  <div v-if="keycloakReady">
     <v-btn v-if="authenticated" color="white" class="login-btn" @click="logout" outlined>
       <v-icon :left="$vuetify.breakpoint.smAndUp">mdi-logout</v-icon>
       <span v-if="$vuetify.breakpoint.smAndUp">Logout</span>
@@ -21,17 +21,17 @@ export default {
       'authenticated',
       'createLoginUrl',
       'createLogoutUrl',
-      'ready'
+      'keycloakReady'
     ])
   },
   methods: {
     login() {
-      if (this.ready) {
+      if (this.keycloakReady) {
         window.location.replace(this.createLoginUrl());
       }
     },
     logout() {
-      if (this.ready) {
+      if (this.keycloakReady) {
         window.location.replace(
           this.createLogoutUrl({ redirectUri: location.origin })
         );

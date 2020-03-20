@@ -30,7 +30,7 @@ describe('user actions', () => {
         namespaced: true,
         getters: {
           authenticated: () => true,
-          subject: () => zeroUuid
+          keycloakSubject: () => zeroUuid
         }
       });
 
@@ -46,7 +46,7 @@ describe('user actions', () => {
         namespaced: true,
         getters: {
           authenticated: () => true,
-          subject: () => zeroUuid
+          keycloakSubject: () => zeroUuid
         }
       });
 
@@ -63,7 +63,7 @@ describe('user actions', () => {
         namespaced: true,
         getters: {
           authenticated: () => true,
-          subject: () => zeroUuid
+          keycloakSubject: () => zeroUuid
         }
       });
 
