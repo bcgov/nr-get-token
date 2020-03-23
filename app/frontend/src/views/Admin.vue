@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <BaseSecure>
-      Admin Page
+    <BaseSecure admin>
+      <h1 class="mb-10">Admin Page</h1>
     </BaseSecure>
   </v-container>
 </template>
