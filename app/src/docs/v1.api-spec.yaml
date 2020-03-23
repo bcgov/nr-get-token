@@ -170,32 +170,19 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  "/keyCloak/clients/{keycloakEnv}/{acronym}":
+  "/keyCloak/clients":
     get:
-      summary: Returns KeyCloak client details
-      operationId: kcClientGet
+      summary: Returns KeyCloak all keycloak clients
+      operationId: kcClientsGet
       tags:
         - KeyCloak Service Client Configuration
-      parameters:
-        - name: keycloakEnv
-          in: path
-          description: "Keycloak realm (dev, test, prod)"
-          required: true
-          schema:
-            type: string
-        - name: acronym
-          in: path
-          description: Name of the application to find the KC client for
-          required: true
-          schema:
-            type: string
       responses:
         "200":
-          description: Returns the Keycloak client details for the acronym specified
+          description: Returns the Keycloak service clients
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/KcClientDetail"
+                $ref: "#/components/schemas/KcClients"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "403":
@@ -889,6 +876,16 @@ components:
           items:
             $ref: "#/components/schemas/Role"
           description: An array of Common Service roles the client currently has
+    KcClients:
+      type: object
+      required:
+        - clients
+      properties:
+        clients:
+          type: array
+          items:
+            $ref: "#/components/schemas/KcClientDetail"
+          description: An array of Keycloak clients
     KcConfigForm:
       type: object
       required:

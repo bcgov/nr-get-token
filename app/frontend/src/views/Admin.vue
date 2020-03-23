@@ -9,6 +9,7 @@
         </v-row>
       </v-container>
       <ApiTester class="my-4" />
+      <stats />
     </BaseSecure>
   </v-container>
 </template>
@@ -17,13 +18,15 @@
 import ApiTester from '@/components/ApiTester.vue';
 import HealthDialog from '@/components/HealthDialog.vue';
 import JWTDialog from '@/components/JWTDialog.vue';
+import Stats from '@/components/Stats.vue';
 
 export default {
   name: 'Admin',
   components: {
     ApiTester,
     HealthDialog,
-    JWTDialog
+    JWTDialog,
+    Stats
   }
 };
 </script>

@@ -48,6 +48,17 @@ const router = new VueRouter({
         requiresAuth: true
       },
     },
+
+    // tempoarary place for admin page
+    {
+      path: '/admin',
+      name: 'Admin',
+      component: () => import(/* webpackChunkName: "admin" */ '@/views/Admin.vue'),
+      meta: {
+        requiresAuth: true
+      },
+    },
+
     {
       path: '/404',
       alias: '*',
