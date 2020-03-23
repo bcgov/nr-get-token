@@ -11,6 +11,9 @@
         <li>
           <router-link :to="{ name: 'RequestAccount' }">Request Account</router-link>
         </li>
+        <li>
+          <router-link :to="{ name: 'Admin' }">Admin</router-link>
+        </li>
       </ul>
     </div>
   </nav>
