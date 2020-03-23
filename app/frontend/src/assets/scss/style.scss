@@ -39,7 +39,11 @@ body > .v-content {
   padding: 12px 32px !important;
   text-align: center;
   text-decoration: none;
-  cursor: pointer;
+}
+
+.v-btn.v-btn--disabled {
+  background-color: #eee;
+  color: #777;
 }
 
 .BC-Gov-PrimaryButton:hover,

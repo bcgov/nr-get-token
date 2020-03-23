@@ -22,6 +22,8 @@ The material design framework Vuetify is used for design and layout. All additio
 
 The Vuex state management system is an integral part of the frontend application. It maintains a centralized store for all the components in the app. The location of the store in the project structure is `./src/store`. See the [Vuex docs](https://vuex.vuejs.org/) for more information.
 
+Our Vuex store leverages [dynamic module registration](https://vuex.vuejs.org/guide/modules.html#dynamic-module-registration) in order to allow for certain modules to be loaded after store creation. This allows us to start the application sooner, and allows for better code separation in webpack bundling. At this time, the auth module must be loaded after the Keycloak plugin has fully loaded. Other modules may potentially follow this dynamic registration pattern if it makes sense.
+
 #### Vue Router
 
 Vue Router is used for Single Page App routing. See the [Vue Router docs](https://router.vuejs.org/) for more information. We are not using history mode in order to ensure network pathing remains consistent.
@@ -51,7 +53,18 @@ Unit tests are written in [Jest](https://jestjs.io/).
 
 [Vue Test Utils](https://vue-test-utils.vuejs.org/) is included (scaffolded through Vue CLI) to facilitate unit test writing for the Vue components.
 
-See [Run your unit tests](#run-your-unit-tests) below for details on executing tests
+See [Run your unit tests](#run-your-unit-tests) below for details on executing tests.
+
+### Writing Unit Tests
+
+For most components, we will want to be shallow mounting them in order to avoid accidentally testing for behavior across different components. Components which contain children components should be stubbed out where possible.
+
+As our codebase uses [dynamic module registration](https://vuex.vuejs.org/guide/modules.html#dynamic-module-registration), unit tests which need the store will need to one of the following:
+
+1. Instantiate a new vuex store with the appropriate values as part of the constructor
+2. Create an empty vuex store and then register a mocked vuex store module for the specific unit test environment
+
+While both methods effectively achieve the same goal of setting the vuex store mock to be in the right state, we suggest using the second option as it can provide slightly more flexibility with unit testing.
 
 ## Project scripts to run locally
 
