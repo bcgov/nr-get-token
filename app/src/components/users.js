@@ -1,3 +1,7 @@
+const config = require('config');
+const KeyCloakServiceClientManager = require('./keyCloakServiceClientMgr');
+const log = require('npmlog');
+const RealmAdminService = require('./realmAdminSvc');
 const { userService } = require('../services');
 
 const users = {
@@ -25,32 +29,52 @@ const users = {
     const user = await userService.find(keycloakId);
     if (!user) return null;
 
-    const acronyms = await userService.userAcronymList(keycloakId);
-    if (!acronyms || !Array.isArray(acronyms) || !acronyms.length) {
+    const acronymsFromDb = await userService.userAcronymList(keycloakId);
+    if (!acronymsFromDb || !Array.isArray(acronymsFromDb) || !acronymsFromDb.length) {
       return [];
     }
+    const acronyms = acronymsFromDb.map(acr => acr.acronym);
+    log.debug('getUserAcronymClients', `Acronyms for user: ${JSON.stringify(acronyms)}`);
 
-    return [{
-      acronym: 'WORG',
-      dev: {
-        clientId: 'WORG_SERVICE_CLIENT',
-        enabled: true
-      },
-      test: {
-        clientId: 'WORG_SERVICE_CLIENT',
-        enabled: true
-      }
-    }, {
-      acronym: 'MSSC',
-      dev: {
-        clientId: 'MSSC_SERVICE_CLIENT',
-        enabled: true
-      },
-      test: {
-        clientId: 'MSSC_SERVICE_CLIENT',
-        enabled: false
-      }
-    }];
+    let [devClients, testClients, prodClients] = await Promise.all([
+      users.getClientsFromEnv('dev', acronyms),
+      users.getClientsFromEnv('test', acronyms),
+      users.getClientsFromEnv('prod', acronyms)
+    ]);
+
+    // This might be able to be better one-lined with map/reduce, but just not worth the time
+    const clientList = [];
+    acronyms.forEach(acr => {
+      const dc = devClients.find(cl => cl.clientId === `${acr}_SERVICE_CLIENT`);
+      const tc = testClients.find(cl => cl.clientId === `${acr}_SERVICE_CLIENT`);
+      const pc = prodClients.find(cl => cl.clientId === `${acr}_SERVICE_CLIENT`);
+      clientList.push({
+        acronym: acr,
+        dev: dc ? dc : null,
+        test: tc ? tc : null,
+        prod: pc ? pc : null
+      });
+    });
+    return clientList;
+  },
+  /**
+   * @function getClientsFromEnv
+   * Utility function to call the KC service to get clients for each realm
+   * @param {string} kcEnv The KC env
+   * @param {string} acronyms The acronyms to get clients for
+   * @returns {object[]} An array of service clients
+   */
+  getClientsFromEnv: async (kcEnv, acronyms) => {
+    const realmKey = `serviceClient.keycloak.${kcEnv}`;
+    const {
+      endpoint: realmBaseUrl,
+      username: clientId,
+      password: clientSecret,
+      realm: realmId
+    } = config.get(realmKey);
+    const realmSvc = new RealmAdminService({ realmBaseUrl, clientId, clientSecret, realmId });
+    const kcScMgr = new KeyCloakServiceClientManager(realmSvc);
+    return kcScMgr.fetchClients(acronyms);
   }
 };
 

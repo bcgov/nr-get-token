@@ -61,3 +61,62 @@ describe('getUserAcronyms', () => {
     expect(userAcronymListSpy).toHaveBeenCalledWith(randUuid);
   });
 });
+
+describe('getUserAcronymClients', () => {
+  const findSpy = jest.spyOn(userService, 'find');
+  const userAcronymListSpy = jest.spyOn(userService, 'userAcronymList');
+  const getClientsSpy = jest.spyOn(users, 'getClientsFromEnv');
+
+  beforeEach(() => {
+    findSpy.mockReset();
+    userAcronymListSpy.mockClear();
+    getClientsSpy.mockClear();
+  });
+
+  it('should return null when user is not found', async () => {
+    findSpy.mockResolvedValue(undefined);
+
+    const result = await users.getUserAcronymClients(zeroUuid);
+
+    expect(result).toBeNull();
+    expect(findSpy).toHaveBeenCalledTimes(1);
+    expect(findSpy).toHaveBeenCalledWith(zeroUuid);
+    expect(userAcronymListSpy).toHaveBeenCalledTimes(0);
+  });
+
+  it('should return empty service client list when no arrays are found', async () => {
+    findSpy.mockResolvedValue({});
+    userAcronymListSpy.mockResolvedValue([]);
+
+    const result = await users.getUserAcronymClients(zeroUuid);
+
+    expect(result).toEqual([]);
+    expect(findSpy).toHaveBeenCalledTimes(1);
+    expect(findSpy).toHaveBeenCalledWith(zeroUuid);
+    expect(userAcronymListSpy).toHaveBeenCalledTimes(1);
+    expect(userAcronymListSpy).toHaveBeenCalledWith(zeroUuid);
+  });
+
+  it('should return null service clients when no clients are found', async () => {
+    findSpy.mockResolvedValue({});
+    userAcronymListSpy.mockResolvedValue([{ acronym: 'ZZZ' }, { acronym: 'XXX' }]);
+    getClientsSpy.mockResolvedValue([]);
+
+    const result = await users.getUserAcronymClients(zeroUuid);
+
+    expect(result).toEqual([{ acronym: 'ZZZ', dev: null, test: null, prod: null }, { acronym: 'XXX', dev: null, test: null, prod: null }]);
+    expect(getClientsSpy).toHaveBeenCalledTimes(3);
+  });
+
+  it('should map service clients to envs when a client is found', async () => {
+    findSpy.mockResolvedValue({});
+    userAcronymListSpy.mockResolvedValue([{ acronym: 'ZZZ' }, { acronym: 'XXX' }]);
+    const mockClient = { environment: 'fake', id: '1234', clientId: 'XXX_SERVICE_CLIENT', enabled: true, name: 'XXX name', description: 'XXX desc', serviceAccountEmail: 'a@b.com' };
+    getClientsSpy.mockResolvedValue([mockClient]);
+
+    const result = await users.getUserAcronymClients(zeroUuid);
+
+    expect(result).toEqual([{ acronym: 'ZZZ', dev: null, test: null, prod: null }, { acronym: 'XXX', dev: mockClient, test: mockClient, prod: mockClient }]);
+    expect(getClientsSpy).toHaveBeenCalledTimes(3);
+  });
+});
