@@ -26,16 +26,19 @@ describe('auth getters', () => {
       get() {
         return {
           authenticated: authenticated,
-          createLoginUrl: () => 'test',
-          createLogoutUrl: () => 'test',
+          createLoginUrl: () => 'loginUrl',
+          createLogoutUrl: () => 'logoutUrl',
+          fullName: 'fName',
           ready: true,
           subject: zeroUuid,
+          token: 'token',
           tokenParsed: {
             realm_access: {
               roles: roles
             },
             resource_access: {}
-          }
+          },
+          userName: 'uName'
         };
       }
     });
@@ -54,13 +57,18 @@ describe('auth getters', () => {
   it('createLoginUrl should return a string', () => {
     expect(store.getters.createLoginUrl).toBeTruthy();
     expect(typeof store.getters.createLoginUrl).toBe('function');
-    expect(store.getters.createLoginUrl()).toMatch('test');
+    expect(store.getters.createLoginUrl()).toMatch('loginUrl');
   });
 
   it('createLogoutUrl should return a string', () => {
     expect(store.getters.createLogoutUrl).toBeTruthy();
     expect(typeof store.getters.createLogoutUrl).toBe('function');
-    expect(store.getters.createLogoutUrl()).toMatch('test');
+    expect(store.getters.createLogoutUrl()).toMatch('logoutUrl');
+  });
+
+  it('fullName should return a string', () => {
+    expect(store.getters.fullName).toBeTruthy();
+    expect(store.getters.fullName).toMatch('fName');
   });
 
   it('isAdmin should return false if unauthenticated', () => {
@@ -101,8 +109,18 @@ describe('auth getters', () => {
     expect(typeof store.getters.resourceAccess).toBe('object');
   });
 
+  it('token should return a string', () => {
+    expect(store.getters.token).toBeTruthy();
+    expect(store.getters.token).toMatch('token');
+  });
+
   it('tokenParsed should return an object', () => {
     expect(store.getters.tokenParsed).toBeTruthy();
     expect(typeof store.getters.tokenParsed).toBe('object');
+  });
+
+  it('userName should return a string', () => {
+    expect(store.getters.userName).toBeTruthy();
+    expect(store.getters.userName).toMatch('uName');
   });
 });
