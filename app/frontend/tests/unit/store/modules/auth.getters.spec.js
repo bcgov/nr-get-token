@@ -4,6 +4,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import authStore from '@/store/modules/auth';
+import { RealmRoles } from '@/utils/constants';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
@@ -11,22 +12,28 @@ localVue.use(Vuex);
 const zeroUuid = '00000000-0000-0000-0000-000000000000';
 
 describe('auth getters', () => {
+  let authenticated;
+  let roles;
   let store;
 
   beforeEach(() => {
+    authenticated = true;
+    roles = [];
     store = new Vuex.Store(cloneDeep(authStore));
 
     Object.defineProperty(Vue.prototype, '$keycloak', {
       configurable: true, // Needed to allow deletions later
       get() {
         return {
-          authenticated: true,
+          authenticated: authenticated,
           createLoginUrl: () => 'test',
           createLogoutUrl: () => 'test',
           ready: true,
           subject: zeroUuid,
           tokenParsed: {
-            realm_access: {},
+            realm_access: {
+              roles: roles
+            },
             resource_access: {}
           }
         };
@@ -54,6 +61,21 @@ describe('auth getters', () => {
     expect(store.getters.createLogoutUrl).toBeTruthy();
     expect(typeof store.getters.createLogoutUrl).toBe('function');
     expect(store.getters.createLogoutUrl()).toMatch('test');
+  });
+
+  it('isAdmin should return false if unauthenticated', () => {
+    authenticated = false;
+
+    expect(store.getters.authenticated).toBeFalsy();
+    expect(store.getters.isAdmin).toBeFalsy();
+  });
+
+  it('isAdmin should return true when GETOK_ADMIN exists', () => {
+    authenticated = true;
+    roles = [RealmRoles.GETOK_ADMIN];
+
+    expect(store.getters.authenticated).toBeTruthy();
+    expect(store.getters.isAdmin).toBeTruthy();
   });
 
   it('keycloakReady should return a boolean', () => {

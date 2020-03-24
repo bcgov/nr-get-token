@@ -13,12 +13,13 @@ describe('BaseSecure.vue', () => {
     store = new Vuex.Store();
   });
 
-  it('renders nothing if authenticated', () => {
+  it('renders nothing if authenticated and authorized', () => {
     store.registerModule('auth', {
       namespaced: true,
       getters: {
         authenticated: () => true,
         createLoginUrl: () => 'test',
+        isAdmin: () => true,
         keycloakReady: () => true
       }
     });
@@ -28,12 +29,36 @@ describe('BaseSecure.vue', () => {
     expect(wrapper.text()).toMatch('');
   });
 
+  it('renders a message if authenticated and unauthorized', () => {
+    store.registerModule('auth', {
+      namespaced: true,
+      getters: {
+        authenticated: () => true,
+        createLoginUrl: () => 'test',
+        isAdmin: () => false,
+        keycloakReady: () => true
+      }
+    });
+
+    const wrapper = shallowMount(BaseSecure, {
+      localVue,
+      propsData: {
+        admin: true
+      },
+      store,
+      stubs: ['router-link']
+    });
+
+    expect(wrapper.text()).toMatch('You are not authorized to use this feature.');
+  });
+
   it('renders a message with login button if unauthenticated', () => {
     store.registerModule('auth', {
       namespaced: true,
       getters: {
         authenticated: () => false,
         createLoginUrl: () => 'test',
+        isAdmin: () => false,
         keycloakReady: () => true
       }
     });
@@ -50,6 +75,7 @@ describe('BaseSecure.vue', () => {
       getters: {
         authenticated: () => false,
         createLoginUrl: () => 'test',
+        isAdmin: () => false,
         keycloakReady: () => false
       }
     });

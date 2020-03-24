@@ -16,6 +16,14 @@ const router = new VueRouter({
       component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue')
     },
     {
+      path: '/admin',
+      name: 'Admin',
+      component: () => import(/* webpackChunkName: "admin" */ '@/views/Admin.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/myApps',
       name: 'MyApps',
       component: () => import(/* webpackChunkName: "my-apps" */ '@/views/MyApps.vue'),

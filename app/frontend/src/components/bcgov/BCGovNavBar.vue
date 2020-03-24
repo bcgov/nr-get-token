@@ -11,14 +11,22 @@
         <li>
           <router-link :to="{ name: 'RequestAccount' }">Request Account</router-link>
         </li>
+        <li v-if="isAdmin">
+          <router-link :to="{ name: 'Admin' }">Admin</router-link>
+        </li>
       </ul>
     </div>
   </nav>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
-  name: 'BCGovNavBar'
+  name: 'BCGovNavBar',
+  computed: {
+    ...mapGetters('auth', ['isAdmin'])
+  }
 };
 </script>
 
