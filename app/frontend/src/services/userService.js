@@ -22,7 +22,7 @@ export default {
    */
   getServiceClients(keycloakId) {
     if (keycloakId && validator.isUUID(keycloakId)) {
-      return getokAxios().get(`/users/${keycloakId}/acronyms/clients`);
+      return getokAxios().get(`/users/${keycloakId}/acronyms/clients`, { timeout: 30000 });
     } else {
       return Promise.reject('keycloakId must be a valid UUID');
     }

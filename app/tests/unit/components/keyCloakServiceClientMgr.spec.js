@@ -19,7 +19,7 @@ jest.mock('../../../src/components/realmAdminSvc', () => {
   return jest.fn().mockImplementation(() => {
     return {
       tokenUrl: 'https://tokenurl',
-      getClients: () => { return [{ id: 1, clientId: 'ZZZ_SERVICE_CLIENT' }]; },
+      getClients: () => { return [{ id: 1, clientId: 'ZZZ_SERVICE_CLIENT' }, { id: 2, clientId: 'XXX_SERVICE_CLIENT' }, { id: 3, clientId: 'YYY_SERVICE_CLIENT' }]; },
       createClient: () => { return { id: '1', clientId: 'generatedserviceclientid' }; },
       getClientRoles: () => { return []; },
       addClientRole: () => { return []; },
@@ -107,25 +107,41 @@ describe('KeyCloakServiceClientManager manage', () => {
 
 });
 
-describe('KeyCloakServiceClientManager fetchClient', () => {
-  it('should throw an error without applicationAcronym', async () => {
+describe('KeyCloakServiceClientManager fetchClients', () => {
+  it('should throw an error without applicationAcronymList', async () => {
     const mgr = new KeyCloakServiceClientManager(realmAdminService);
-    await expect(mgr.fetchClient(undefined)).rejects.toThrow();
+    await expect(mgr.fetchClients(undefined)).rejects.toThrow();
   });
 
-  it('should return a Service Client', async () => {
+  it('should throw an error with empty applicationAcronymList', async () => {
     const mgr = new KeyCloakServiceClientManager(realmAdminService);
-    const r = await mgr.fetchClient('ZZZ');
+    await expect(mgr.fetchClients([])).rejects.toThrow();
+  });
+
+  it('should return a Service Client when a single acronym is passed in', async () => {
+    const mgr = new KeyCloakServiceClientManager(realmAdminService);
+    const r = await mgr.fetchClients(['ZZZ']);
     expect(r).toBeTruthy();
-    expect(r.id).toEqual(1);
-    expect(r.clientId).toEqual('ZZZ_SERVICE_CLIENT');
+    expect(r.length).toEqual(1);
+    expect(r[0].id).toEqual(1);
+    expect(r[0].clientId).toEqual('ZZZ_SERVICE_CLIENT');
+  });
+
+  it('should return only the relevant Service Clients when multiple acronyms are passed in', async () => {
+    const mgr = new KeyCloakServiceClientManager(realmAdminService);
+    const r = await mgr.fetchClients(['ZZZ', 'YYY', 'ABC', '123']);
+    expect(r).toBeTruthy();
+    expect(r.length).toEqual(2);
+    expect(r[0].id).toEqual(1);
+    expect(r[0].clientId).toEqual('ZZZ_SERVICE_CLIENT');
+    expect(r[1].id).toEqual(3);
+    expect(r[1].clientId).toEqual('YYY_SERVICE_CLIENT');
   });
 
   it('should return undefined if a service client not found', async () => {
     const mgr = new KeyCloakServiceClientManager(realmAdminService);
-    const r = await mgr.fetchClient('XXX');
-    expect(r).toBeFalsy();
-    expect(r).toBeUndefined();
+    const r = await mgr.fetchClients(['SDFH']);
+    expect(r).toEqual([]);
   });
 
 });
@@ -141,5 +157,14 @@ describe('KeyCloakServiceClientManager findUser', () => {
     const r = await mgr.findUser('me@idir');
     expect(r).toBeTruthy();
     expect(r.username).toEqual('me@idir');
+  });
+});
+
+describe('KeyCloakServiceClientManager makeClientDetails', () => {
+  // Note: most tests of this method are excersized with fetchClients above
+  it('should throw an error without username', async () => {
+    const mgr = new KeyCloakServiceClientManager(realmAdminService);
+    const res = await mgr.makeClientDetails(undefined);
+    expect(res).toEqual(undefined);
   });
 });

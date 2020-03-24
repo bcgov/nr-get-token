@@ -33,15 +33,15 @@
     "keycloak": {
       "dev": {
         "endpoint": "https://sso-dev.pathfinder.gov.bc.ca",
-        "realm": "98r0z7rz"
+        "realm": "jbd6rnxw"
       },
       "test": {
         "endpoint": "https://sso-test.pathfinder.gov.bc.ca",
-        "realm": "98r0z7rz"
+        "realm": "jbd6rnxw"
       },
       "prod": {
         "endpoint": "https://sso.pathfinder.gov.bc.ca",
-        "realm": "98r0z7rz"
+        "realm": "jbd6rnxw"
       }
     },
     "webAde": {
