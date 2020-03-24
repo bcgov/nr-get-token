@@ -128,7 +128,7 @@ import { FieldValidations } from '@/utils/constants.js';
 export default {
   name: 'RequestForm',
   computed: {
-    ...mapGetters('auth', ['tokenParsed'])
+    ...mapGetters('auth', ['tokenParsed', 'userName'])
   },
   data() {
     return {
@@ -176,7 +176,7 @@ export default {
       this.form.applicationAcronym = '';
       this.form.comments = '';
       this.form.from = this.tokenParsed.email;
-      this.form.idir = this.tokenParsed.preferred_username;
+      this.form.idir = this.userName;
     },
     resetState() {
       this.errorOccurred = false;

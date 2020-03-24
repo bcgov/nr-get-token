@@ -27,9 +27,9 @@ describe('RequestForm.vue', () => {
         tokenParsed: () => {
           return {
             email: email,
-            preferred_username: idir
           };
-        }
+        },
+        userName: () => idir
       }
     });
 
@@ -52,9 +52,9 @@ describe('RequestForm.vue', () => {
         tokenParsed: () => {
           return {
             email: 'email',
-            preferred_username: 'user@idir'
           };
-        }
+        },
+        userName: () => 'user@idir'
       }
     });
 
@@ -81,9 +81,9 @@ describe('RequestForm.vue', () => {
         tokenParsed: () => {
           return {
             email: 'email',
-            preferred_username: 'user@idir'
           };
-        }
+        },
+        userName: () => 'user@idir'
       }
     });
 
@@ -110,9 +110,9 @@ describe('RequestForm.vue', () => {
         tokenParsed: () => {
           return {
             email: 'email',
-            preferred_username: 'user@idir'
           };
-        }
+        },
+        userName: () => 'user@idir'
       }
     });
 
