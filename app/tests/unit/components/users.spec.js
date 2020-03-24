@@ -111,7 +111,10 @@ describe('getUserAcronymClients', () => {
   it('should map service clients to envs when a client is found', async () => {
     findSpy.mockResolvedValue({});
     userAcronymListSpy.mockResolvedValue([{ acronym: 'ZZZ' }, { acronym: 'XXX' }]);
-    const mockClient = { environment: 'fake', id: '1234', clientId: 'XXX_SERVICE_CLIENT', enabled: true, name: 'XXX name', description: 'XXX desc', serviceAccountEmail: 'a@b.com' };
+    const mockClient = {
+      environment: 'fake', id: '1234', clientId: 'XXX_SERVICE_CLIENT', enabled: true, name: 'XXX name',
+      description: 'XXX desc', serviceAccountEmail: 'a@b.com'
+    };
     getClientsSpy.mockResolvedValue([mockClient]);
 
     const result = await users.getUserAcronymClients(zeroUuid);

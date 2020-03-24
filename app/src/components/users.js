@@ -1,6 +1,7 @@
 const config = require('config');
-const KeyCloakServiceClientManager = require('./keyCloakServiceClientMgr');
 const log = require('npmlog');
+
+const KeyCloakServiceClientManager = require('./keyCloakServiceClientMgr');
 const RealmAdminService = require('./realmAdminSvc');
 const { userService } = require('../services');
 
@@ -36,26 +37,24 @@ const users = {
     const acronyms = acronymsFromDb.map(acr => acr.acronym);
     log.debug('getUserAcronymClients', `Acronyms for user: ${JSON.stringify(acronyms)}`);
 
-    let [devClients, testClients, prodClients] = await Promise.all([
+    const [devClients, testClients, prodClients] = await Promise.all([
       users.getClientsFromEnv('dev', acronyms),
       users.getClientsFromEnv('test', acronyms),
       users.getClientsFromEnv('prod', acronyms)
     ]);
 
-    // This might be able to be better one-lined with map/reduce, but just not worth the time
-    const clientList = [];
-    acronyms.forEach(acr => {
+    return acronyms.map(acr => {
       const dc = devClients.find(cl => cl.clientId === `${acr}_SERVICE_CLIENT`);
       const tc = testClients.find(cl => cl.clientId === `${acr}_SERVICE_CLIENT`);
       const pc = prodClients.find(cl => cl.clientId === `${acr}_SERVICE_CLIENT`);
-      clientList.push({
+
+      return {
         acronym: acr,
         dev: dc ? dc : null,
         test: tc ? tc : null,
         prod: pc ? pc : null
-      });
+      };
     });
-    return clientList;
   },
   /**
    * @function getClientsFromEnv
