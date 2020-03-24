@@ -36,8 +36,8 @@ export default {
       type: Boolean
     },
     width: {
-      default: 500,
-      type: Number
+      default: '500',
+      type: String
     }
   },
   methods: {
