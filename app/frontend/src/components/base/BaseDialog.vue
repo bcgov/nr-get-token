@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="show" max-width="500">
+  <v-dialog persistent v-model="show" :max-width="width" @click:outside="closeDialog">
     <v-card>
       <div class="dialog-body">
         <v-card-title class primary-title>
@@ -31,7 +31,14 @@ import '@/assets/scss/style.scss';
 export default {
   name: 'BaseDialog',
   props: {
-    show: Boolean
+    show: {
+      default: false,
+      type: Boolean
+    },
+    width: {
+      default: 500,
+      type: Number
+    }
   },
   methods: {
     closeDialog() {
@@ -53,5 +60,6 @@ export default {
 }
 .dialog-text {
   flex: 1 1 auto;
+  width: 90%;
 }
 </style>
