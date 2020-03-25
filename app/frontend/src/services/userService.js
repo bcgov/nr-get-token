@@ -1,5 +1,7 @@
 import validator from 'validator';
+
 import { getokAxios } from '@/services/interceptors';
+import { ApiRoutes } from '@/utils/constants';
 
 export default {
   /**
@@ -10,7 +12,7 @@ export default {
    */
   getUserAcronyms(keycloakId) {
     if (keycloakId && validator.isUUID(keycloakId)) {
-      return getokAxios().get(`/users/${keycloakId}/acronyms`);
+      return getokAxios().get(`${ApiRoutes.USERS}/${keycloakId}/acronyms`);
     } else {
       return Promise.reject('keycloakId must be a valid UUID');
     }
@@ -22,7 +24,7 @@ export default {
    */
   getServiceClients(keycloakId) {
     if (keycloakId && validator.isUUID(keycloakId)) {
-      return getokAxios().get(`/users/${keycloakId}/acronyms/clients`, { timeout: 30000 });
+      return getokAxios().get(`${ApiRoutes.USERS}/${keycloakId}/acronyms/clients`, { timeout: 30000 });
     } else {
       return Promise.reject('keycloakId must be a valid UUID');
     }
