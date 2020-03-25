@@ -1,5 +1,11 @@
 <template>
-  <v-dialog persistent v-model="show" :max-width="width" @click:outside="closeDialog">
+  <v-dialog
+    :max-width="width"
+    persistent
+    v-model="show"
+    @click:outside="closeDialog"
+    @keydown.esc="closeDialog"
+  >
     <v-card>
       <div class="dialog-body">
         <v-card-title class primary-title>

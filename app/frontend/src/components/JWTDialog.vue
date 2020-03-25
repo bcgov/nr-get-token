@@ -10,14 +10,22 @@
         <strong v-else>User is not logged in.</strong>
       </template>
       <template v-slot:icon>
-        <v-icon large>mdi-wrench</v-icon>
+
       </template>
       <template v-slot:text>
         <div v-if="authenticated">
-          <strong>JWT Token</strong>
-          <p>{{ token }}</p>
-          <strong>Contents</strong>
-          <p>{{ tokenParsed }}</p>
+          <v-tabs v-model="tab" light flat>
+            <v-tab>JWT Contents</v-tab>
+            <v-tab>Access Token</v-tab>
+          </v-tabs>
+          <v-tabs-items v-model="tab">
+            <v-tab-item>
+              <pre>{{ JSON.stringify(tokenParsed, null, 2) }}</pre>
+            </v-tab-item>
+            <v-tab-item>
+              <p>{{ token }}</p>
+            </v-tab-item>
+          </v-tabs-items>
         </div>
         <strong v-else>No JWT Token.</strong>
       </template>
@@ -42,7 +50,8 @@ export default {
   },
   data() {
     return {
-      jwtShow: false
+      jwtShow: false,
+      tab: null
     };
   }
 };
