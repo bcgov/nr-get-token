@@ -14,7 +14,7 @@ class KeyCloakServiceClientManager {
   }
 
   async manage({ applicationAcronym, applicationName, applicationDescription, commonServices }) {
-    log.info('KeyCloakServiceClientManager.manage ', `${applicationAcronym}, ${applicationName}, ${applicationDescription}, [${commonServices}]`);
+    log.debug('KeyCloakServiceClientManager.manage', `${applicationAcronym}, ${applicationName}, ${applicationDescription}, [${commonServices}]`);
     if (!applicationAcronym) {
       log.error('KeyCloakServiceClientManager - no applicationAcronymprovided.');
       throw new Error('Cannot manage service clients in KeyCloak realm: applicationAcronym required.');
@@ -102,7 +102,7 @@ class KeyCloakServiceClientManager {
   }
 
   async fetchClients(applicationAcronymList) {
-    log.info('KeyCloakServiceClientManager.fetchClients', applicationAcronymList);
+    log.debug('KeyCloakServiceClientManager.fetchClients', applicationAcronymList);
     if (!applicationAcronymList || !Array.isArray(applicationAcronymList)) {
       log.error('KeyCloakServiceClientManager.fetchClients', 'No applicationAcronymList provided.');
       throw new Error('Cannot find service clients in KeyCloak realm: applicationAcronymList array required.');
@@ -152,7 +152,7 @@ class KeyCloakServiceClientManager {
   }
 
   async findUser(username) {
-    log.info('KeyCloakServiceClientManager.findUser', username);
+    log.debug('KeyCloakServiceClientManager.findUser', username);
     if (!username) {
       log.error('KeyCloakServiceClientManager.findUser', 'No user provided.');
       throw new Error('Cannot get a user in KeyCloak realm: username required.');
