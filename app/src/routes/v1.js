@@ -9,6 +9,7 @@ const keycloak = require('../components/keycloak');
 const checksRouter = require('./v1/checks');
 const emailRouter = require('./v1/email');
 const usersRouter = require('./v1/users');
+const statsRouter = require('./v1/stats');
 
 const getSpec = () => {
   const rawSpec = fs.readFileSync(path.join(__dirname, '../docs/v1.api-spec.yaml'), 'utf8');
@@ -55,5 +56,9 @@ router.use('/email', keycloak.protect(), emailRouter);
 
 /** Users Router */
 router.use('/users', keycloak.protect(), usersRouter);
+
+/** Stats Router */
+router.use('/stats', keycloak.protect(), statsRouter);
+
 
 module.exports = router;

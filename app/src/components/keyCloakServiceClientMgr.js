@@ -168,6 +168,20 @@ class KeyCloakServiceClientManager {
       return undefined;
     }
   }
+
+  async fetchAllClients() {
+    log.info('KeyCloakServiceClientManager.fetchAllClients');
+
+    //get all service clients
+    // NOTE: this seems to return all the service clinets but shows a ERR 400 in the console for all the methods in the reamlAdminSvc class
+    const clients = await this.svc.getClients();
+
+    // get details for each service client
+    const clientsWithDetails = clients.map(sc => this.makeClientDetails(sc));
+
+    return await Promise.all(clientsWithDetails);
+  }
+
 }
 
 module.exports = KeyCloakServiceClientManager;

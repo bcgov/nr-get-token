@@ -170,15 +170,15 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  "/keyCloak/clients":
+  "/stats/serviceClients":
     get:
-      summary: Returns KeyCloak all keycloak clients
-      operationId: kcClientsGet
+      summary: Returns all registered service clients
+      operationId: kcServiceClientsGet
       tags:
         - KeyCloak Service Client Configuration
       responses:
         "200":
-          description: Returns the Keycloak service clients
+          description: Returns the registered service clients
           content:
             application/json:
               schema:
@@ -885,7 +885,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/KcClientDetail"
-          description: An array of Keycloak clients
+          description: An array of registered service clients
     KcConfigForm:
       type: object
       required:
