@@ -20,6 +20,7 @@ export default {
     authenticated: () => Vue.prototype.$keycloak.authenticated,
     createLoginUrl: () => options => Vue.prototype.$keycloak.createLoginUrl(options),
     createLogoutUrl: () => options => Vue.prototype.$keycloak.createLogoutUrl(options),
+    fullName: () => Vue.prototype.$keycloak.fullName,
     isAdmin: (_state, getters) => {
       if (!getters.authenticated) return false;
       return hasRoles(getters.realmAccess.roles, [RealmRoles.GETOK_ADMIN]);
@@ -29,7 +30,9 @@ export default {
     moduleLoaded: () => !!Vue.prototype.$keycloak,
     realmAccess: () => Vue.prototype.$keycloak.tokenParsed.realm_access,
     resourceAccess: () => Vue.prototype.$keycloak.tokenParsed.resource_access,
-    tokenParsed: () => Vue.prototype.$keycloak.tokenParsed
+    token: () => Vue.prototype.$keycloak.token,
+    tokenParsed: () => Vue.prototype.$keycloak.tokenParsed,
+    userName: () => Vue.prototype.$keycloak.userName
   },
   mutations: {},
   actions: {}
