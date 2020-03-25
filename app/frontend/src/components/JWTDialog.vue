@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-btn class="primary" @click="jwtShow = true">
-      <v-icon :left="$vuetify.breakpoint.smAndUp">mdi-wrench</v-icon>
-      <span v-if="$vuetify.breakpoint.smAndUp">JWT Token</span>
+      <v-icon left>mdi-wrench</v-icon>
+      <span>JWT Token</span>
     </v-btn>
     <BaseDialog :show="jwtShow" width="1200" @close-dialog="jwtShow = false">
       <template v-slot:title>
