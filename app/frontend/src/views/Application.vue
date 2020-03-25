@@ -10,26 +10,20 @@
       </div>
       <v-tabs vertical class="mt-10 getok-tabs">
         <v-tab>API Access</v-tab>
-        <v-tab>Users</v-tab>
+        <v-tab>Team</v-tab>
 
         <v-tab-item>
           <v-card flat class="pl-12">
-            <v-card-text>
-              <p>Sed aliquam ultrices mauris. Donec posuere vulputate arcu. Morbi ac felis. Etiam feugiat lorem non metus. Sed a libero.</p>
-
-              <p>Nam ipsum risus, rutrum vitae, vestibulum eu, molestie vel, lacus. Aenean tellus metus, bibendum sed, posuere ac, mattis non, nunc. Aliquam lobortis. Aliquam lobortis. Suspendisse non nisl sit amet velit hendrerit rutrum.</p>
-
-              <p
-                class="mb-0"
-              >Phasellus dolor. Fusce neque. Fusce fermentum odio nec arcu. Pellentesque libero tortor, tincidunt et, tincidunt eget, semper nec, quam. Phasellus blandit leo ut odio.</p>
-            </v-card-text>
+            <h2>{{acronym}}</h2>
+            <ApiAccess />
           </v-card>
         </v-tab-item>
 
         <v-tab-item>
           <v-card flat class="pl-12">
+            <h2>{{acronym}}</h2>
             <v-card-text>
-              <p class="mb-0">TBA.</p>
+              <p class="mb-0">TBA. Users tab coming soon</p>
             </v-card-text>
           </v-card>
         </v-tab-item>
@@ -39,8 +33,13 @@
 </template>
 
 <script>
+import ApiAccess from '@/components/apiAccess/ApiAccess.vue';
+
 export default {
   name: 'Application',
+  components: {
+    ApiAccess
+  },
   props: ['acronym']
 };
 </script>
@@ -58,6 +57,7 @@ export default {
 .getok-tabs {
   .v-tab {
     font-weight: bold;
+    justify-content: left;
     &:not(.v-tab--active) {
       background-color: #f2f2f2;
       color: #1a5a96 !important;
