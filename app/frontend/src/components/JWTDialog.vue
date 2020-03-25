@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn class="primary" @click="jwtShow = true">
+    <v-btn class="jwt-token-btn" color="primary" @click="jwtShow = true">
       <v-icon left>mdi-wrench</v-icon>
       <span>JWT Token</span>
     </v-btn>

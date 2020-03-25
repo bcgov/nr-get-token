@@ -22,12 +22,12 @@
         />
       </v-container>
       <v-card-actions>
-        <v-btn color="primary" outlined @click="resetForm">
+        <v-btn class="api-tester-reset-btn" color="primary" outlined @click="resetForm">
           <v-icon left>mdi-refresh</v-icon>
           <span>Reset</span>
         </v-btn>
         <v-spacer />
-        <v-btn color="primary" :loading="loading" @click="testApi">
+        <v-btn class="api-tester-test-btn" color="primary" :loading="loading" @click="testApi">
           <v-icon left>mdi-hexagon-multiple-outline</v-icon>
           <span>Test</span>
         </v-btn>
