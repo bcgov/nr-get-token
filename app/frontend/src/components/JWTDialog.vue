@@ -1,16 +1,18 @@
 <template>
   <div>
-    <v-btn class="jwt-token-btn" color="primary" @click="jwtShow = true">
-      <v-icon left>mdi-wrench</v-icon>
-      <span>JWT Token</span>
-    </v-btn>
+    <v-tooltip top>
+      <template v-slot:activator="{ on }">
+        <v-btn v-on="on" color="primary" @click="jwtShow = true">
+          <v-icon left>mdi-wrench</v-icon>
+          <span>JWT Token</span>
+        </v-btn>
+      </template>
+      <span>Current User JWT Token Info</span>
+    </v-tooltip>
     <BaseDialog :show="jwtShow" width="1200" @close-dialog="jwtShow = false">
       <template v-slot:title>
         <strong v-if="authenticated">User {{ fullName }} ({{ userName }}) is logged in.</strong>
         <strong v-else>User is not logged in.</strong>
-      </template>
-      <template v-slot:icon>
-
       </template>
       <template v-slot:text>
         <div v-if="authenticated">
