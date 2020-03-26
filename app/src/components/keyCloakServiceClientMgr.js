@@ -169,17 +169,23 @@ class KeyCloakServiceClientManager {
     }
   }
 
-  async fetchAllClients() {
+  async fetchAllClients(kcEnv) {
+
     log.info('KeyCloakServiceClientManager.fetchAllClients');
 
     //get all service clients
-    // NOTE: this seems to return all the service clinets but shows a ERR 400 in the console for all the methods in the reamlAdminSvc class
-    const clients = await this.svc.getClients();
+    let clients = await this.svc.getClients();
 
-    // get details for each service client
-    const clientsWithDetails = clients.map(sc => this.makeClientDetails(sc));
+    // remove those that dont match '*_SERVICE_CLIENT';
+    const regex = '.*_SERVICE_CLIENT$';
+    clients = clients.filter(cl => cl.clientId.match(regex));
 
-    return await Promise.all(clientsWithDetails);
+    // add the keycloak environment to the end of each service client in the array
+    clients.forEach(function (cl) {
+      cl.realm = kcEnv;
+    });
+
+    return clients;
   }
 
 }

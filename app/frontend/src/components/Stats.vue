@@ -2,18 +2,14 @@
   <v-container>
     <template>
       <h4 class="pb-5">Registered Service Clients:</h4>
-      <v-data-table
-        :headers="headers"
-        :items="serviceClients"
-        :items-per-page="2"
-      ></v-data-table>
+      <v-data-table :headers="headers" :items="serviceClients" :items-per-page="2"></v-data-table>
     </template>
   </v-container>
 </template>
 
 
 <script>
-import statsService from '@/services/statsService';
+import keycloakService from '@/services/keycloakService';
 
 export default {
   name: 'Stats',
@@ -42,20 +38,6 @@ export default {
           dev: 1,
           test: 1,
           prod: 0
-        },
-        {
-          name: 'HKI_THREE',
-          created: 262,
-          dev: 1,
-          test: 0,
-          prod: 0
-        },
-        {
-          name: 'BED_FOUR',
-          created: 305,
-          dev: 1,
-          test: 1,
-          prod: 1
         }
       ]
       */
@@ -65,15 +47,56 @@ export default {
   methods: {
     // get table data from frontend service layer
     getData() {
-      statsService
-        .getServiceClients()
-        .then(response => {
-          if (response) {
-            return response;
-          }
-        });
-    }
-  },
 
+      keycloakService.getServiceClients().then(response => {
+
+        if (response) {
+
+          console.log('hmmm');
+          //build a simpler 'output' array of the data
+          const output = [];
+
+          response.data.forEach(function(sc) {
+            // if array item doesnt exist
+            if (output[sc.clientId] == undefined) {
+              output[sc.clientId] = {};
+            }
+
+            // create or update item
+            output[sc.clientId]['name'] = sc.clientId;
+            output[sc.clientId]['created'] = '-';
+            if (sc.realm === 'dev') output[sc.clientId]['dev'] = 1;
+            if (sc.realm === 'test') output[sc.clientId]['test'] = 1;
+            if (sc.realm === 'prod') output[sc.clientId]['prod'] = 1;
+          });
+
+          console.log(output);
+
+          return output;
+        }
+      });
+
+
+    }
+  }
 };
+
+// // if clientId not in output array
+// if (output.filter(i => i.name = sc.clientId).length == 0) {
+//   // add all values to a new item in output array
+//   output.push([
+//     {
+//       name: sc.clientId,
+//       created: '-',
+//       dev: sc.realm == 'dev' ? 1 : 0,
+//       test: sc.realm == 'test' ? 1 : 0,
+//       prod: sc.realm == 'prod' ? 1 : 0
+//     }
+//   ]);
+// }
+// // else update that item in array
+// else {
+//   var realm = sc.realm;
+//   var match = output.find( i => i.name = sc.clientId );
+//   match[realm] = 1;
 </script>

@@ -170,7 +170,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  "/stats/serviceClients":
+  "/keycloak/serviceClients":
     get:
       summary: Returns all registered service clients
       operationId: kcServiceClientsGet
