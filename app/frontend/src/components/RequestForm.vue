@@ -88,8 +88,8 @@
       </v-row>
     </v-form>
     <div class="justify-center pb-8">
-      <v-btn class="request-form-cancel-btn BC-Gov-PrimaryButton light float-left" text @click="cancel()">Cancel</v-btn>
-      <v-btn class="request-form-submit-btn BC-Gov-PrimaryButton float-right" text @click="postRegistrationForm()">Submit</v-btn>
+      <v-btn class="BC-Gov-PrimaryButton light float-left" text @click="cancel()">Cancel</v-btn>
+      <v-btn class="BC-Gov-PrimaryButton float-right" text @click="postRegistrationForm()">Submit</v-btn>
     </div>
 
     <BaseDialog v-bind:show="errorOccurred" @close-dialog="errorOccurred = false">
