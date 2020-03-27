@@ -171,7 +171,7 @@ class KeyCloakServiceClientManager {
 
   async fetchAllClients(kcEnv) {
 
-    log.info('KeyCloakServiceClientManager.fetchAllClients');
+    log.info('KeyCloakServiceClientManager.fetchAllClients in ' + kcEnv);
 
     //get all service clients
     let clients = await this.svc.getClients();
@@ -180,7 +180,7 @@ class KeyCloakServiceClientManager {
     const regex = '.*_SERVICE_CLIENT$';
     clients = clients.filter(cl => cl.clientId.match(regex));
 
-    // add the keycloak environment to the end of each service client in the array
+    // add the keycloak environment to each service client object in the array
     clients.forEach(function (cl) {
       cl.realm = kcEnv;
     });

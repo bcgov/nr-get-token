@@ -1,10 +1,42 @@
 <template>
-  <v-container>
+  <v-card>
     <template>
-      <h4 class="pb-5">Registered Service Clients:</h4>
-      <v-data-table :headers="headers" :items="serviceClients" :items-per-page="2"></v-data-table>
+      <v-card-title>
+        Registered Service Clients
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>
+
+      <v-data-table
+        class="kc-table"
+        dense
+        :headers="headers"
+        :items="serviceClients"
+        :items-per-page="5"
+        :search="search"
+        :loading="loading"
+        loading-text="Loading... Please wait"
+      >
+        <template v-slot:item.dev="{item}">
+          <v-icon v-if="item.dev === 1" color="green">check</v-icon>
+        </template>
+
+        <template v-slot:item.test="{item}">
+          <v-icon v-if="item.test === 1" color="green">check</v-icon>
+        </template>
+
+        <template v-slot:item.prod="{item}">
+          <v-icon v-if="item.prod === 1" color="green">check</v-icon>
+        </template>
+      </v-data-table>
     </template>
-  </v-container>
+  </v-card>
 </template>
 
 
@@ -15,88 +47,67 @@ export default {
   name: 'Stats',
   data() {
     return {
+      // vuetify data table
+      search: '',
       headers: [
-        { text: 'Service Client', align: 'start', value: 'name' },
-        { text: 'Created', value: 'created' },
+        { text: 'Name', align: 'start', value: 'name' },
         { text: 'DEV', value: 'dev' },
         { text: 'TEST', value: 'test' },
         { text: 'PROD', value: 'prod' }
       ],
-      serviceClients: this.getData()
-      /*
-      [
-        {
-          name: 'ABC_ONE',
-          created: 159,
-          dev: 1,
-          test: 0,
-          prod: 0
-        },
-        {
-          name: 'DEF_TWO',
-          created: 237,
-          dev: 1,
-          test: 1,
-          prod: 0
-        }
-      ]
-      */
+      serviceClients: [],
+      loading: true
     };
   },
-
+  watch: {
+    // hide data table progress bar when serviceClients have been returned from backend
+    serviceClients() {
+      this.loading = false;
+    }
+  },
   methods: {
     // get table data from frontend service layer
     getData() {
-
       keycloakService.getServiceClients().then(response => {
-
         if (response) {
 
-          console.log('hmmm');
-          //build a simpler 'output' array of the data
-          const output = [];
-
-          response.data.forEach(function(sc) {
-            // if array item doesnt exist
-            if (output[sc.clientId] == undefined) {
-              output[sc.clientId] = {};
+          // reformat serviceClients data into array of objects that will work for the data table
+          var output = [];
+          var tmpArray = [];
+          response.data.forEach(sc => {
+            // if object doesnt exist in tmpArray
+            if (tmpArray[sc.clientId] == undefined) {
+              //create empty object
+              tmpArray[sc.clientId] = {};
             }
-
-            // create or update item
-            output[sc.clientId]['name'] = sc.clientId;
-            output[sc.clientId]['created'] = '-';
-            if (sc.realm === 'dev') output[sc.clientId]['dev'] = 1;
-            if (sc.realm === 'test') output[sc.clientId]['test'] = 1;
-            if (sc.realm === 'prod') output[sc.clientId]['prod'] = 1;
+            // update object
+            tmpArray[sc.clientId].name = sc.clientId;
+            if (sc.realm === 'dev') tmpArray[sc.clientId].dev = 1;
+            if (sc.realm === 'test') tmpArray[sc.clientId].test = 1;
+            if (sc.realm === 'prod') tmpArray[sc.clientId].prod = 1;
           });
-
-          console.log(output);
-
-          return output;
+          //convert back to numeric array
+          for (var items in tmpArray) {
+            output.push(tmpArray[items]);
+          }
         }
+        this.serviceClients = output;
       });
-
-
     }
+  },
+  mounted() {
+    this.getData();
   }
 };
-
-// // if clientId not in output array
-// if (output.filter(i => i.name = sc.clientId).length == 0) {
-//   // add all values to a new item in output array
-//   output.push([
-//     {
-//       name: sc.clientId,
-//       created: '-',
-//       dev: sc.realm == 'dev' ? 1 : 0,
-//       test: sc.realm == 'test' ? 1 : 0,
-//       prod: sc.realm == 'prod' ? 1 : 0
-//     }
-//   ]);
-// }
-// // else update that item in array
-// else {
-//   var realm = sc.realm;
-//   var match = output.find( i => i.name = sc.clientId );
-//   match[realm] = 1;
 </script>
+
+<style scoped>
+.kc-table .active {
+  width: 10px;
+  height: 10px;
+  display: block;
+  background: blue;
+}
+</style>
+
+
