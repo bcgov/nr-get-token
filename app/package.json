@@ -51,6 +51,7 @@
     "express": "^4.17.1",
     "express-validator": "^6.4.0",
     "js-yaml": "^3.13.1",
+    "jsonwebtoken": "^8.5.1",
     "keycloak-connect": "^9.0.0",
     "morgan": "^1.9.1",
     "npmlog": "^4.1.2",
