@@ -4,11 +4,6 @@ const log = require('npmlog');
 
 const utils = require('./utils');
 
-const paths = Object.freeze({
-  email: '/v1/email',
-  health: '/v1/health'
-});
-
 const email = {
   /**
    * @function sendRequest
@@ -25,7 +20,7 @@ const email = {
     const password = config.get('serviceClient.ches.password');
     try {
       const token = await utils.getKeyCloakToken(username, password, tokenEndpoint);
-      const response = await axios.post(apiEndpoint + paths.email, {
+      const response = await axios.post(apiEndpoint + '/v1/email', {
         body: `<p>Request from GETOK for acronym creation/access</p> <p><strong>User comments:</strong><br/>${comments}`,
         bodyType: 'html',
         from: from,
