@@ -5,7 +5,9 @@ module.exports = {
     'src/**/*.js',
     '!src/docs/*.*',
     '!src/frontend/**/*.*',
-    '!src/migrations/*.js'
+    '!src/migrations/*.js',
+    '!src/seeders/*.js',
+    '!src/services/*.js'
   ],
   moduleFileExtensions: ['js', 'json'],
   moduleNameMapper: {

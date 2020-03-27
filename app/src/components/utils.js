@@ -22,7 +22,7 @@ const utils = {
           username: username,
           password: password
         },
-        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       });
       log.verbose('utils.getKeyCloakToken', JSON.stringify(response.data));
       return response.data;

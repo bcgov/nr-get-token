@@ -10,7 +10,7 @@ checksRouter.get('/status', async (_req, res) => {
   if (result instanceof Array) {
     res.status(200).json({ endpoints: result });
   } else {
-    return new Problem(500, 'Unable to get api status list').send(res);
+    return new Problem(500, { detail: 'Unable to get api status list' }).send(res);
   }
 });
 
