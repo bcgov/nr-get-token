@@ -13,6 +13,8 @@
         ></v-text-field>
       </v-card-title>
 
+      <v-alert v-if="showAlert" :type="alertType" tile dense>{{alertMessage}}</v-alert>
+
       <v-data-table
         class="kc-table"
         dense
@@ -24,15 +26,15 @@
         loading-text="Loading... Please wait"
       >
         <template v-slot:item.dev="{item}">
-          <v-icon v-if="item.dev === 1" color="green">check</v-icon>
+          <v-icon v-if="item.dev" color="green">check</v-icon>
         </template>
 
         <template v-slot:item.test="{item}">
-          <v-icon v-if="item.test === 1" color="green">check</v-icon>
+          <v-icon v-if="item.test" color="green">check</v-icon>
         </template>
 
         <template v-slot:item.prod="{item}">
-          <v-icon v-if="item.prod === 1" color="green">check</v-icon>
+          <v-icon v-if="item.prod" color="green">check</v-icon>
         </template>
       </v-data-table>
     </template>
@@ -55,7 +57,10 @@ export default {
         { text: 'PROD', value: 'prod' }
       ],
       serviceClients: [],
-      loading: true
+      loading: true,
+      showAlert: false,
+      alertType: null,
+      alertMessage: ''
     };
   },
   watch: {
@@ -69,29 +74,38 @@ export default {
     getData() {
       keycloakService.getServiceClients().then(response => {
         if (response) {
+          // reformat data to show in our data table of service clients
+          const reduced = response.data.reduce((a, b) => {
+            if (!a[b.clientId]) a[b.clientId] = []; //If this type wasn't previously stored
+            a[b.clientId].push(b.environment);
+            return a;
+          }, {});
 
-          // reformat serviceClients data into array of objects that will work for the data table
-          var output = [];
-          var tmpArray = [];
-          response.data.forEach(sc => {
-            // if object doesnt exist in tmpArray
-            if (tmpArray[sc.clientId] == undefined) {
-              //create empty object
-              tmpArray[sc.clientId] = {};
-            }
-            // update object
-            tmpArray[sc.clientId].name = sc.clientId;
-            if (sc.realm === 'dev') tmpArray[sc.clientId].dev = 1;
-            if (sc.realm === 'test') tmpArray[sc.clientId].test = 1;
-            if (sc.realm === 'prod') tmpArray[sc.clientId].prod = 1;
+          const clients = Object.keys(reduced).map(k => {
+            return {
+              name: k,
+              dev: reduced[k].includes('dev'),
+              test: reduced[k].includes('test'),
+              prod: reduced[k].includes('prod')
+            };
           });
-          //convert back to numeric array
-          for (var items in tmpArray) {
-            output.push(tmpArray[items]);
+
+          if (clients.length == 0) {
+            this.showTableAlert('info', 'No Service Clients found');
           }
+          console.log(clients);
+          this.serviceClients = clients;
+
+        } else {
+          this.showTableAlert('error', 'No response from server');
         }
-        this.serviceClients = output;
       });
+    },
+    showTableAlert(typ, msg) {
+      this.showAlert = true;
+      this.alertType = typ;
+      this.alertMessage = msg;
+      this.loading = false;
     }
   },
   mounted() {

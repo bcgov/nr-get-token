@@ -884,7 +884,7 @@ components:
         clients:
           type: array
           items:
-            $ref: "#/components/schemas/KcClientDetail"
+            $ref: "https://www.keycloak.org/docs-api/5.0/rest-api/index.html#_clientrepresentation"
           description: An array of registered service clients
     KcConfigForm:
       type: object

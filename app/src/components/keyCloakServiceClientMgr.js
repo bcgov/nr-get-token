@@ -169,23 +169,15 @@ class KeyCloakServiceClientManager {
     }
   }
 
-  async fetchAllClients(kcEnv) {
+  async fetchAllClients() {
 
-    log.info('KeyCloakServiceClientManager.fetchAllClients in ' + kcEnv);
+    log.info('KeyCloakServiceClientManager.fetchAllClients');
 
     //get all service clients
-    let clients = await this.svc.getClients();
+    const clients = await this.svc.getClients();
 
-    // remove those that dont match '*_SERVICE_CLIENT';
-    const regex = '.*_SERVICE_CLIENT$';
-    clients = clients.filter(cl => cl.clientId.match(regex));
-
-    // add the keycloak environment to each service client object in the array
-    clients.forEach(function (cl) {
-      cl.realm = kcEnv;
-    });
-
-    return clients;
+    // return clients that match '*_SERVICE_CLIENT';
+    return clients.filter(cl => cl.clientId.match(/.*_SERVICE_CLIENT$/));
   }
 
 }

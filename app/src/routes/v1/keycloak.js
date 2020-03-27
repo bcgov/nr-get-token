@@ -12,14 +12,13 @@ const keycloakRouter = require('express').Router();
 // current user must have role GETOK_ADMIN
 keycloakRouter.get('/serviceClients', keycloak.protect('realm:GETOK_ADMIN'), async (req, res) => {
 
-  const [devClients, testClients, prodClients] = await Promise.all([
+  const clients = await Promise.all([
     getClientsFromEnv('dev'),
     getClientsFromEnv('test'),
     getClientsFromEnv('prod')
   ]);
-
   // join them all into one array
-  var result = devClients.concat(testClients, prodClients);
+  const result = clients.flat();
 
   if (result === null) {
     return new Problem(404).send(res);
@@ -35,7 +34,7 @@ keycloakRouter.get('/serviceClients', keycloak.protect('realm:GETOK_ADMIN'), asy
  * @param {string} kcEnv The KC env
  * @returns {object[]} An array of service clients
  */
-function getClientsFromEnv(kcEnv){
+function getClientsFromEnv(kcEnv) {
 
   const realmKey = `serviceClient.keycloak.${kcEnv}`;
   const {
@@ -48,7 +47,16 @@ function getClientsFromEnv(kcEnv){
   const realmSvc = new RealmAdminService({ realmBaseUrl, clientId, clientSecret, realmId });
   const kcScMgr = new KeyCloakServiceClientManager(realmSvc);
 
-  return kcScMgr.fetchAllClients(kcEnv);
+  var clients = kcScMgr.fetchAllClients();
+  clients.then(result => {
+    // add a keycloak environment label to each service client object in the array
+    result.forEach(function (cl) {
+      cl.environment = kcEnv;
+    });
+  });
+
+  return clients;
 }
+
 
 module.exports = keycloakRouter;
