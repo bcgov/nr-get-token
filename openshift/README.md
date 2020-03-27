@@ -23,24 +23,6 @@ oc create -n k8vopl-dev configmap getok-frontend-config \
   --from-literal=FRONTEND_KC_SERVERURL=https://sso-dev.pathfinder.gov.bc.ca/auth
 ```
 
-*Note 2:* getok-oidc-config is deprecated and will be removed in a future build
-
-```sh
-oc create -n k8vopl-<env> configmap getok-oidc-config \
-  --from-literal=OIDC_DISCOVERY=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/vehizw2t/.well-known/openid-configuration
-```
-
-```sh
-oc create -n k8vopl-<env> configmap getok-server-config \
-  --from-literal=SERVER_APIPATH=/api/v1 \
-  --from-literal=SERVER_BODYLIMIT=30mb \
-  --from-literal=SERVER_KC_REALM=vehizw2t \
-  --from-literal=SERVER_KC_SERVERURL=https://sso-dev.pathfinder.gov.bc.ca/auth \
-  --from-literal=SERVER_LOGLEVEL=info \
-  --from-literal=SERVER_MORGANFORMAT=combined \
-  --from-literal=SERVER_PORT=8080
-```
-
 ```sh
 oc create -n k8vopl-<env> configmap getok-sc-config \
   --from-literal=SC_CHES_API_ENDPOINT=https://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api \
@@ -60,6 +42,17 @@ oc create -n k8vopl-<env> configmap getok-sc-config \
   --from-literal=CHES_HEALTH_ENDPOINT=http://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api/v1/health
 ```
 
+```sh
+oc create -n k8vopl-<env> configmap getok-server-config \
+  --from-literal=SERVER_APIPATH=/api/v1 \
+  --from-literal=SERVER_BODYLIMIT=30mb \
+  --from-literal=SERVER_KC_REALM=vehizw2t \
+  --from-literal=SERVER_KC_SERVERURL=https://sso-dev.pathfinder.gov.bc.ca/auth \
+  --from-literal=SERVER_LOGLEVEL=info \
+  --from-literal=SERVER_MORGANFORMAT=combined \
+  --from-literal=SERVER_PORT=8080
+```
+
 ### Secrets
 
 Replace anything in angle brackets with the appropriate value!
@@ -68,37 +61,6 @@ Replace anything in angle brackets with the appropriate value!
 
 ```sh
 oc create -n k8vopl-<env> secret generic getok-keycloak-secret \
-  --type=kubernetes.io/basic-auth \
-  --from-literal=username=<username> \
-  --from-literal=password=<password>
-```
-
-*Note 2:* getok-oidc-secret is deprecated and will be removed in a future build
-
-```sh
-oc create -n k8vopl-<env> secret generic getok-oidc-secret \
-  --type=kubernetes.io/basic-auth \
-  --from-literal=username=<username> \
-  --from-literal=password=<password> \
-  --from-literal=publickey="<key>"
-```
-
-```sh
-oc create -n k8vopl-<env> secret generic getok-sc-getokint-secret \
-  --type=kubernetes.io/basic-auth \
-  --from-literal=username=<username> \
-  --from-literal=password=<password>
-```
-
-```sh
-oc create -n k8vopl-<env> secret generic getok-sc-getoktest-secret \
-  --type=kubernetes.io/basic-auth \
-  --from-literal=username=<username> \
-  --from-literal=password=<password>
-```
-
-```sh
-oc create -n k8vopl-<env> secret generic getok-sc-getokprod-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>
@@ -127,6 +89,27 @@ oc create -n k8vopl-<env> secret generic getok-sc-keycloaktest-secret \
 
 ```sh
 oc create -n k8vopl-<env> secret generic getok-sc-keycloakprod-secret \
+  --type=kubernetes.io/basic-auth \
+  --from-literal=username=<username> \
+  --from-literal=password=<password>
+```
+
+```sh
+oc create -n k8vopl-<env> secret generic getok-sc-webade-int-secret \
+  --type=kubernetes.io/basic-auth \
+  --from-literal=username=<username> \
+  --from-literal=password=<password>
+```
+
+```sh
+oc create -n k8vopl-<env> secret generic getok-sc-webade-test-secret \
+  --type=kubernetes.io/basic-auth \
+  --from-literal=username=<username> \
+  --from-literal=password=<password>
+```
+
+```sh
+oc create -n k8vopl-<env> secret generic getok-sc-webade-prod-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>

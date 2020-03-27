@@ -1,12 +1,12 @@
 const axios = require('axios');
 const config = require('config');
-const log = require('npmlog');
 const MockAdapter = require('axios-mock-adapter');
 const mockAxios = new MockAdapter(axios);
 
 const RealmAdminService = require('../../../src/components/realmAdminSvc');
 
-log.level = config.get('server.logLevel');
+const helper = require('../../common/helper');
+helper.logHelper();
 
 let realmConfig = {};
 

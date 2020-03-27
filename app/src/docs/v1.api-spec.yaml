@@ -120,6 +120,7 @@ paths:
   /checks/status:
     get:
       summary: Returns status of correspondent APIs
+      description: Fetch the health statuses of associated endpoints
       operationId: checkStatus
       tags:
         - Checks

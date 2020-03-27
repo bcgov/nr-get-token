@@ -2,6 +2,7 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
 import userService from '@/services/userService';
+import { ApiRoutes } from '@/utils/constants';
 
 const mockInstance = axios.create();
 const mockAxios = new MockAdapter(mockInstance);
@@ -24,7 +25,7 @@ describe('getUserAcronyms', () => {
       { acronym: 'GETOK', owner: false },
       { acronym: 'MSSC', owner: false }
     ];
-    mockAxios.onGet(`/users/${zeroUuid}/acronyms`).reply(200, data);
+    mockAxios.onGet(`${ApiRoutes.USERS}/${zeroUuid}/acronyms`).reply(200, data);
 
     const result = await userService.getUserAcronyms(zeroUuid);
 

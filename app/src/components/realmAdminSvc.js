@@ -6,7 +6,7 @@ const tokenProvider = require('axios-token-interceptor');
 
 class RealmAdminService {
   constructor({ realmId, realmBaseUrl, clientId, clientSecret }) {
-    log.info('RealmAdminService ', `${realmId}, ${realmBaseUrl}, ${clientId}, secret`);
+    log.debug('RealmAdminService', `${realmId}, ${realmBaseUrl}, ${clientId}, secret`);
     if (!realmId || !realmBaseUrl || !clientId || !clientSecret) {
       log.error('RealmAdminService - invalid configuration.');
       throw new Error('RealmAdminService is not configured.  Check configuration.');

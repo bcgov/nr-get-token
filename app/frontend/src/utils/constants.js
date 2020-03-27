@@ -1,3 +1,15 @@
+export const ApiRoutes = Object.freeze({
+  ACRONYMS: '/acronyms',
+  AUDIT: '/audit',
+  DOCS: '/docs',
+  EMAIL: '/email',
+  HEALTH: '/checks/status',
+  KCCONFIG: '/keyCloak/configForm',
+  USERS: '/users',
+  WEBADE: '/webAde',
+  WEBADE_CONFIGFORM: '/webAde/configForm'
+});
+
 export const FieldValidations = Object.freeze({
   ACRONYM_MAX_LENGTH: 30,
   ACRONYM_MIN_LENGTH: 3,

@@ -1,6 +1,5 @@
 //const axios = require('axios');
 const config = require('config');
-const log = require('npmlog');
 //const MockAdapter = require('axios-mock-adapter');
 //const mockAxios = new MockAdapter(axios);
 
@@ -8,8 +7,8 @@ const KeyCloakServiceClientManager = require('../../../src/components/keyCloakSe
 const RealmAdminService = require('../../../src/components/realmAdminSvc');
 const { acronymService } = require('../../../src/services');
 
-log.level = config.get('server.logLevel');
-log.addLevel('debug', 1500, { fg: 'cyan' });
+const helper = require('../../common/helper');
+helper.logHelper();
 
 let realmConfig = {};
 let realmAdminService = undefined;

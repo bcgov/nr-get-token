@@ -15,10 +15,8 @@ describe('getKeyCloakToken', () => {
   const username = config.get('serviceClient.ches.username');
   const password = config.get('serviceClient.ches.password');
 
-  const spy = jest.spyOn(axios, 'post');
-
-  afterEach(() => {
-    spy.mockClear();
+  beforeEach(() => {
+    mockAxios.resetHistory();
   });
 
   it('should call KC endpoint to get a token', async () => {
@@ -43,7 +41,13 @@ describe('getKeyCloakToken', () => {
 
     expect(result.data).toBeTruthy();
     expect(result.data.access_token).toEqual(tkn);
-    expect(spy).toHaveBeenCalledTimes(1);
+    expect(mockAxios.history.post).toHaveLength(1);
+    expect(mockAxios.history.post[0].auth).toEqual({
+      username: username,
+      password: password
+    });
+    expect(mockAxios.history.post[0].headers['Content-Type'])
+      .toMatch('application/x-www-form-urlencoded');
   });
 
   it('should gracefully fail if endpoint is down', async () => {
@@ -57,6 +61,68 @@ describe('getKeyCloakToken', () => {
     const result = await utils.getKeyCloakToken(username, password, endpoint);
 
     expect(result).toBeTruthy();
-    expect(spy).toHaveBeenCalledTimes(1);
+    expect(mockAxios.history.post).toHaveLength(1);
+  });
+});
+
+describe('getWebAdeToken', () => {
+  const endpoint = config.get('serviceClient.webAde.int.endpoint');
+  const username = config.get('serviceClient.webAde.int.username');
+  const password = config.get('serviceClient.webAde.int.password');
+  const scope = 'WEBADE-REST';
+  const url = endpoint.replace('webade-api', 'oauth2') + '/oauth/token';
+
+  beforeEach(() => {
+    mockAxios.resetHistory();
+  });
+
+  it('should call WebADE endpoint to get a token', async () => {
+    mockAxios.onGet(url).reply(200, {
+      data: {
+        'access_token': '00000000-0000-0000-0000-000000000000',
+        'token_type': 'bearer',
+        'expires_in': 43199,
+        'scope': 'scopes',
+        'jti': '00000000-0000-0000-0000-000000000000'
+      }
+    });
+
+    const result = await utils.getWebAdeToken(username, password, scope);
+
+    expect(result).toBeTruthy();
+    expect(mockAxios.history.get).toHaveLength(1);
+    expect(mockAxios.history.get[0].auth).toEqual({
+      username: username,
+      password: password
+    });
+    expect(mockAxios.history.get[0].params).toEqual({
+      disableDeveloperFilter: true,
+      grant_type: 'client_credentials',
+      scope: scope
+    });
+  });
+
+  it('should gracefully fail if endpoint is down', async () => {
+    mockAxios.onGet(url).reply(400, {
+      data: {
+        'error': 'invalid_scope',
+        'error_description': 'Invalid application authority: GARBAGE. Client has not been granted the requested application authority...',
+        'scope': ''
+      }
+    });
+
+    const result = await utils.getWebAdeToken(username, password, 'GARBAGE');
+
+    expect(result).toBeTruthy();
+    expect(mockAxios.history.get).toHaveLength(1);
+    expect(mockAxios.history.get[0].auth).toEqual({
+      username: username,
+      password: password
+    });
+    expect(mockAxios.history.get[0].params).toEqual({
+      disableDeveloperFilter: true,
+      grant_type: 'client_credentials',
+      scope: 'GARBAGE'
+    });
   });
 });
