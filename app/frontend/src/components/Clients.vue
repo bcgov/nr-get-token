@@ -39,7 +39,6 @@
   </v-card>
 </template>
 
-
 <script>
 import keycloakService from '@/services/keycloakService';
 
@@ -100,14 +99,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.kc-table .active {
-  width: 10px;
-  height: 10px;
-  display: block;
-  background: blue;
-}
-</style>
-
-
