@@ -1,9 +1,7 @@
-const config = require('config');
 const log = require('npmlog');
 
-const KeyCloakServiceClientManager = require('./keyCloakServiceClientMgr');
-const RealmAdminService = require('./realmAdminSvc');
 const { userService } = require('../services');
+const utils = require('./utils');
 
 const users = {
   /**
@@ -38,9 +36,9 @@ const users = {
     log.debug('getUserAcronymClients', `Acronyms for user: ${JSON.stringify(acronyms)}`);
 
     const [devClients, testClients, prodClients] = await Promise.all([
-      users.getClientsFromEnv('dev', acronyms),
-      users.getClientsFromEnv('test', acronyms),
-      users.getClientsFromEnv('prod', acronyms)
+      utils.getClientsFromEnv('dev', acronyms),
+      utils.getClientsFromEnv('test', acronyms),
+      utils.getClientsFromEnv('prod', acronyms)
     ]);
 
     return acronyms.map(acr => {
@@ -55,25 +53,6 @@ const users = {
         prod: pc ? pc : null
       };
     });
-  },
-  /**
-   * @function getClientsFromEnv
-   * Utility function to call the KC service to get clients for each realm
-   * @param {string} kcEnv The KC env
-   * @param {string} acronyms The acronyms to get clients for
-   * @returns {object[]} An array of service clients
-   */
-  getClientsFromEnv: async (kcEnv, acronyms) => {
-    const realmKey = `serviceClient.keycloak.${kcEnv}`;
-    const {
-      endpoint: realmBaseUrl,
-      username: clientId,
-      password: clientSecret,
-      realm: realmId
-    } = config.get(realmKey);
-    const realmSvc = new RealmAdminService({ realmBaseUrl, clientId, clientSecret, realmId });
-    const kcScMgr = new KeyCloakServiceClientManager(realmSvc);
-    return kcScMgr.fetchClients(acronyms);
   }
 };
 
