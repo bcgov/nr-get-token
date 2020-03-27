@@ -119,18 +119,16 @@ def runStageDeploy(String stageEnv, String projectEnv, String hostEnv, String pa
 
       echo "Checking for ConfigMaps and Secrets in project ${openshift.project()}..."
       if(!(openshift.selector('cm', "getok-frontend-config").exists() &&
-      openshift.selector('cm', "getok-oidc-config").exists() &&
       openshift.selector('cm', "getok-sc-config").exists() &&
       openshift.selector('cm', "getok-server-config").exists() &&
       openshift.selector('secret', "getok-keycloak-secret").exists() &&
-      openshift.selector('secret', "getok-oidc-secret").exists() &&
-      openshift.selector('secret', "getok-sc-getokint-secret").exists() &&
-      openshift.selector('secret', "getok-sc-getoktest-secret").exists() &&
-      openshift.selector('secret', "getok-sc-getokprod-secret").exists() &&
+      openshift.selector('secret', "getok-sc-ches-secret").exists() &&
       openshift.selector('secret', "getok-sc-keycloakint-secret").exists() &&
       openshift.selector('secret', "getok-sc-keycloaktest-secret").exists() &&
       openshift.selector('secret', "getok-sc-keycloakprod-secret").exists() &&
-      openshift.selector('secret', "getok-sc-ches-secret").exists())) {
+      openshift.selector('secret', "getok-sc-webade-int-secret").exists() &&
+      openshift.selector('secret', "getok-sc-webade-test-secret").exists() &&
+      openshift.selector('secret', "getok-sc-webade-prod-secret").exists())) {
         echo 'Some ConfigMaps and/or Secrets are missing. Please consult the openshift readme for details.'
         throw new Exception('Missing ConfigMaps and/or Secrets')
       }
