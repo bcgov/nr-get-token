@@ -9,24 +9,24 @@
         </v-row>
       </v-container>
       <ApiTester class="my-4" />
-      <stats />
+      <Clients />
     </BaseSecure>
   </v-container>
 </template>
 
 <script>
 import ApiTester from '@/components/ApiTester.vue';
+import Clients from '@/components/Clients.vue';
 import HealthDialog from '@/components/HealthDialog.vue';
 import JWTDialog from '@/components/JWTDialog.vue';
-import Stats from '@/components/Stats.vue';
 
 export default {
   name: 'Admin',
   components: {
     ApiTester,
+    Clients,
     HealthDialog,
-    JWTDialog,
-    Stats
+    JWTDialog
   }
 };
 </script>

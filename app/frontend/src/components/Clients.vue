@@ -44,7 +44,7 @@
 import keycloakService from '@/services/keycloakService';
 
 export default {
-  name: 'Stats',
+  name: 'Clients',
   data() {
     return {
       // vuetify data table
