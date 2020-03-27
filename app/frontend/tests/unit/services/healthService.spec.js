@@ -13,7 +13,7 @@ jest.mock('@/services/interceptors', () => {
   };
 });
 
-describe.skip('getHealthCheck', () => {
+describe('getHealthCheck', () => {
   beforeEach(() => {
     mockAxios.reset();
   });

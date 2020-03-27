@@ -98,10 +98,10 @@ export default {
     getStatusIcon(status) {
       return status ? 'mdi-thumb-up' : 'mdi-thumb-down';
     },
-    async onHealthClick() {
+    onHealthClick() {
       this.healthShow = true;
       this.loaded = false;
-      setTimeout(() => this.getHealthCheck(), 1000);
+      this.getHealthCheck();
     }
   }
 };

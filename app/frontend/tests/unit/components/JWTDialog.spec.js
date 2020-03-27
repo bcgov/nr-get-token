@@ -13,6 +13,6 @@ describe('JWTDialog.vue', () => {
       stubs: ['BaseDialog']
     });
 
-    expect(wrapper.text()).toMatch('JWT Token');
+    expect(wrapper.text()).toMatch('Current User JWT Token Info');
   });
 });
