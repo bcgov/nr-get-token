@@ -3,11 +3,11 @@
     <v-tooltip top>
       <template v-slot:activator="{ on }">
         <v-btn v-on="on" color="primary" @click="jwtShow = true">
-          <v-icon left>mdi-wrench</v-icon>
-          <span>JWT Token</span>
+          <v-icon left>mdi-ticket</v-icon>
+          <span>JSON Web Token</span>
         </v-btn>
       </template>
-      <span>Current User JWT Token Info</span>
+      <span>{{ fullName }}'s JSON Web Token (JWT)</span>
     </v-tooltip>
     <BaseDialog :show="jwtShow" width="1200" @close-dialog="jwtShow = false">
       <template v-slot:title>
