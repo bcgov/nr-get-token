@@ -33,6 +33,8 @@ const acronyms = {
   },
 
   registerUserToAcronym: async (token, kcRealm, acronym, username) => {
+    log.info('registerUserToAcronym', `Request made to add ${username} to ${acronym}`);
+
     acronym = acronym.toUpperCase();
     username = username.toLowerCase();
     await acronymService.findOrCreateList([acronym]);

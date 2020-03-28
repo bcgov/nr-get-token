@@ -193,16 +193,16 @@ objects:
               secretKeyRef:
                 key: password
                 name: getok-sc-ches-secret
-          - name: SC_KC_INT_USERNAME
+          - name: SC_KC_DEV_USERNAME
             valueFrom:
               secretKeyRef:
                 key: username
-                name: getok-sc-keycloakint-secret
-          - name: SC_KC_INT_PASSWORD
+                name: getok-sc-keycloakdev-secret
+          - name: SC_KC_DEV_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: password
-                name: getok-sc-keycloakint-secret
+                name: getok-sc-keycloakdev-secret
           - name: SC_KC_TEST_USERNAME
             valueFrom:
               secretKeyRef:
