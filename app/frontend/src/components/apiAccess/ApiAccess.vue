@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import apiAccess from '@/store/modules/apiAccess';
 import Step1 from '@/components/apiAccess/Step1.vue';
 import Step2 from '@/components/apiAccess/Step2.vue';
 import Step3 from '@/components/apiAccess/Step3.vue';
@@ -61,7 +60,6 @@ export default {
     ...mapActions('apiAccess', ['setStep', 'getAcronymClientStatus'])
   },
   created() {
-    this.$store.registerModule('apiAccess', apiAccess);
     this.setAcronym(this.acronym);
     this.getAcronymClientStatus();
   }

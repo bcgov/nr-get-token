@@ -26,6 +26,7 @@ export const KcEnv = Object.freeze({
   PROD: 'PROD'
 });
 
+// TODO: consider if this actually needs to be a constant
 export const KcClientStatus = Object.freeze({
   AVAILABLE: 'Available',
   NOT: 'Not Available'

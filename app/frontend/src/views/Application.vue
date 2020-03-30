@@ -28,13 +28,20 @@
 
 <script>
 import ApiAccess from '@/components/apiAccess/ApiAccess.vue';
+import apiAccess from '@/store/modules/apiAccess';
 
 export default {
   name: 'Application',
   components: {
     ApiAccess
   },
-  props: ['acronym']
+  props: ['acronym'],
+  beforeDestroy() {
+    this.$store.unregisterModule('apiAccess');
+  },
+  created() {
+    this.$store.registerModule('apiAccess', apiAccess);
+  },
 };
 </script>
 

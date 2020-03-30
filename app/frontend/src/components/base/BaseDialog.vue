@@ -23,7 +23,7 @@
         </v-card-text>
       </div>
       <v-card-actions class="justify-center">
-        <div v-if="type == 'OK'">
+        <div v-if="type === 'OK'">
           <v-btn class="BC-Gov-PrimaryButton mb-5" text @click="closeDialog">
             <slot name="button-text">OK</slot>
           </v-btn>
