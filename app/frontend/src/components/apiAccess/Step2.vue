@@ -10,6 +10,7 @@
             dense
             outlined
             flat
+            :rules="appNameRules"
             solo
           />
         </v-col>
@@ -25,6 +26,7 @@
             flat
             outlined
             rows="5"
+            :rules="appDescriptionRules"
             solo
           />
         </v-col>
@@ -46,7 +48,7 @@
     </v-form>
     <div class="text-center mt-12">
       <v-btn class="BC-Gov-PrimaryButton light mr-4" text @click="setStep(1)">Back</v-btn>
-      <v-btn class="BC-Gov-PrimaryButton" text @click="confirmDialog = true">Submit</v-btn>
+      <v-btn class="BC-Gov-PrimaryButton" text @click="submit">Submit</v-btn>
     </div>
 
     <BaseDialog
@@ -79,20 +81,50 @@ export default {
   name: 'ApiAccessStep2',
   data() {
     return {
+      appNameRules: [
+        v => !!v || 'Name is required',
+        v =>
+          v.length <= FieldValidations.NAME_MAX_LENGTH ||
+          `Name must be ${FieldValidations.NAME_MAX_LENGTH} characters or less`
+      ],
+      appDescriptionRules: [
+        v => !!v || 'Description is required',
+        v =>
+          v.length <= FieldValidations.DESCRIPTION_MAX_LENGTH ||
+          `Description must be ${FieldValidations.DESCRIPTION_MAX_LENGTH} characters or less`
+      ],
       confirmDialog: false,
       fieldValidations: FieldValidations
     };
   },
   computed: {
-    ...mapGetters('apiAccess', [
-      'acronym',
-      'appName',
-      'appDescription',
-      'environment'
-    ])
+    ...mapGetters('apiAccess', ['acronym', 'environment']),
+    // TODO: 2-way binding to vuex state with v-model (https://vuex.vuejs.org/guide/forms.html), but there's got to be a less verbose way...
+    // Going with this to get features working for now
+    appName: {
+      get() {
+        return this.$store.state.apiAccess.appName;
+      },
+      set(val) {
+        this.$store.commit('apiAccess/setAppName', val);
+      }
+    },
+    appDescription: {
+      get() {
+        return this.$store.state.apiAccess.appDescription;
+      },
+      set(val) {
+        this.$store.commit('apiAccess/setAppDescription', val);
+      }
+    }
   },
   methods: {
-    ...mapMutations('apiAccess', ['setStep'])
+    ...mapMutations('apiAccess', ['setStep']),
+    submit() {
+      if (this.$refs.form.validate()) {
+        this.confirmDialog = true;
+      }
+    }
   }
 };
 </script>

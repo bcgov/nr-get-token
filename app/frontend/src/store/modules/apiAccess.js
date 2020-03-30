@@ -4,8 +4,8 @@ export default {
   namespaced: true,
   state: {
     acronym: '',
-    appName: 'test',
-    appDescription: 'Descr',
+    appName: 'TEMP',
+    appDescription: 'POPULATE FROM DB COMING SOON HERE',
     clientStatus: {
       dev: false,
       test: false,
@@ -17,8 +17,6 @@ export default {
   },
   getters: {
     acronym: state => state.acronym,
-    appName: state => state.appName,
-    appDescription: state => state.appDescription,
     clientStatus: state => state.clientStatus,
     clientStatusLoaded: state => state.clientStatusLoaded,
     environment: state => state.environment,
