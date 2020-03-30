@@ -57,10 +57,15 @@ export default {
   },
   methods: {
     ...mapMutations('apiAccess', ['setStep', 'setAcronym']),
-    ...mapActions('apiAccess', ['setStep', 'getAcronymClientStatus'])
+    ...mapActions('apiAccess', [
+      'setStep',
+      'getAcronymClientStatus',
+      'getAcronymDetails'
+    ])
   },
   created() {
     this.setAcronym(this.acronym);
+    this.getAcronymDetails();
     this.getAcronymClientStatus();
   }
 };

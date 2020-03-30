@@ -4,6 +4,20 @@ import { ApiRoutes } from '@/utils/constants';
 
 export default {
   /**
+   * @function getAcronym
+   * Fetch the service clients for the acronym
+   * @param {string} acronym app acronym
+   * @returns {Promise} An axios response
+   */
+  getAcronym(acronym) {
+    if (acronym) {
+      return getokAxios().get(`${ApiRoutes.ACRONYMS}/${acronym}`);
+    } else {
+      return Promise.reject('No acronym supplied');
+    }
+  },
+
+  /**
    * @function getServiceClients
    * Fetch the service clients for the acronym
    * @param {string} acronym app acronym

@@ -4,8 +4,8 @@ export default {
   namespaced: true,
   state: {
     acronym: '',
-    appName: 'TEMP',
-    appDescription: 'POPULATE FROM DB COMING SOON HERE',
+    appName: '',
+    appDescription: '',
     clientStatus: {
       dev: false,
       test: false,
@@ -65,6 +65,21 @@ export default {
       } catch (error) {
         // TODO: Create top-level global state error message
         commit('setClientStatusLoaded', false);
+        console.error(error); // eslint-disable-line no-console
+      }
+    },
+
+    /**
+     * @function getAcronymDetails
+     * Fetch the acronym record
+     * @param {object} context The store context
+     */
+    async getAcronymDetails({ commit, state }) {
+      try {
+        const res = await AcronymService.getAcronym(state.acronym);
+        commit('setAppName', res.data.name);
+        commit('setAppDescription', res.data.description);
+      } catch (error) {
         console.error(error); // eslint-disable-line no-console
       }
     }
