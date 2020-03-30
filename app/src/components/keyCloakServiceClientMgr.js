@@ -171,7 +171,7 @@ class KeyCloakServiceClientManager {
 
   async fetchAllClients() {
 
-    log.info('KeyCloakServiceClientManager.fetchAllClients');
+    log.debug('KeyCloakServiceClientManager.fetchAllClients');
 
     //get all service clients
     const clients = await this.svc.getClients();

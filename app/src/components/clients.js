@@ -24,13 +24,9 @@ const clients = {
     const realmSvc = new RealmAdminService({ realmBaseUrl, clientId, clientSecret, realmId });
     const kcScMgr = new KeyCloakServiceClientManager(realmSvc);
 
-    var clients = kcScMgr.fetchAllClients();
-    clients.then(result => {
-      // add a keycloak environment label to each service client object in the array
-      result.forEach(function (cl) {
-        cl.environment = kcEnv;
-      });
-    });
+    const clients = await kcScMgr.fetchAllClients();
+    // add a keycloak environment label to each service client object in the array
+    clients.forEach(cl => cl.environment = kcEnv);
 
     return clients;
   }
