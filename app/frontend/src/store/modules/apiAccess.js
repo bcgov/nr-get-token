@@ -4,6 +4,8 @@ export default {
   namespaced: true,
   state: {
     acronym: '',
+    appName: 'test',
+    appDescription: 'Descr',
     clientStatus: {
       dev: false,
       test: false,
@@ -14,6 +16,9 @@ export default {
     step: 1
   },
   getters: {
+    acronym: state => state.acronym,
+    appName: state => state.appName,
+    appDescription: state => state.appDescription,
     clientStatus: state => state.clientStatus,
     clientStatusLoaded: state => state.clientStatusLoaded,
     environment: state => state.environment,
@@ -22,6 +27,12 @@ export default {
   mutations: {
     setAcronym: (state, acronym) => {
       state.acronym = acronym;
+    },
+    setAppName: (state, appName) => {
+      state.appName = appName;
+    },
+    setAppDescription: (state, appDescription) => {
+      state.appDescription = appDescription;
     },
     setClientStatus: (state, statusObj) => {
       state.clientStatus = statusObj;

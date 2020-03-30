@@ -23,9 +23,19 @@
         </v-card-text>
       </div>
       <v-card-actions class="justify-center">
-        <v-btn class="BC-Gov-PrimaryButton mb-5" text @click="closeDialog">
-          <slot name="button-text">OK</slot>
-        </v-btn>
+        <div v-if="type == 'OK'">
+          <v-btn class="BC-Gov-PrimaryButton mb-5" text @click="closeDialog">
+            <slot name="button-text">OK</slot>
+          </v-btn>
+        </div>
+        <div v-else-if="type === 'CONTINUE'">
+          <v-btn class="BC-Gov-PrimaryButton light mb-5 mr-5" text @click="closeDialog">
+            <slot name="button-text">Cancel</slot>
+          </v-btn>
+          <v-btn class="BC-Gov-PrimaryButton mb-5" text @click="continueDialog">
+            <slot name="button-text">Continue</slot>
+          </v-btn>
+        </div>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -41,6 +51,10 @@ export default {
       default: false,
       type: Boolean
     },
+    type: {
+      default: 'OK',
+      type: String
+    },
     width: {
       default: '500',
       type: String
@@ -49,6 +63,9 @@ export default {
   methods: {
     closeDialog() {
       this.$emit('close-dialog');
+    },
+    continueDialog() {
+      this.$emit('continue-dialog');
     }
   }
 };
