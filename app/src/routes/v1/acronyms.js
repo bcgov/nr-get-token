@@ -6,6 +6,34 @@ const log = require('npmlog');
 const Problem = require('api-problem');
 
 const acronyms = require('../../components/acronyms');
+const permissionHelpers = require('../../components/permissionHelpers');
+
+/** fetches the acronym details */
+acronymsRouter.get('/:appAcronym', [
+], async (req, res) => {
+  // Check for required permissions. Can only fetch details for the acronyms you are associated with
+  const permissionErr = await permissionHelpers.checkAcronymPermission(req.kauth.grant.access_token.content.sub, req.params.appAcronym);
+  if (permissionErr) {
+    return res.status(403).json({
+      message: permissionErr
+    });
+  }
+
+  try {
+    const response = await acronyms.getAcronym(req.params.appAcronym);
+    if (response) {
+      return res.status(200).json(response);
+    } else {
+      return res.status(404).end();
+    }
+  } catch (error) {
+    log.error(error);
+    res.status(500).json({
+      message: error.message
+    });
+    return res;
+  }
+});
 
 /** Returns clients from KC for the supplied acronym*/
 acronymsRouter.get('/:acronym/clients', [
