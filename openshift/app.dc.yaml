@@ -170,7 +170,7 @@ objects:
                 - name: SC_KC_DEV_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      key: username
+                      key: password
                       name: getok-sc-keycloakdev-secret
                 - name: SC_KC_TEST_USERNAME
                   valueFrom:
@@ -180,7 +180,7 @@ objects:
                 - name: SC_KC_TEST_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      key: username
+                      key: password
                       name: getok-sc-keycloaktest-secret
                 - name: SC_KC_PROD_USERNAME
                   valueFrom:
@@ -190,7 +190,7 @@ objects:
                 - name: SC_KC_PROD_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      key: username
+                      key: password
                       name: getok-sc-keycloakprod-secret
                 - name: SC_WEBADE_INT_USERNAME
                   valueFrom:
