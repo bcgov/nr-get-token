@@ -10,6 +10,7 @@ const acronymsRouter = require('./v1/acronyms');
 const checksRouter = require('./v1/checks');
 const emailRouter = require('./v1/email');
 const usersRouter = require('./v1/users');
+const keycloakRouter = require('./v1/keycloak');
 
 const getSpec = () => {
   const rawSpec = fs.readFileSync(path.join(__dirname, '../docs/v1.api-spec.yaml'), 'utf8');
@@ -59,5 +60,9 @@ router.use('/email', keycloak.protect(), emailRouter);
 
 /** Users Router */
 router.use('/users', keycloak.protect(), usersRouter);
+
+/** Keycloak Router */
+router.use('/keycloak', keycloak.protect(), keycloakRouter);
+
 
 module.exports = router;

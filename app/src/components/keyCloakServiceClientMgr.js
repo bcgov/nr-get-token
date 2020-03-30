@@ -168,6 +168,18 @@ class KeyCloakServiceClientManager {
       return undefined;
     }
   }
+
+  async fetchAllClients() {
+
+    log.debug('KeyCloakServiceClientManager.fetchAllClients');
+
+    //get all service clients
+    const clients = await this.svc.getClients();
+
+    // return clients that match '*_SERVICE_CLIENT';
+    return clients.filter(cl => cl.clientId.match(/.*_SERVICE_CLIENT$/));
+  }
+
 }
 
 module.exports = KeyCloakServiceClientManager;
