@@ -1,5 +1,7 @@
 import { getokAxios } from '@/services/interceptors';
 
+import { ApiRoutes } from '@/utils/constants';
+
 export default {
   /**
    * @function getServiceClients
@@ -8,7 +10,7 @@ export default {
    */
   getServiceClients(acronym) {
     if (acronym) {
-      return getokAxios().get(`/acronyms/${acronym}/clients`, { timeout: 30000 });
+      return getokAxios().get(`${ApiRoutes.ACRONYMS}/${acronym}/clients`, { timeout: 30000 });
     } else {
       return Promise.reject('No acronym supplied');
     }

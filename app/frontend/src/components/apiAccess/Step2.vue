@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    Contents to go here
+    Contents to go here {{environment}}
     <br />
     <br />
     <br />
@@ -13,10 +13,13 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'ApiAccessStep2',
+  computed: {
+    ...mapGetters('apiAccess', ['environment'])
+  },
   methods: {
     ...mapMutations('apiAccess', ['setStep'])
   }

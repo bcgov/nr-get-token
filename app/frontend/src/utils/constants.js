@@ -20,6 +20,17 @@ export const FieldValidations = Object.freeze({
   PASSWORD_MAX_LENGTH: 60
 });
 
+export const KcEnv = Object.freeze({
+  DEV: 'DEV',
+  TEST: 'TEST',
+  PROD: 'PROD'
+});
+
+export const KcClientStatus = Object.freeze({
+  AVAILABLE: 'Available',
+  NOT: 'Not Available'
+});
+
 export const RealmRoles = Object.freeze({
   GETOK_ADMIN: 'GETOK_ADMIN',
   GETOK_ADMIN_ADD_USER: 'GETOK_ADMIN_ADD_USER',
@@ -27,4 +38,12 @@ export const RealmRoles = Object.freeze({
   WEBADE_CFG_READ_ALL: 'WEBADE_CFG_READ_ALL',
   WEBADE_PERMISSION: 'WEBADE_PERMISSION',
   WEBADE_PERMISSION_NROS_DMS: 'WEBADE_PERMISSION_NROS_DMS'
+});
+
+export const WebAdeEnvs = Object.freeze({
+  INT: 'CREATE',
+  S1: 'S1',
+  S2: 'S2',
+  TEST: 'TEST',
+  PROD: 'PROD'
 });

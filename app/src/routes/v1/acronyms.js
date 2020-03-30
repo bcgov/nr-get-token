@@ -20,7 +20,7 @@ acronymsRouter.get('/:acronym/clients', [
     }).send(res);
   }
 
-  const result = await acronyms.getClients(req.params.acronym);
+  const result = await acronyms.getAcronymClients(req.params.acronym);
   if (result === null) {
     return new Problem(404).send(res);
   } else {

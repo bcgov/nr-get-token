@@ -21,27 +21,37 @@
         <v-row>
           <v-col cols="6">
             <ul>
-              <li>DEV: Available</li>
+              <li v-html="buildClientStatusSpan(env.DEV, clientStatus.dev)"></li>
             </ul>
           </v-col>
           <v-col cols="6">
-            <v-btn color="primary" block @click="setStep(2)">Get Token for Dev</v-btn>
+            <v-btn color="primary" block @click="nextStep(env.DEV)">Get Token for Dev</v-btn>
           </v-col>
           <v-col cols="6">
             <ul>
-              <li>TEST: Available</li>
+              <li v-html="buildClientStatusSpan(env.TEST, clientStatus.test)"></li>
             </ul>
           </v-col>
           <v-col cols="6">
-            <v-btn color="primary" block @click="setStep(2)">Get Token for Test</v-btn>
+            <v-btn
+              color="primary"
+              :disabled="!clientStatus.dev"
+              block
+              @click="nextStep(env.TEST)"
+            >Get Token for Test</v-btn>
           </v-col>
           <v-col cols="6">
             <ul>
-              <li>PROD: Available</li>
+              <li v-html="buildClientStatusSpan(env.PROD, clientStatus.prod)"></li>
             </ul>
           </v-col>
           <v-col cols="6">
-            <v-btn color="primary" block @click="setStep(2)">Get Token for Prod</v-btn>
+            <v-btn
+              color="primary"
+              :disabled="!clientStatus.test"
+              block
+              @click="nextStep(env.PROD)"
+            >Get Token for Prod</v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -52,13 +62,27 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex';
 
+import { KcClientStatus, KcEnv } from '@/utils/constants';
+import { buildClientStatusSpan } from '@/utils/util.js';
+
 export default {
   name: 'ApiAccessStep1',
+  data() {
+    return {
+      KcClientStatus: KcClientStatus,
+      env: KcEnv
+    };
+  },
   computed: {
-    ...mapGetters('apiAccess', ['clientStatusLoaded'])
+    ...mapGetters('apiAccess', ['clientStatus', 'clientStatusLoaded'])
   },
   methods: {
-    ...mapMutations('apiAccess', ['setStep'])
+    ...mapMutations('apiAccess', ['setEnvironment', 'setStep']),
+    buildClientStatusSpan,
+    nextStep(env) {
+      this.setEnvironment(env);
+      this.setStep(2);
+    }
   }
 };
 </script>

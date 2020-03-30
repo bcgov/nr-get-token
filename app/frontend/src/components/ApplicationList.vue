@@ -44,6 +44,9 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 
+import { KcEnv } from '@/utils/constants';
+import { buildClientStatusSpan } from '@/utils/util.js';
+
 export default {
   name: 'ApplicationList',
   created() {
@@ -54,15 +57,10 @@ export default {
   },
   methods: {
     ...mapActions('user', ['loadModule']),
-    buildClientSpan(envLabel, status) {
-      const cls = status ? 'green--text' : '';
-      const txt = status ? 'Available' : 'Not Available';
-      return `${envLabel}: <span class="${cls}">${txt}</span>`;
-    },
     setClientTexts(acr) {
-      return `${this.buildClientSpan('Dev', acr.clientStatus && acr.clientStatus.dev)}<br />
-              ${this.buildClientSpan('Test', acr.clientStatus && acr.clientStatus.test)}<br />
-              ${this.buildClientSpan('Prod', acr.clientStatus && acr.clientStatus.prod)}`;
+      return `${buildClientStatusSpan(KcEnv.DEV, acr.clientStatus && acr.clientStatus.dev)}<br />
+              ${buildClientStatusSpan(KcEnv.TEST, acr.clientStatus && acr.clientStatus.test)}<br />
+              ${buildClientStatusSpan(KcEnv.PROD, acr.clientStatus && acr.clientStatus.prod)}`;
     }
   }
 };
