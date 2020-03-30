@@ -2,6 +2,7 @@ const uuid = require('uuid');
 
 const helper = require('../../common/helper');
 const users = require('../../../src/components/users');
+const utils = require('../../../src/components/utils');
 const { userService } = require('../../../src/services');
 
 helper.logHelper();
@@ -65,7 +66,7 @@ describe('getUserAcronyms', () => {
 describe('getUserAcronymClients', () => {
   const findSpy = jest.spyOn(userService, 'find');
   const userAcronymListSpy = jest.spyOn(userService, 'userAcronymList');
-  const getClientsSpy = jest.spyOn(users, 'getClientsFromEnv');
+  const getClientsSpy = jest.spyOn(utils, 'getClientsFromEnv');
 
   beforeEach(() => {
     findSpy.mockReset();

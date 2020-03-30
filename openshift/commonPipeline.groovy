@@ -123,7 +123,7 @@ def runStageDeploy(String stageEnv, String projectEnv, String hostEnv, String pa
       openshift.selector('cm', "getok-server-config").exists() &&
       openshift.selector('secret', "getok-keycloak-secret").exists() &&
       openshift.selector('secret', "getok-sc-ches-secret").exists() &&
-      openshift.selector('secret', "getok-sc-keycloakint-secret").exists() &&
+      openshift.selector('secret', "getok-sc-keycloakdev-secret").exists() &&
       openshift.selector('secret', "getok-sc-keycloaktest-secret").exists() &&
       openshift.selector('secret', "getok-sc-keycloakprod-secret").exists() &&
       openshift.selector('secret', "getok-sc-webade-int-secret").exists() &&

@@ -31,15 +31,12 @@ oc create -n k8vopl-<env> configmap getok-sc-config \
   --from-literal=SC_GETOK_ENDPOINT_TEST=https://t1api.nrs.gov.bc.ca/webade-api/v1 \
   --from-literal=SC_GETOK_ENDPOINT_PROD=https://api.nrs.gov.bc.ca/webade-api/v1 \
   --from-literal=SC_MSSC_ENDPOINT=https://i1api.nrs.gov.bc.ca/cmsg-messaging-api/v1 \
-  --from-literal=SC_KC_INT_ENDPOINT=https://sso-dev.pathfinder.gov.bc.ca \
+  --from-literal=SC_KC_DEV_ENDPOINT=https://sso-dev.pathfinder.gov.bc.ca \
   --from-literal=SC_KC_TEST_ENDPOINT=https://sso-test.pathfinder.gov.bc.ca \
   --from-literal=SC_KC_PROD_ENDPOINT=https://sso.pathfinder.gov.bc.ca \
-  --from-literal=SC_KC_INT_REALM=jbd6rnxw \
+  --from-literal=SC_KC_DEV_REALM=jbd6rnxw \
   --from-literal=SC_KC_TEST_REALM=jbd6rnxw \
-  --from-literal=SC_KC_PROD_REALM=jbd6rnxw \
-  --from-literal=CHES_TOKEN_ENDPOINT=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token \
-  --from-literal=CHES_EMAIL_ENDPOINT=https://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api/v1/email \
-  --from-literal=CHES_HEALTH_ENDPOINT=http://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api/v1/health
+  --from-literal=SC_KC_PROD_REALM=jbd6rnxw
 ```
 
 ```sh
@@ -74,8 +71,7 @@ oc create -n k8vopl-<env> secret generic getok-sc-ches-secret \
 ```
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-sc-keycloakint-secret \
-  --type=kubernetes.io/basic-auth \
+oc create -n k8vopl-<env> secret generic getok-sc-keycloakdev-secret type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>
 ```

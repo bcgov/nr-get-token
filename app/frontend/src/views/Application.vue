@@ -13,19 +13,13 @@
         <v-tab>Team</v-tab>
 
         <v-tab-item>
-          <v-card flat class="pl-12">
-            <h2>{{acronym}}</h2>
-            <ApiAccess />
-          </v-card>
+          <h2>{{acronym}}</h2>
+          <ApiAccess :acronym="acronym" />
         </v-tab-item>
 
         <v-tab-item>
-          <v-card flat class="pl-12">
-            <h2>{{acronym}}</h2>
-            <v-card-text>
-              <p class="mb-0">TBA. Users tab coming soon</p>
-            </v-card-text>
-          </v-card>
+          <h2>{{acronym}}</h2>
+          <p class="mb-0">TBA. Users tab coming soon</p>
         </v-tab-item>
       </v-tabs>
     </BaseSecure>
@@ -34,13 +28,20 @@
 
 <script>
 import ApiAccess from '@/components/apiAccess/ApiAccess.vue';
+import apiAccess from '@/store/modules/apiAccess';
 
 export default {
   name: 'Application',
   components: {
     ApiAccess
   },
-  props: ['acronym']
+  props: ['acronym'],
+  beforeDestroy() {
+    this.$store.unregisterModule('apiAccess');
+  },
+  created() {
+    this.$store.registerModule('apiAccess', apiAccess);
+  },
 };
 </script>
 
@@ -55,7 +56,11 @@ export default {
 
 /* Tab (TODO: if this is used elsewhere in the program, make this style global) */
 .getok-tabs {
+  .v-tabs-bar {
+    margin-right: 8em;
+  }
   .v-tab {
+    padding: 2em 7em 2em 2em;
     font-weight: bold;
     justify-content: left;
     &:not(.v-tab--active) {

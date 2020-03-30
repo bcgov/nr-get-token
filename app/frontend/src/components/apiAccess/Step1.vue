@@ -1,21 +1,89 @@
 <template>
-  <v-container>
-    <h2>API Access for Common Services</h2>Contents to go here
-    <br />
-    <br />
-    <br />
-    <br />
-    <v-btn color="primary" @click="setStep(2)">Get Token for Dev</v-btn>
+  <v-container class="pl-0">
+    <h2 class="pb-8">API Access for Common Services</h2>
+    <p>Your application has a service client with access to:</p>
+    <ul>
+      <li>Common Hosted Email Service</li>
+      <li>Common Document Generation Service</li>
+    </ul>
+    <h2 class="mt-8 pb-2">Service Client Status</h2>
+    <p>
+      * Available each service client in order:
+      <strong>DEV - TEST - PROD</strong>
+    </p>
+
+    <v-skeleton-loader
+      type="list-item-three-line"
+      :loading="!clientStatusLoaded"
+      transition="scale-transition"
+    >
+      <v-container>
+        <v-row>
+          <v-col cols="6">
+            <ul>
+              <li v-html="buildClientStatusSpan(env.DEV, clientStatus.dev)"></li>
+            </ul>
+          </v-col>
+          <v-col cols="6">
+            <v-btn color="primary" block @click="nextStep(env.DEV)">Get Token for Dev</v-btn>
+          </v-col>
+          <v-col cols="6">
+            <ul>
+              <li v-html="buildClientStatusSpan(env.TEST, clientStatus.test)"></li>
+            </ul>
+          </v-col>
+          <v-col cols="6">
+            <v-btn
+              color="primary"
+              :disabled="!clientStatus.dev"
+              block
+              @click="nextStep(env.TEST)"
+            >Get Token for Test</v-btn>
+          </v-col>
+          <v-col cols="6">
+            <ul>
+              <li v-html="buildClientStatusSpan(env.PROD, clientStatus.prod)"></li>
+            </ul>
+          </v-col>
+          <v-col cols="6">
+            <v-btn
+              color="primary"
+              :disabled="!clientStatus.test"
+              block
+              @click="nextStep(env.PROD)"
+            >Get Token for Prod</v-btn>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-skeleton-loader>
   </v-container>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
+
+import { KcClientStatus, KcEnv } from '@/utils/constants';
+import { buildClientStatusSpan } from '@/utils/util.js';
 
 export default {
   name: 'ApiAccessStep1',
+  data() {
+    return {
+      KcClientStatus: KcClientStatus,
+      env: KcEnv
+    };
+  },
+  computed: {
+    ...mapGetters('apiAccess', ['clientStatus', 'clientStatusLoaded'])
+  },
   methods: {
-    ...mapMutations('apiAccess', ['setStep'])
+    ...mapMutations('apiAccess', ['setEnvironment', 'setStep']),
+    buildClientStatusSpan,
+    nextStep(env) {
+      this.setEnvironment(env);
+      this.setStep(2);
+    }
   }
 };
 </script>
+
