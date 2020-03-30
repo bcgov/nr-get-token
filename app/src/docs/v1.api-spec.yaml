@@ -175,10 +175,10 @@ paths:
       summary: Returns all registered service clients
       operationId: kcServiceClientsGet
       tags:
-        - KeyCloak Service Client Configuration
+        - KeyCloak Service Clients
       responses:
         "200":
-          description: Returns the registered service clients
+          description: Returns an array of the registered service clients
           content:
             application/json:
               schema:
@@ -876,16 +876,99 @@ components:
           items:
             $ref: "#/components/schemas/Role"
           description: An array of Common Service roles the client currently has
-    KcClients:
+    KcClientDetailFull:
       type: object
-      required:
-        - clients
+      description: "Keycloak's representation of a client. see: https://www.keycloak.org/docs-api/5.0/rest-api/index.html#_clientrepresentation"
       properties:
-        clients:
+        access:
+          type: object
+          example: { view: true, configure: true, manage: true }
+        attributes:
+          type: object
+          example: {
+          'saml.assertion.signature': 'false',
+          'saml.multivalued.roles': 'false',
+          'saml.force.post.binding': 'false',
+          'saml.encrypt': 'false',
+          'saml.server.signature': 'false',
+          'saml.server.signature.keyinfo.ext': 'false',
+          'exclude.session.state.from.auth.response': 'false',
+          'saml_force_name_id_format': 'false',
+          'saml.client.signature': 'false',
+          'tls.client.certificate.bound.access.tokens': 'false',
+          'saml.authnstatement': 'false',
+          'display.on.consent.screen': 'false',
+          'saml.onetimeuse.condition': 'false'
+        }
+        authenticationFlowBindingOverrides:
+          type: object
+        authorizationServicesEnabled:
+          type: boolean
+        bearerOnly:
+          type: boolean
+        clientAuthenticatorType:
+          type: string
+          example: client-secret
+        clientId:
+          type: string
+          example: TEST_SERVICE_CLIENT
+        consentRequired:
+          type: boolean
+        defaultClientScopes:
+          type: string
+        description:
+          type: string
+          example: Test Service Client
+        directAccessGrantsEnabled:
+          type: boolean
+        enabled:
+          type: boolean
+        environment:
+          type: string
+          example: test
+        frontchannelLogout:
+          type: boolean
+        fullScopeAllowed:
+          type: boolean
+        id:
+          type: string
+          example: 12345-abcde-67890-fghijk
+        implicitFlowEnabled:
+          type: boolean
+        name:
+          type: string
+          example: TEST
+        nodeReRegistrationTimeout:
+          type: integer
+          example: -1
+        notBefore:
+          type: integer
+        optionalClientScopes:
+          type: string
+        protocol:
+          type: string
+          example: 'openid-connect'
+        protocolMappers:
           type: array
           items:
-            $ref: "https://www.keycloak.org/docs-api/5.0/rest-api/index.html#_clientrepresentation"
-          description: An array of registered service clients
+            type: string
+        publicClient:
+          type: boolean
+        redirectUris:
+          type: string
+        serviceAccountsEnabled:
+          type: boolean
+        standardFlowEnabled:
+          type: boolean
+        surrogateAuthRequired:
+          type: boolean
+        webOrigins:
+          type: string
+    KcClients:
+      type: array
+      items:
+        $ref: "#/components/schemas/KcClientDetailFull"
+      description: An array of registered service clients
     KcConfigForm:
       type: object
       required:

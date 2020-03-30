@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <template>
+    <v-container>
       <v-card-title>
         Registered Service Clients
         <v-spacer></v-spacer>
@@ -10,6 +10,7 @@
           label="Search"
           single-line
           hide-details
+          class="pb-5"
         ></v-text-field>
       </v-card-title>
 
@@ -37,7 +38,7 @@
           <v-icon v-if="item.prod" color="green">check</v-icon>
         </template>
       </v-data-table>
-    </template>
+    </v-container>
   </v-card>
 </template>
 
@@ -72,8 +73,9 @@ export default {
   methods: {
     // get table data from frontend service layer
     getData() {
-      keycloakService.getServiceClients().then(response => {
-        if (response) {
+      keycloakService
+        .getServiceClients()
+        .then(response => {
           // reformat data to show in our data table of service clients
           const reduced = response.data.reduce((a, b) => {
             if (!a[b.clientId]) a[b.clientId] = []; //If this type wasn't previously stored
@@ -93,13 +95,11 @@ export default {
           if (clients.length == 0) {
             this.showTableAlert('info', 'No Service Clients found');
           }
-          console.log(clients);
           this.serviceClients = clients;
-
-        } else {
+        })
+        .catch(() => {
           this.showTableAlert('error', 'No response from server');
-        }
-      });
+        });
     },
     showTableAlert(typ, msg) {
       this.showAlert = true;
