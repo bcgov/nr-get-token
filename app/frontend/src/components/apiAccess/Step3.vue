@@ -98,7 +98,7 @@
     </v-row>
 
     <BaseDialog
-      v-bind:show="confirmDialog"
+      :show="confirmDialog"
       type="CONTINUE"
       @close-dialog="confirmDialog = false"
       @continue-dialog="confirmDialog = false; setStep(4)"

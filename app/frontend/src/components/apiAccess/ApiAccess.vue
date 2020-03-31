@@ -56,11 +56,11 @@ export default {
     ...mapGetters('apiAccess', ['step'])
   },
   methods: {
-    ...mapMutations('apiAccess', ['setStep', 'setAcronym']),
+    ...mapMutations('apiAccess', ['setAcronym', 'setStep']),
     ...mapActions('apiAccess', [
-      'setStep',
       'getAcronymClientStatus',
-      'getAcronymDetails'
+      'getAcronymDetails',
+      'setStep'
     ])
   },
   created() {

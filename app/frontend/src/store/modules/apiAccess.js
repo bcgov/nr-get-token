@@ -139,11 +139,13 @@ export default {
           commit('setGeneratedPassword', res.data.generatedPassword);
           return true;
         } else {
+          //TODO: global error handling here?
           console.error(`submitConfigForm - No response for ${JSON.stringify(configForm)}`); // eslint-disable-line no-console
           return false;
         }
       }
       catch (error) {
+        //TODO: global error handling here?
         console.error(`submitConfigForm - Error occurred for ${JSON.stringify(configForm)}`); // eslint-disable-line no-console
         console.error(error); // eslint-disable-line no-console
         return false;

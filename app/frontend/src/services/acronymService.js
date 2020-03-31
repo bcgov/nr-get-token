@@ -32,9 +32,9 @@ export default {
   },
 
   /**
-   * @function getServiceClients
+   * @function postConfigForm
    * Post the service client creation submission to the api
-   * @param {string} acronym app acronym
+   * @param {object} configForm the service client creation configuration (see backend validation on route for required fields)
    * @returns {Promise} An axios response
    */
   postConfigForm(configForm) {

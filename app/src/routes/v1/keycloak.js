@@ -47,10 +47,10 @@ keycloakRouter.post('/configForm', [
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     log.debug('/configForm', 'Validation Error');
-    return res.status(400).json({
-      errors: errors.array(),
-      message: 'Validation failed'
-    });
+    return new Problem(422, {
+      detail: 'Validation failed',
+      errors: errors.array()
+    }).send(res);
   }
 
   const {
@@ -61,9 +61,7 @@ keycloakRouter.post('/configForm', [
   // Check for required permissions. Can only create clients for the acronyms you are associated with
   const permissionErr = await permissionHelpers.checkAcronymPermission(userid, configForm.applicationAcronym);
   if (permissionErr) {
-    return res.status(403).json({
-      message: permissionErr
-    });
+    return new Problem(403, { detail: permissionErr, }).send(res);
   }
 
   // TODO: too much logic in the routing layer, refactor along with some other stuff that does KC client operations
@@ -91,10 +89,7 @@ keycloakRouter.post('/configForm', [
     });
   } catch (error) {
     log.error(error);
-    res.status(500).json({
-      message: error.message
-    });
-    return res;
+    return new Problem(500, { detail: error.message }).send(res);
   }
 });
 

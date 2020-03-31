@@ -57,7 +57,7 @@
     </v-row>
 
     <BaseDialog
-      v-bind:show="confirmDialog"
+      :show="confirmDialog"
       :type="!submissionInProgress ? 'CONTINUE' : ''"
       @close-dialog="confirmDialog = false"
       @continue-dialog="sendFormToApi()"
@@ -72,15 +72,15 @@
         <div v-else>
           <p>
             This will create your
-            <strong>{{ environment}}</strong> service client for the
-            <strong>{{ acronym}}</strong> application.
+            <strong>{{ environment }}</strong> service client for the
+            <strong>{{ acronym }}</strong> application.
           </p>
           <p>Do you want to continue?</p>
         </div>
       </template>
     </BaseDialog>
 
-    <BaseDialog v-bind:show="errorDialog" @close-dialog="errorDialog = false">
+    <BaseDialog :show="errorDialog" @close-dialog="errorDialog = false">
       <template v-slot:icon>
         <v-icon large color="red">cancel</v-icon>
       </template>
@@ -164,8 +164,7 @@ export default {
       }
 
       // To give the animation enough time to fade so it doesn't juke a little
-      await new Promise(t => setTimeout(t, 1000));
-      this.submissionInProgress = false;
+      setTimeout(() => this.submissionInProgress = false, 1000);
     }
   }
 };

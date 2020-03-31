@@ -5,9 +5,10 @@ export default {
   /**
    * @function getAllServiceClients
    * Fetch all registered service clients
+   * @returns {Promise} An axios response
    */
   getServiceClients() {
-    return getokAxios().get(ApiRoutes.KCCLIENTS, { timeout: 30000 });
+    return getokAxios().get(ApiRoutes.KC_CLIENTS, { timeout: 30000 });
   },
 
   /**
@@ -17,6 +18,6 @@ export default {
    * @returns {Promise} An axios response
    */
   postConfigForm(content) {
-    return getokAxios().post(ApiRoutes.KCCONFIG, content);
+    return getokAxios().post(ApiRoutes.KC_CONFIG, content);
   }
 };

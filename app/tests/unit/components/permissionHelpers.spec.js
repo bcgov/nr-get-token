@@ -1,10 +1,8 @@
-const config = require('config');
-const log = require('npmlog');
-
+const helper = require('../../common/helper');
 const permissionHelpers = require('../../../src/components/permissionHelpers');
 const { userService } = require('../../../src/services');
 
-log.level = config.get('server.logLevel');
+helper.logHelper();
 
 describe('checkAcronymPermission', () => {
   const spy = jest.fn();
@@ -13,7 +11,7 @@ describe('checkAcronymPermission', () => {
     userService.userAcronymList = spy;
   });
 
-  afterEach(() => {
+  beforeEach(() => {
     spy.mockReset();
   });
 

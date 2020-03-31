@@ -1,5 +1,5 @@
-const helper = require('../../common/helper');
 const acronyms = require('../../../src/components/acronyms');
+const helper = require('../../common/helper');
 const { acronymService } = require('../../../src/services');
 const utils = require('../../../src/components/utils');
 
@@ -11,9 +11,8 @@ describe('getAcronym', () => {
 
   // Spy/mock the DB access 'find' method on the acronym table
   const spy = jest.spyOn(acronymService, 'find');
-  jest.mock('../../../src/services/acronym');
 
-  afterEach(() => {
+  beforeEach(() => {
     spy.mockClear();
   });
 
