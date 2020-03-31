@@ -81,13 +81,7 @@
       <v-col cols="6">
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn
-              v-on="on"
-              class="BC-Gov-PrimaryButton light mr-4"
-              block
-              text
-              @click="setStep(2)"
-            >Back</v-btn>
+            <v-btn v-on="on" class="BC-Gov-PrimaryButton light mr-4" block text @click="goBack">Back</v-btn>
           </template>
           <span>Go back to create a new password</span>
         </v-tooltip>
@@ -178,6 +172,11 @@ export default {
         this.ephemeralPasswordRSAKey
       );
       this.passwordShown = DecryptionResult.plaintext;
+    },
+    goBack() {
+      this.passwordShown = '••••••••';
+      this.passwordDecrypted = false;
+      this.setStep(2);
     }
   }
 };
