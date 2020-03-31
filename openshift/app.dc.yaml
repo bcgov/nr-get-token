@@ -166,32 +166,32 @@ objects:
                   valueFrom:
                     secretKeyRef:
                       key: username
-                      name: getok-sc-keycloakdev-secret
+                      name: getok-sc-keycloak-dev-secret
                 - name: SC_KC_DEV_PASSWORD
                   valueFrom:
                     secretKeyRef:
                       key: password
-                      name: getok-sc-keycloakdev-secret
+                      name: getok-sc-keycloak-dev-secret
                 - name: SC_KC_TEST_USERNAME
                   valueFrom:
                     secretKeyRef:
                       key: username
-                      name: getok-sc-keycloaktest-secret
+                      name: getok-sc-keycloak-test-secret
                 - name: SC_KC_TEST_PASSWORD
                   valueFrom:
                     secretKeyRef:
                       key: password
-                      name: getok-sc-keycloaktest-secret
+                      name: getok-sc-keycloak-test-secret
                 - name: SC_KC_PROD_USERNAME
                   valueFrom:
                     secretKeyRef:
                       key: username
-                      name: getok-sc-keycloakprod-secret
+                      name: getok-sc-keycloak-prod-secret
                 - name: SC_KC_PROD_PASSWORD
                   valueFrom:
                     secretKeyRef:
                       key: password
-                      name: getok-sc-keycloakprod-secret
+                      name: getok-sc-keycloak-prod-secret
                 - name: SC_WEBADE_INT_USERNAME
                   valueFrom:
                     secretKeyRef:
