@@ -16,18 +16,20 @@ export default {
       prod: false
     },
     clientStatusLoaded: false,
-    configFormSubmissionResult: null,
     environment: '',
     ephemeralPasswordRSAKey: null,
+    generatedClient: '',
+    generatedPassword: '',
     step: 1
   },
   getters: {
     acronym: state => state.acronym,
     clientStatus: state => state.clientStatus,
     clientStatusLoaded: state => state.clientStatusLoaded,
-    configFormSubmissionResult: state => state.configFormSubmissionResult,
     environment: state => state.environment,
     ephemeralPasswordRSAKey: state => state.ephemeralPasswordRSAKey,
+    generatedClient: state => state.generatedClient,
+    generatedPassword: state => state.generatedPassword,
     step: state => state.step
   },
   mutations: {
@@ -46,14 +48,17 @@ export default {
     setClientStatusLoaded: (state, clientStatusLoaded) => {
       state.clientStatusLoaded = clientStatusLoaded;
     },
-    setConfigFormSubmissionResult: (state, val) => {
-      state.configFormSubmissionResult = val;
-    },
     setEnvironment: (state, env) => {
       state.environment = env;
     },
     setEphemeralPasswordRSAKey: (state, ephemeralPasswordRSAKey) => {
       state.ephemeralPasswordRSAKey = ephemeralPasswordRSAKey;
+    },
+    setGeneratedClient: (state, generatedClient) => {
+      state.generatedClient = generatedClient;
+    },
+    setGeneratedPassword: (state, generatedPassword) => {
+      state.generatedPassword = generatedPassword;
     },
     setStep: (state, step) => {
       state.step = step;
@@ -130,11 +135,8 @@ export default {
 
         const res = await KeycloakService.postConfigForm(body);
         if (res && res.data) {
-          const configFormSubmissionResult = {
-            generatedPassword: res.data.generatedPassword,
-            generatedServiceClient: res.data.generatedServiceClient
-          };
-          commit('setConfigFormSubmissionResult', configFormSubmissionResult);
+          commit('setGeneratedClient', res.data.generatedServiceClient);
+          commit('setGeneratedPassword', res.data.generatedPassword);
           return true;
         } else {
           console.error(`submitConfigForm - No response for ${JSON.stringify(configForm)}`); // eslint-disable-line no-console
