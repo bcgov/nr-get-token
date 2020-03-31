@@ -159,7 +159,7 @@ export default {
       }
 
       // To give the animation enough time to fade so it doesn't juke a little
-      await new Promise(r => setTimeout(r, 1000));
+      await new Promise(t => setTimeout(t, 1000));
       this.submissionInProgress = false;
     }
   }

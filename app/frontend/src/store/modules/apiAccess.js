@@ -1,4 +1,8 @@
+import cryptico from 'cryptico-js';
+
 import AcronymService from '@/services/acronymService';
+import { CommonServiceTypes, CommonServiceList } from '@/utils/commonServices.js';
+import KeycloakService from '@/services/keycloakService';
 
 export default {
   namespaced: true,
@@ -12,7 +16,8 @@ export default {
       prod: false
     },
     clientStatusLoaded: false,
-    environment: 'aaa',
+    environment: '',
+    ephemeralPasswordRSAKey: null,
     step: 1
   },
   getters: {
@@ -20,6 +25,7 @@ export default {
     clientStatus: state => state.clientStatus,
     clientStatusLoaded: state => state.clientStatusLoaded,
     environment: state => state.environment,
+    ephemeralPasswordRSAKey: state => state.ephemeralPasswordRSAKey,
     step: state => state.step
   },
   mutations: {
@@ -40,6 +46,9 @@ export default {
     },
     setEnvironment: (state, env) => {
       state.environment = env;
+    },
+    setEphemeralPasswordRSAKey: (state, ephemeralPasswordRSAKey) => {
+      state.ephemeralPasswordRSAKey = ephemeralPasswordRSAKey;
     },
     setStep: (state, step) => {
       state.step = step;
@@ -90,22 +99,37 @@ export default {
      * @param {object} context The store context
      * @returns {boolean} whether the operation succeeded
      */
-    async submitConfigForm({ state }) {
+    async submitConfigForm({ commit, state }) {
       const configForm = {
-        acronym: state.acronym,
-        name: '',
-        description: ''
+        applicationAcronym: state.acronym,
+        applicationName: state.appName,
+        applicationDescription: state.appDescription,
+        clientEnvironment: state.environment,
+        commonServices: CommonServiceList
+          .filter(svc => svc.type === CommonServiceTypes.KEYCLOAK)
+          .map(svc => svc.abbreviation),
       };
+
       try {
-        await new Promise(r => setTimeout(r, 2000));
-        //const res = await KeycloakService.postConfigForm(configForm);
-        return true;
-        // if (res && res.data) {
-        //   return true;
-        // } else {
-        //   console.error(`submitConfigForm - No response for ${JSON.stringify(configForm)}`); // eslint-disable-line no-console
-        //   return false;
-        // }
+        const uniqueSeed =
+          Math.random()
+            .toString(36)
+            .substring(2) + new Date().getTime().toString(36);
+        const ephemeralRSAKey = cryptico.generateRSAKey(uniqueSeed, 1024);
+        commit('setEphemeralPasswordRSAKey', ephemeralRSAKey);
+
+        const body = {
+          configForm: configForm,
+          passwordPublicKey: cryptico.publicKeyString(ephemeralRSAKey)
+        };
+
+        const res = await KeycloakService.postConfigForm(body);
+        if (res && res.data) {
+          return true;
+        } else {
+          console.error(`submitConfigForm - No response for ${JSON.stringify(configForm)}`); // eslint-disable-line no-console
+          return false;
+        }
       }
       catch (error) {
         console.error(`submitConfigForm - Error occurred for ${JSON.stringify(configForm)}`); // eslint-disable-line no-console

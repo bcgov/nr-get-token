@@ -4,7 +4,8 @@ export const ApiRoutes = Object.freeze({
   DOCS: '/docs',
   EMAIL: '/email',
   HEALTH: '/checks/status',
-  KCCONFIG: '/keyCloak/configForm',
+  KCCLIENTS: '/keycloak/serviceClients',
+  KCCONFIG: '/keycloak/configForm',
   USERS: '/users',
   WEBADE: '/webAde',
   WEBADE_CONFIGFORM: '/webAde/configForm'
