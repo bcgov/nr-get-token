@@ -53,27 +53,49 @@
 
     <BaseDialog
       v-bind:show="confirmDialog"
-      type="CONTINUE"
+      :type="!submissionInProgress ? 'CONTINUE' : ''"
       @close-dialog="confirmDialog = false"
-      @continue-dialog="confirmDialog = false; setStep(3)"
+      @continue-dialog="sendFormToApi()"
     >
       <template v-slot:icon>
-        <v-icon large color="orange">warning</v-icon>
+        <v-icon v-if="!submissionInProgress" large color="orange">warning</v-icon>
+      </template>
+      <template v-slot:text>
+        <div v-if="submissionInProgress" class="text-center">
+          <v-progress-circular indeterminate color="primary" :size="120">Submitting</v-progress-circular>
+        </div>
+        <div v-else>
+          <p>
+            This will create your
+            <strong>{{ environment}}</strong> service client for the
+            <strong>{{ acronym}}</strong> application.
+          </p>
+          <p>Do you want to continue?</p>
+        </div>
+      </template>
+    </BaseDialog>
+
+    <BaseDialog v-bind:show="errorDialog" @close-dialog="errorDialog = false">
+      <template v-slot:icon>
+        <v-icon large color="red">cancel</v-icon>
       </template>
       <template v-slot:text>
         <p>
-          This will create your
-          <strong>{{ environment}}</strong> service client for the
-          <strong>{{ acronym}}</strong> application.
+          An error occurred while attempting to create a service client for
+          <strong>{{ acronym }}</strong>.
+          <br />Please try again later (you can try logging out or refreshing the page). If the error persists please
+          <a
+            href="mailto:NR.CommonServiceShowcase@gov.bc.ca?subject=Error during service client creation"
+          >contact us</a>.
         </p>
-        <p>Do you want to continue?</p>
+        <p>Include your application name as well as your IDIR username in your email.</p>
       </template>
     </BaseDialog>
   </v-container>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 import { FieldValidations } from '@/utils/constants.js';
 
@@ -94,13 +116,13 @@ export default {
           `Description must be ${FieldValidations.DESCRIPTION_MAX_LENGTH} characters or less`
       ],
       confirmDialog: false,
-      fieldValidations: FieldValidations
+      errorDialog: false,
+      fieldValidations: FieldValidations,
+      submissionInProgress: false
     };
   },
   computed: {
     ...mapGetters('apiAccess', ['acronym', 'environment']),
-    // TODO: 2-way binding to vuex state with v-model (https://vuex.vuejs.org/guide/forms.html), but there's got to be a less verbose way...
-    // Going with this to get features working for now
     appName: {
       get() {
         return this.$store.state.apiAccess.appName;
@@ -120,10 +142,25 @@ export default {
   },
   methods: {
     ...mapMutations('apiAccess', ['setStep']),
+    ...mapActions('apiAccess', ['submitConfigForm']),
     submit() {
       if (this.$refs.form.validate()) {
         this.confirmDialog = true;
       }
+    },
+    async sendFormToApi() {
+      this.submissionInProgress = true;
+      const success = await this.submitConfigForm();
+      this.confirmDialog = false;
+      if (success) {
+        this.setStep(3);
+      } else {
+        this.errorDialog = true;
+      }
+
+      // To give the animation enough time to fade so it doesn't juke a little
+      await new Promise(r => setTimeout(r, 1000));
+      this.submissionInProgress = false;
     }
   }
 };

@@ -82,6 +82,36 @@ export default {
       } catch (error) {
         console.error(error); // eslint-disable-line no-console
       }
+    },
+
+    /**
+     * @function submitConfigForm
+     * Fetch the acronym record
+     * @param {object} context The store context
+     * @returns {boolean} whether the operation succeeded
+     */
+    async submitConfigForm({ state }) {
+      const configForm = {
+        acronym: state.acronym,
+        name: '',
+        description: ''
+      };
+      try {
+        await new Promise(r => setTimeout(r, 2000));
+        //const res = await KeycloakService.postConfigForm(configForm);
+        return true;
+        // if (res && res.data) {
+        //   return true;
+        // } else {
+        //   console.error(`submitConfigForm - No response for ${JSON.stringify(configForm)}`); // eslint-disable-line no-console
+        //   return false;
+        // }
+      }
+      catch (error) {
+        console.error(`submitConfigForm - Error occurred for ${JSON.stringify(configForm)}`); // eslint-disable-line no-console
+        console.error(error); // eslint-disable-line no-console
+        return false;
+      }
     }
   }
 };

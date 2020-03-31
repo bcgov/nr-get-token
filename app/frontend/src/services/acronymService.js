@@ -29,5 +29,19 @@ export default {
     } else {
       return Promise.reject('No acronym supplied');
     }
+  },
+
+  /**
+   * @function getServiceClients
+   * Post the service client creation submission to the api
+   * @param {string} acronym app acronym
+   * @returns {Promise} An axios response
+   */
+  postConfigForm(configForm) {
+    if (configForm) {
+      return getokAxios().post(`${ApiRoutes.ACRONYMS}/${configForm.acronym}/clients`, configForm);
+    } else {
+      return Promise.reject('No acronym supplied');
+    }
   }
 };
