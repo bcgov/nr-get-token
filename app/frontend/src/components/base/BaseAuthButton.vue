@@ -33,7 +33,7 @@ export default {
     logout() {
       if (this.keycloakReady) {
         window.location.replace(
-          this.createLogoutUrl({ redirectUri: location.origin })
+          this.createLogoutUrl({ redirectUri: location.origin + location.pathname })
         );
       }
     }
