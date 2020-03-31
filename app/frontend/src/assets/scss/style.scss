@@ -48,12 +48,15 @@ body > .v-content {
 
 .BC-Gov-PrimaryButton:hover,
 .v-btn:hover {
-  text-decoration: underline;
   opacity: 0.8;
 }
 
 .BC-Gov-PrimaryButton.light.v-btn {
   background-color: #fff;
   border: 2px solid #003366;
+  color: #003366 !important;
+}
+
+.BC-Gov-IconButton.v-btn {
   color: #003366 !important;
 }

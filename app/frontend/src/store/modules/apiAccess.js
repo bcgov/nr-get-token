@@ -16,6 +16,7 @@ export default {
       prod: false
     },
     clientStatusLoaded: false,
+    configFormSubmissionResult: null,
     environment: '',
     ephemeralPasswordRSAKey: null,
     step: 1
@@ -24,6 +25,7 @@ export default {
     acronym: state => state.acronym,
     clientStatus: state => state.clientStatus,
     clientStatusLoaded: state => state.clientStatusLoaded,
+    configFormSubmissionResult: state => state.configFormSubmissionResult,
     environment: state => state.environment,
     ephemeralPasswordRSAKey: state => state.ephemeralPasswordRSAKey,
     step: state => state.step
@@ -43,6 +45,9 @@ export default {
     },
     setClientStatusLoaded: (state, clientStatusLoaded) => {
       state.clientStatusLoaded = clientStatusLoaded;
+    },
+    setConfigFormSubmissionResult: (state, val) => {
+      state.configFormSubmissionResult = val;
     },
     setEnvironment: (state, env) => {
       state.environment = env;
@@ -125,6 +130,11 @@ export default {
 
         const res = await KeycloakService.postConfigForm(body);
         if (res && res.data) {
+          const configFormSubmissionResult = {
+            generatedPassword: res.data.generatedPassword,
+            generatedServiceClient: res.data.generatedServiceClient
+          };
+          commit('setConfigFormSubmissionResult', configFormSubmissionResult);
           return true;
         } else {
           console.error(`submitConfigForm - No response for ${JSON.stringify(configForm)}`); // eslint-disable-line no-console

@@ -1,5 +1,5 @@
 <template>
-  <v-container class="request-form">
+  <v-container>
     <v-form ref="form" lazy-validation>
       <v-row>
         <v-col>
@@ -46,10 +46,15 @@
         </v-col>
       </v-row>
     </v-form>
-    <div class="text-center mt-12">
-      <v-btn class="BC-Gov-PrimaryButton light mr-4" text @click="setStep(1)">Back</v-btn>
-      <v-btn class="BC-Gov-PrimaryButton" text @click="submit">Submit</v-btn>
-    </div>
+
+    <v-row class="mt-12">
+      <v-col cols="6">
+        <v-btn class="BC-Gov-PrimaryButton light mr-4" block text @click="setStep(1)">Back</v-btn>
+      </v-col>
+      <v-col cols="6">
+        <v-btn class="BC-Gov-PrimaryButton" block text @click="submit">Submit</v-btn>
+      </v-col>
+    </v-row>
 
     <BaseDialog
       v-bind:show="confirmDialog"
