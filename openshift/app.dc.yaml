@@ -55,7 +55,7 @@ objects:
               command:
                 - npm
                 - run
-                - migrate
+                - k8s:migrate:seed
               containerName: "app"
               env:
                 - name: NODE_ENV
@@ -77,6 +77,8 @@ objects:
                     secretKeyRef:
                       key: app-db-password
                       name: "patroni-${JOB_NAME}-secret"
+                - name: SERVER_BASEPATH
+                  value: "${ROUTE_PATH}"
       template:
         metadata:
           labels:

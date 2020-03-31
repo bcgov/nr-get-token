@@ -41,7 +41,8 @@
     "all:rebuild": "npm run rebuild && cd frontend && npm run rebuild",
     "all:reinstall": "npm run reinstall && cd frontend && npm run reinstall",
     "all:fresh-start": "npm run all:reinstall && npm run all:rebuild && npm run all:start",
-    "frontend:purge": "cd frontend && npm run purge"
+    "frontend:purge": "cd frontend && npm run purge",
+    "k8s:migrate:seed": "node ./migrate-seed.js"
   },
   "dependencies": {
     "api-problem": "6.0.1",
