@@ -1,7 +1,7 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import Vuetify from 'vuetify';
 
-import HealthDialog from '@/components/HealthDialog.vue';
+import HealthDialog from '@/components/admin/HealthDialog.vue';
 import healthService from '@/services/healthService';
 
 const localVue = createLocalVue();

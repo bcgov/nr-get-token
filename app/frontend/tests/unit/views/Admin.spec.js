@@ -10,7 +10,7 @@ describe('Admin.vue', () => {
   it('renders', () => {
     const wrapper = shallowMount(Admin, {
       localVue,
-      stubs: ['ApiTester', 'BaseSecure', 'JWTDialog']
+      stubs: ['ApiTester', 'Clients', 'BaseSecure', 'JWTDialog']
     });
 
     expect(wrapper.html()).toMatch('Admin');

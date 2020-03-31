@@ -2,7 +2,7 @@ import { shallowMount, createLocalVue } from '@vue/test-utils';
 import Vuetify from 'vuetify';
 import Vuex from 'vuex';
 
-import JWTDialog from '@/components/JWTDialog.vue';
+import JWTDialog from '@/components/admin/JWTDialog.vue';
 
 const localVue = createLocalVue();
 localVue.use(Vuetify);
