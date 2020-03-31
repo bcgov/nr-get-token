@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row no-gutters>
-      <v-col cols="12" lg="9">
+      <v-col cols="12" lg="10" xl="5">
         <v-stepper v-model="step" class="elevation-0">
           <v-stepper-header class="elevation-0 pt-4 mb-6">
             <v-stepper-step :complete="step > 1" step="1" />
@@ -56,11 +56,16 @@ export default {
     ...mapGetters('apiAccess', ['step'])
   },
   methods: {
-    ...mapMutations('apiAccess', ['setStep', 'setAcronym']),
-    ...mapActions('apiAccess', ['setStep', 'getAcronymClientStatus'])
+    ...mapMutations('apiAccess', ['setAcronym', 'setStep']),
+    ...mapActions('apiAccess', [
+      'getAcronymClientStatus',
+      'getAcronymDetails',
+      'setStep'
+    ])
   },
   created() {
     this.setAcronym(this.acronym);
+    this.getAcronymDetails();
     this.getAcronymClientStatus();
   }
 };

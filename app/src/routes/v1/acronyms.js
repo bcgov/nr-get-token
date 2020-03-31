@@ -6,6 +6,29 @@ const log = require('npmlog');
 const Problem = require('api-problem');
 
 const acronyms = require('../../components/acronyms');
+const permissionHelpers = require('../../components/permissionHelpers');
+
+/** fetches the acronym details */
+acronymsRouter.get('/:appAcronym', [
+], async (req, res) => {
+  // Check for required permissions. Can only fetch details for the acronyms you are associated with
+  const permissionErr = await permissionHelpers.checkAcronymPermission(req.kauth.grant.access_token.content.sub, req.params.appAcronym);
+  if (permissionErr) {
+    return new Problem(403, { detail: permissionErr }).send(res);
+  }
+
+  try {
+    const response = await acronyms.getAcronym(req.params.appAcronym);
+    if (response) {
+      return res.status(200).json(response);
+    } else {
+      return new Problem(404).send(res);
+    }
+  } catch (error) {
+    log.error(error);
+    return new Problem(500, { detail: error.message }).send(res);
+  }
+});
 
 /** Returns clients from KC for the supplied acronym*/
 acronymsRouter.get('/:acronym/clients', [
@@ -33,10 +56,9 @@ acronymsRouter.get('/:acronym/clients', [
 acronymsRouter.get('/:appAcronym/addUser/:username', keycloak.protect('realm:GETOK_ADMIN_ADD_USER'),
   async (req, res) => {
     if (!req.params.appAcronym || !req.params.username) {
-      res.status(400).json({
-        message: 'Must supply app acronym and user (ex: myname@idir)'
-      });
-      return res;
+      return new Problem(400, {
+        detail: 'Must supply app acronym and user (ex: myname@idir)'
+      }).send(res);
     }
 
     try {
@@ -45,14 +67,11 @@ acronymsRouter.get('/:appAcronym/addUser/:username', keycloak.protect('realm:GET
       if (response) {
         return res.status(200).json(response);
       } else {
-        return res.status(404).end();
+        return new Problem(404).send(res);
       }
     } catch (error) {
       log.error(error);
-      res.status(500).json({
-        message: error.message
-      });
-      return res;
+      return new Problem(500, { detail: error.message }).send(res);
     }
   });
 

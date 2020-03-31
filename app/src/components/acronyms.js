@@ -6,6 +6,27 @@ const utils = require('./utils');
 
 const acronyms = {
   /**
+   *  @function getAcronym
+   *  Fetch a specific acronym's application detail from GETOK database.
+   *  @param {string} applicationAcronym - The app specifier.
+   */
+  getAcronym: async applicationAcronym => {
+    if (!applicationAcronym) {
+      const errMsg = 'No app acronym supplied to getAcronym';
+      log.error('getAcronym', errMsg);
+      throw new Error(errMsg);
+    }
+    try {
+      const acronymDetails = await acronymService.find(applicationAcronym);
+      log.verbose('getAcronym', JSON.stringify(acronymDetails));
+      return acronymDetails ? acronymDetails : null;
+    } catch (error) {
+      log.error('getAcronym', error.message);
+      throw new Error(`An error occured fetching acronym details from GETOK database. ${error.message}`);
+    }
+  },
+
+  /**
    * @function getUserAcronymClients
    * Returns all service clients for all acronyms associated with a user
    * @param {string} acronym The Keycloak user GUID

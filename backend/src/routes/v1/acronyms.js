@@ -5,8 +5,7 @@ const permissionHelpers = require('../../components/permissionHelpers');
 const acronymComponent = require('../../components/acronyms');
 
 // fetches the acronym details
-acronyms.get('/:appAcronym', [
-], async (req, res) => {
+acronyms.get('/:appAcronym', async (req, res) => {
   // Check for required permissions. Can only fetch details for the acronyms you are associated with
   const permissionErr = await permissionHelpers.checkAcronymPermission(req.user.jwt, req.params.appAcronym);
   if (permissionErr) {
@@ -33,8 +32,7 @@ acronyms.get('/:appAcronym', [
 
 // A special administrative call to add users to acronym. This is a temporary shim until we have an actual administrative
 // section of the app in place
-acronyms.get('/:appAcronym/addUser/:username', [
-], async (req, res) => {
+acronyms.get('/:appAcronym/addUser/:username', async (req, res) => {
   // Check for required permissions
   if (!req.user.jwt.realm_access.roles.includes('GETOK_ADMIN_ADD_USER')) {
     return res.status(403).json({
