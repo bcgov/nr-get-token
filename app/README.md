@@ -53,6 +53,7 @@ In order for the application to run correctly, you will need to ensure that the 
 2. Environment configurations have been set up
 3. A Postgres database instance that is reachable
 4. The database has been initialized with the correct migrations
+5. (Optional) The database has been seeded with dev data
 
 ### Install
 
@@ -132,7 +133,21 @@ Assuming you have a database ready to go, you will still require the database sc
 npm run migrate
 ```
 
-Once this is done, you should be able to start up the backend application.
+#### Initial Seeding
+
+If you need the database pre-populated with some data, you can run the following:
+
+``` sh
+npm run seed:dev
+```
+
+If you have to remove the seed data, or need to reapply it, you will want to undo the seed with:
+
+``` sh
+npm run seed:dev:undo
+```
+
+Once the migration and optional seeding steps are done, you should be able to start up the backend application.
 
 ## Commands
 
