@@ -14,7 +14,7 @@ acronymsRouter.get('/:appAcronym', [
   // Check for required permissions. Can only fetch details for the acronyms you are associated with
   const permissionErr = await permissionHelpers.checkAcronymPermission(req.kauth.grant.access_token.content.sub, req.params.appAcronym);
   if (permissionErr) {
-    return new Problem(403, { detail: permissionErr, }).send(res);
+    return new Problem(403, { detail: permissionErr }).send(res);
   }
 
   try {
