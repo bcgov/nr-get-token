@@ -1,7 +1,7 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import Vuetify from 'vuetify';
 
-import ApiTester from '@/components/ApiTester.vue';
+import ApiTester from '@/components/admin/ApiTester.vue';
 import testerService from '@/services/testerService';
 
 const localVue = createLocalVue();

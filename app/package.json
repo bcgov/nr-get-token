@@ -23,6 +23,8 @@
     "migrate": "sequelize db:migrate",
     "pretest": "npm run lint",
     "posttest": "node ./lcov-fix.js",
+    "seed:dev": "sequelize db:seed --seed 20200330000000-dev-users",
+    "seed:dev:undo": "sequelize db:seed:undo --seed 20200330000000-dev-users",
     "clean": "rm -rf coverage dist",
     "purge": "rm -rf node_modules",
     "rebuild": "npm run clean && npm run build",
@@ -39,7 +41,8 @@
     "all:rebuild": "npm run rebuild && cd frontend && npm run rebuild",
     "all:reinstall": "npm run reinstall && cd frontend && npm run reinstall",
     "all:fresh-start": "npm run all:reinstall && npm run all:rebuild && npm run all:start",
-    "frontend:purge": "cd frontend && npm run purge"
+    "frontend:purge": "cd frontend && npm run purge",
+    "k8s:migrate:seed": "node ./migrate-seed.js"
   },
   "dependencies": {
     "api-problem": "6.0.1",

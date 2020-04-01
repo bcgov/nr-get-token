@@ -22,5 +22,7 @@ module.exports = {
     max: 5,
     idle: 10000,
     acquire: 60000
-  }
+  },
+  seederStorage: 'sequelize',
+  seederStorageTableName: 'sequelize_data'
 };

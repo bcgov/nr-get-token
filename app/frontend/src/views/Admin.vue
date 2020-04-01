@@ -15,10 +15,10 @@
 </template>
 
 <script>
-import ApiTester from '@/components/ApiTester.vue';
-import Clients from '@/components/Clients.vue';
-import HealthDialog from '@/components/HealthDialog.vue';
-import JWTDialog from '@/components/JWTDialog.vue';
+import ApiTester from '@/components/admin/ApiTester.vue';
+import Clients from '@/components/admin/Clients.vue';
+import HealthDialog from '@/components/admin/HealthDialog.vue';
+import JWTDialog from '@/components/admin/JWTDialog.vue';
 
 export default {
   name: 'Admin',
