@@ -8,41 +8,35 @@ import bcgov.GitHubHelper
 // Run Tests
 def runStageTests() {
   timeout(time: 10, unit: 'MINUTES') {
-    parallel(
-      App: {
-        dir('app') {
-          try {
-            echo 'Installing NPM Dependencies...'
-            sh 'npm ci'
+    dir('app') {
+      try {
+        echo 'Installing NPM Dependencies...'
+        sh 'npm ci'
 
-            echo 'Linting and Testing App...'
-            sh 'npm run test'
+        echo 'Linting and Testing App...'
+        sh 'npm run test'
 
-            echo 'App Lint Checks and Tests passed'
-          } catch (e) {
-            echo 'App Lint Checks and Tests failed'
-            throw e
-          }
-        }
-      },
-
-      Frontend: {
-        dir('app/frontend') {
-          try {
-            echo 'Installing NPM Dependencies...'
-            sh 'npm ci'
-
-            echo 'Linting and Testing Frontend...'
-            sh 'npm run test'
-
-            echo 'Frontend Lint Checks and Tests passed'
-          } catch (e) {
-            echo 'Frontend Lint Checks and Tests failed'
-            throw e
-          }
-        }
+        echo 'App Lint Checks and Tests passed'
+      } catch (e) {
+        echo 'App Lint Checks and Tests failed'
+        throw e
       }
-    )
+    }
+
+    dir('app/frontend') {
+      try {
+        echo 'Installing NPM Dependencies...'
+        sh 'npm ci'
+
+        echo 'Linting and Testing Frontend...'
+        sh 'npm run test'
+
+        echo 'Frontend Lint Checks and Tests passed'
+      } catch (e) {
+        echo 'Frontend Lint Checks and Tests failed'
+        throw e
+      }
+    }
   }
 }
 
