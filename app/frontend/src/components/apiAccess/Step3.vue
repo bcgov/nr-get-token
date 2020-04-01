@@ -72,12 +72,19 @@
       </v-row>
     </v-form>
 
-    <p class="mb-12">
-      Click the
-      <strong>"Show" icon</strong> and make sure to save the password securely as you will be unable to fetch it again.
-    </p>
+    <v-row>
+      <v-col cols="1">
+        <v-icon large color="orange darken-2">warning</v-icon>
+      </v-col>
+      <v-col cols="11">
+        <p>
+          Click the
+          <strong>"Show" icon</strong> and make sure to save the password securely as you will be unable to fetch it again.
+        </p>
+      </v-col>
+    </v-row>
 
-    <v-row class="mt-12">
+    <v-row class="mt-8">
       <v-col cols="6">
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
@@ -100,11 +107,12 @@
     <BaseDialog
       :show="confirmDialog"
       type="CONTINUE"
+      width="400"
       @close-dialog="confirmDialog = false"
       @continue-dialog="confirmDialog = false; setStep(4)"
     >
       <template v-slot:icon>
-        <v-icon large color="orange">warning</v-icon>
+        <v-icon large color="orange darken-2">warning</v-icon>
       </template>
       <template v-slot:text>
         <p>Did you save the password?</p>

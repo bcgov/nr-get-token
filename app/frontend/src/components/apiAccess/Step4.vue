@@ -10,10 +10,10 @@
 
     <div>
       <ul>
-        <li v-for="item in KeycloakCommonServiceList" v-bind:key="item.name" class="mb-10">
+        <li v-for="item in KeycloakCommonServiceList" v-bind:key="item.name" class="mb-5">
           {{item.name}}
           <br />
-          <v-row class="mt-2">
+          <v-row>
             <v-col cols="6">
               <a :href="item.apiDocLink" target="_blank">
                 <strong>API DOCS</strong>
