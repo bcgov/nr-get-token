@@ -41,7 +41,7 @@ export default {
   },
   created() {
     this.$store.registerModule('apiAccess', apiAccess);
-  },
+  }
 };
 </script>
 
@@ -57,7 +57,12 @@ export default {
 /* Tab (TODO: if this is used elsewhere in the program, make this style global) */
 .getok-tabs {
   .v-tabs-bar {
-    margin-right: 8em;
+    @media (min-width: 960px) {
+      margin-right: 8em;
+    }
+    @media (max-width: 959px) {
+      margin-right: 2em;
+    }
   }
   .v-tab {
     padding: 2em 7em 2em 2em;

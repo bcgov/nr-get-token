@@ -63,7 +63,7 @@
       @continue-dialog="sendFormToApi()"
     >
       <template v-slot:icon>
-        <v-icon v-if="!submissionInProgress" large color="orange">warning</v-icon>
+        <v-icon v-if="!submissionInProgress" large color="orange darken-2">warning</v-icon>
       </template>
       <template v-slot:text>
         <div v-if="submissionInProgress" class="text-center">

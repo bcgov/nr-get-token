@@ -17,6 +17,17 @@ p {
   line-height: 1.6;
 }
 
+a {
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+    button {
+      display: inline-block;
+      text-decoration: none;
+    }
+  }
+}
+
 
 /* sticky footer */
 html,
@@ -59,4 +70,5 @@ body > .v-content {
 
 .BC-Gov-IconButton.v-btn {
   color: #003366 !important;
+  text-decoration: none;
 }
