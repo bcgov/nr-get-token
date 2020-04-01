@@ -77,8 +77,25 @@ module.exports = {
     });
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.sequelize.transaction(t => {
+  // TODO: Figure out how to restore the foreign keys afterwards
+  down: async (queryInterface, Sequelize) => {
+    return queryInterface.sequelize.transaction(async t => {
+      // Temporarily remove foreign key constraints
+      const lifecycleHistoryFks = await queryInterface.getForeignKeyReferencesForTable('lifecycle_history', {});
+      const lifecycleFks = await queryInterface.getForeignKeyReferencesForTable('lifecycle', {});
+
+      if (lifecycleHistoryFks.some(x => x.constraintName === 'lifecycle_history_userId_fkey')) {
+        await queryInterface.removeConstraint('lifecycle_history', 'lifecycle_history_userId_fkey', {
+          transaction: t
+        });
+      }
+      if (lifecycleFks.some(x => x.constraintName === 'lifecycle_acronymId_fkey')) {
+        await queryInterface.removeConstraint('lifecycle', 'lifecycle_acronymId_fkey', {
+          transaction: t
+        });
+      }
+
+      // Remove seed data
       return Promise.all([
         queryInterface.bulkDelete('user_acronym', {
           userAcronymId: {
@@ -97,5 +114,37 @@ module.exports = {
         }, { transaction: t })
       ]);
     });
+
+    // console.log(await queryInterface.getForeignKeyReferencesForTable('lifecycle_history', {}));
+    // console.log(await queryInterface.getForeignKeyReferencesForTable('lifecycle', {}));
+
+    // TODO: Figure out why this keeps getting blocked by a foreign key constraint that doesn't exist??
+    // Restore foreign key constraints
+    // return queryInterface.sequelize.transaction(t => {
+    //   return Promise.all([
+    //     queryInterface.addConstraint('lifecycle', ['acronymId'], {
+    //       type: 'FOREIGN KEY',
+    //       name: 'lifecycle_acronymId_fkey',
+    //       references: {
+    //         table: 'acronym',
+    //         field: 'acronymId'
+    //       },
+    //       onDelete: 'set NULL',
+    //       onUpdate: 'cascade',
+    //       transaction: t
+    //     }),
+    //     queryInterface.addConstraint('lifecycle_history', ['userId'], {
+    //       type: 'FOREIGN KEY',
+    //       name: 'lifecycle_history_userId_fkey',
+    //       references: {
+    //         table: 'user',
+    //         field: 'userId'
+    //       },
+    //       onDelete: 'set NULL',
+    //       onUpdate: 'cascade',
+    //       transaction: t
+    //     })
+    //   ]);
+    // });
   }
 };

@@ -7,11 +7,15 @@ const exec = require('child_process').exec;
  * @return {Promise} A promise
  */
 function execShellCommand(cmd) {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     exec(cmd, (error, stdout, stderr) => {
-      if (error) throw(error);
-      console.log(stdout ? stdout : stderr); // eslint-disable-line no-console
-      resolve();
+      if (error) {
+        console.log(error); // eslint-disable-line no-console
+        reject(error);
+      } else {
+        console.log(stdout ? stdout : stderr); // eslint-disable-line no-console
+        resolve();
+      }
     });
   });
 }
@@ -24,7 +28,11 @@ function execShellCommand(cmd) {
 
   // If this is a PR, clear any seed data and re-seed the DB
   if (basePath && typeof basePath === 'string' && basePath.startsWith('/pr-')) {
-    await execShellCommand('npm run seed:dev:undo');
-    await execShellCommand('npm run seed:dev');
+    try {
+      await execShellCommand('npm run seed:dev');
+    } catch (error) {
+      console.log('Dev data already seeded'); // eslint-disable-line no-console
+      process.exit(0);
+    }
   }
 })();
