@@ -87,10 +87,15 @@
         </v-col>
       </v-row>
     </v-form>
-    <div class="justify-center pb-8">
-      <v-btn class="BC-Gov-PrimaryButton light float-left" text @click="cancel()">Cancel</v-btn>
-      <v-btn class="BC-Gov-PrimaryButton float-right" text @click="postRegistrationForm()">Submit</v-btn>
-    </div>
+
+    <v-row class="mt-8">
+      <v-col cols="6">
+        <v-btn class="BC-Gov-PrimaryButton light mr-4" block text @click="cancel()">Cancel</v-btn>
+      </v-col>
+      <v-col cols="6">
+        <v-btn class="BC-Gov-PrimaryButton" block text @click="postRegistrationForm()">Submit</v-btn>
+      </v-col>
+    </v-row>
 
     <BaseDialog v-bind:show="errorOccurred" @close-dialog="errorOccurred = false">
       <template v-slot:icon>
