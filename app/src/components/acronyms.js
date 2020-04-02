@@ -27,6 +27,34 @@ const acronyms = {
   },
 
   /**
+   *  @function getUsers
+   *  Fetch a specific acronym's application detail from GETOK database.
+   *  @param {string} applicationAcronym - The app specifier.
+   *  @returns {array} An array of acronym/user mappings. [] if none found
+   */
+  getUsers: async applicationAcronym => {
+    if (!applicationAcronym) {
+      const errMsg = 'No app acronym supplied to getUsers';
+      log.error('getUsers', errMsg);
+      throw new Error(errMsg);
+    }
+    try {
+      // Get the UserAcronym mappings from the DB
+      const acronymUsers = await acronymService.acronymUserList(applicationAcronym);
+      log.verbose('getUsers - acronymUsers:', JSON.stringify(acronymUsers));
+      if (!acronymUsers || !acronymUsers.length) {
+        return [];
+      }
+
+      // Get the keycloak userinfo for the relevant users
+      return acronymUsers;
+    } catch (error) {
+      log.error('getUsers', error.message);
+      throw new Error(`An error occured fetching acronym details from GETOK database. ${error.message}`);
+    }
+  },
+
+  /**
    * @function getUserAcronymClients
    * Returns all service clients for all acronyms associated with a user
    * @param {string} acronym The Keycloak user GUID
