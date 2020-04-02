@@ -1,6 +1,6 @@
 <template>
   <v-container class="not-found text-center">
-    <h1 class="mb-10">404: Page not found. :(</h1>
+    <h1 class="my-8">404: Page not found. :(</h1>
     <router-link :to="{ name: 'About' }">
       <v-btn color="primary" class="about-btn" large>
         <v-icon left>mdi-home</v-icon>

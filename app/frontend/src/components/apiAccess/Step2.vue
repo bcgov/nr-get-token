@@ -37,6 +37,7 @@
           <v-text-field
             v-model="environment"
             dense
+            disabled
             hide-details="auto"
             outlined
             flat

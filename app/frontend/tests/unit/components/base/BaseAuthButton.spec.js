@@ -1,12 +1,9 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils';
-import Vuetify from 'vuetify';
 import Vuex from 'vuex';
 
 import BaseAuthButton from '@/components/base/BaseAuthButton.vue';
 
 const localVue = createLocalVue();
-const vuetify = new Vuetify();
-localVue.use(Vuetify);
 localVue.use(Vuex);
 
 describe('BaseAuthButton.vue', () => {
@@ -27,7 +24,7 @@ describe('BaseAuthButton.vue', () => {
       }
     });
 
-    const wrapper = shallowMount(BaseAuthButton, { localVue, store, vuetify });
+    const wrapper = shallowMount(BaseAuthButton, { localVue, store });
 
     expect(wrapper.text()).toMatch('Login');
   });
@@ -43,7 +40,7 @@ describe('BaseAuthButton.vue', () => {
       }
     });
 
-    const wrapper = shallowMount(BaseAuthButton, { localVue, store, vuetify });
+    const wrapper = shallowMount(BaseAuthButton, { localVue, store });
 
     expect(wrapper.text()).toMatch('Logout');
   });
@@ -59,7 +56,7 @@ describe('BaseAuthButton.vue', () => {
       }
     });
 
-    const wrapper = shallowMount(BaseAuthButton, { localVue, store, vuetify });
+    const wrapper = shallowMount(BaseAuthButton, { localVue, store });
 
     expect(wrapper.text()).toBeFalsy();
   });

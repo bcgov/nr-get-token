@@ -66,7 +66,6 @@ describe('BaseSecure.vue', () => {
     const wrapper = shallowMount(BaseSecure, { localVue, store });
 
     expect(wrapper.text()).toMatch('You must be logged in to use this feature.');
-    expect(wrapper.text()).toMatch('mdi-login');
   });
 
   it('renders a message without login button if unauthenticated', () => {

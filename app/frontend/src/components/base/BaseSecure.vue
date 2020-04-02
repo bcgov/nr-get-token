@@ -4,7 +4,7 @@
       <slot />
     </div>
     <div v-else class="text-center">
-      <h1 class="mb-10">You are not authorized to use this feature.</h1>
+      <h1 class="my-8">You are not authorized to use this feature.</h1>
       <router-link :to="{ name: 'About' }">
         <v-btn color="primary" class="about-btn" large>
           <v-icon left>mdi-home</v-icon>
@@ -14,11 +14,8 @@
     </div>
   </div>
   <div v-else class="text-center">
-    <h1 class="mb-10">You must be logged in to use this feature.</h1>
-    <v-btn v-if="keycloakReady" color="secondary" class="login-btn" @click="login" large>
-      <v-icon left>mdi-login</v-icon>
-      <span>Login</span>
-    </v-btn>
+    <h1 class="my-8">You must be logged in to use this feature.</h1>
+    <v-btn v-if="keycloakReady" color="secondary" class="login-btn" @click="login" large>Login</v-btn>
   </div>
 </template>
 

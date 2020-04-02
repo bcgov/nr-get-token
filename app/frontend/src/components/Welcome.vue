@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1 class="text-center mb-10">GETOK Common Service Onboarding</h1>
+    <h1 class="text-center my-8">GETOK Common Service Onboarding</h1>
     <v-card class="mx-auto mb-8" max-width="800">
       <v-toolbar flat color="grey lighten-3">
         <v-toolbar-title class="px-3">How It Works</v-toolbar-title>
