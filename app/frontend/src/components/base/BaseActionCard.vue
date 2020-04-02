@@ -28,6 +28,10 @@ export default {
   height: 100%;
 }
 
+.v-card {
+  border-radius: 0.5rem;
+}
+
 .v-system-bar {
   background-color: #38598a;
 }
