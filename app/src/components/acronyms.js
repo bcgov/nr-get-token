@@ -2,6 +2,7 @@ const axios = require('axios');
 const log = require('npmlog');
 
 const { acronymService, userService } = require('../services');
+const userComponent = require('./users');
 const utils = require('./utils');
 
 const acronyms = {
@@ -41,16 +42,46 @@ const acronyms = {
     try {
       // Get the UserAcronym mappings from the DB
       const acronymUsers = await acronymService.acronymUserList(applicationAcronym);
-      log.verbose('getUsers - acronymUsers:', JSON.stringify(acronymUsers));
       if (!acronymUsers || !acronymUsers.length) {
         return [];
       }
+      log.verbose('getUsers - acronymUsers', JSON.stringify(acronymUsers, 0, 2));
 
       // Get the keycloak userinfo for the relevant users
-      return acronymUsers;
+      // Could call GET /{realm}/users/{id} for each ID but more efficient to just get all users and filter server side here
+      const userInfos = await userComponent.getAllGetokUsers();
+      if (!userInfos || !userInfos.length) {
+        log.error('getUsers', `No users found in KC, something went wrong. ${applicationAcronym}, ${userInfos}`);
+        throw new Error(`An error occured fetching users for acronym ${applicationAcronym}`);
+      }
+
+      // Build the response object we want from the endpoint, joining the info from the table and the userInfo from KC
+      const filtered = acronymUsers.filter(au => userInfos.find(ui => ui.id === au.keycloakGuid));
+      const users = filtered.map(au => {
+        const userAcronymDetails = {
+          acronym: applicationAcronym,
+          owner: au.userAcronym.owner,
+          createdAt: au.userAcronym.createdAt
+        };
+        const kcUsr = userInfos.find(ui => ui.id === au.keycloakGuid);
+        return {
+          userAcronymDetails: userAcronymDetails,
+          user: {
+            userId: au.userAcronym.userId,
+            keycloakGuid: kcUsr.id,
+            username: kcUsr.username,
+            firstName: kcUsr.firstName,
+            lastName: kcUsr.lastName,
+            email: kcUsr.email
+          }
+        };
+      });
+      log.verbose('getUsers - users:', JSON.stringify(users));
+
+      return users;
     } catch (error) {
       log.error('getUsers', error.message);
-      throw new Error(`An error occured fetching acronym details from GETOK database. ${error.message}`);
+      throw new Error(`An error occured fetching users for acronym ${applicationAcronym}. ${error.message}`);
     }
   },
 

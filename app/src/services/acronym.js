@@ -1,5 +1,4 @@
 const db = require('../models');
-const { Op } = require('sequelize');
 
 module.exports = {
   async find(acronym) {
@@ -43,7 +42,11 @@ module.exports = {
       include: [
         {
           attributes: [
-            'userId'
+            'userId',
+            'keycloakId',
+            'createdAt',
+            'updatedAt',
+            'deletedAt',
           ],
           model: db.User,
           through: {
@@ -60,7 +63,7 @@ module.exports = {
     });
 
     if (result[0]) {
-      return result[0].Users.map(usr => usr.UserAcronym);
+      return result[0].Users.map(usr => { return { userAcronym: usr.UserAcronym, keycloakGuid: usr.keycloakId }; });
     } else {
       return null;
     }

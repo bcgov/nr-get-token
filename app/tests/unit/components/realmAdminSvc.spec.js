@@ -538,24 +538,53 @@ describe('RealmAdminService getRoleComposites', () => {
 
 describe('RealmAdminService getUsers', () => {
 
-  it('should throw an error if no username provided', async () => {
+  it('should throw an error if non object query provided', async () => {
     const svc = new RealmAdminService(realmConfig);
-    await expect(svc.getUsers(undefined, '')).rejects.toThrow();
+    await expect(svc.getUsers('user')).rejects.toThrow('Cannot get users: optional searchParams parameter must be an object.');
   });
 
-  it('should return users', async () => {
+  it('should throw an error if array provided', async () => {
+    const svc = new RealmAdminService(realmConfig);
+    await expect(svc.getUsers(['abcd'])).rejects.toThrow('Cannot get users: optional searchParams parameter must be an object.');
+  });
+
+  it('should return users searched on', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = axios.create();
-    mockAxios.onGet(`${svc.realmAdminUrl}/users?username=me@idir`).reply(204, 'yes returned');
+    const testQuery = { username: 'me@idir' };
+    mockAxios.onGet(`${svc.realmAdminUrl}/users`, { params: testQuery }).reply(204, 'yes returned');
 
-    const result = await svc.getUsers('me@idir');
+    const result = await svc.getUsers(testQuery);
     expect(result).toBeTruthy();
+    expect(result).toEqual('yes returned');
+  });
+
+  it('should handle multiple query params', async () => {
+    const svc = new RealmAdminService(realmConfig);
+    svc.axios = axios.create();
+    const testQuery = { username: 'me@idir', firstname: 'test', lastname:'test' };
+    mockAxios.onGet(`${svc.realmAdminUrl}/users`, { params: testQuery }).reply(204, 'yes returned');
+
+    const result = await svc.getUsers(testQuery);
+    expect(result).toBeTruthy();
+    expect(result).toEqual('yes returned');
+  });
+
+  it('should handle empty query params object', async () => {
+    const svc = new RealmAdminService(realmConfig);
+    svc.axios = axios.create();
+    const testQuery = {};
+    mockAxios.onGet(`${svc.realmAdminUrl}/users`, { params: testQuery }).reply(204, 'yes returned');
+
+    const result = await svc.getUsers(testQuery);
+    expect(result).toBeTruthy();
+    expect(result).toEqual('yes returned');
   });
 
   it('should throw an error when realm url is bad...', async () => {
     const svc = new RealmAdminService(realmConfig);
     mockAxios.onGet(svc.realmAdminUrl).reply(500);
-    await expect(svc.getUsers('me')).rejects.toThrow();
+    await expect(svc.getUsers({ users: 'me@idir' })).rejects.toThrow();
   });
 
 });
