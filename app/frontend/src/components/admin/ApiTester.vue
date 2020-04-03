@@ -22,12 +22,12 @@
         />
       </v-container>
       <v-card-actions>
-        <v-btn class="BC-Gov-PrimaryButton light" text @click="resetForm">
+        <v-btn outlined @click="resetForm">
           <v-icon left>mdi-refresh</v-icon>
           <span>Reset</span>
         </v-btn>
         <v-spacer />
-        <v-btn class="BC-Gov-PrimaryButton" text :loading="loading" @click="testApi">
+        <v-btn color="primary" depressed :loading="loading" @click="testApi">
           <v-icon left>mdi-hexagon-multiple-outline</v-icon>
           <span>Test</span>
         </v-btn>

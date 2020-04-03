@@ -2,7 +2,7 @@
   <div>
     <v-tooltip top>
       <template v-slot:activator="{ on }">
-        <v-btn class="BC-Gov-PrimaryButton" text v-on="on" @click="onHealthClick">
+        <v-btn color="primary" depressed v-on="on" @click="onHealthClick">
           <v-icon left>healing</v-icon>
           <span>Health Check</span>
         </v-btn>

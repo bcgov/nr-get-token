@@ -17,7 +17,7 @@
             <v-col cols="6">
               <a :href="item.apiDocLink" target="_blank">
                 <strong>API DOCS</strong>
-                <v-btn text large icon class="BC-Gov-IconButton">
+                <v-btn color="primary" icon large>
                   <v-icon>open_in_new</v-icon>
                 </v-btn>
               </a>
@@ -30,7 +30,7 @@
                 target="_blank"
               >
                 <strong>Postman Collection</strong>
-                <v-btn text large icon class="BC-Gov-IconButton">
+                <v-btn color="primary" icon large>
                   <v-icon>cloud_download</v-icon>
                 </v-btn>
               </a>
@@ -42,7 +42,7 @@
 
     <v-row class="mt-12">
       <v-col cols="6" offset="3">
-        <v-btn class="BC-Gov-PrimaryButton" block text @click="finish">
+        <v-btn color="primary" block depressed @click="finish">
           <span>Finish</span>
         </v-btn>
       </v-col>

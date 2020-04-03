@@ -45,8 +45,11 @@ export default {
     font-size: 1rem;
     text-decoration: none;
     text-transform: none;
+    span > span {
+      font-weight: normal;
+    }
   }
-  
+
   &.v-footer {
     background-color: #003366;
     border-top: 2px solid #fcba19;

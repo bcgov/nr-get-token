@@ -25,7 +25,7 @@
             </ul>
           </v-col>
           <v-col cols="6">
-            <v-btn class="BC-Gov-PrimaryButton" block text @click="nextStep(env.DEV)">
+            <v-btn color="primary" block depressed @click="nextStep(env.DEV)">
               <span>Get Token for Dev</span>
             </v-btn>
           </v-col>
@@ -36,10 +36,10 @@
           </v-col>
           <v-col cols="6">
             <v-btn
-              class="BC-Gov-PrimaryButton"
+              color="primary"
               block
+              depressed
               :disabled="!clientStatus.dev"
-              text
               @click="nextStep(env.TEST)"
             >
               <span>Get Token for Test</span>
@@ -52,10 +52,10 @@
           </v-col>
           <v-col cols="6">
             <v-btn
-              class="BC-Gov-PrimaryButton"
+              class="primary"
               block
+              depressed
               :disabled="!clientStatus.test"
-              text
               @click="nextStep(env.PROD)"
             >
               <span>Get Token for Prod</span>

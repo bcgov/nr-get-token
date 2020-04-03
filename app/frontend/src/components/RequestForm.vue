@@ -90,16 +90,16 @@
 
     <v-row class="mt-8">
       <v-col cols="6">
-        <v-btn class="BC-Gov-PrimaryButton light mr-4" block text @click="cancel()">
+        <v-btn class="mr-4" block outlined @click="cancel()">
           <span>Cancel</span>
         </v-btn>
       </v-col>
       <v-col cols="6">
         <v-btn
-          class="BC-Gov-PrimaryButton"
+          color="primary"
           block
+          depressed
           :disabled="!valid"
-          text
           @click="postRegistrationForm()"
         >Submit</v-btn>
       </v-col>

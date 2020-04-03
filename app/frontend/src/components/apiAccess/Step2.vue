@@ -50,12 +50,12 @@
 
     <v-row class="mt-12">
       <v-col cols="6">
-        <v-btn class="BC-Gov-PrimaryButton light mr-4" block text @click="setStep(1)">
+        <v-btn class="mr-4" block outlined @click="setStep(1)">
           <span>Back</span>
         </v-btn>
       </v-col>
       <v-col cols="6">
-        <v-btn class="BC-Gov-PrimaryButton" block text @click="submit">
+        <v-btn color="primary" block depressed @click="submit">
           <span>Submit</span>
         </v-btn>
       </v-col>

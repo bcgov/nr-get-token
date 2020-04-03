@@ -1,9 +1,9 @@
 <template>
   <div v-if="keycloakReady">
-    <v-btn v-if="authenticated" class="BC-Gov-PrimaryButton dark" text @click="logout" outlined>
+    <v-btn v-if="authenticated" dark outlined @click="logout">
       <span>Logout</span>
     </v-btn>
-    <v-btn v-else class="BC-Gov-PrimaryButton dark" text @click="login" outlined>
+    <v-btn v-else dark outlined @click="login">
       <span>Login</span>
     </v-btn>
   </div>

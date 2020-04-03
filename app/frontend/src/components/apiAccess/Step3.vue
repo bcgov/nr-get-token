@@ -42,7 +42,7 @@
         <v-col cols="1" class="pt-9">
           <v-tooltip bottom>
             <template v-slot:activator="{ on }">
-              <v-btn v-on="on" text large icon class="BC-Gov-IconButton" @click="decryptPassword">
+              <v-btn v-on="on" color="primary" icon large @click="decryptPassword">
                 <v-icon>remove_red_eye</v-icon>
               </v-btn>
             </template>
@@ -54,10 +54,9 @@
             <template v-slot:activator="{ on }">
               <v-btn
                 v-on="on"
-                text
-                large
+                color="primary"
                 icon
-                class="BC-Gov-IconButton"
+                large
                 v-clipboard:copy="passwordShown"
                 v-clipboard:success="clipboardSuccessHandler"
                 v-clipboard:error="clipboardErrorHandler"
@@ -88,7 +87,7 @@
       <v-col cols="6">
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn v-on="on" class="BC-Gov-PrimaryButton light mr-4" block text @click="goBack">
+            <v-btn v-on="on" class="mr-4" block outlined @click="goBack">
               <span>Back</span>
             </v-btn>
           </template>
@@ -97,9 +96,9 @@
       </v-col>
       <v-col cols="6">
         <v-btn
-          class="BC-Gov-PrimaryButton"
+          color="primary"
           block
-          text
+          depressed
           @click="confirmDialog = true"
           :disabled="!passwordDecrypted"
         >
@@ -126,7 +125,7 @@
 
     <v-snackbar v-model="snackbar.on" right :timeout="6000" :color="snackbar.color">
       {{snackbar.text}}
-      <v-btn class="BC-Gov-IconButton" color="white" text @click="snackbar.on = false">
+      <v-btn color="white" icon text @click="snackbar.on = false">
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
