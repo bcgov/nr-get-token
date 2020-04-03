@@ -88,7 +88,9 @@
       <v-col cols="6">
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn v-on="on" class="BC-Gov-PrimaryButton light mr-4" block text @click="goBack">Back</v-btn>
+            <v-btn v-on="on" class="BC-Gov-PrimaryButton light mr-4" block text @click="goBack">
+              <span>Back</span>
+            </v-btn>
           </template>
           <span>Go back to create a new password</span>
         </v-tooltip>
@@ -100,7 +102,9 @@
           text
           @click="confirmDialog = true"
           :disabled="!passwordDecrypted"
-        >Next</v-btn>
+        >
+          <span>Next</span>
+        </v-btn>
       </v-col>
     </v-row>
 
@@ -122,7 +126,7 @@
 
     <v-snackbar v-model="snackbar.on" right :timeout="6000" :color="snackbar.color">
       {{snackbar.text}}
-      <v-btn color="white" text @click="snackbar.on = false">
+      <v-btn class="BC-Gov-IconButton" color="white" text @click="snackbar.on = false">
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>

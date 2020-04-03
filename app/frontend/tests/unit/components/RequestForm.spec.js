@@ -63,7 +63,7 @@ describe('RequestForm.vue', () => {
       localVue,
       stubs: ['BaseDialog']
     });
-    wrapper.vm.$refs.form.validate = () => true;
+    wrapper.setData({ valid: true });
     await wrapper.vm.postRegistrationForm();
     await localVue.nextTick();
 
@@ -92,7 +92,7 @@ describe('RequestForm.vue', () => {
       localVue,
       stubs: ['BaseDialog']
     });
-    wrapper.vm.$refs.form.validate = () => true;
+    wrapper.setData({ valid: true });
     await wrapper.vm.postRegistrationForm();
     await localVue.nextTick();
 

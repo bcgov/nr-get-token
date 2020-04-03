@@ -15,7 +15,9 @@
   </div>
   <div v-else class="text-center">
     <h1 class="my-8">You must be logged in to use this feature.</h1>
-    <v-btn v-if="keycloakReady" color="secondary" class="login-btn" @click="login" large>Login</v-btn>
+    <v-btn v-if="keycloakReady" color="primary" class="login-btn" @click="login" large>
+      <span>Login</span>
+    </v-btn>
   </div>
 </template>
 

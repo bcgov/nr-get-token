@@ -2,7 +2,7 @@
   <div>
     <v-tooltip top>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" color="primary" @click="jwtShow = true">
+        <v-btn class="BC-Gov-PrimaryButton" text v-on="on" @click="jwtShow = true">
           <v-icon left>mdi-ticket</v-icon>
           <span>JSON Web Token</span>
         </v-btn>

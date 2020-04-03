@@ -10,44 +10,53 @@ h3 { font-size: 1.444em; /* (25.92px) */ }
 h4 { font-size: 1.2em; /* (21.60px) */ }
 
 h1, h2, h3, h4, h5 {
+  color: #494949;
   line-height: 1.2;
 }
 
 p {
+  color: #494949;
   line-height: 1.6;
 }
 
-a {
+/* Button and link behavior */
+a, .v-tab {
   text-decoration: none;
   &:hover {
     text-decoration: underline;
     button {
-      display: inline-block;
+      // display: inline-block;
       text-decoration: none;
     }
   }
 }
 
-
-/* sticky footer */
-html,
-body {
-  height: 100%;
+.v-btn {
+  &:hover {
+    opacity: 0.8;
+    span {
+      & > span {
+        text-decoration: underline;
+      }
+    }
+  }
 }
+
+/* Sticky Footer */
 body {
   display: flex;
   flex-direction: column;
-}
-body > .v-content {
-  flex: 1 0 auto;
+  & > .v-content {
+    flex: 1 0 auto;
+  }
 }
 
+/* BCGov Style */
 .BC-Gov-PrimaryButton.v-btn {
   background-color: #003366;
   border: none;
   border-radius: 4px;
   color: white !important;
-  padding: 12px 32px !important;
   text-align: center;
   text-decoration: none;
 }
@@ -57,15 +66,15 @@ body > .v-content {
   color: #777;
 }
 
-.BC-Gov-PrimaryButton:hover,
-.v-btn:hover {
-  opacity: 0.8;
-}
-
 .BC-Gov-PrimaryButton.light.v-btn {
   background-color: #fff;
   border: 2px solid #003366;
   color: #003366 !important;
+}
+
+.BC-Gov-PrimaryButton.dark.v-btn {
+  border: 2px solid #fff !important;
+  color: #fff !important;
 }
 
 .BC-Gov-IconButton.v-btn {

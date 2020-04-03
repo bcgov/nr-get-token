@@ -42,7 +42,9 @@
 
     <v-row class="mt-12">
       <v-col cols="6" offset="3">
-        <v-btn class="BC-Gov-PrimaryButton" block text @click="finish">Finish</v-btn>
+        <v-btn class="BC-Gov-PrimaryButton" block text @click="finish">
+          <span>Finish</span>
+        </v-btn>
       </v-col>
     </v-row>
   </v-container>

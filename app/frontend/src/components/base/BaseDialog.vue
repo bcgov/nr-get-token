@@ -25,15 +25,21 @@
       <v-card-actions class="justify-center">
         <div v-if="type === 'OK'">
           <v-btn class="BC-Gov-PrimaryButton mb-5" text @click="closeDialog">
-            <slot name="button-text">OK</slot>
+            <slot name="button-text">
+              <span>OK</span>
+            </slot>
           </v-btn>
         </div>
         <div v-else-if="type === 'CONTINUE'">
           <v-btn class="BC-Gov-PrimaryButton light mb-5 mr-5" text @click="closeDialog">
-            <slot name="button-text">Cancel</slot>
+            <slot name="button-text">
+              <span>Cancel</span>
+            </slot>
           </v-btn>
           <v-btn class="BC-Gov-PrimaryButton mb-5" text @click="continueDialog">
-            <slot name="button-text">Continue</slot>
+            <slot name="button-text">
+              <span>Continue</span>
+            </slot>
           </v-btn>
         </div>
       </v-card-actions>

@@ -90,7 +90,9 @@
 
     <v-row class="mt-8">
       <v-col cols="6">
-        <v-btn class="BC-Gov-PrimaryButton light mr-4" block text @click="cancel()">Cancel</v-btn>
+        <v-btn class="BC-Gov-PrimaryButton light mr-4" block text @click="cancel()">
+          <span>Cancel</span>
+        </v-btn>
       </v-col>
       <v-col cols="6">
         <v-btn
