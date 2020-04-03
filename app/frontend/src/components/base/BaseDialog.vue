@@ -48,8 +48,6 @@
 </template>
 
 <script>
-import '@/assets/scss/style.scss';
-
 export default {
   name: 'BaseDialog',
   props: {
