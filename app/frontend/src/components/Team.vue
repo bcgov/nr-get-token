@@ -2,10 +2,11 @@
   <v-container>
     <p class="text-right">
       <strong>
-        <v-icon class="pr-2">group</v-icon>Team members (x)
+        <v-icon class="pr-2">group</v-icon>Team members
+        <span v-if="usersLoaded">({{users.length}})</span>
         <v-tooltip bottom open-delay="1000">
           <template v-slot:activator="{ on }">
-            <v-btn v-on="on" icon class="BC-Gov-IconButton" @click="addDialog = true">
+            <v-btn v-on="on" icon color="primary" @click="addDialog = true">
               <v-icon>add_circle</v-icon>
             </v-btn>
           </template>
@@ -19,30 +20,33 @@
       :loading="!usersLoaded"
       transition="scale-transition"
     >
-      <v-container>Loaded</v-container>
+      <v-container>
+        <v-alert
+          v-if="errorLoadingUsers"
+          type="error"
+          tile
+          dense
+        >An error occurred while loading the users, please refresh and try again</v-alert>
+        <v-simple-table class="getok-simple-table">
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th class="text-left">Name</th>
+                <th class="text-left">IDIR</th>
+                <th class="text-left">Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in users" :key="item.idir">
+                <td>{{ item.name }}</td>
+                <td>{{ item.idir }}</td>
+                <td>{{ item.email }}</td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+      </v-container>
     </v-skeleton-loader>
-
-    <br />
-    <br />
-    <br />
-    <v-simple-table class="getok-simple-table">
-      <template v-slot:default>
-        <thead>
-          <tr>
-            <th class="text-left">Name</th>
-            <th class="text-left">IDIR</th>
-            <th class="text-left">Email</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in desserts" :key="item.name">
-            <td>{{ item.name }}</td>
-            <td>{{ item.IDIR }}</td>
-            <td>{{ item.email }}</td>
-          </tr>
-        </tbody>
-      </template>
-    </v-simple-table>
 
     <BaseDialog :show="addDialog" width="500" @close-dialog="addDialog = false">
       <template v-slot:icon>
@@ -65,45 +69,27 @@ export default {
   props: ['acronym'],
   data() {
     return {
-      desserts: [
-        {
-          name: 'Lucas ONeil',
-          IDIR: 'loneil',
-          email: 'lucas.oneil@gov.bc.ca'
-        },
-        {
-          name: 'Lucas ONeil',
-          IDIR: 'loneil',
-          email: 'lucas.oneil@gov.bc.ca'
-        },
-        {
-          name: 'Lucas ONeil',
-          IDIR: 'loneil',
-          email: 'lucas.oneil@gov.bc.ca'
-        },
-        {
-          name: 'Lucas ONeil',
-          IDIR: 'loneil',
-          email: 'lucas.oneil@gov.bc.ca'
-        },
-        {
-          name: 'Lucas ONeil',
-          IDIR: 'loneil',
-          email: 'lucas.oneil@gov.bc.ca'
-        },
-      ],
       addDialog: false,
       errorLoadingUsers: false,
+      users: [],
       usersLoaded: false
     };
   },
   async mounted() {
     try {
-      const users = await acronymService.getUsers(this.acronym);
+      const res = await acronymService.getUsers(this.acronym);
+      this.users = res.data.map(u => {
+        return{
+          name: `${u.user.firstName} ${u.user.lastName}`,
+          idir: u.user.username,
+          email: u.user.email
+        };
+      });
     } catch {
-
+      //TODO: still pending descisions on global error standardization
+      this.errorLoadingUsers = true;
     } finally {
-      this.usersLoaded= true;
+      this.usersLoaded = true;
     }
   }
 };
