@@ -19,7 +19,7 @@
 
         <v-tab-item>
           <h2>{{acronym}}</h2>
-          <p class="mb-0">TBA. Users tab coming soon</p>
+          <Team :acronym="acronym" />
         </v-tab-item>
       </v-tabs>
     </BaseSecure>
@@ -28,12 +28,14 @@
 
 <script>
 import ApiAccess from '@/components/apiAccess/ApiAccess.vue';
+import Team from '@/components/Team.vue';
 import apiAccess from '@/store/modules/apiAccess';
 
 export default {
   name: 'Application',
   components: {
-    ApiAccess
+    ApiAccess,
+    Team
   },
   props: ['acronym'],
   beforeDestroy() {
