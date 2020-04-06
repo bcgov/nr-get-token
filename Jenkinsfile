@@ -38,12 +38,12 @@ pipeline {
     SOURCE_REPO_REF = "${JOB_NAME}"
     SOURCE_REPO_URL = "https://github.com/${REPO_OWNER}/${REPO_NAME}.git"
 
-    // HOST_ROUTE is the full domain without the path (ie. 'appname-k8vopl-dev.pathfinder.gov.bc.ca/pr-5')
+    // ENV_HOST is the full domain without the path (ie. 'appname-dev.pathfinder.gov.bc.ca')
     DEV_HOST = "${APP_NAME}-dev.${APP_DOMAIN}"
     TEST_HOST = "${APP_NAME}-test.${APP_DOMAIN}"
     PROD_HOST = "${APP_NAME}.${APP_DOMAIN}"
-    // will be added to the HOST_ROUTE
-    PATH_ROOT = "/${JOB_NAME}"
+    // PATH_ROOT will be appended to ENV_HOST
+    PATH_ROOT = "/${JOB_NAME.equalsIgnoreCase('master') ? APP_NAME : JOB_NAME}"
 
     // SonarQube Endpoint URL
     SONARQUBE_URL_INT = 'http://sonarqube:9000'
