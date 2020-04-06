@@ -30,7 +30,7 @@ acronymsRouter.get('/:appAcronym', [
   }
 });
 
-/** Returns clients from KC for the supplied acronym*/
+/** Returns clients from KC for the supplied acronym */
 acronymsRouter.get('/:acronym/clients', [
 ], async (req, res) => {
   // TODO: Move this into middleware or equivalent
@@ -50,6 +50,28 @@ acronymsRouter.get('/:acronym/clients', [
     res.status(200).json(result);
   }
 });
+
+/** Returns users from KC for the supplied acronym */
+acronymsRouter.get('/:acronym/users', async (req, res) => {
+  // Check for required permissions. Can only fetch details for the acronyms you are associated with
+  const permissionErr = await permissionHelpers.checkAcronymPermission(req.kauth.grant.access_token.content.sub, req.params.acronym);
+  if (permissionErr) {
+    return new Problem(403, { detail: permissionErr }).send(res);
+  }
+
+  try {
+    const result = await acronyms.getUsers(req.params.acronym);
+    if (result === null) {
+      return new Problem(404).send(res);
+    } else {
+      res.status(200).json(result);
+    }
+  } catch (error) {
+    log.error(error);
+    return new Problem(500, { detail: error.message }).send(res);
+  }
+});
+
 
 // A special administrative call to add users to acronym. This is a temporary shim until we have an actual administrative
 // section of the app in place

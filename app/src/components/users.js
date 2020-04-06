@@ -1,9 +1,31 @@
+const config = require('config');
 const log = require('npmlog');
 
+const KeyCloakServiceClientManager = require('./keyCloakServiceClientMgr');
+const RealmAdminService = require('./realmAdminSvc');
 const { userService } = require('../services');
 const utils = require('./utils');
 
 const users = {
+  /**
+  * @function getAllGetokUsers
+  * Returns all the users in the keycloak realm that the GETOK api is running on. Use the api's client to call realm api
+  * @returns {object[]} An array of user objects
+  */
+  getAllGetokUsers: async () => {
+    log.verbose('getAllGetokUsers');
+    const {
+      serverUrl: authUrl,
+      clientId: clientId,
+      clientSecret: clientSecret,
+      realm: realmId
+    } = config.get('server.keycloak');
+    const realmBaseUrl = authUrl.replace('/auth', '');
+    const realmSvc = new RealmAdminService({ realmBaseUrl, clientId, clientSecret, realmId });
+    const kcScMgr = new KeyCloakServiceClientManager(realmSvc);
+    return kcScMgr.findUsers();
+  },
+
   /**
    * @function getUserAcronyms
    * Returns acronyms associated with a user

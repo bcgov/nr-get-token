@@ -151,20 +151,16 @@ class KeyCloakServiceClientManager {
     }
   }
 
-  async findUser(username) {
-    log.debug('KeyCloakServiceClientManager.findUser', username);
-    if (!username) {
-      log.error('KeyCloakServiceClientManager.findUser', 'No user provided.');
-      throw new Error('Cannot get a user in KeyCloak realm: username required.');
-    }
+  // Get all users based on search param, supply undefined as searchParams to get ALL users in realm
+  async findUsers(searchParams) {
+    log.debug('KeyCloakServiceClientManager.findUsers', `Params: ${JSON.stringify(searchParams)}`);
 
-    const users = await this.svc.getUsers(username);
+    const users = await this.svc.getUsers(searchParams);
 
     if (users && users.length) {
-      // Can only be one user by identified username (idir or github or whatever)
-      return users[0];
+      return users;
     } else {
-      log.debug('KeyCloakServiceClientManager.findUser', `No user found for ${username}`);
+      log.debug('KeyCloakServiceClientManager.findUsers', `No users found for ${JSON.stringify(searchParams)}`);
       return undefined;
     }
   }

@@ -1,0 +1,144 @@
+[
+  {
+    "id": "a6d404b9-9397-4987-97d6-e755355663fe",
+    "createdTimestamp": 1580513486025,
+    "username": "jsmith@idir",
+    "enabled": true,
+    "totp": false,
+    "emailVerified": false,
+    "firstName": "John",
+    "lastName": "Smith",
+    "email": "John.Smith@gov.bc.ca",
+    "attributes": {
+      "idir_userid": [
+        "redacted"
+      ],
+      "displayName": [
+        "Smith, John IIT:EX"
+      ]
+    },
+    "disableableCredentialTypes": [],
+    "requiredActions": [],
+    "notBefore": 0,
+    "access": {
+      "manageGroupMembership": true,
+      "view": true,
+      "mapRoles": true,
+      "impersonate": false,
+      "manage": true
+    }
+  },
+  {
+    "id": "8a21fba0-297f-401f-a703-b81032a573b9",
+    "createdTimestamp": 1579886441663,
+    "username": "sbob@idir",
+    "enabled": true,
+    "totp": false,
+    "emailVerified": false,
+    "firstName": "Sarah",
+    "lastName": "Bob",
+    "email": "Sarah.Bob@gov.bc.ca",
+    "attributes": {
+      "idir_userid": [
+        "redacted"
+      ],
+      "displayName": [
+        "Bob, Sarah CITZ:EX"
+      ]
+    },
+    "disableableCredentialTypes": [],
+    "requiredActions": [],
+    "notBefore": 0,
+    "access": {
+      "manageGroupMembership": true,
+      "view": true,
+      "mapRoles": true,
+      "impersonate": false,
+      "manage": true
+    }
+  },
+  {
+    "id": "00346864-c787-450c-a217-35ddf19f1454",
+    "createdTimestamp": 1556061633579,
+    "username": "jshmo@idir",
+    "enabled": true,
+    "totp": false,
+    "emailVerified": false,
+    "firstName": "Jeremy",
+    "lastName": "Shmo",
+    "email": "jeremy.Shmo@gov.bc.ca",
+    "attributes": {
+      "idir_userid": [
+        "redacted"
+      ],
+      "displayName": [
+        "Shmo, Jeremy X IIT:EX"
+      ]
+    },
+    "disableableCredentialTypes": [],
+    "requiredActions": [],
+    "notBefore": 1559088605,
+    "access": {
+      "manageGroupMembership": true,
+      "view": true,
+      "mapRoles": true,
+      "impersonate": false,
+      "manage": true
+    }
+  },
+  {
+    "id": "k1",
+    "createdTimestamp": 1560284248537,
+    "username": "hherman@idir",
+    "enabled": true,
+    "totp": false,
+    "emailVerified": false,
+    "firstName": "Hank",
+    "lastName": "Herman",
+    "email": "hherman@gmail.com",
+    "attributes": {
+      "idir_userid": [
+        "redacted"
+      ]
+    },
+    "disableableCredentialTypes": [],
+    "requiredActions": [],
+    "notBefore": 0,
+    "access": {
+      "manageGroupMembership": true,
+      "view": true,
+      "mapRoles": true,
+      "impersonate": false,
+      "manage": true
+    }
+  },
+  {
+    "id": "k2",
+    "createdTimestamp": 1556044045255,
+    "username": "lneil@idir",
+    "enabled": true,
+    "totp": false,
+    "emailVerified": false,
+    "firstName": "Luke",
+    "lastName": "Neil",
+    "email": "Luke.neil@gov.bc.ca",
+    "attributes": {
+      "idir_userid": [
+        "redacted"
+      ],
+      "displayName": [
+        "Neil, Luke IIT:EX"
+      ]
+    },
+    "disableableCredentialTypes": [],
+    "requiredActions": [],
+    "notBefore": 0,
+    "access": {
+      "manageGroupMembership": true,
+      "view": true,
+      "mapRoles": true,
+      "impersonate": false,
+      "manage": true
+    }
+  }
+]

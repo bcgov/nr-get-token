@@ -26,7 +26,7 @@ jest.mock('../../../src/components/realmAdminSvc', () => {
       getRoleComposites: () => { return [{ id: '456', name: 'GENERATOR', description: 'This role is.' }]; },
       getServiceAccountUser: () => { return { id: '2', 'clientId': '1' }; },
       addServiceAccountRole: () => { },
-      getUsers: () => { return [{ id: 1, username: 'me@idir' }, { id: 2, username: 'me@github' }]; },
+      getUsers: () => { return [{ id: 1, username: 'me@idir' }]; },
       getClientSecret: () => { return { value: 'itsasecret' }; }
     };
   });
@@ -145,17 +145,26 @@ describe('KeyCloakServiceClientManager fetchClients', () => {
 
 });
 
-describe('KeyCloakServiceClientManager findUser', () => {
-  it('should throw an error without username', async () => {
-    const mgr = new KeyCloakServiceClientManager(realmAdminService);
-    await expect(mgr.findUser(undefined)).rejects.toThrow();
-  });
-
+describe('KeyCloakServiceClientManager findUsers', () => {
   it('should return a User', async () => {
     const mgr = new KeyCloakServiceClientManager(realmAdminService);
-    const r = await mgr.findUser('me@idir');
-    expect(r).toBeTruthy();
-    expect(r.username).toEqual('me@idir');
+    const r = await mgr.findUsers({username: 'me@idir'});
+    expect(r[0]).toBeTruthy();
+    expect(r[0].username).toEqual('me@idir');
+  });
+
+  it('should handle blank params', async () => {
+    const mgr = new KeyCloakServiceClientManager(realmAdminService);
+    const r = await mgr.findUsers();
+    expect(r[0]).toBeTruthy();
+    expect(r[0].username).toEqual('me@idir');
+  });
+
+  it('should handle undefined params', async () => {
+    const mgr = new KeyCloakServiceClientManager(realmAdminService);
+    const r = await mgr.findUsers(undefined);
+    expect(r[0]).toBeTruthy();
+    expect(r[0].username).toEqual('me@idir');
   });
 });
 

@@ -1,6 +1,7 @@
 const acronyms = require('../../../src/components/acronyms');
-const helper = require('../../common/helper');
 const { acronymService } = require('../../../src/services');
+const helper = require('../../common/helper');
+const usersComponent = require('../../../src/components/users');
 const utils = require('../../../src/components/utils');
 
 helper.logHelper();
@@ -52,6 +53,110 @@ describe('getAcronym', () => {
     });
 
     await expect(acronyms.getAcronym('TEST')).rejects.toThrow();
+  });
+});
+
+describe('getUsers', () => {
+  const acronymUsersFixture = require('./fixtures/acronymUsers.json');
+  const keycloakUsersFixture = require('./fixtures/keycloakUsers.json');
+
+  // Spy/mock the DB access 'find' method on the acronym table
+  const spy = jest.spyOn(acronymService, 'acronymUserList');
+  const usersSpy = jest.spyOn(usersComponent, 'getAllGetokUsers');
+
+  beforeEach(() => {
+    spy.mockClear();
+    usersSpy.mockClear();
+  });
+
+  it('should throw an error if no acronym supplied', async () => {
+    await expect(acronyms.getUsers(undefined)).rejects.toThrow('No app acronym supplied to getUsers');
+  });
+
+
+  it('should return an empty array if the service returns undefined', async () => {
+    acronymService.acronymUserList.mockResolvedValue(undefined);
+    const acr = 'XXX';
+
+    const result = await acronyms.getUsers(acr);
+
+    expect(result).toEqual([]);
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(acr);
+    expect(usersSpy).toHaveBeenCalledTimes(0);
+  });
+
+  it('should return an empty array if no userAcronym mappings exist', async () => {
+    acronymService.acronymUserList.mockResolvedValue([]);
+    const acr = 'XXX';
+
+    const result = await acronyms.getUsers(acr);
+
+    expect(result).toEqual([]);
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(acr);
+    expect(usersSpy).toHaveBeenCalledTimes(0);
+  });
+
+  it('should return an empty array if no users are found from KC', async () => {
+    acronymService.acronymUserList.mockResolvedValue(acronymUsersFixture);
+    usersComponent.getAllGetokUsers.mockResolvedValue([]);
+    const acr = 'XXX';
+
+    const result = acronyms.getUsers(acr);
+    await expect(result).rejects.toThrow(`An error occured fetching users for acronym ${acr}`);
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(acr);
+    expect(usersSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return an appropriate combination of AcronymUser and Keycloak user records', async () => {
+    acronymService.acronymUserList.mockResolvedValue(acronymUsersFixture);
+    usersComponent.getAllGetokUsers.mockResolvedValue(keycloakUsersFixture);
+    const acr = 'XXX';
+
+    const result = await acronyms.getUsers(acr);
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(acr);
+    expect(usersSpy).toHaveBeenCalledTimes(1);
+
+    expect(result).toBeTruthy();
+    expect(result).toHaveLength(2);
+    expect(result[0]).toBeTruthy();
+    expect(result[0]).toEqual({
+      userAcronymDetails: {
+        acronym: 'XXX',
+        owner: false,
+        createdAt: '2020-03-17T20:53:06.565Z'
+      },
+      user: {
+        userId: '1',
+        keycloakGuid: 'k1',
+        username: 'hherman@idir',
+        firstName: 'Hank',
+        lastName: 'Herman',
+        email: 'hherman@gmail.com'
+      }
+    });
+    expect(result[1]).toBeTruthy();
+    expect(result[1]).toEqual({
+      userAcronymDetails: {
+        acronym: 'XXX',
+        owner: false,
+        createdAt: '2020-03-30T04:33:59.375Z'
+      },
+      user: {
+        userId: '3',
+        keycloakGuid: 'k2',
+        username: 'lneil@idir',
+        firstName: 'Luke',
+        lastName: 'Neil',
+        email: 'Luke.neil@gov.bc.ca'
+      }
+    });
+
   });
 });
 

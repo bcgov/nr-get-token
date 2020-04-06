@@ -388,16 +388,16 @@ class RealmAdminService {
     return response;
   }
 
-  // Get from the users list with the username query param. If we want to be able to filter by more can refactor this method
-  // to take in search parameters. https://www.keycloak.org/docs-api/5.0/rest-api/index.html#_users_resource
-  async getUsers(username) {
-    if (!username) {
-      log.error('RealmAdminService.getUsers', 'username parameter is null.');
-      throw new Error('Cannot get users: username parameter cannot be null.');
+  // Get from the users list filtered by optional query parameters
+  // Available search parameters: https://www.keycloak.org/docs-api/5.0/rest-api/index.html#_users_resource
+  async getUsers(queryParams) {
+    if (queryParams && typeof queryParams !== 'object' || queryParams instanceof Array) {
+      log.error('RealmAdminService.getUsers', 'optional searchParams parameter must be an object.');
+      throw new Error('Cannot get users: optional searchParams parameter must be an object.');
     }
 
-    const url = `${this.realmAdminUrl}/users?username=${username}`;
-    const response = await this.axios.get(url)
+    const url = `${this.realmAdminUrl}/users`;
+    const response = await this.axios.get(url, { params: queryParams })
       .catch(e => {
         log.error('RealmAdminService.getUsers', JSON.stringify(e));
         throw e;

@@ -34,5 +34,38 @@ module.exports = {
         acronym: acronym
       }
     });
+  },
+
+  async acronymUserList(acronym) {
+    const result = await db.Acronym.findAll({
+      attributes: [],
+      include: [
+        {
+          attributes: [
+            'userId',
+            'keycloakId',
+            'createdAt',
+            'updatedAt',
+            'deletedAt',
+          ],
+          model: db.User,
+          through: {
+            model: db.UserAcronym,
+            where: {
+              deletedAt: null
+            }
+          }
+        }
+      ],
+      where: {
+        acronym: acronym
+      }
+    });
+
+    if (result[0]) {
+      return result[0].Users.map(usr => { return { userAcronym: usr.UserAcronym, keycloakGuid: usr.keycloakId }; });
+    } else {
+      return null;
+    }
   }
 };
