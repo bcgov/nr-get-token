@@ -18,14 +18,23 @@
 
       <v-data-table
         class="kc-table"
-        dense
         :headers="headers"
         :items="serviceClients"
-        :items-per-page="5"
+        :items-per-page="10"
         :search="search"
         :loading="loading"
         loading-text="Loading... Please wait"
+
+        :expanded.sync="expanded"
+        item-key="clientId"
+        show-expand
       >
+        <template v-slot:expanded-item="{ headers, item }">
+          <td></td>
+          <td :colspan="headers.length - 1">More info {{ item.name }}</td>
+
+        </template>
+
         <template v-slot:item.dev="{item}">
           <v-icon v-if="item.dev" color="green">check</v-icon>
         </template>
@@ -52,16 +61,18 @@ export default {
       // vuetify data table
       search: '',
       headers: [
-        { text: 'Name', align: 'start', value: 'name' },
+        { text: '', value: 'data-table-expand' },
+        { text: 'ID', align: 'start', value: 'clientId' },
         { text: 'DEV', value: 'dev' },
         { text: 'TEST', value: 'test' },
-        { text: 'PROD', value: 'prod' }
+        { text: 'PROD', value: 'prod' },
       ],
       serviceClients: [],
       loading: true,
       showAlert: false,
       alertType: null,
-      alertMessage: ''
+      alertMessage: '',
+      expanded: []
     };
   },
   watch: {
@@ -80,12 +91,14 @@ export default {
           const reduced = response.data.reduce((a, b) => {
             if (!a[b.clientId]) a[b.clientId] = []; //If this type wasn't previously stored
             a[b.clientId].push(b.environment);
+            a[b.clientId].push(b.name);
             return a;
           }, {});
 
           const clients = Object.keys(reduced).map(k => {
             return {
-              name: k,
+              clientId: k,
+              name:reduced[k].name,
               dev: reduced[k].includes('dev'),
               test: reduced[k].includes('test'),
               prod: reduced[k].includes('prod')
@@ -106,6 +119,9 @@ export default {
       this.alertType = typ;
       this.alertMessage = msg;
       this.loading = false;
+    },
+    clicked(value) {
+      this.expanded.push(value);
     }
   },
   mounted() {
@@ -113,3 +129,13 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.kc-table >>> tr.v-data-table__expanded.v-data-table__expanded__row td {
+	border-bottom: 0 !important;
+}
+.kc-table >>> tr.v-data-table__expanded.v-data-table__expanded__content {
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
+}
+</style>
