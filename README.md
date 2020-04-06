@@ -1,11 +1,11 @@
-# Common Service Get Token [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE) [![Quality Gate](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/gate?key=nr-get-token)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token)
+# Common Service Get Token [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE) [![Quality Gate](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/gate?key=nr-get-token)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token-master)
 
-[![Bugs](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/measure?key=nr-get-token&metric=bugs)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token)
-[![Vulnerabilities](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/measure?key=nr-get-token&metric=vulnerabilities)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token)
-[![Code Smells](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/measure?key=nr-get-token&metric=code_smells)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token)
-[![Coverage](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/measure?key=nr-get-token&metric=coverage)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token)
-[![Lines](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/measure?key=nr-get-token&metric=lines)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token)
-[![Duplication](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/measure?key=nr-get-token&metric=duplicated_lines_density)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token)
+[![Bugs](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/measure?key=nr-get-token&metric=bugs)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token-master)
+[![Vulnerabilities](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/measure?key=nr-get-token&metric=vulnerabilities)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token-master)
+[![Code Smells](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/measure?key=nr-get-token&metric=code_smells)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token-master)
+[![Coverage](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/measure?key=nr-get-token&metric=coverage)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token-master)
+[![Lines](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/measure?key=nr-get-token&metric=lines)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token-master)
+[![Duplication](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/api/badges/measure?key=nr-get-token&metric=duplicated_lines_density)](https://sonarqube-k8vopl-tools.pathfinder.gov.bc.ca/dashboard?id=nr-get-token-master)
 
 To learn more about the **Common Services** available visit the [Common Services Showcase](https://bcgov.github.io/common-service-showcase/) page.
 
