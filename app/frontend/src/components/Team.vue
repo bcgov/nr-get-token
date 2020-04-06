@@ -3,7 +3,7 @@
     <p class="text-right">
       <strong>
         <v-icon class="pr-2">group</v-icon>Team members
-        <span v-if="usersLoaded">({{users.length}})</span>
+        <span v-if="usersLoaded">({{ users.length }})</span>
         <v-tooltip bottom open-delay="1000">
           <template v-slot:activator="{ on }">
             <v-btn v-on="on" icon color="primary" @click="addDialog = true">
@@ -48,13 +48,13 @@
       </v-container>
     </v-skeleton-loader>
 
-    <BaseDialog :show="addDialog" width="500" @close-dialog="addDialog = false">
+    <BaseDialog :show="addDialog" @close-dialog="addDialog = false">
       <template v-slot:icon>
-        <v-icon large color="blue darken-2">info</v-icon>
+        <v-icon large color="primary">info</v-icon>
       </template>
       <template v-slot:text>
         <h4 class="mb-5">Invitation functionality coming soon</h4>
-        <p>To add a new user for your application, please instruct them to log and use the Request Account page to request access to your application.</p>
+        <p>To add a new user for your application, please instruct them to log in and use the Request Account page to request access to your application.</p>
         <p>The Common Service Showcase team will action the request to add them once submitted.</p>
       </template>
     </BaseDialog>
@@ -79,7 +79,7 @@ export default {
     try {
       const res = await acronymService.getUsers(this.acronym);
       this.users = res.data.map(u => {
-        return{
+        return {
           name: `${u.user.firstName} ${u.user.lastName}`,
           idir: u.user.username,
           email: u.user.email
