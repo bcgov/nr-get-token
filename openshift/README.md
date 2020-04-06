@@ -15,7 +15,7 @@ In order to prepare an environment, you will need to ensure that all of the foll
 *Note:* Replace anything in angle brackets with the appropriate value!
 
 ```sh
-oc create -n k8vopl-dev configmap getok-frontend-config \
+oc create -n k8vopl-<env> configmap getok-frontend-config \
   --from-literal=FRONTEND_APIPATH=api/v1 \
   --from-literal=FRONTEND_BASEPATH=/app \
   --from-literal=FRONTEND_KC_CLIENTID=getok-frontend \
@@ -30,7 +30,6 @@ oc create -n k8vopl-<env> configmap getok-sc-config \
   --from-literal=SC_GETOK_ENDPOINT_INT=https://i1api.nrs.gov.bc.ca/webade-api/v1 \
   --from-literal=SC_GETOK_ENDPOINT_TEST=https://t1api.nrs.gov.bc.ca/webade-api/v1 \
   --from-literal=SC_GETOK_ENDPOINT_PROD=https://api.nrs.gov.bc.ca/webade-api/v1 \
-  --from-literal=SC_MSSC_ENDPOINT=https://i1api.nrs.gov.bc.ca/cmsg-messaging-api/v1 \
   --from-literal=SC_KC_DEV_ENDPOINT=https://sso-dev.pathfinder.gov.bc.ca \
   --from-literal=SC_KC_TEST_ENDPOINT=https://sso-test.pathfinder.gov.bc.ca \
   --from-literal=SC_KC_PROD_ENDPOINT=https://sso.pathfinder.gov.bc.ca \
