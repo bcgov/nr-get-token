@@ -13,7 +13,7 @@ const users = {
   * @returns {object[]} An array of user objects
   */
   getAllGetokUsers: async () => {
-    log.debug('getAllGetokUsers');
+    log.verbose('getAllGetokUsers');
     const {
       serverUrl: authUrl,
       clientId: clientId,

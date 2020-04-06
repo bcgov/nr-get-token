@@ -153,14 +153,14 @@ class KeyCloakServiceClientManager {
 
   // Get all users based on search param, supply undefined as searchParams to get ALL users in realm
   async findUsers(searchParams) {
-    log.debug('KeyCloakServiceClientManager.findUser', `Params: ${JSON.stringify(searchParams)}`);
+    log.debug('KeyCloakServiceClientManager.findUsers', `Params: ${JSON.stringify(searchParams)}`);
 
     const users = await this.svc.getUsers(searchParams);
 
     if (users && users.length) {
       return users;
     } else {
-      log.debug('KeyCloakServiceClientManager.findUser', `No users found for ${JSON.stringify(searchParams)}`);
+      log.debug('KeyCloakServiceClientManager.findUsers', `No users found for ${JSON.stringify(searchParams)}`);
       return undefined;
     }
   }

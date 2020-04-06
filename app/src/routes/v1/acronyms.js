@@ -30,7 +30,7 @@ acronymsRouter.get('/:appAcronym', [
   }
 });
 
-/** Returns clients from KC for the supplied acronym*/
+/** Returns clients from KC for the supplied acronym */
 acronymsRouter.get('/:acronym/clients', [
 ], async (req, res) => {
   // TODO: Move this into middleware or equivalent
@@ -51,7 +51,7 @@ acronymsRouter.get('/:acronym/clients', [
   }
 });
 
-/** Returns users from KC for the supplied acronym*/
+/** Returns users from KC for the supplied acronym */
 acronymsRouter.get('/:acronym/users', async (req, res) => {
   // Check for required permissions. Can only fetch details for the acronyms you are associated with
   const permissionErr = await permissionHelpers.checkAcronymPermission(req.kauth.grant.access_token.content.sub, req.params.acronym);

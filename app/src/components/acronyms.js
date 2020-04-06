@@ -58,14 +58,13 @@ const acronyms = {
       // Build the response object we want from the endpoint, joining the info from the table and the userInfo from KC
       const filtered = acronymUsers.filter(au => userInfos.find(ui => ui.id === au.keycloakGuid));
       const users = filtered.map(au => {
-        const userAcronymDetails = {
-          acronym: applicationAcronym,
-          owner: au.userAcronym.owner,
-          createdAt: au.userAcronym.createdAt
-        };
         const kcUsr = userInfos.find(ui => ui.id === au.keycloakGuid);
         return {
-          userAcronymDetails: userAcronymDetails,
+          userAcronymDetails: {
+            acronym: applicationAcronym,
+            owner: au.userAcronym.owner,
+            createdAt: au.userAcronym.createdAt
+          },
           user: {
             userId: au.userAcronym.userId,
             keycloakGuid: kcUsr.id,

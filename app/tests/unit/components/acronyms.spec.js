@@ -123,7 +123,7 @@ describe('getUsers', () => {
     expect(usersSpy).toHaveBeenCalledTimes(1);
 
     expect(result).toBeTruthy();
-    expect(result.length).toEqual(2);
+    expect(result).toHaveLength(2);
     expect(result[0]).toBeTruthy();
     expect(result[0]).toEqual({
       userAcronymDetails: {
