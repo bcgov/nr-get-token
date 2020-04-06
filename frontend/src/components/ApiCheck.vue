@@ -4,7 +4,9 @@
       <v-col cols="12" md="5">
         <v-form @submit.prevent="testApi">
           <v-text-field v-model="testRoute" label="Endpoint" required></v-text-field>
-          <v-btn color="success" @click="testApi">Test</v-btn>
+          <v-btn color="success" @click="testApi">
+            <span>Test</span>
+          </v-btn>
         </v-form>
       </v-col>
       <v-col cols="12" md="6" offset-md="1">

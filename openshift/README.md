@@ -12,67 +12,51 @@ In order to prepare an environment, you will need to ensure that all of the foll
 
 ### Config Maps
 
-*Note: Replace anything in angle brackets with the appropriate value!*
+*Note:* Replace anything in angle brackets with the appropriate value!
 
 ```sh
-oc create -n k8vopl-<env> configmap getok-oidc-config \
-  --from-literal=OIDC_DISCOVERY=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/vehizw2t/.well-known/openid-configuration
-```
-
-```sh
-oc create -n k8vopl-<env> configmap getok-server-config \
-  --from-literal=SERVER_LOGLEVEL=info \
-  --from-literal=SERVER_MORGANFORMAT=combined \
-  --from-literal=SERVER_PORT=8080
+oc create -n k8vopl-<env> configmap getok-frontend-config \
+  --from-literal=FRONTEND_APIPATH=api/v1 \
+  --from-literal=FRONTEND_BASEPATH=/app \
+  --from-literal=FRONTEND_KC_CLIENTID=getok-frontend \
+  --from-literal=FRONTEND_KC_REALM=vehizw2t \
+  --from-literal=FRONTEND_KC_SERVERURL=https://sso-dev.pathfinder.gov.bc.ca/auth
 ```
 
 ```sh
 oc create -n k8vopl-<env> configmap getok-sc-config \
+  --from-literal=SC_CHES_API_ENDPOINT=https://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api \
+  --from-literal=SC_CHES_TOKEN_ENDPOINT=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token \
   --from-literal=SC_GETOK_ENDPOINT_INT=https://i1api.nrs.gov.bc.ca/webade-api/v1 \
   --from-literal=SC_GETOK_ENDPOINT_TEST=https://t1api.nrs.gov.bc.ca/webade-api/v1 \
   --from-literal=SC_GETOK_ENDPOINT_PROD=https://api.nrs.gov.bc.ca/webade-api/v1 \
-  --from-literal=SC_MSSC_ENDPOINT=https://i1api.nrs.gov.bc.ca/cmsg-messaging-api/v1 \
-  --from-literal=SC_KC_INT_ENDPOINT=https://sso-dev.pathfinder.gov.bc.ca \
+  --from-literal=SC_KC_DEV_ENDPOINT=https://sso-dev.pathfinder.gov.bc.ca \
   --from-literal=SC_KC_TEST_ENDPOINT=https://sso-test.pathfinder.gov.bc.ca \
   --from-literal=SC_KC_PROD_ENDPOINT=https://sso.pathfinder.gov.bc.ca \
-  --from-literal=SC_KC_INT_REALM=jbd6rnxw \
+  --from-literal=SC_KC_DEV_REALM=jbd6rnxw \
   --from-literal=SC_KC_TEST_REALM=jbd6rnxw \
-  --from-literal=SC_KC_PROD_REALM=jbd6rnxw \
-  --from-literal=CHES_TOKEN_ENDPOINT=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token \
-  --from-literal=CHES_EMAIL_ENDPOINT=https://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api/v1/email \
-  --from-literal=CHES_HEALTH_ENDPOINT=http://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api/v1/health
+  --from-literal=SC_KC_PROD_REALM=jbd6rnxw
+```
+
+```sh
+oc create -n k8vopl-<env> configmap getok-server-config \
+  --from-literal=SERVER_APIPATH=/api/v1 \
+  --from-literal=SERVER_BODYLIMIT=30mb \
+  --from-literal=SERVER_KC_REALM=vehizw2t \
+  --from-literal=SERVER_KC_SERVERURL=https://sso-dev.pathfinder.gov.bc.ca/auth \
+  --from-literal=SERVER_LOGLEVEL=info \
+  --from-literal=SERVER_MORGANFORMAT=combined \
+  --from-literal=SERVER_PORT=8080
 ```
 
 ### Secrets
 
 Replace anything in angle brackets with the appropriate value!
 
-_Note: Publickey must be a PEM-encoded value encapsulated in double quotes in the argument. Newlines should not be re-encoded when using this command. If authentication fails, it's very likely a newline whitespace issue._
+*Note:* Publickey must be a PEM-encoded value encapsulated in double quotes in the argument. Newlines should not be re-encoded when using this command. If authentication fails, it's very likely a newline whitespace issue.
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-oidc-secret \
-  --type=kubernetes.io/basic-auth \
-  --from-literal=username=<username> \
-  --from-literal=password=<password> \
-  --from-literal=publickey="<key>"
-```
-
-```sh
-oc create -n k8vopl-<env> secret generic getok-sc-getokint-secret \
-  --type=kubernetes.io/basic-auth \
-  --from-literal=username=<username> \
-  --from-literal=password=<password>
-```
-
-```sh
-oc create -n k8vopl-<env> secret generic getok-sc-getoktest-secret \
-  --type=kubernetes.io/basic-auth \
-  --from-literal=username=<username> \
-  --from-literal=password=<password>
-```
-
-```sh
-oc create -n k8vopl-<env> secret generic getok-sc-getokprod-secret \
+oc create -n k8vopl-<env> secret generic getok-keycloak-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>
@@ -86,21 +70,42 @@ oc create -n k8vopl-<env> secret generic getok-sc-ches-secret \
 ```
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-sc-keycloakint-secret \
+oc create -n k8vopl-<env> secret generic getok-sc-keycloak-dev-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>
 ```
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-sc-keycloaktest-secret \
+oc create -n k8vopl-<env> secret generic getok-sc-keycloak-test-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>
 ```
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-sc-keycloakprod-secret \
+oc create -n k8vopl-<env> secret generic getok-sc-keycloak-prod-secret \
+  --type=kubernetes.io/basic-auth \
+  --from-literal=username=<username> \
+  --from-literal=password=<password>
+```
+
+```sh
+oc create -n k8vopl-<env> secret generic getok-sc-webade-int-secret \
+  --type=kubernetes.io/basic-auth \
+  --from-literal=username=<username> \
+  --from-literal=password=<password>
+```
+
+```sh
+oc create -n k8vopl-<env> secret generic getok-sc-webade-test-secret \
+  --type=kubernetes.io/basic-auth \
+  --from-literal=username=<username> \
+  --from-literal=password=<password>
+```
+
+```sh
+oc create -n k8vopl-<env> secret generic getok-sc-webade-prod-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>
@@ -108,17 +113,15 @@ oc create -n k8vopl-<env> secret generic getok-sc-keycloakprod-secret \
 
 ## Build Config & Deployment
 
-Get Token is currently designed with two discrete pod deployments: a static frontend which hosts all of the Vue.js resources and assets, and a Node.js backend which serves the API that the frontend requires. We are currently leveraging Openshift Routes with path based filtering in order to forward incoming traffic to the right deployment service.
+Get Token is currently designed as a single application pod deployments. It will host a static frontend containing all of the Vue.js resources and assets, and a Node.js backend which serves the API that the frontend requires. We are currently leveraging Openshift Routes with path based filtering in order to forward incoming traffic to the right deployment service.
 
 ### Frontend
 
-The frontend uses [Caddy](https://caddyserver.com) to host the static Vue UI. The service itself does not do much other than serve the static assets, handle some path rewriting rules and proxying API calls to the appropriate route.
+The frontend temporarily installs dependencies needed to generate the static assets that will appear in the `/app/frontend/dist` folder. These contents will be picked up by the application and hosted appropriately.
 
-The deployment container is built up using a two step chained build strategy. The first step yields an imagestream which uses a minimal Node Alpine container to temporarily install dependencies and generate the static assets in the `/dist` folder. The second step yields the Caddy server with only the static assets in the `/dist` folder copied over to minimize unnecessary container bloat.
+### Application
 
-### Backend
-
-The backend is a standard [Node](https://nodejs.org)/[Express](https://expressjs.com) server. It handles the JWT based authentication via OIDC authentication flow, and exposes the API to authorized users. This deployment container is built up using an Openshift S2I image strategy. The resulting container after build is what is deployed.
+The backend is a standard [Node](https://nodejs.org)/[Express](https://expressjs.com) server. It handles the JWT based authentication via OIDC authentication flow, and exposes the API to authorized users. This deployment container is built up on top of an Alpine Node image. The resulting container after build is what is deployed.
 
 ## Templates
 
@@ -139,7 +142,7 @@ The template can be manually invoked and deployed via Openshift CLI. For example
 
 ```sh
 oc -n k8vopl-<env> process -f openshift/app.bc.yaml -p REPO_NAME=nr-get-token
- -p JOB_NAME=master -p SOURCE_REPO_URL=https://github.com/bcgov/nr-get-token.git -p SOURCE_REPO_REF=master -o yaml | oc -n k8vopl-<env> create -f -
+ -p JOB_NAME=master -p SOURCE_REPO_URL=https://github.com/bcgov/nr-get-token.git -p SOURCE_REPO_REF=master -o yaml | oc -n k8vopl-<env> apply -f -
 ```
 
 Note that these build configurations do not have any triggers defined. They will be invoked by the Jenkins pipeline, started manually in the console, or by an equivalent oc command for example:
@@ -158,7 +161,9 @@ oc -n k8vopl-<env> tag <buildname>:latest <buildname>:master
 
 ### Deployment Configurations
 
-Deployment configurations will emit and handle the deployment lifecycles of running containers based off of the previously built images. They generally contain a deploymentconfig, a service, and a route. They take in the following parameters:
+Deployment configurations will emit and handle the deployment lifecycles of running containers based off of the previously built images. They generally contain a deploymentconfig, a service, and a route. Before our application is deployed, Patroni (a Highly Available Postgres Cluster implementation) needs to be deployed. Refer to any `patroni*` templates and their [official documentation](https://patroni.readthedocs.io/en/latest/) for more details.
+
+Our application template take in the following parameters:
 
 | Name | Required | Description |
 | --- | --- | --- |
@@ -166,12 +171,13 @@ Deployment configurations will emit and handle the deployment lifecycles of runn
 | JOB_NAME | yes | Job identifier (i.e. 'pr-5' OR 'master') |
 | NAMESPACE | yes | which namespace/"environment" are we deploying to? dev, test, prod? |
 | APP_NAME | yes | short name for the application |
-| HOST_ROUTE | yes | used to set the publicly accessible url |
+| ROUTE_HOST | yes | base domain for the publicly accessible URL |
+| ROUTE_PATH | yes | base path for the publicly accessible URL |
 
 The Jenkins pipeline will handle deployment invocation automatically. However should you need to run it manually, you can do so with the following for example:
 
 ```sh
-oc -n k8vopl-<env> process -f openshift/app.dc.yaml -p REPO_NAME=nr-get-token -p JOB_NAME=master -p NAMESPACE=k8vopl-<env> -p APP_NAME=getok -p HOST_ROUTE=getok-master-k8vopl-<env>.pathfinder.gov.bc.ca -o yaml | oc -n k8vopl-<env> apply -f -
+oc -n k8vopl-<env> process -f openshift/app.dc.yaml -p REPO_NAME=nr-get-token -p JOB_NAME=master -p NAMESPACE=k8vopl-<env> -p APP_NAME=getok -p ROUTE_HOST=getok-dev.pathfinder.gov.bc.ca -p ROUTE_PATH=master -o yaml | oc -n k8vopl-<env> apply -f -
 ```
 
 Due to the triggers that are set in the deploymentconfig, the deployment will begin automatically. However, you can deploy manually by use the following command for example:
@@ -187,7 +193,7 @@ oc -n k8vopl-<env> rollout latest dc/<buildname>-master
 As of this time, we do not automatically clean up resources generated by a Pull Request once it has been accepted and merged in. This is still a manual process. Our PR deployments are all named in the format "pr-###", where the ### is the number of the specific PR. In order to clear all resources for a specific PR, run the following two commands to delete all relevant resources from the Openshift project (replacing `PRNUMBER` with the appropriate number):
 
 ```sh
-oc delete all,nsp -n k8vopl-dev --selector app=getok-pr-<PRNUMBER>
+oc delete all,secret,nsp -n k8vopl-dev --selector app=getok-pr-<PRNUMBER>
 oc delete all,svc,cm,sa,role,secret -n k8vopl-dev --selector cluster-name=pr-<PRNUMBER>
 ```
 

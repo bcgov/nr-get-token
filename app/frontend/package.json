@@ -1,0 +1,70 @@
+{
+  "name": "get-token-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "author": "NR Common Service Showcase <NR.CommonServiceShowcase@gov.bc.ca>",
+  "bugs": {
+    "url": "https://github.com/bcgov/nr-get-token/issues"
+  },
+  "description": "Common Service Get Token",
+  "homepage": "https://github.com/bcgov/nr-get-token",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bcgov/nr-get-token.git"
+  },
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "test": "npm run test:unit",
+    "test:unit": "vue-cli-service test:unit --verbose",
+    "lint": "vue-cli-service lint",
+    "lint:fix": "vue-cli-service lint --fix",
+    "pretest": "npm run lint",
+    "clean": "rm -rf coverage dist",
+    "purge": "rm -rf node_modules",
+    "rebuild": "npm run clean && npm run build",
+    "reinstall": "npm run purge && npm install"
+  },
+  "dependencies": {
+    "@bcgov/bc-sans": "^1.0.1",
+    "@dsb-norge/vue-keycloak-js": "^1.1.2",
+    "axios": "^0.19.2",
+    "core-js": "^3.6.4",
+    "cryptico-js": "^1.1.0",
+    "nprogress": "^0.2.0",
+    "validator": "^13.0.0",
+    "vue": "^2.6.11",
+    "vue-clipboard2": "^0.3.1",
+    "vue-router": "^3.1.6",
+    "vuetify": "^2.2.19",
+    "vuex": "^3.1.3"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.2.3",
+    "@vue/cli-plugin-eslint": "^4.2.3",
+    "@vue/cli-plugin-router": "^4.2.3",
+    "@vue/cli-plugin-unit-jest": "^4.2.3",
+    "@vue/cli-plugin-vuex": "^4.2.3",
+    "@vue/cli-service": "^4.2.3",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "@vue/test-utils": "1.0.0-beta.31",
+    "axios-mock-adapter": "^1.18.1",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-vue": "^6.2.2",
+    "eslint-plugin-vuetify": "^1.0.0-beta.6",
+    "jest-sonar-reporter": "^2.0.0",
+    "node-sass": "^4.12.0",
+    "prettier": "^2.0.2",
+    "sass": "^1.26.3",
+    "sass-loader": "^8.0.2",
+    "vue-cli-plugin-vuetify": "^2.0.5",
+    "vue-template-compiler": "^2.6.11",
+    "vuetify-loader": "^1.3.0"
+  },
+  "jestSonar": {
+    "reportPath": "coverage"
+  }
+}

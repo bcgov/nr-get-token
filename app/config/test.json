@@ -1,0 +1,46 @@
+{
+  "db": {
+    "username": "username",
+    "password": "password"
+  },
+  "server": {
+    "keycloak": {
+      "clientSecret": "password"
+    },
+    "logLevel": "silent"
+  },
+  "serviceClient": {
+    "ches": {
+      "username": "username",
+      "password": "password"
+    },
+    "keycloak": {
+      "dev": {
+        "username": "username",
+        "password": "password"
+      },
+      "test": {
+        "username": "username",
+        "password": "password"
+      },
+      "prod": {
+        "username": "username",
+        "password": "password"
+      }
+    },
+    "webAde": {
+      "int": {
+        "username": "username",
+        "password": "password"
+      },
+      "test": {
+        "username": "username",
+        "password": "password"
+      },
+      "prod": {
+        "username": "username",
+        "password": "password"
+      }
+    }
+  }
+}

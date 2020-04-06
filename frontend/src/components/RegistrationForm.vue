@@ -96,8 +96,8 @@
           </v-form>
         </v-card-text>
         <v-card-actions class="justify-center pb-8">
-          <v-btn class="BC-Gov-PrimaryButton light" text @click="cancel()">Cancel</v-btn>
-          <v-btn class="BC-Gov-PrimaryButton" text @click="postRegistrationForm()">Submit</v-btn>
+          <v-btn outlined @click="cancel()">Cancel</v-btn>
+          <v-btn color="primary" depressed @click="postRegistrationForm()">Submit</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

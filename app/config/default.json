@@ -1,0 +1,59 @@
+{
+  "db": {
+    "database": "getok",
+    "host": "localhost"
+  },
+  "frontend": {
+    "apiPath": "api/v1",
+    "basePath" : "/app",
+    "keycloak": {
+      "clientId": "getok-frontend",
+      "realm": "vehizw2t",
+      "serverUrl": "https://sso-dev.pathfinder.gov.bc.ca/auth"
+    }
+  },
+  "server": {
+    "apiPath": "/api/v1",
+    "basePath" : "/app",
+    "bodyLimit": "30mb",
+    "keycloak": {
+      "clientId": "getok",
+      "realm": "vehizw2t",
+      "serverUrl": "https://sso-dev.pathfinder.gov.bc.ca/auth"
+    },
+    "logLevel": "debug",
+    "morganFormat": "combined",
+    "port": "8080"
+  },
+  "serviceClient": {
+    "ches": {
+      "apiEndpoint": "https://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api",
+      "tokenEndpoint": "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token"
+    },
+    "keycloak": {
+      "dev": {
+        "endpoint": "https://sso-dev.pathfinder.gov.bc.ca",
+        "realm": "jbd6rnxw"
+      },
+      "test": {
+        "endpoint": "https://sso-test.pathfinder.gov.bc.ca",
+        "realm": "jbd6rnxw"
+      },
+      "prod": {
+        "endpoint": "https://sso.pathfinder.gov.bc.ca",
+        "realm": "jbd6rnxw"
+      }
+    },
+    "webAde": {
+      "int": {
+        "endpoint": "https://i1api.nrs.gov.bc.ca/webade-api/v1"
+      },
+      "test": {
+        "endpoint": "https://t1api.nrs.gov.bc.ca/webade-api/v1"
+      },
+      "prod": {
+        "endpoint": "https://api.nrs.gov.bc.ca/webade-api/v1"
+      }
+    }
+  }
+}

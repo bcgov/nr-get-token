@@ -1,0 +1,38 @@
+[
+  {
+    "keycloakGuid": "k1",
+    "userAcronym": {
+      "userAcronymId": "a",
+      "owner": false,
+      "createdAt": "2020-03-17T20:53:06.565Z",
+      "updatedAt": "2020-03-17T20:53:06.565Z",
+      "deletedAt": null,
+      "acronymId": "ccbb8b92-4a64-4c32-abb4-8cf5f15d7843",
+      "userId": "1"
+    }
+  },
+  {
+    "keycloakGuid": "k-not-there",
+    "userAcronym": {
+      "userAcronymId": "b",
+      "owner": false,
+      "createdAt": "2020-03-30T04:33:59.375Z",
+      "updatedAt": "2020-03-30T04:33:59.375Z",
+      "deletedAt": null,
+      "acronymId": "ccbb8b92-4a64-4c32-abb4-8cf5f15d7843",
+      "userId": "2"
+    }
+  },
+  {
+    "keycloakGuid": "k2",
+    "userAcronym": {
+      "userAcronymId": "c",
+      "owner": false,
+      "createdAt": "2020-03-30T04:33:59.375Z",
+      "updatedAt": "2020-03-30T04:33:59.375Z",
+      "deletedAt": null,
+      "acronymId": "ccbb8b92-4a64-4c32-abb4-8cf5f15d7843",
+      "userId": "3"
+    }
+  }
+]

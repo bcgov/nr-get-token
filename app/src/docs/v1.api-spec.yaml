@@ -1,0 +1,1306 @@
+---
+openapi: 3.0.2
+info:
+  version: 1.0.0
+  title: GetOK API
+  description: >-
+    This API automates the process for getting setup to use common services
+    published on https://apistore.nrs.gov.bc.ca/store/
+  license:
+    name: Apache 2.0
+    url: "https://www.apache.org/licenses/LICENSE-2.0.html"
+  contact:
+    name: NR Common Service Showcase
+    email: NR.CommonServiceShowcase@gov.bc.ca
+servers:
+  - url: /api/v1
+    description: This Server
+security:
+  - bearerAuth: []
+  - OpenID: []
+paths:
+  "/acronyms/{acronym}":
+    get:
+      summary: Returns the details that GETOK stores about an application acronym
+      operationId: getAcronym
+      tags:
+        - Acronyms
+      parameters:
+        - name: acronym
+          in: path
+          description: Name of the project
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Acronym details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AcronymDetail"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/acronyms/{acronym}/clients":
+    get:
+      summary: Returns all YAMS (Common Service KeyCloak realm) service clients that the supplied acronym has.
+      operationId: getAcronymClients
+      tags:
+        - Acronyms
+      parameters:
+        - name: acronym
+          in: path
+          description: Name of the project
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Acronym clients (Dev, Test, and Prod)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AcronymClients"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/audit/{acronym}":
+    get:
+      summary: >-
+        Returns the history that GETOK stores about actions done on behalf of an
+        acronym
+      operationId: getAudit
+      tags:
+        - Audit
+      parameters:
+        - name: acronym
+          in: path
+          description: Name of the project
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Audit history details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuditHistoryList"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/acronyms/{acronym}/users":
+    get:
+      summary: Returns all Users from the GETOK database associated with the acronym with their user data from Keycloak
+      operationId: getAcronymUsers
+      tags:
+        - Acronyms
+      parameters:
+        - name: acronym
+          in: path
+          description: Name of the project
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AcronymUsersList"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /checks/status:
+    get:
+      summary: Returns status of correspondent APIs
+      description: Fetch the health statuses of associated endpoints
+      operationId: checkStatus
+      tags:
+        - Checks
+      responses:
+        "200":
+          description: Responds if the correspondent API endpoint(s) are healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EndpointList"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /email:
+    post:
+      summary: Sends an application registration request email
+      description: Leverages the CHES API to issue an email
+      operationId: email
+      tags:
+        - Email
+      requestBody:
+        description: Form fields representing the contact information to email
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactForm"
+      responses:
+        "201":
+          description: Email Successfully Sent
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/keycloak/serviceClients":
+    get:
+      summary: Returns all registered service clients
+      operationId: kcServiceClientsGet
+      tags:
+        - KeyCloak Service Clients
+      responses:
+        "200":
+          description: Returns an array of the registered service clients
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KcClients"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /keyCloak/configForm:
+    post:
+      summary: Submit a proposed application to KeyCloak
+      operationId: kcConfigFormPost
+      tags:
+        - KeyCloak Service Client Configuration
+      requestBody:
+        description: Form fields required to generate a KeyCloak Service Client
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KcConfigForm"
+      responses:
+        "200":
+          description: Service Client Credentials and Endpoint information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KcConfigResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/users/{keycloakId}/acronyms":
+    get:
+      summary: Returns acronyms associated with a user
+      operationId: userAcronymGet
+      tags:
+        - Users
+      parameters:
+        - name: keycloakId
+          in: path
+          description: Keycloak user UUID
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of associated acronyms
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserAcronymList"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/users/{keycloakId}/acronyms/{acronym}":
+    delete:
+      summary: Removes an acronym associated with a user
+      operationId: userAcronymDelete
+      tags:
+        - Users
+      parameters:
+        - name: keycloakId
+          in: path
+          description: Keycloak user UUID
+          required: true
+          schema:
+            type: string
+        - name: acronym
+          in: path
+          description: Acronym
+          required: true
+          schema:
+            type: string
+      responses:
+        "202":
+          $ref: "#/components/responses/Accepted"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/users/{keycloakId}/acronyms/clients":
+    get:
+      summary: Returns service clients for all realms for all acronyms associated with a user
+      operationId: userAcronymClientGet
+      tags:
+        - Users
+      parameters:
+        - name: keycloakId
+          in: path
+          description: Keycloak user UUID
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of associated acronyms' clients
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AcronymClientsList"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/webAde/{webAdeEnv}/{acronym}/appConfig/":
+    get:
+      summary: >-
+        Returns WebADE JSON response for the specified acronym in the specified
+        environment
+      operationId: appConfigGetAcronym
+      tags:
+        - WebADE Application Configuration
+      parameters:
+        - name: acronym
+          in: path
+          description: Name of the project
+          required: true
+          schema:
+            type: string
+        - name: webAdeEnv
+          in: path
+          description: The ISSS WebADE environment
+          required: true
+          schema:
+            type: string
+            enum:
+              - INT
+              - TEST
+              - PROD
+      responses:
+        "200":
+          description: WebADE JSON response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppConfig"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/webAde/{webAdeEnv}/{acronym}/dependencies/":
+    get:
+      summary: Returns a list of other WebADE acronyms that reference the one supplied
+      operationId: getDependencies
+      tags:
+        - WebADE Application Configuration
+      parameters:
+        - name: acronym
+          in: path
+          description: Name of the project
+          required: true
+          schema:
+            type: string
+        - name: webAdeEnv
+          in: path
+          description: The ISSS WebADE environment
+          required: true
+          schema:
+            type: string
+            enum:
+              - INT
+              - TEST
+              - PROD
+      responses:
+        "200":
+          description: WebADE JSON response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DependencyList"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/webAde/{webAdeEnv}/preferences/insecurePrefs":
+    get:
+      summary: >-
+        Returns a list of all WebADE applicationPreferences that have the
+        sensitiveDataInd set to false matching the search criteria regular
+        expression
+      operationId: getInsecurePrefs
+      tags:
+        - WebADE Application Configuration
+      parameters:
+        - name: webAdeEnv
+          in: path
+          description: The ISSS WebADE environment
+          required: true
+          schema:
+            type: string
+            enum:
+              - INT
+              - TEST
+              - PROD
+        - name: searchCriteria
+          in: query
+          required: true
+          schema:
+            type: string
+            example: secret
+          description: >-
+            A regular expression that will find preferences matching on their
+            name
+      responses:
+        "200":
+          description: WebADE JSON response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsecurePrefList"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/webAde/{webAdeEnv}/appConfigs/":
+    get:
+      summary: Returns WebADE JSON response for all acronyms
+      operationId: appConfigGetAll
+      tags:
+        - WebADE Application Configuration
+      parameters:
+        - name: webAdeEnv
+          in: path
+          description: The ISSS WebADE environment
+          required: true
+          schema:
+            type: string
+            enum:
+              - INT
+              - TEST
+              - PROD
+      responses:
+        "200":
+          description: Array of WebADE JSONs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppConfigList"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /webade/appConfigForm:
+    post:
+      summary: Submit a proposed application
+      operationId: appConfigFormPost
+      tags:
+        - WebADE Application Configuration
+      requestBody:
+        description: Form fields required to generate a minimal Application Configuration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppConfigForm"
+      responses:
+        "200":
+          description: WebADE JSON response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppConfigResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    OpenID:
+      type: openIdConnect
+      openIdConnectUrl: "https://example.com/.well-known/openid-configuration"
+  schemas:
+    AuditHistoryList:
+      type: array
+      items:
+        $ref: "#/components/schemas/AuditHistory"
+      description: An array of audit history items
+    AuditHistory:
+      type: object
+      properties:
+        date:
+          type: string
+          example: 2019-08-22T18:43:07.393Z
+        acronym:
+          type: string
+          example: MSSC
+        user:
+          type: string
+          example: jsmith@idir
+        environment:
+          type: string
+          example: DEV
+        details:
+          type: string
+          example: "details string/object, subject to change"
+    AcronymClients:
+      type: object
+      properties:
+        acronym:
+          type: string
+          example: MSSC
+        dev:
+          $ref: "#/components/schemas/KcClientDetail"
+        test:
+          $ref: "#/components/schemas/KcClientDetail"
+        prod:
+          $ref: "#/components/schemas/KcClientDetail"
+    AcronymClientsList:
+      type: array
+      items:
+        $ref: "#/components/schemas/AcronymClients"
+    AcronymDetail:
+      type: object
+      properties:
+        acronym:
+          type: string
+          example: MSSC
+        description:
+          type: string
+          example: This application sends emails for the common service team
+        name:
+          type: string
+          example: Messaging Service Showcase
+        permissionWebade:
+          type: boolean
+          example: true
+        permissionWebadeNrosDms:
+          type: boolean
+          example: false
+    AcronymUsersList:
+      type: array
+      items:
+        $ref: "#/components/schemas/AcronymUserMapping"
+    AcronymUserMapping:
+      type: object
+      properties:
+        userAcronymDetails:
+            $ref: "#/components/schemas/UserAcronymDetail"
+        user:
+            $ref: "#/components/schemas/User"
+    AppConfig:
+      type: object
+      properties:
+        "@type":
+          type: string
+          example: "http://webade.gov.bc.ca/applicationConfiguration"
+        applicationAcronym:
+          type: string
+          example: MSSC
+        custodianNumber:
+          type: integer
+          minimum: 0
+        applicationName:
+          type: string
+          example: Application Name
+        applicationDescription:
+          type: string
+          example: Application Description
+        applicationObjectPrefix:
+          type: string
+          example: null
+        enabledInd:
+          type: boolean
+          example: true
+        distributeTypeCd:
+          type: string
+          example: null
+        managementEnabledInd:
+          type: boolean
+          example: false
+        applicationVersion:
+          type: string
+          example: null
+        reportedWebadeVersion:
+          type: string
+          example: null
+        actions:
+          type: array
+          items:
+            type: object
+          example: []
+        roles:
+          type: array
+          items:
+            type: object
+          example: []
+        wdePreferences:
+          type: array
+          items:
+            type: object
+          example: []
+        applicationPreferences:
+          type: array
+          items:
+            type: object
+          example: []
+        globalPreferences:
+          type: array
+          items:
+            type: object
+          example: []
+        defaultUserPreferences:
+          type: array
+          items:
+            type: object
+          example: []
+        profiles:
+          type: array
+          items:
+            type: object
+          example: []
+        serviceClients:
+          type: array
+          items:
+            type: object
+          example: []
+        groupAuthorizations:
+          type: array
+          items:
+            type: object
+          example: []
+    AppConfigForm:
+      type: object
+      required:
+        - applicationAcronym
+        - applicationName
+        - applicationDescription
+        - clientEnvironment
+        - commonServices
+        - passwordPublicKey
+      properties:
+        applicationAcronym:
+          type: string
+          example: MSSC
+        applicationName:
+          type: string
+          example: Application Name
+        applicationDescription:
+          type: string
+          example: Application Description
+        commonServices:
+          type: array
+          items:
+            type: string
+            example: cmsg
+          description: An array of applicationAcronyms
+        passwordPublicKey:
+          type: string
+          description: A public key in PEM format without the headers
+          example: MIGfMA0GCSqGS...
+        clientEnvironment:
+          type: string
+          enum:
+            - INT
+            - TEST
+            - PROD
+          description: Which WebADE environment to work on
+          example: INT
+    AppConfigList:
+      type: array
+      items:
+        $ref: "#/components/schemas/AppConfig"
+      description: A list of Application Configurations
+    AppConfigResponse:
+      required:
+        - webAdeResponse
+        - generatedPassword
+        - generatedServiceClient
+      properties:
+        webAdeResponse:
+          $ref: "#/components/schemas/AppConfig"
+        generatedPassword:
+          type: string
+          description: >-
+            Contains the generated password, encrypted with the user-supplied
+            public key
+          example: ABC123XYZ
+        generatedServiceClient:
+          type: string
+          description: Contains the service client name that was written to WebADE
+          example: DOMO_SERVICE_CLIENT
+    BadRequest:
+      allOf:
+        - $ref: "#/components/schemas/Problem"
+        - type: object
+          properties:
+            status:
+              example: 400
+            title:
+              example: Bad Request
+            type:
+              example: "https://httpstatuses.com/400"
+    Conflict:
+      allOf:
+        - $ref: "#/components/schemas/Problem"
+        - type: object
+          properties:
+            status:
+              example: 409
+            title:
+              example: Conflict
+            type:
+              example: "https://httpstatuses.com/409"
+    ContactForm:
+      type: object
+      required:
+        - applicationAcronym
+        - comments
+        - from
+        - idir
+      properties:
+        applicationAcronym:
+          type: string
+          description: The requested application acronym
+          example: MSSC
+        comments:
+          type: string
+          description: Unformatted comment text
+          example: My team has 10 members
+        from:
+          type: string
+          description: The sender's registered email
+          example: jsmith@gov.bc.ca
+        idir:
+          type: string
+          description: The sender's IDIR
+          example: jsmith@idir
+    DependencyList:
+      type: array
+      items:
+        $ref: "#/components/schemas/WebAdeProject"
+      description: A list of dependent webade projects
+    InsecurePrefList:
+      type: array
+      items:
+        $ref: "#/components/schemas/WebAdePreferenceList"
+      description: A list of webade projects and the list preference names
+    EndpointStatus:
+      type: object
+      required:
+        - name
+        - endpoint
+        - healthCheck
+        - authenticated
+        - authorized
+      properties:
+        name:
+          type: string
+          description: The name of the endpoint
+          example: WebADE API
+        endpoint:
+          type: string
+          description: Base endpoint URL
+          example: "https://example.com/v1/"
+        healthCheck:
+          type: boolean
+          description: Is the endpoint reachable
+        authenticated:
+          type: boolean
+          description: Are credentials valid to access endpoint
+        authorized:
+          type: boolean
+          description: Do the credentials have the right permissions
+    EndpointList:
+      type: object
+      required:
+        - endpoints
+      properties:
+        endpoints:
+          type: array
+          items:
+            $ref: "#/components/schemas/EndpointStatus"
+          description: A list of Endpoint Statuses
+    Error:
+      allOf:
+        - $ref: "#/components/schemas/Problem"
+        - type: object
+          properties:
+            status:
+              example: 500
+            title:
+              example: Internal Server Error
+            type:
+              example: "https://httpstatuses.com/500"
+    KcClientDetail:
+      type: object
+      required:
+        - environment
+        - id
+        - clientId
+        - enabled
+        - name
+        - description
+        - commonServiceRoles
+      properties:
+        environment:
+          type: string
+          enum:
+            - DEV
+            - TEST
+            - PROD
+          description: >-
+            Which KeyCloak environment the client is in - one of DEV, TEST or
+            PROD
+          example: TEST
+        id:
+          type: string
+          example: d288f328-3d0e-4bd0-8d89-8beccdace260
+        clientId:
+          type: string
+          example: ZZZZ_SERVICE_CLIENT
+        enabled:
+          type: boolean
+          example: true
+        name:
+          type: string
+          example: ZZZ Application
+        description:
+          type: string
+          example: This application does some work
+        serviceAccountEmail:
+          type: string
+          example: bob.alice@gov.bc.ca
+        commonServiceRoles:
+          type: array
+          items:
+            $ref: "#/components/schemas/Role"
+          description: An array of Common Service roles the client currently has
+    KcClientDetailFull:
+      type: object
+      description: "Keycloak's representation of a client. see: https://www.keycloak.org/docs-api/5.0/rest-api/index.html#_clientrepresentation"
+      properties:
+        access:
+          type: object
+          example: { view: true, configure: true, manage: true }
+        attributes:
+          type: object
+          example:
+            saml.assertion.signature: 'false'
+            saml.multivalued.roles: 'false'
+            saml.force.post.binding: 'false'
+            saml.encrypt: 'false'
+            saml.server.signature: 'false'
+            saml.server.signature.keyinfo.ext: 'false'
+            exclude.session.state.from.auth.response: 'false'
+            saml_force_name_id_format: 'false'
+            saml.client.signature: 'false'
+            tls.client.certificate.bound.access.tokens: 'false'
+            saml.authnstatement: 'false'
+            display.on.consent.screen: 'false'
+            saml.onetimeuse.condition: 'false'
+        authenticationFlowBindingOverrides:
+          type: object
+        authorizationServicesEnabled:
+          type: boolean
+        bearerOnly:
+          type: boolean
+        clientAuthenticatorType:
+          type: string
+          example: client-secret
+        clientId:
+          type: string
+          example: TEST_SERVICE_CLIENT
+        consentRequired:
+          type: boolean
+        defaultClientScopes:
+          type: string
+        description:
+          type: string
+          example: Test Service Client
+        directAccessGrantsEnabled:
+          type: boolean
+        enabled:
+          type: boolean
+        environment:
+          type: string
+          example: test
+        frontchannelLogout:
+          type: boolean
+        fullScopeAllowed:
+          type: boolean
+        id:
+          type: string
+          example: 12345-abcde-67890-fghijk
+        implicitFlowEnabled:
+          type: boolean
+        name:
+          type: string
+          example: TEST
+        nodeReRegistrationTimeout:
+          type: integer
+          example: -1
+        notBefore:
+          type: integer
+        optionalClientScopes:
+          type: string
+        protocol:
+          type: string
+          example: 'openid-connect'
+        protocolMappers:
+          type: array
+          items:
+            type: string
+        publicClient:
+          type: boolean
+        redirectUris:
+          type: string
+        serviceAccountsEnabled:
+          type: boolean
+        standardFlowEnabled:
+          type: boolean
+        surrogateAuthRequired:
+          type: boolean
+        webOrigins:
+          type: string
+    KcClients:
+      type: array
+      items:
+        $ref: "#/components/schemas/KcClientDetailFull"
+      description: An array of registered service clients
+    KcConfigForm:
+      type: object
+      required:
+        - applicationAcronym
+        - applicationName
+        - applicationDescription
+        - commonServices
+        - clientEnvironment
+        - passwordPublicKey
+      properties:
+        applicationAcronym:
+          type: string
+          example: MSSC
+        applicationName:
+          type: string
+          example: Application Name
+        applicationDescription:
+          type: string
+          example: Application Description
+        clientEnvironment:
+          type: string
+          enum:
+            - DEV
+            - TEST
+            - PROD
+          description: "Which KeyCloak environment to work on - one of DEV, TEST or PROD"
+          example: INT
+        commonServices:
+          type: array
+          items:
+            type: string
+            example: CHES
+          description: An array of applicationAcronyms
+        passwordPublicKey:
+          type: string
+          description: A public key in PEM format without the headers
+          example: MIGfMA0GCSqGS...
+    KcConfigResponse:
+      required:
+        - oidcTokenUrl
+        - generatedPassword
+        - generatedServiceClient
+      properties:
+        oidcTokenUrl:
+          type: string
+          description: >-
+            Contains the OpenID Connect token url for the generated Service
+            Client to get authenticated
+          example: ABC123XYZ
+        generatedPassword:
+          type: string
+          description: >-
+            Contains the generated password, encrypted with the user-supplied
+            public key
+          example: ABC123XYZ
+        generatedServiceClient:
+          type: string
+          description: Contains the service client name that was written to WebADE
+          example: CHES_SERVICE_CLIENT
+    NotFound:
+      allOf:
+        - $ref: "#/components/schemas/Problem"
+        - type: object
+          properties:
+            status:
+              example: 404
+            title:
+              example: Not Found
+            type:
+              example: "https://httpstatuses.com/404"
+    Problem:
+      required:
+        - type
+        - title
+        - status
+        - detail
+      properties:
+        type:
+          type: string
+          description: "What type of problem, link to explanation of problem"
+        title:
+          type: string
+          description: "Title of problem, generally the Http Status Code description"
+        status:
+          type: string
+          description: The Http Status code
+        detail:
+          type: string
+          description: Short description of why this problem was raised.
+    Role:
+      type: object
+      required:
+        - roleName
+        - description
+      properties:
+        roleName:
+          type: string
+          example: EMAILER
+        description:
+          type: string
+          example: This role allows email sending via CHES
+    UserAcronymList:
+      type: array
+      items:
+        $ref: "#/components/schemas/UserAcronymDetail"
+      description: An array of acronym detail items
+    UserAcronymDetail:
+      type: object
+      properties:
+        acronym:
+          type: string
+          description: The application acronym
+          example: MSSC
+        owner:
+          type: boolean
+          description: User is an owner of this acronym
+          example: false
+        createdAt:
+          type: string
+          description: The datestamp the user->acronym mapping was created
+          example: "2019-08-22T18:43:07.393Z"
+    User:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: Primary key from the user table
+          example: cc745445-e221-4a9a-8758-2d7d20c1decf
+        keycloakGuid:
+          type: string
+          description: Identifier for the user in KC
+          example: 5b5d0a2f-93a0-4c18-9d70-753648b8e7b9
+        username:
+          type: string 
+          description: Username from KC
+          example: jsmith@idir
+        firstName:
+          type: string
+          description: First name from KC
+          example: John
+        lastName:
+          type: string
+          description: Last name from KC
+          example: Smith
+        email:
+          type: string
+          description: Email from KC
+          example: jsmith@gov.bc.ca
+    ValidationError:
+      allOf:
+        - $ref: "#/components/schemas/Problem"
+        - type: object
+          required:
+            - errors
+          properties:
+            errors:
+              type: array
+              items:
+                type: object
+                required:
+                  - message
+                properties:
+                  value:
+                    type: object
+                    description: Contents of the field that was in error.
+                    example: utf-8x
+                  message:
+                    type: string
+                    description: The error message for the field.
+                    example: Invalid value `encoding`.
+            status:
+              example: 422
+            title:
+              example: Unprocessable Entity
+            type:
+              example: "https://httpstatuses.com/422"
+    WebAdeProject:
+      type: object
+      required:
+        - applicationAcronym
+        - applicationName
+        - applicationDescription
+        - enabled
+      properties:
+        applicationAcronym:
+          type: string
+          example: MSSC
+        applicationName:
+          type: string
+          example: Application Name
+        applicationDescription:
+          type: string
+          example: Application Description
+        enabled:
+          type: boolean
+          example: true
+      description: "A WebADE project acronym, name, and description"
+    WebAdePreferenceList:
+      type: object
+      required:
+        - applicationAcronym
+        - applicationName
+        - applicationDescription
+        - preferences
+      properties:
+        applicationAcronym:
+          type: string
+          example: MSSC
+        applicationName:
+          type: string
+          example: Application Name
+        applicationDescription:
+          type: string
+          example: Application Description
+        preferences:
+          type: array
+          items:
+            $ref: "#/components/schemas/WebadePreference"
+      description: A WebADE project and a list of associated preferences
+    WebadePreference:
+      type: object
+      required:
+        - dataTypeCode
+        - description
+        - name
+        - sensitiveDataInd
+        - setName
+        - subTypeCode
+        - value
+      properties:
+        dataTypeCode:
+          type: string
+          example: STRING
+        description:
+          type: string
+          example: description of preference
+        name:
+          type: string
+          example: posse.token.service.url
+        sensitiveDataInd:
+          type: boolean
+          example: false
+        setName:
+          type: string
+          example: aqua
+        subTypeCode:
+          type: string
+          example: bootstrap-config
+        value:
+          type: string
+          example: "https://j200.gov.bc.ca/ws/NrsServices/session"
+      description: A WebADE preference object
+  responses:
+    Accepted:
+      description: Accepted
+    BadRequest:
+      description: Request is missing content or is malformed
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BadRequest"
+    Conflict:
+      description: Request conflicts with server state
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Conflict"
+    Error:
+      description: Unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Forbidden:
+      description: Lack required role to perform action
+    NoContent:
+      description: Accepted and no content
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/NotFound"
+    UnauthorizedError:
+      description: Access token is missing or invalid
+    UnprocessableEntity:
+      description: >-
+        The server was unable to process the contained instructions. Generally
+        validation error(s).
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ValidationError"

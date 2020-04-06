@@ -1,0 +1,32 @@
+[
+  {
+    "userAcronymDetails": {
+      "acronym": "XXX",
+      "owner": false,
+      "createdAt": "2020-03-17T20:53:06.565Z"
+    },
+    "user": {
+      "userId": "6e9a5e7c-ee38-4433-af14-9f920eb1593a",
+      "keycloakGuid": "4b5d0a2f-63a0-4c18-9d70-753648b8e7a9",
+      "username": "lneil@idir",
+      "firstName": "Luke",
+      "lastName": "Neil",
+      "email": "Luke.Neil@gov.bc.ca"
+    }
+  },
+  {
+    "userAcronymDetails": {
+      "acronym": "XXX",
+      "owner": false,
+      "createdAt": "2020-03-30T04:33:59.375Z"
+    },
+    "user": {
+      "userId": "dc745445-e221-4a9a-8748-2d7d20c1decd",
+      "keycloakGuid": "463e8a71-8bdd-49fb-9a35-e9a8827bab05",
+      "username": "tcat@idir",
+      "firstName": "Todd",
+      "lastName": "Cat",
+      "email": "tcat@gmail.com"
+    }
+  }
+]

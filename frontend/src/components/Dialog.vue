@@ -17,7 +17,7 @@
         </v-card-text>
       </div>
       <v-card-actions class="justify-center">
-        <v-btn class="BC-Gov-PrimaryButton mb-5" text @click="closeDialog">
+        <v-btn class="mb-5" color="primary" depressed @click="closeDialog">
           <slot name="button-text">OK</slot>
         </v-btn>
       </v-card-actions>

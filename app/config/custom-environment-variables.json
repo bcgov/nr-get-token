@@ -1,0 +1,76 @@
+{
+  "db": {
+    "database": "DB_DATABASE",
+    "host": "DB_HOST",
+    "username": "DB_USERNAME",
+    "password": "DB_PASSWORD"
+  },
+  "frontend": {
+    "apiPath": "FRONTEND_APIPATH",
+    "basePath": "FRONTEND_BASEPATH",
+    "keycloak": {
+      "clientId": "FRONTEND_KC_CLIENTID",
+      "realm": "FRONTEND_KC_REALM",
+      "serverUrl": "FRONTEND_KC_SERVERURL"
+    }
+  },
+  "server": {
+    "apiPath": "SERVER_APIPATH",
+    "basePath" : "SERVER_BASEPATH",
+    "bodyLimit": "SERVER_BODYLIMIT",
+    "keycloak": {
+      "clientId": "SERVER_KC_CLIENTID",
+      "clientSecret": "SERVER_KC_CLIENTSECRET",
+      "realm": "SERVER_KC_REALM",
+      "serverUrl": "SERVER_KC_SERVERURL"
+    },
+    "logLevel": "SERVER_LOGLEVEL",
+    "morganFormat": "SERVER_MORGANFORMAT",
+    "port": "SERVER_PORT"
+  },
+  "serviceClient": {
+    "ches": {
+      "apiEndpoint": "SC_CHES_API_ENDPOINT",
+      "tokenEndpoint": "SC_CHES_TOKEN_ENDPOINT",
+      "username": "SC_CHES_USERNAME",
+      "password": "SC_CHES_PASSWORD"
+    },
+    "keycloak": {
+      "dev": {
+        "endpoint": "SC_KC_DEV_ENDPOINT",
+        "username": "SC_KC_DEV_USERNAME",
+        "password": "SC_KC_DEV_PASSWORD",
+        "realm": "SC_KC_DEV_REALM"
+      },
+      "test": {
+        "endpoint": "SC_KC_TEST_ENDPOINT",
+        "username": "SC_KC_TEST_USERNAME",
+        "password": "SC_KC_TEST_PASSWORD",
+        "realm": "SC_KC_TEST_REALM"
+      },
+      "prod": {
+        "endpoint": "SC_KC_PROD_ENDPOINT",
+        "username": "SC_KC_PROD_USERNAME",
+        "password": "SC_KC_PROD_PASSWORD",
+        "realm": "SC_KC_PROD_REALM"
+      }
+    },
+    "webAde": {
+      "int": {
+        "endpoint": "SC_WEBADE_INT_ENDPOINT",
+        "username": "SC_WEBADE_INT_USERNAME",
+        "password": "SC_WEBADE_INT_PASSWORD"
+      },
+      "test": {
+        "endpoint": "SC_WEBADE_TEST_ENDPOINT",
+        "username": "SC_WEBADE_TEST_USERNAME",
+        "password": "SC_WEBADE_TEST_PASSWORD"
+      },
+      "prod": {
+        "endpoint": "SC_WEBADE_PROD_ENDPOINT",
+        "username": "SC_WEBADE_PROD_USERNAME",
+        "password": "SC_WEBADE_PROD_PASSWORD"
+      }
+    }
+  }
+}

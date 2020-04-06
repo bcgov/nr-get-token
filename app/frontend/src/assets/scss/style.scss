@@ -1,0 +1,76 @@
+/*
+ * BCGov Style
+ * This globally extends the base Vuetify style
+ */
+
+// Sticky Footer
+body {
+  display: flex;
+  flex-direction: column;
+  & > .v-content {
+    flex: 1 0 auto;
+  }
+}
+
+// Typography
+.v-application {
+  font-family: -apple-system, BlinkMacSystemFont, BCSans, Roboto, Verdana, Arial, sans-serif !important;
+  line-height: 1.5;
+}
+
+h1 { font-size: 2.074em; /* (37.32px) */ }
+h2 { font-size: 1.728em; /* (31.10px) */ }
+h3 { font-size: 1.444em; /* (25.92px) */ }
+h4 { font-size: 1.2em; /* (21.60px) */ }
+
+h1, h2, h3, h4, h5 {
+  color: #494949;
+  line-height: 1.2;
+}
+
+p {
+  color: #494949;
+  line-height: 1.6;
+}
+
+// Anchor and Tab Behavior
+a, .v-tab {
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+    button {
+      display: inline-block;
+      text-decoration: none;
+    }
+  }
+}
+
+// General Button Style Extensions
+.v-btn {
+  span > span {
+    font-weight: bold;
+  }
+
+  &:hover {
+    opacity: 0.8;
+    span > span {
+      text-decoration: underline;
+    }
+  }
+
+  &.v-btn--disabled {
+    background-color: #eee;
+    color: #777;
+  }
+
+  &.v-btn--outlined {
+    &.theme--light {
+      border: 2px solid #003366;
+    }
+
+    &.theme--dark {
+      border: 2px solid #fff;
+    }
+  }
+}
+
