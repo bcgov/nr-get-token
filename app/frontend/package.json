@@ -17,7 +17,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test": "npm run test:unit",
-    "test:unit": "vue-cli-service test:unit --verbose",
+    "test:unit": "vue-cli-service test:unit --verbose --forceExit --detectOpenHandles --maxWorkers=10",
     "lint": "vue-cli-service lint",
     "lint:fix": "vue-cli-service lint --fix",
     "pretest": "npm run lint",

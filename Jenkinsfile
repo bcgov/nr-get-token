@@ -38,12 +38,12 @@ pipeline {
     SOURCE_REPO_REF = "${JOB_NAME}"
     SOURCE_REPO_URL = "https://github.com/${REPO_OWNER}/${REPO_NAME}.git"
 
-    // HOST_ROUTE is the full domain without the path (ie. 'appname-k8vopl-dev.pathfinder.gov.bc.ca/pr-5')
+    // ENV_HOST is the full domain without the path (ie. 'appname-dev.pathfinder.gov.bc.ca')
     DEV_HOST = "${APP_NAME}-dev.${APP_DOMAIN}"
     TEST_HOST = "${APP_NAME}-test.${APP_DOMAIN}"
     PROD_HOST = "${APP_NAME}.${APP_DOMAIN}"
-    // will be added to the HOST_ROUTE
-    PATH_ROOT = "/${JOB_NAME}"
+    // PATH_ROOT will be appended to ENV_HOST
+    PATH_ROOT = "/${JOB_NAME.equalsIgnoreCase('master') ? APP_NAME : JOB_NAME}"
 
     // SonarQube Endpoint URL
     SONARQUBE_URL_INT = 'http://sonarqube:9000'
@@ -161,50 +161,50 @@ pipeline {
       }
     }
 
-    // stage('Deploy - Test') {
-    //   agent any
-    //   steps {
-    //     script {
-    //       commonPipeline.runStageDeploy('Test', TEST_PROJECT, TEST_HOST, PATH_ROOT)
-    //     }
-    //   }
-    //   post {
-    //     success {
-    //       script {
-    //         commonPipeline.createDeploymentStatus(TEST_PROJECT, 'SUCCESS', JOB_NAME, TEST_HOST, PATH_ROOT)
-    //         commonPipeline.notifyStageStatus('Deploy - Test', 'SUCCESS')
-    //       }
-    //     }
-    //     unsuccessful {
-    //       script {
-    //         commonPipeline.createDeploymentStatus(TEST_PROJECT, 'FAILURE', JOB_NAME, TEST_HOST, PATH_ROOT)
-    //         commonPipeline.notifyStageStatus('Deploy - Test', 'FAILURE')
-    //       }
-    //     }
-    //   }
-    // }
+    stage('Deploy - Test') {
+      agent any
+      steps {
+        script {
+          commonPipeline.runStageDeploy('Test', TEST_PROJECT, TEST_HOST, PATH_ROOT)
+        }
+      }
+      post {
+        success {
+          script {
+            commonPipeline.createDeploymentStatus(TEST_PROJECT, 'SUCCESS', JOB_NAME, TEST_HOST, PATH_ROOT)
+            commonPipeline.notifyStageStatus('Deploy - Test', 'SUCCESS')
+          }
+        }
+        unsuccessful {
+          script {
+            commonPipeline.createDeploymentStatus(TEST_PROJECT, 'FAILURE', JOB_NAME, TEST_HOST, PATH_ROOT)
+            commonPipeline.notifyStageStatus('Deploy - Test', 'FAILURE')
+          }
+        }
+      }
+    }
 
-    // stage('Deploy - Prod') {
-    //   agent any
-    //   steps {
-    //     script {
-    //       commonPipeline.runStageDeploy('Prod', PROD_PROJECT, PROD_HOST, PATH_ROOT)
-    //     }
-    //   }
-    //   post {
-    //     success {
-    //       script {
-    //         commonPipeline.createDeploymentStatus(PROD_PROJECT, 'SUCCESS', JOB_NAME, PROD_HOST, PATH_ROOT)
-    //         commonPipeline.notifyStageStatus('Deploy - Prod', 'SUCCESS')
-    //       }
-    //     }
-    //     unsuccessful {
-    //       script {
-    //         commonPipeline.createDeploymentStatus(PROD_PROJECT, 'FAILURE', JOB_NAME, PROD_HOST, PATH_ROOT)
-    //         commonPipeline.notifyStageStatus('Deploy - Prod', 'FAILURE')
-    //       }
-    //     }
-    //   }
-    // }
+    stage('Deploy - Prod') {
+      agent any
+      steps {
+        script {
+          commonPipeline.runStageDeploy('Prod', PROD_PROJECT, PROD_HOST, PATH_ROOT)
+        }
+      }
+      post {
+        success {
+          script {
+            commonPipeline.createDeploymentStatus(PROD_PROJECT, 'SUCCESS', JOB_NAME, PROD_HOST, PATH_ROOT)
+            commonPipeline.notifyStageStatus('Deploy - Prod', 'SUCCESS')
+          }
+        }
+        unsuccessful {
+          script {
+            commonPipeline.createDeploymentStatus(PROD_PROJECT, 'FAILURE', JOB_NAME, PROD_HOST, PATH_ROOT)
+            commonPipeline.notifyStageStatus('Deploy - Prod', 'FAILURE')
+          }
+        }
+      }
+    }
   }
 }
