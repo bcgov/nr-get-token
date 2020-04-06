@@ -16,6 +16,6 @@ describe('Secure.vue', () => {
       stubs: ['BaseSecure', 'RequestForm']
     });
 
-    expect(wrapper.text()).toMatch('');
+    expect(wrapper.text()).toMatch('Request Account');
   });
 });

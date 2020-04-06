@@ -2,7 +2,7 @@
   <div>
     <v-tooltip top>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" color="primary" @click="jwtShow = true">
+        <v-btn color="primary" depressed v-on="on" @click="jwtShow = true">
           <v-icon left>mdi-ticket</v-icon>
           <span>JSON Web Token</span>
         </v-btn>
@@ -31,7 +31,9 @@
         </div>
         <strong v-else>No JWT Token.</strong>
       </template>
-      <template v-slot:button-text>Close</template>
+      <template v-slot:button-text>
+        <span>Close</span>
+      </template>
     </BaseDialog>
   </div>
 </template>

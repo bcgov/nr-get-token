@@ -1,6 +1,7 @@
 <template>
   <v-container class="request-account">
     <BaseSecure>
+      <h1 class="text-center my-8">Request Account</h1>
       <RequestForm />
     </BaseSecure>
   </v-container>

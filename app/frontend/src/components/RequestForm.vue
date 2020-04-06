@@ -1,16 +1,15 @@
 <template>
   <v-container class="request-form">
-    <h2 class="text-center mb-10">Request Account</h2>
-
     <p>Please submit the Acronym of the application you wish to add. You will get an email once it is confirmed.</p>
 
-    <v-form ref="form" v-model="valid" lazy-validation>
+    <v-form ref="form" v-model="valid">
       <v-row>
         <v-col>
           <label>IDIR</label>
           <v-text-field
             v-model="form.idir"
             dense
+            disabled
             hide-details="auto"
             outlined
             flat
@@ -26,6 +25,7 @@
           <v-text-field
             v-model="form.from"
             dense
+            disabled
             flat
             hide-details="auto"
             outlined
@@ -87,10 +87,23 @@
         </v-col>
       </v-row>
     </v-form>
-    <div class="justify-center pb-8">
-      <v-btn class="BC-Gov-PrimaryButton light float-left" text @click="cancel()">Cancel</v-btn>
-      <v-btn class="BC-Gov-PrimaryButton float-right" text @click="postRegistrationForm()">Submit</v-btn>
-    </div>
+
+    <v-row class="mt-8">
+      <v-col cols="6">
+        <v-btn class="mr-4" block outlined @click="cancel()">
+          <span>Cancel</span>
+        </v-btn>
+      </v-col>
+      <v-col cols="6">
+        <v-btn
+          color="primary"
+          block
+          depressed
+          :disabled="!valid"
+          @click="postRegistrationForm()"
+        >Submit</v-btn>
+      </v-col>
+    </v-row>
 
     <BaseDialog v-bind:show="errorOccurred" @close-dialog="errorOccurred = false">
       <template v-slot:icon>
@@ -159,7 +172,7 @@ export default {
     },
     postRegistrationForm() {
       this.resetState();
-      if (this.$refs.form.validate()) {
+      if (this.valid) {
         emailService
           .sendRegistrationEmail(this.form)
           .then(response => {
@@ -177,6 +190,7 @@ export default {
       this.form.comments = '';
       this.form.from = this.tokenParsed.email;
       this.form.idir = this.userName;
+      this.valid = false;
     },
     resetState() {
       this.errorOccurred = false;

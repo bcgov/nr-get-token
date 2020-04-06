@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <BaseSecure admin>
-      <h1 class="mb-10 text-center">Admin</h1>
+      <h1 class="my-8 text-center">Admin</h1>
       <v-container>
         <v-row>
           <HealthDialog class="mr-1" />

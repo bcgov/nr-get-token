@@ -25,7 +25,9 @@
             </ul>
           </v-col>
           <v-col cols="6">
-            <v-btn color="primary" block @click="nextStep(env.DEV)">Get Token for Dev</v-btn>
+            <v-btn color="primary" block depressed @click="nextStep(env.DEV)">
+              <span>Get Token for Dev</span>
+            </v-btn>
           </v-col>
           <v-col cols="6">
             <ul>
@@ -35,10 +37,13 @@
           <v-col cols="6">
             <v-btn
               color="primary"
-              :disabled="!clientStatus.dev"
               block
+              depressed
+              :disabled="!clientStatus.dev"
               @click="nextStep(env.TEST)"
-            >Get Token for Test</v-btn>
+            >
+              <span>Get Token for Test</span>
+            </v-btn>
           </v-col>
           <v-col cols="6">
             <ul>
@@ -47,11 +52,14 @@
           </v-col>
           <v-col cols="6">
             <v-btn
-              color="primary"
-              :disabled="!clientStatus.test"
+              class="primary"
               block
+              depressed
+              :disabled="!clientStatus.test"
               @click="nextStep(env.PROD)"
-            >Get Token for Prod</v-btn>
+            >
+              <span>Get Token for Prod</span>
+            </v-btn>
           </v-col>
         </v-row>
       </v-container>

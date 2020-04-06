@@ -37,6 +37,7 @@
           <v-text-field
             v-model="environment"
             dense
+            disabled
             hide-details="auto"
             outlined
             flat
@@ -49,10 +50,14 @@
 
     <v-row class="mt-12">
       <v-col cols="6">
-        <v-btn class="BC-Gov-PrimaryButton light mr-4" block text @click="setStep(1)">Back</v-btn>
+        <v-btn class="mr-4" block outlined @click="setStep(1)">
+          <span>Back</span>
+        </v-btn>
       </v-col>
       <v-col cols="6">
-        <v-btn class="BC-Gov-PrimaryButton" block text @click="submit">Submit</v-btn>
+        <v-btn color="primary" block depressed @click="submit">
+          <span>Submit</span>
+        </v-btn>
       </v-col>
     </v-row>
 
@@ -164,7 +169,7 @@ export default {
       }
 
       // To give the animation enough time to fade so it doesn't juke a little
-      setTimeout(() => this.submissionInProgress = false, 1000);
+      setTimeout(() => (this.submissionInProgress = false), 1000);
     }
   }
 };

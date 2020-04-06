@@ -39,7 +39,7 @@ describe('RequestForm.vue', () => {
       stubs: ['BaseDialog']
     });
 
-    expect(wrapper.text()).toContain('Request Account');
+    expect(wrapper.text()).toContain('Please submit the Acronym of the application you wish to add. You will get an email once it is confirmed.');
     expect(wrapper.vm.form.from).toMatch(email);
     expect(wrapper.vm.form.idir).toMatch(idir);
   });
@@ -63,11 +63,11 @@ describe('RequestForm.vue', () => {
       localVue,
       stubs: ['BaseDialog']
     });
-    wrapper.vm.$refs.form.validate = () => true;
+    wrapper.setData({ valid: true });
     await wrapper.vm.postRegistrationForm();
     await localVue.nextTick();
 
-    expect(wrapper.text()).toContain('Request Account');
+    expect(wrapper.text()).toContain('Please submit the Acronym of the application you wish to add. You will get an email once it is confirmed.');
     expect(wrapper.vm.errorOccurred).toBeFalsy();
     expect(wrapper.vm.registerSuccess).toBeTruthy();
     expect(sendRegEmailSpy).toHaveBeenCalledTimes(1);
@@ -92,11 +92,11 @@ describe('RequestForm.vue', () => {
       localVue,
       stubs: ['BaseDialog']
     });
-    wrapper.vm.$refs.form.validate = () => true;
+    wrapper.setData({ valid: true });
     await wrapper.vm.postRegistrationForm();
     await localVue.nextTick();
 
-    expect(wrapper.text()).toContain('Request Account');
+    expect(wrapper.text()).toContain('Please submit the Acronym of the application you wish to add. You will get an email once it is confirmed.');
     expect(wrapper.vm.registerSuccess).toBeFalsy();
     expect(wrapper.vm.errorOccurred).toBeTruthy();
     expect(sendRegEmailSpy).toHaveBeenCalledTimes(1);
