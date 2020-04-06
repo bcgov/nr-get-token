@@ -32,6 +32,20 @@ export default {
   },
 
   /**
+   * @function getUsers
+   * Fetch the users associated with the acronym
+   * @param {string} acronym app acronym
+   * @returns {Promise} An axios response
+   */
+  getUsers(acronym) {
+    if (acronym) {
+      return getokAxios().get(`${ApiRoutes.ACRONYMS}/${acronym}/users`);
+    } else {
+      return Promise.reject('No acronym supplied');
+    }
+  },
+
+  /**
    * @function postConfigForm
    * Post the service client creation submission to the api
    * @param {object} configForm the service client creation configuration (see backend validation on route for required fields)
