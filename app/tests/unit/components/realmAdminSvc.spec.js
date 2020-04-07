@@ -282,7 +282,7 @@ describe('RealmAdminService getClientSecret', () => {
 
 describe('RealmAdminService generateNewClientSecret', () => {
 
-  it('should throw an error connection is not set', async () => {
+  it('should throw an error if axios undefined', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = undefined;
     await expect(svc.generateNewClientSecret('1')).rejects.toThrow();

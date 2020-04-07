@@ -233,7 +233,7 @@ class RealmAdminService {
 
   async generateNewClientSecret(id) {
     if (!id) {
-      log.error('RealmAdminService generateNewClientSecret id parameter is null.');
+      log.error('RealmAdminService.generateNewClientSecret', 'RealmAdminService generateNewClientSecret id parameter is null.');
       throw new Error('Cannot update client secret: id parameter cannot be null.');
     }
 
