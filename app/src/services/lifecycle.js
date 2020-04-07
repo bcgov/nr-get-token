@@ -33,4 +33,20 @@ module.exports = {
 
     return lifecycleHistory;
   },
+
+  // get lifecycle rows for an acronym
+  async findLatestPromotions(acronymId) {
+    const lifecycle = await db.Lifecycle.findAll({
+      where: {
+        acronymId: acronymId
+      },
+      distinct: 'env',
+      order: [
+        ['updatedAt', 'DESC'],
+      ],
+      limit: 3
+    });
+    return lifecycle;
+  },
+
 };

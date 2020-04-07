@@ -8,28 +8,86 @@ const Problem = require('api-problem');
 
 const clients = require('../../components/clients');
 const keycloak = require('../../components/keycloak');
+const acronyms = require('../../components/acronyms');
+
 const KeyCloakServiceClientManager = require('../../components/keyCloakServiceClientMgr');
 const { lifecycleService } = require('../../services');
 const permissionHelpers = require('../../components/permissionHelpers');
 const RealmAdminService = require('../../components/realmAdminSvc');
 
-// fetches all the service clients for all KC realms
+
+
+// fetches all the service clients for all KC realms and related data from db
+// used in admin service clients table
 // current user must have role GETOK_ADMIN
 keycloakRouter.get('/serviceClients', keycloak.protect('realm:GETOK_ADMIN'), async (req, res) => {
-
+  // get service clients for each realm
   const serviceClients = await Promise.all([
     clients.getClientsFromEnv('dev'),
     clients.getClientsFromEnv('test'),
     clients.getClientsFromEnv('prod')
   ]);
   // join them all into one array
-  const result = serviceClients.flat();
+  const allServiceClients = serviceClients.flat();
+  //const tmpArr = allServiceClients.filter(val => (val.clientId == 'GOLF_SERVICE_CLIENT') || (val.clientId == 'DGRSC_SERVICE_CLIENT'));
 
-  if (result === null) {
-    return new Problem(404).send(res);
-  } else {
-    res.status(200).json(result);
-  }
+  // reformat data to show in our data table of service clients
+  const reduced = allServiceClients.reduce((a, b) => {
+  //const reduced = tmpArr.reduce((a, b) => {
+
+    //If this type wasn't previously stored
+    if (!a[b.clientId]) {
+      // create array placeholder
+      a[b.clientId] = {
+        acronym: b.clientId.replace('_SERVICE_CLIENT', ''),
+        clientId: b.clientId,
+        name: b.name,
+        environments: {
+        }
+      };
+    }
+    // add array of environment data to a property
+    let env = { name: b.name, created: '', updated: '' };
+    a[b.clientId].environments[b.environment.toUpperCase()] = env;
+    return a;
+  }, {});
+
+
+  // ----attach more app details from db
+  const getDetails = (myObj) => {
+
+    // get a promise for each service client
+    const promises = Object.keys(myObj).map(async function (key) {
+      let obj = myObj[key];
+
+      // app details
+      const acronymnDetailsFromDb = await acronyms.getAcronym(obj.acronym);
+      obj.acronymnDetails = acronymnDetailsFromDb.dataValues;
+
+      // promotions (from lifecycle table for now)
+      const promotions = await lifecycleService.findLatestPromotions(obj.acronymnDetails.acronymId);
+      promotions.forEach(function (k) {
+        obj.environments[k.dataValues.env].created = k.dataValues.createdAt;
+        obj.environments[k.dataValues.env].updated = k.dataValues.updatedAt;
+      });
+
+      // users
+      const usersList = await acronyms.getUsers(obj.acronym);
+      obj.users = usersList;
+
+      return obj;
+    });
+    return Promise.all(promises);
+  };
+
+  getDetails(reduced)
+    .then(data => {
+      if (data === null) {
+        return new Problem(404).send(res);
+      } else {
+        res.status(200).json(data);
+      }
+    });
 });
 
 // Creates a service client based on the configuration posted
