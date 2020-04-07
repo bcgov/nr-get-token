@@ -9,6 +9,6 @@ localVue.use(router);
 describe('Clients.vue', () => {
   it('renders', () => {
     const wrapper = shallowMount(Clients, { localVue });
-    expect(wrapper.text()).toMatch('Registered Service Clients');
+    expect(wrapper.text()).toMatch('Service Clients');
   });
 });
