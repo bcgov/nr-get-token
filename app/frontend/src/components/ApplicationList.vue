@@ -30,7 +30,11 @@
                   :loading="!moduleLoaded"
                   transition="scale-transition"
                 >
-                  <p v-html="setClientTexts(acr)" />
+                  <p>
+                    <ClientStatus :env="envs.DEV" :clientStatuses="acr.clientStatus" />
+                    <ClientStatus :env="envs.TEST" :clientStatuses="acr.clientStatus" />
+                    <ClientStatus :env="envs.PROD" :clientStatuses="acr.clientStatus" />
+                  </p>
                 </v-skeleton-loader>
               </div>
             </div>
@@ -45,23 +49,22 @@
 import { mapActions, mapGetters } from 'vuex';
 
 import { KcEnv } from '@/utils/constants';
-import { buildClientStatusSpan } from '@/utils/util.js';
+import ClientStatus from '@/components/apiAccess/ClientStatus.vue';
 
 export default {
   name: 'ApplicationList',
+  components: {
+    ClientStatus
+  },
   created() {
     this.loadModule();
   },
   computed: {
-    ...mapGetters('user', ['acronyms', 'moduleLoaded'])
+    ...mapGetters('user', ['acronyms', 'moduleLoaded']),
+    envs: () => KcEnv
   },
   methods: {
-    ...mapActions('user', ['loadModule']),
-    setClientTexts(acr) {
-      return `${buildClientStatusSpan(KcEnv.DEV, acr.clientStatus && acr.clientStatus.dev)}<br />
-              ${buildClientStatusSpan(KcEnv.TEST, acr.clientStatus && acr.clientStatus.test)}<br />
-              ${buildClientStatusSpan(KcEnv.PROD, acr.clientStatus && acr.clientStatus.prod)}`;
-    }
+    ...mapActions('user', ['loadModule'])
   }
 };
 </script>

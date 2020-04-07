@@ -21,17 +21,22 @@
         <v-row>
           <v-col cols="6">
             <ul>
-              <li v-html="buildClientStatusSpan(env.DEV, clientStatus.dev)"></li>
+              <li>
+                <ClientStatus :env="envs.DEV" :clientStatuses="clientStatus" />
+              </li>
             </ul>
           </v-col>
           <v-col cols="6">
-            <v-btn color="primary" block depressed @click="nextStep(env.DEV)">
-              <span>Get Token for Dev</span>
+            <v-btn color="primary" block depressed @click="nextStep(envs.DEV)">
+              <span v-if="clientStatus.dev">Reset Password</span>
+              <span v-else>Get Token for Dev</span>
             </v-btn>
           </v-col>
           <v-col cols="6">
             <ul>
-              <li v-html="buildClientStatusSpan(env.TEST, clientStatus.test)"></li>
+              <li>
+                <ClientStatus :env="envs.TEST" :clientStatuses="clientStatus" />
+              </li>
             </ul>
           </v-col>
           <v-col cols="6">
@@ -40,14 +45,17 @@
               block
               depressed
               :disabled="!clientStatus.dev"
-              @click="nextStep(env.TEST)"
+              @click="nextStep(envs.TEST)"
             >
-              <span>Get Token for Test</span>
+              <span v-if="clientStatus.test">Reset Password</span>
+              <span v-else>Get Token for Test</span>
             </v-btn>
           </v-col>
           <v-col cols="6">
             <ul>
-              <li v-html="buildClientStatusSpan(env.PROD, clientStatus.prod)"></li>
+              <li>
+                <ClientStatus :env="envs.PROD" :clientStatuses="clientStatus" />
+              </li>
             </ul>
           </v-col>
           <v-col cols="6">
@@ -56,9 +64,10 @@
               block
               depressed
               :disabled="!clientStatus.test"
-              @click="nextStep(env.PROD)"
+              @click="nextStep(envs.PROD)"
             >
-              <span>Get Token for Prod</span>
+              <span v-if="clientStatus.prod">Reset Password</span>
+              <span v-else>Get Token for Prod</span>
             </v-btn>
           </v-col>
         </v-row>
@@ -70,23 +79,20 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex';
 
-import { KcClientStatus, KcEnv } from '@/utils/constants';
-import { buildClientStatusSpan } from '@/utils/util.js';
+import ClientStatus from '@/components/apiAccess/ClientStatus.vue';
+import { KcEnv } from '@/utils/constants';
 
 export default {
   name: 'ApiAccessStep1',
-  data() {
-    return {
-      KcClientStatus: KcClientStatus,
-      env: KcEnv
-    };
+  components: {
+    ClientStatus
   },
   computed: {
-    ...mapGetters('apiAccess', ['clientStatus', 'clientStatusLoaded'])
+    ...mapGetters('apiAccess', ['clientStatus', 'clientStatusLoaded']),
+    envs: () => KcEnv
   },
   methods: {
     ...mapMutations('apiAccess', ['setEnvironment', 'setStep']),
-    buildClientStatusSpan,
     nextStep(env) {
       this.setEnvironment(env);
       this.setStep(2);
