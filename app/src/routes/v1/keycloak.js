@@ -55,7 +55,7 @@ keycloakRouter.get('/serviceClients', keycloak.protect('realm:GETOK_ADMIN'), asy
   const getDetails = (myObj) => {
 
     // get a promise for each service client
-    const promises = Object.keys(myObj).map(async function (key, index, object) {
+    const promises = Object.keys(myObj).map(async function (key) {
       let obj = myObj[key];
 
       // app details
