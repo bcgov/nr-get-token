@@ -56,16 +56,12 @@ export default {
   components: {
     ClientStatus
   },
-  data() {
-    return {
-      envs: KcEnv
-    };
-  },
   created() {
     this.loadModule();
   },
   computed: {
-    ...mapGetters('user', ['acronyms', 'moduleLoaded'])
+    ...mapGetters('user', ['acronyms', 'moduleLoaded']),
+    envs: () => KcEnv
   },
   methods: {
     ...mapActions('user', ['loadModule'])

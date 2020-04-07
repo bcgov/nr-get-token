@@ -80,21 +80,16 @@
 import { mapGetters, mapMutations } from 'vuex';
 
 import ClientStatus from '@/components/apiAccess/ClientStatus.vue';
-import { KcClientStatus, KcEnv } from '@/utils/constants';
+import { KcEnv } from '@/utils/constants';
 
 export default {
   name: 'ApiAccessStep1',
   components: {
     ClientStatus
   },
-  data() {
-    return {
-      KcClientStatus: KcClientStatus,
-      envs: KcEnv
-    };
-  },
   computed: {
-    ...mapGetters('apiAccess', ['clientStatus', 'clientStatusLoaded'])
+    ...mapGetters('apiAccess', ['clientStatus', 'clientStatusLoaded']),
+    envs: () => KcEnv
   },
   methods: {
     ...mapMutations('apiAccess', ['setEnvironment', 'setStep']),
