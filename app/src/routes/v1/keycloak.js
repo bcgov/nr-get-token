@@ -29,11 +29,9 @@ keycloakRouter.get('/serviceClients', keycloak.protect('realm:GETOK_ADMIN'), asy
   ]);
   // join them all into one array
   const allServiceClients = serviceClients.flat();
-  //const tmpArr = allServiceClients.filter(val => (val.clientId == 'GOLF_SERVICE_CLIENT') || (val.clientId == 'DGRSC_SERVICE_CLIENT'));
 
   // reformat data to show in our data table of service clients
   const reduced = allServiceClients.reduce((a, b) => {
-  //const reduced = tmpArr.reduce((a, b) => {
 
     //If this type wasn't previously stored
     if (!a[b.clientId]) {
@@ -53,28 +51,32 @@ keycloakRouter.get('/serviceClients', keycloak.protect('realm:GETOK_ADMIN'), asy
   }, {});
 
 
-  // ----attach more app details from db
+  // attach more app details from db to each service client object
   const getDetails = (myObj) => {
 
     // get a promise for each service client
-    const promises = Object.keys(myObj).map(async function (key) {
+    const promises = Object.keys(myObj).map(async function (key, index, object) {
       let obj = myObj[key];
 
       // app details
       const acronymnDetailsFromDb = await acronyms.getAcronym(obj.acronym);
-      obj.acronymnDetails = acronymnDetailsFromDb.dataValues;
 
-      // promotions (from lifecycle table for now)
-      const promotions = await lifecycleService.findLatestPromotions(obj.acronymnDetails.acronymId);
-      promotions.forEach(function (k) {
-        obj.environments[k.dataValues.env].created = k.dataValues.createdAt;
-        obj.environments[k.dataValues.env].updated = k.dataValues.updatedAt;
-      });
+      // if a corresponding acronym in db (there wont be in local dev enviroment)
+      if (acronymnDetailsFromDb) {
 
-      // users
-      const usersList = await acronyms.getUsers(obj.acronym);
-      obj.users = usersList;
+        obj.acronymnDetails = acronymnDetailsFromDb.dataValues;
 
+        // promotions (from lifecycle table for now)
+        const promotions = await lifecycleService.findLatestPromotions(obj.acronymnDetails.acronymId);
+        promotions.forEach(function (k) {
+          obj.environments[k.dataValues.env].created = k.dataValues.createdAt;
+          obj.environments[k.dataValues.env].updated = k.dataValues.updatedAt;
+        });
+
+        // users
+        const usersList = await acronyms.getUsers(obj.acronym);
+        obj.users = usersList;
+      }
       return obj;
     });
     return Promise.all(promises);
