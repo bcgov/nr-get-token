@@ -27,7 +27,7 @@
             </ul>
           </v-col>
           <v-col cols="6">
-            <v-btn color="primary" block depressed @click="nextStep(env.DEV)">
+            <v-btn color="primary" block depressed @click="nextStep(envs.DEV)">
               <span v-if="clientStatus.dev">Reset Password</span>
               <span v-else>Get Token for Dev</span>
             </v-btn>
