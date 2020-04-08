@@ -8,87 +8,23 @@ const Problem = require('api-problem');
 
 const clients = require('../../components/clients');
 const keycloak = require('../../components/keycloak');
-const acronyms = require('../../components/acronyms');
-
-const KeyCloakServiceClientManager = require('../../components/keyCloakServiceClientMgr');
-const { lifecycleService } = require('../../services');
 const permissionHelpers = require('../../components/permissionHelpers');
+const KeyCloakServiceClientManager = require('../../components/keyCloakServiceClientMgr');
 const RealmAdminService = require('../../components/realmAdminSvc');
+
+const { lifecycleService } = require('../../services');
 
 // fetches all the service clients for all KC realms and related data from db
 // used in admin service clients table
 // current user must have role GETOK_ADMIN
 keycloakRouter.get('/serviceClients', keycloak.protect('realm:GETOK_ADMIN'), async (req, res) => {
-  // get service clients for each realm
-  const serviceClients = await Promise.all([
-    clients.getClientsFromEnv('dev'),
-    clients.getClientsFromEnv('test'),
-    clients.getClientsFromEnv('prod')
-  ]);
-  // join them all into one array
-  const allServiceClients = serviceClients.flat();
+  const result = await clients.getAllServiceClients();
 
-  // reformat data to show in our data table of service clients
-  const reduced = allServiceClients.reduce((a, b) => {
-    // If this type wasn't previously stored
-    if (!a[b.clientId]) {
-      // create array placeholder
-      a[b.clientId] = {
-        acronym: b.clientId.replace('_SERVICE_CLIENT', ''),
-        clientId: b.clientId,
-        name: b.name,
-        environments: {
-        }
-      };
-    }
-    // add array of environment data to a property
-    a[b.clientId].environments[b.environment.toUpperCase()] = {
-      name: b.name
-    };
-    return a;
-  }, {});
-
-  // attach more app details from db to each service client object
-  const getDetails = serviceClients => {
-    // get a promise for each service client
-    const promises = Object.keys(serviceClients).map(async key => {
-      const sc = serviceClients[key];
-
-      // app details
-      const acronymObj = await acronyms.getAcronym(sc.acronym);
-
-      // if a corresponding acronym in db
-      if (acronymObj) {
-        sc.acronymnDetails = acronymObj.dataValues;
-
-        // promotions (from lifecycle table for now)
-        const promotions = await lifecycleService.findLatestPromotions(sc.acronymnDetails.acronymId);
-
-        promotions.forEach(promotion => {
-          if (promotion.length) {
-            const data = promotion[0].dataValues;
-            sc.environments[data.env].created = data.createdAt;
-            sc.environments[data.env].updated = data.updatedAt;
-          }
-        });
-
-        sc.users = await acronyms.getUsers(sc.acronym);
-      }
-
-      return sc;
-    });
-
-    return Promise.all(promises);
-  };
-
-  getDetails(reduced)
-    .then(data => {
-      if (data === null) {
-        return new Problem(404).send(res);
-      } else {
-        res.status(200).json(data);
-      }
-    });
+  if (result === null) {
+    return new Problem(404).send(res);
+  } else {
+    res.status(200).json(result);
+  }
 });
 
 // Creates a service client based on the configuration posted
