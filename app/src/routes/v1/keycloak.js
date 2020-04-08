@@ -15,8 +15,6 @@ const { lifecycleService } = require('../../services');
 const permissionHelpers = require('../../components/permissionHelpers');
 const RealmAdminService = require('../../components/realmAdminSvc');
 
-
-
 // fetches all the service clients for all KC realms and related data from db
 // used in admin service clients table
 // current user must have role GETOK_ADMIN
@@ -32,8 +30,7 @@ keycloakRouter.get('/serviceClients', keycloak.protect('realm:GETOK_ADMIN'), asy
 
   // reformat data to show in our data table of service clients
   const reduced = allServiceClients.reduce((a, b) => {
-
-    //If this type wasn't previously stored
+    // If this type wasn't previously stored
     if (!a[b.clientId]) {
       // create array placeholder
       a[b.clientId] = {
@@ -45,40 +42,42 @@ keycloakRouter.get('/serviceClients', keycloak.protect('realm:GETOK_ADMIN'), asy
       };
     }
     // add array of environment data to a property
-    let env = { name: b.name, created: '', updated: '' };
-    a[b.clientId].environments[b.environment.toUpperCase()] = env;
+    a[b.clientId].environments[b.environment.toUpperCase()] = {
+      name: b.name
+    };
     return a;
   }, {});
 
-
   // attach more app details from db to each service client object
-  const getDetails = (myObj) => {
-
+  const getDetails = serviceClients => {
     // get a promise for each service client
-    const promises = Object.keys(myObj).map(async function (key) {
-      let obj = myObj[key];
+    const promises = Object.keys(serviceClients).map(async key => {
+      const sc = serviceClients[key];
 
       // app details
-      const acronymnDetailsFromDb = await acronyms.getAcronym(obj.acronym);
+      const acronymObj = await acronyms.getAcronym(sc.acronym);
 
-      // if a corresponding acronym in db (there wont be in local dev enviroment)
-      if (acronymnDetailsFromDb) {
-
-        obj.acronymnDetails = acronymnDetailsFromDb.dataValues;
+      // if a corresponding acronym in db
+      if (acronymObj) {
+        sc.acronymnDetails = acronymObj.dataValues;
 
         // promotions (from lifecycle table for now)
-        const promotions = await lifecycleService.findLatestPromotions(obj.acronymnDetails.acronymId);
-        promotions.forEach(function (k) {
-          obj.environments[k.dataValues.env].created = k.dataValues.createdAt;
-          obj.environments[k.dataValues.env].updated = k.dataValues.updatedAt;
+        const promotions = await lifecycleService.findLatestPromotions(sc.acronymnDetails.acronymId);
+
+        promotions.forEach(promotion => {
+          if (promotion.length) {
+            const data = promotion[0].dataValues;
+            sc.environments[data.env].created = data.createdAt;
+            sc.environments[data.env].updated = data.updatedAt;
+          }
         });
 
-        // users
-        const usersList = await acronyms.getUsers(obj.acronym);
-        obj.users = usersList;
+        sc.users = await acronyms.getUsers(sc.acronym);
       }
-      return obj;
+
+      return sc;
     });
+
     return Promise.all(promises);
   };
 

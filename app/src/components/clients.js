@@ -6,13 +6,12 @@ const RealmAdminService = require('./realmAdminSvc');
 const clients = {
 
   /**
- * @function getClientsFromEnv
- * Utility function to call the KC service to get service clients for a KC realm
- * @param {string} kcEnv The KC env
- * @returns {object[]} An array of service clients
- */
-  getClientsFromEnv: async (kcEnv) => {
-
+   * @function getClientsFromEnv
+   * Utility function to call the KC service to get service clients for a KC realm
+   * @param {string} kcEnv The KC env
+   * @returns {object[]} An array of service clients
+   */
+  getClientsFromEnv: async kcEnv => {
     const realmKey = `serviceClient.keycloak.${kcEnv}`;
     const {
       endpoint: realmBaseUrl,
