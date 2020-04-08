@@ -231,6 +231,26 @@ class RealmAdminService {
     return response.data;
   }
 
+  async generateNewClientSecret(id) {
+    if (!id) {
+      log.error('RealmAdminService.generateNewClientSecret', 'RealmAdminService generateNewClientSecret id parameter is null.');
+      throw new Error('Cannot update client secret: id parameter cannot be null.');
+    }
+
+    const response = await this.axios.post(
+      `${this.realmAdminUrl}/clients/${id}/client-secret`,
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    ).catch(e => {
+      log.error('RealmAdminService.generateNewClientSecret', JSON.stringify(e));
+      throw e;
+    });
+    return response.data;
+  }
+
   async getServiceAccountUser(id) {
     if (!id) {
       log.error('RealmAdminService getServiceAccountUser id parameter is null.');

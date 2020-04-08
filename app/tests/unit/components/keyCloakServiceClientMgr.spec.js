@@ -27,7 +27,8 @@ jest.mock('../../../src/components/realmAdminSvc', () => {
       getServiceAccountUser: () => { return { id: '2', 'clientId': '1' }; },
       addServiceAccountRole: () => { },
       getUsers: () => { return [{ id: 1, username: 'me@idir' }]; },
-      getClientSecret: () => { return { value: 'itsasecret' }; }
+      getClientSecret: () => { return { value: 'itsasecret' }; },
+      generateNewClientSecret: () => { return { value: 'newsecret' }; }
     };
   });
 });
@@ -148,7 +149,7 @@ describe('KeyCloakServiceClientManager fetchClients', () => {
 describe('KeyCloakServiceClientManager findUsers', () => {
   it('should return a User', async () => {
     const mgr = new KeyCloakServiceClientManager(realmAdminService);
-    const r = await mgr.findUsers({username: 'me@idir'});
+    const r = await mgr.findUsers({ username: 'me@idir' });
     expect(r[0]).toBeTruthy();
     expect(r[0].username).toEqual('me@idir');
   });

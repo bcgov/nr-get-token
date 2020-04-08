@@ -280,6 +280,39 @@ describe('RealmAdminService getClientSecret', () => {
   });
 });
 
+describe('RealmAdminService generateNewClientSecret', () => {
+
+  it('should throw an error if axios undefined', async () => {
+    const svc = new RealmAdminService(realmConfig);
+    svc.axios = undefined;
+    await expect(svc.generateNewClientSecret('1')).rejects.toThrow();
+  });
+  it('should throw an error connection is not set', async () => {
+    const svc = new RealmAdminService(realmConfig);
+    svc.realmAdminUrl = undefined;
+    await expect(svc.generateNewClientSecret('1')).rejects.toThrow();
+  });
+  it('should throw an error when realm url is bad...', async () => {
+    const svc = new RealmAdminService(realmConfig);
+    mockAxios.onGet(svc.realmAdminUrl).reply(500);
+    await expect(svc.generateNewClientSecret('1')).rejects.toThrow();
+  });
+
+  it('should throw an error when null id parameter...', async () => {
+    const svc = new RealmAdminService(realmConfig);
+    await expect(svc.generateNewClientSecret(undefined)).rejects.toThrow();
+  });
+
+  it('should return a secret update response', async () => {
+    const svc = new RealmAdminService(realmConfig);
+    svc.axios = axios.create();
+    mockAxios.onPost(`${svc.realmAdminUrl}/clients/1/client-secret`).reply(200, 'truthy');
+
+    const result = await svc.generateNewClientSecret('1');
+    expect(result).toBeTruthy();
+  });
+});
+
 describe('RealmAdminService getServiceAccountUser', () => {
 
   it('should throw an error connection is not set', async () => {

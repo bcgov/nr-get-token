@@ -85,7 +85,7 @@ export default {
           email: u.user.email
         };
       });
-    } catch {
+    } catch (error) {
       //TODO: still pending descisions on global error standardization
       this.errorLoadingUsers = true;
     } finally {

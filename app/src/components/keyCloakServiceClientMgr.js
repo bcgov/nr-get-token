@@ -42,6 +42,10 @@ class KeyCloakServiceClientManager {
     } else {
       // may have changed the name and description...
       serviceClient = await this.svc.updateClientDetails(serviceClient, applicationName, applicationDescription);
+      // generate new password
+      // TODO: if this gets moved to a separate action, where it's not updating client details at the same time
+      // move this generate new call out of manage to a separate call through this class
+      await this.svc.generateNewClientSecret(serviceClient.id);
     }
 
     // get all the selected common services and their roles
