@@ -34,19 +34,38 @@ module.exports = {
     return lifecycleHistory;
   },
 
-  // get lifecycle rows for an acronym
-  async findLatestPromotions(acronymId) {
+  /**
+   * @function getLatestEnvAction
+   * Finds the latest lifecycle action for `env`
+   * @param {string} acronymId The desired acronymId
+   * @param {string} env The desired environment
+   * @returns {object} A lifecycle object if it exists
+   */
+  async getLatestEnvAction(acronymId, env) {
     const lifecycle = await db.Lifecycle.findAll({
       where: {
-        acronymId: acronymId
+        acronymId: acronymId,
+        env: env
       },
-      distinct: 'env',
       order: [
-        ['updatedAt', 'DESC'],
+        ['updatedAt', 'DESC']
       ],
-      limit: 3
+      limit: 1
     });
-    return lifecycle;
+
+    return lifecycle.length ? lifecycle : null;
   },
 
+  /**
+   * @function findLatestPromotions
+   * Returns an array of all latest promotions in each environment for `acronymId`
+   * @param {string} acronymId The desired acronymId
+   * @returns {object[]} An array of lifecycle object
+   */
+  async findLatestPromotions(acronymId) {
+    const results = await Promise.all(['DEV', 'TEST', 'PROD'].map(env => {
+      return this.getLatestEnvAction(acronymId, env);
+    }));
+    return results.filter(x => !!x);
+  }
 };
