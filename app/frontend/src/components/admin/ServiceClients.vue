@@ -15,9 +15,8 @@
           class="pb-5"
         ></v-text-field>
       </div>
-
+      <!-- table alert -->
       <v-alert v-if="showAlert" :type="alertType" tile dense>{{alertMessage}}</v-alert>
-
       <!-- table header -->
       <v-data-table
         class="kc-table"
@@ -30,56 +29,67 @@
         :expanded.sync="expanded"
         item-key="acronym"
         show-expand
+
       >
-        <template v-slot:expanded-item="{ headers, item }">
-          <td :colspan="headers.length">
-            <table class="kc-nested-table">
-              <!-- environments -->
-              <tr>
-                <td></td>
-                <td>
-                  <strong>created:</strong>
-                </td>
-                <td>{{ formatDate(item.environments.DEV) }}</td>
-                <td>{{ formatDate(item.environments.TEST) }}</td>
-                <td>{{ formatDate(item.environments.PROD) }}</td>
-              </tr>
-
-              <!-- users -->
-              <tr>
-                <td></td>
-                <td>
-                  <strong>users:</strong>
-                </td>
-                <td :colspan="headers.length - 2">
-                  <div v-for="user in item.users" :key="user.user.userId" >
-                    {{ [ user.user.firstName, user.user.lastName, user.user.email ].join(' ') }}
-                  </div>
-                </td>
-              </tr>
-
-              <!-- app details -->
-              <tr class="last">
-                <td></td>
-                <td>
-                  <strong>project name:</strong>
-                </td>
-                <td :colspan="3">{{ item.name }}</td>
-              </tr>
-            </table>
-          </td>
-        </template>
-
+        <!-- environments -->
         <template v-slot:item.dev="{item}">
-          <v-icon v-if="item.dev" color="green">check</v-icon>
+          <div v-if="item.dev">
+            <v-tooltip top>
+              <template v-slot:activator="{ on }">
+                <v-icon color="green" v-on="on">check</v-icon>
+              </template>
+              <span>updated: {{ formatEnvDate(item.environments.DEV) }}</span>
+            </v-tooltip>
+          </div>
         </template>
-
         <template v-slot:item.test="{item}">
-          <v-icon v-if="item.test" color="green">check</v-icon>
+          <div v-if="item.test">
+            <v-tooltip top>
+              <template v-slot:activator="{ on }">
+                <v-icon color="green" v-on="on">check</v-icon>
+              </template>
+              <span>updated: {{ formatEnvDate(item.environments.TEST) }}</span>
+            </v-tooltip>
+          </div>
+        </template>
+        <template v-slot:item.prod="{item}">
+          <div v-if="item.prod">
+            <v-tooltip top>
+              <template v-slot:activator="{ on }">
+                <v-icon color="green" v-on="on">check</v-icon>
+              </template>
+              <span>Updated: {{ formatEnvDate(item.environments.PROD) }}</span>
+            </v-tooltip>
+          </div>
         </template>
 
-        <template v-slot:item.prod="{item}">
-          <v-icon v-if="item.prod" color="green">check</v-icon>
+        <!-- expanded row -->
+        <template v-slot:expanded-item="{ headers, item }">
+          <td :class="[responsiveCell]"></td>
+          <td :colspan="headers.length - 1" :class="[responsiveCell]">
+            <div class="kc-expanded">
+              <!-- app details -->
+              <strong>Name: </strong>
+              <span>{{ item.name }}</span>
+            </div>
+
+            <div class="kc-expanded">
+              <!-- app details -->
+              <strong>Created: </strong>
+              <span>{{ formatDate(item.acronymDetails.createdAt) }}</span>
+            </div>
+
+            <div class="kc-expanded">
+              <!-- users -->
+              <strong>Users: </strong>
+              <ul>
+                <li
+                  v-for="user in item.users"
+                  :key="user.user.userId"
+                >{{ user.user.firstName + ' ' + user.user.lastName + ((item.users.length > 1) ? ',' : '') }}</li>
+              </ul>
+            </div>
+          </td>
         </template>
       </v-data-table>
     </v-container>
@@ -91,6 +101,11 @@ import keycloakService from '@/services/keycloakService';
 
 export default {
   name: 'Clients',
+  computed: {
+    responsiveCell () {
+      return (this.$vuetify.breakpoint.name == 'xs') ? 'v-data-table__mobile-table-row' : '';
+    }
+  },
   data() {
     return {
       // vuetify data table
@@ -111,8 +126,12 @@ export default {
     };
   },
   methods: {
-    formatDate(env) {
-      return (env && env.created) ? new Date(env.created).toLocaleDateString() : 'N/A';
+
+    formatEnvDate(env) {
+      return (env && env.created) ?  this.formatDate(env.created): '-';
+    },
+    formatDate(date){
+      return new Date(date).toLocaleString();
     },
     // get table data from frontend service layer
     getData() {
@@ -120,11 +139,14 @@ export default {
         .getServiceClients()
         .then(response => {
           const data = response.data;
+          console.log(data);
+
           const clients = Object.keys(data).map(k => {
             let client = data[k];
             return {
               acronym: client.acronym,
               name: client.name,
+              acronymDetails: client.acronymDetails,
               dev: client.environments.DEV,
               test: client.environments.TEST,
               prod: client.environments.PROD,
@@ -173,24 +195,47 @@ export default {
 .kc-table {
   clear: both;
 }
-.kc-table >>> tr.v-data-table__expanded.v-data-table__expanded__row td {
+.kc-table >>> tr.v-data-table__expanded__row td {
   border-bottom: 0 !important;
 }
-.kc-table >>> tr.v-data-table__expanded.v-data-table__expanded__content {
+.kc-table >>> tr.v-data-table__expanded__content {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
 }
-.kc-table tr.last td {
-  border-bottom: 1px !important;
-  padding-bottom: 10px;
+.kc-table >>> tr.v-data-table__expanded__content td{
+  padding-bottom: 1em;
 }
-.kc-nested-table {
-  width: 100%;
+div.kc-expanded{
+  font-size: 85% !important;
+  color: #494949 !important;
 }
-.kc-nested-table td {
-  height: auto;
-  border-bottom: 0 !important;
-  font-size: 90% !important;
-  color: gray;
+div.kc-expanded strong {
+  font-weight: bolder;
+  margin-right: 1em;
+  display: inline-block;
+}
+div.kc-expanded ul {
+  display: inline;
+  padding: 0;
+}
+div.kc-expanded ul li {
+  display: inline;
+  margin-right: 1rem;
+}
+/* mobile view */
+tr.v-data-table__expanded__content
+  td.v-data-table__mobile-table-row:nth-child(1) {
+  display: none !important;
+}
+tr.v-data-table__expanded__content
+  td.v-data-table__mobile-table-row:not(:nth-child(1)) {
+  padding: 0;
+}
+td.v-data-table__mobile-table-row div.kc-expanded {
+  padding: .2rem 1rem;
+}
+
+.kc-search >>> tr.v-data-table__expanded__content{
+  /* border: 1px solid red !important; */
 }
 </style>

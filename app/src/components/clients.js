@@ -23,10 +23,10 @@ const clients = {
 
       // if a corresponding acronym in db
       if (acronymObj) {
-        sc.acronymnDetails = acronymObj.dataValues;
+        sc.acronymDetails = acronymObj.dataValues;
 
         // promotions (from lifecycle table for now)
-        const promotions = await lifecycleService.findLatestPromotions(sc.acronymnDetails.acronymId);
+        const promotions = await lifecycleService.findLatestPromotions(sc.acronymDetails.acronymId);
 
         promotions.forEach(promotion => {
           if (promotion.length) {
@@ -68,6 +68,8 @@ const clients = {
           clientId: b.clientId,
           name: b.name,
           environments: {
+          },
+          acronymDetails: {
           }
         };
       }
