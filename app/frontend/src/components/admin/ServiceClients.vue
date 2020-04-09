@@ -139,8 +139,6 @@ export default {
         .getServiceClients()
         .then(response => {
           const data = response.data;
-          console.log(data);
-
           const clients = Object.keys(data).map(k => {
             let client = data[k];
             return {
