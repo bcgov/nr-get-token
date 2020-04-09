@@ -36,25 +36,25 @@
             <table class="kc-nested-table">
               <!-- environments -->
               <tr>
-                <td width="40px"></td>
+                <td></td>
                 <td>
                   <strong>created:</strong>
                 </td>
-                <td>{{ (item.environments.DEV) ? new Date(item.environments.DEV.created).toLocaleDateString() : '' }}</td>
-                <td>{{ (item.environments.TEST) ? new Date(item.environments.TEST.created).toLocaleDateString() : '' }}</td>
-                <td>{{ (item.environments.PROD) ? new Date(item.environments.PROD.created).toLocaleDateString() : '' }}</td>
+                <td>{{ formatDate(item.environments.DEV) }}</td>
+                <td>{{ formatDate(item.environments.TEST) }}</td>
+                <td>{{ formatDate(item.environments.PROD) }}</td>
               </tr>
 
               <!-- users -->
               <tr>
-                <td width="25px"></td>
+                <td></td>
                 <td>
                   <strong>users:</strong>
                 </td>
                 <td :colspan="headers.length - 2">
-                  <template
-                    v-for="user in item.users"
-                  >{{ user.user.firstName + ' ' + user.user.lastName + ' - ' + user.user.email }}</template>
+                  <div v-for="user in item.users" :key="user.user.userId" >
+                    {{ [ user.user.firstName, user.user.lastName, user.user.email ].join(' ') }}
+                  </div>
                 </td>
               </tr>
 
@@ -98,9 +98,9 @@ export default {
       headers: [
         { text: '', value: 'data-table-expand' },
         { text: 'Application', align: 'start', value: 'acronym' },
-        { text: 'DEV', value: 'dev'},
+        { text: 'DEV', value: 'dev' },
         { text: 'TEST', value: 'test' },
-        { text: 'PROD', value: 'prod' },
+        { text: 'PROD', value: 'prod' }
       ],
       serviceClients: [],
       loading: true,
@@ -110,13 +110,10 @@ export default {
       expanded: []
     };
   },
-  watch: {
-    // hide data table progress bar when serviceClients have been returned from backend
-    serviceClients() {
-      this.loading = false;
-    }
-  },
   methods: {
+    formatDate(env) {
+      return (env && env.created) ? new Date(env.created).toLocaleDateString() : 'N/A';
+    },
     // get table data from frontend service layer
     getData() {
       keycloakService
@@ -157,6 +154,12 @@ export default {
   },
   mounted() {
     this.getData();
+  },
+  watch: {
+    // hide data table progress bar when serviceClients have been returned from backend
+    serviceClients() {
+      this.loading = false;
+    }
   }
 };
 </script>
@@ -167,7 +170,7 @@ export default {
   max-width: 20em;
   float: right;
 }
-.kc-table{
+.kc-table {
   clear: both;
 }
 .kc-table >>> tr.v-data-table__expanded.v-data-table__expanded__row td {
