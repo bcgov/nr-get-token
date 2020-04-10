@@ -29,7 +29,6 @@
         :expanded.sync="expanded"
         item-key="acronym"
         show-expand
-
       >
         <!-- environments -->
         <template v-slot:item.dev="{item}">
@@ -84,9 +83,9 @@
               <strong>Users: </strong>
               <ul>
                 <li
-                  v-for="user in item.users"
-                  :key="user.user.userId"
-                >{{ user.user.firstName + ' ' + user.user.lastName + ((item.users.length > 1) ? ',' : '') }}</li>
+                  v-for="(user, index) in item.users"
+                  :key="index"
+                >{{ user.user.firstName + ' ' + user.user.lastName + ((item.users.length > 1 && item.users.length > index) ? ',' : '') }}</li>
               </ul>
             </div>
           </td>
@@ -168,9 +167,6 @@ export default {
       this.alertMessage = msg;
       this.loading = false;
     },
-    clicked(value) {
-      this.expanded.push(value);
-    }
   },
   mounted() {
     this.getData();
@@ -200,10 +196,10 @@ export default {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
 }
-.kc-table >>> tr.v-data-table__expanded__content td{
+.kc-table >>> tr.v-data-table__expanded__content td {
   padding-bottom: 1em;
 }
-div.kc-expanded{
+div.kc-expanded {
   font-size: 85% !important;
   color: #494949 !important;
 }
@@ -230,10 +226,6 @@ tr.v-data-table__expanded__content
   padding: 0;
 }
 td.v-data-table__mobile-table-row div.kc-expanded {
-  padding: .2rem 1rem;
-}
-
-.kc-search >>> tr.v-data-table__expanded__content{
-  /* border: 1px solid red !important; */
+  padding: 0.2rem 1rem;
 }
 </style>
