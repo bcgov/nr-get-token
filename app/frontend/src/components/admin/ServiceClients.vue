@@ -37,7 +37,7 @@
               <template v-slot:activator="{ on }">
                 <v-icon color="green" v-on="on">check</v-icon>
               </template>
-              <span>updated: {{ formatEnvDate(item.environments.DEV) }}</span>
+              <span>Keycloak environment last modified: {{ formatEnvDate(item.environments.DEV) }}</span>
             </v-tooltip>
           </div>
         </template>
@@ -47,7 +47,7 @@
               <template v-slot:activator="{ on }">
                 <v-icon color="green" v-on="on">check</v-icon>
               </template>
-              <span>updated: {{ formatEnvDate(item.environments.TEST) }}</span>
+              <span>Keycloak environment last modified: {{ formatEnvDate(item.environments.TEST) }}</span>
             </v-tooltip>
           </div>
         </template>
@@ -57,7 +57,7 @@
               <template v-slot:activator="{ on }">
                 <v-icon color="green" v-on="on">check</v-icon>
               </template>
-              <span>Updated: {{ formatEnvDate(item.environments.PROD) }}</span>
+              <span>Keycloak environment last modified: {{ formatEnvDate(item.environments.PROD) }}</span>
             </v-tooltip>
           </div>
         </template>
@@ -74,7 +74,7 @@
 
             <div class="kc-expanded">
               <!-- app details -->
-              <strong>Created: </strong>
+              <strong>Acronymn Created: </strong>
               <span>{{ formatDate(item.acronymDetails.createdAt) }}</span>
             </div>
 
@@ -127,10 +127,11 @@ export default {
   methods: {
 
     formatEnvDate(env) {
-      return (env && env.created) ?  this.formatDate(env.created): '-';
+      return (env && env.created) ?  this.formatDate(env.created): 'N/A';
     },
     formatDate(date){
-      return new Date(date).toLocaleString();
+
+      return (date) ? new Date(date).toLocaleString() : 'N/A';
     },
     // get table data from frontend service layer
     getData() {
@@ -152,12 +153,14 @@ export default {
             };
           });
 
-          if (clients.length == 0) {
+          if (!clients.length) {
+            // TODO: use a base alert component if one has been added to the project
             this.showTableAlert('info', 'No Service Clients found');
           }
           this.serviceClients = clients;
         })
         .catch(() => {
+          // TODO: use a base alert component if one has been added to the project
           this.showTableAlert('error', 'No response from server');
         });
     },
@@ -205,7 +208,7 @@ div.kc-expanded {
 }
 div.kc-expanded strong {
   font-weight: bolder;
-  margin-right: 1em;
+  margin-right: .5em;
   display: inline-block;
 }
 div.kc-expanded ul {
