@@ -22,7 +22,7 @@
         class="kc-table"
         :headers="headers"
         :items="serviceClients"
-        :items-per-page="10"
+        :items-per-page="7"
         :search="search"
         :loading="loading"
         loading-text="Loading... Please wait"
@@ -68,13 +68,13 @@
           <td :colspan="headers.length - 1" :class="[responsiveCell]">
             <div class="kc-expanded">
               <!-- app details -->
-              <strong>Name: </strong>
+              <strong>Application Name: </strong>
               <span>{{ item.name }}</span>
             </div>
 
             <div class="kc-expanded">
               <!-- app details -->
-              <strong>Acronymn Created: </strong>
+              <strong>Application Created: </strong>
               <span>{{ formatDate(item.acronymDetails.createdAt) }}</span>
             </div>
 
@@ -130,7 +130,6 @@ export default {
       return (env && env.created) ?  this.formatDate(env.created): 'N/A';
     },
     formatDate(date){
-
       return (date) ? new Date(date).toLocaleString() : 'N/A';
     },
     // get table data from frontend service layer
