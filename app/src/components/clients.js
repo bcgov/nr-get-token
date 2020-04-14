@@ -31,8 +31,10 @@ const clients = {
         promotions.forEach(promotion => {
           if (promotion.length) {
             const data = promotion[0].dataValues;
-            sc.environments[data.env].created = data.createdAt;
-            sc.environments[data.env].updated = data.updatedAt;
+            if (sc.environments[data.env]) {
+              sc.environments[data.env].created = data.createdAt;
+              sc.environments[data.env].updated = data.updatedAt;
+            }
           }
         });
 

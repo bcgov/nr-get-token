@@ -74,7 +74,7 @@
 
             <div class="kc-expanded">
               <!-- app details -->
-              <strong>Application Created: </strong>
+              <strong>Acronym Created: </strong>
               <span>{{ formatDate(item.acronymDetails.createdAt) }}</span>
             </div>
 
