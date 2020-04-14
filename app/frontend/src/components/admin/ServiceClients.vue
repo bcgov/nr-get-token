@@ -85,7 +85,7 @@
                 <li
                   v-for="(user, index) in item.users"
                   :key="index"
-                >{{ user.user.firstName + ' ' + user.user.lastName + ((item.users.length > 1 && item.users.length > index) ? ',' : '') }}</li>
+                >{{ user.user.firstName + ' ' + user.user.lastName + ((item.users.length > (index + 1)) ? ',' : '') }}</li>
               </ul>
             </div>
           </td>
