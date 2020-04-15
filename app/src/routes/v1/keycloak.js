@@ -8,22 +8,17 @@ const Problem = require('api-problem');
 
 const clients = require('../../components/clients');
 const keycloak = require('../../components/keycloak');
-const KeyCloakServiceClientManager = require('../../components/keyCloakServiceClientMgr');
-const { lifecycleService } = require('../../services');
 const permissionHelpers = require('../../components/permissionHelpers');
+const KeyCloakServiceClientManager = require('../../components/keyCloakServiceClientMgr');
 const RealmAdminService = require('../../components/realmAdminSvc');
 
-// fetches all the service clients for all KC realms
+const { lifecycleService } = require('../../services');
+
+// fetches all the service clients for all KC realms and related data from db
+// used in admin service clients table
 // current user must have role GETOK_ADMIN
 keycloakRouter.get('/serviceClients', keycloak.protect('realm:GETOK_ADMIN'), async (req, res) => {
-
-  const serviceClients = await Promise.all([
-    clients.getClientsFromEnv('dev'),
-    clients.getClientsFromEnv('test'),
-    clients.getClientsFromEnv('prod')
-  ]);
-  // join them all into one array
-  const result = serviceClients.flat();
+  const result = await clients.getAllServiceClients();
 
   if (result === null) {
     return new Problem(404).send(res);

@@ -3,7 +3,7 @@ import { ApiRoutes } from '@/utils/constants';
 
 export default {
   /**
-   * @function getAllServiceClients
+   * @function getServiceClients
    * Fetch all registered service clients
    * @returns {Promise} An axios response
    */

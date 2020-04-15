@@ -5,7 +5,7 @@ import { ApiRoutes } from '@/utils/constants';
 export default {
   /**
    * @function getAcronym
-   * Fetch the service clients for the acronym
+   * Fetch acronym details from Keycloak
    * @param {string} acronym app acronym
    * @returns {Promise} An axios response
    */

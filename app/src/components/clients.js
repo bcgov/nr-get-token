@@ -1,18 +1,97 @@
 const config = require('config');
 
+const acronyms = require('./acronyms');
 const KeyCloakServiceClientManager = require('./keyCloakServiceClientMgr');
 const RealmAdminService = require('./realmAdminSvc');
 
+const { lifecycleService } = require('../services');
+
 const clients = {
+  /**
+   * @function addAppDetails
+   * Add various application details for each service client from db
+   * @param {object} serviceClients An object with all service clients as keys
+   * @returns {object[]} An array of service clients
+   */
+  addAppDetails: serviceClients => {
+    // get a promise for each service client
+    return Promise.all(Object.keys(serviceClients).map(async key => {
+      const sc = serviceClients[key];
+
+      // app details
+      const acronymObj = await acronyms.getAcronym(sc.acronym);
+
+      // if a corresponding acronym in db
+      if (acronymObj) {
+        sc.acronymDetails = acronymObj.dataValues;
+
+        // promotions (from lifecycle table for now)
+        const promotions = await lifecycleService.findLatestPromotions(sc.acronymDetails.acronymId);
+
+        promotions.forEach(promotion => {
+          if (promotion.length) {
+            const data = promotion[0].dataValues;
+            if (sc.environments[data.env]) {
+              sc.environments[data.env].created = data.createdAt;
+              sc.environments[data.env].updated = data.updatedAt;
+            }
+          }
+        });
+
+        sc.users = await acronyms.getUsers(sc.acronym);
+      }
+
+      return sc;
+    }));
+  },
 
   /**
- * @function getClientsFromEnv
- * Utility function to call the KC service to get service clients for a KC realm
- * @param {string} kcEnv The KC env
- * @returns {object[]} An array of service clients
- */
-  getClientsFromEnv: async (kcEnv) => {
+   * @function getAllServiceClients
+   * Aggregates all known service clients with additional context information
+   * @returns {object[]} An array of service clients with additional data
+   */
+  getAllServiceClients: async () => {
+    // get service clients for each realm
+    const serviceClients = await Promise.all([
+      clients.getClientsFromEnv('dev'),
+      clients.getClientsFromEnv('test'),
+      clients.getClientsFromEnv('prod')
+    ]);
+    // join them all into one array
+    const allServiceClients = serviceClients.flat();
 
+    // reformat data to show in our data table of service clients
+    const reduced = allServiceClients.reduce((a, b) => {
+      // If this type wasn't previously stored
+      if (!a[b.clientId]) {
+        // create array placeholder
+        a[b.clientId] = {
+          acronym: b.clientId.replace('_SERVICE_CLIENT', ''),
+          clientId: b.clientId,
+          name: b.name,
+          environments: {
+          },
+          acronymDetails: {
+          }
+        };
+      }
+      // add array of environment data to a property
+      a[b.clientId].environments[b.environment.toUpperCase()] = {
+        name: b.name
+      };
+      return a;
+    }, {});
+
+    return clients.addAppDetails(reduced);
+  },
+
+  /**
+   * @function getClientsFromEnv
+   * Utility function to call the KC service to get service clients for a KC realm
+   * @param {string} kcEnv The KC env
+   * @returns {object[]} An array of service clients
+   */
+  getClientsFromEnv: async kcEnv => {
     const realmKey = `serviceClient.keycloak.${kcEnv}`;
     const {
       endpoint: realmBaseUrl,
@@ -30,7 +109,6 @@ const clients = {
 
     return clients;
   }
-
 };
 
 module.exports = clients;
