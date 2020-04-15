@@ -22,7 +22,7 @@
         class="kc-table"
         :headers="headers"
         :items="serviceClients"
-        :items-per-page="7"
+        :items-per-page="10"
         :search="search"
         :loading="loading"
         loading-text="Loading... Please wait"
