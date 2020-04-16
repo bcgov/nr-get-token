@@ -12,7 +12,8 @@ const acronymData = [
     acronymId: '00000000-0000-4000-8001-000000000000',
     acronym: 'WORG',
     name: 'Hello name',
-    description: 'Hello description'
+    description: 'Hello description',
+    permissionWebade: false
   }
 ];
 
