@@ -1,0 +1,11 @@
+{
+  "applicationAcronym": "WORG",
+  "applicationName": "Test application",
+  "applicationDescription": "Description for the test application",
+  "commonServices": [
+    "cmsg",
+    "dms"
+  ],
+  "clientEnvironment": "INT",
+  "passwordPublicKey": "ABC"
+}

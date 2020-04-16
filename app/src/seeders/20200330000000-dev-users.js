@@ -5,7 +5,8 @@ const acronymData = [
     acronymId: '00000000-0000-4000-8000-000000000000',
     acronym: 'TEMP',
     name: 'Temp application name',
-    description: 'Temp application description'
+    description: 'Temp application description',
+    permissionWebade: true
   },
   {
     acronymId: '00000000-0000-4000-8001-000000000000',

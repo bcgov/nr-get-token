@@ -1,5 +1,7 @@
 const axios = require('axios');
 const config = require('config');
+const cryptico = require('cryptico-js');
+const generator = require('generate-password');
 const log = require('npmlog');
 const qs = require('querystring');
 
@@ -7,6 +9,84 @@ const KeyCloakServiceClientManager = require('./keyCloakServiceClientMgr');
 const RealmAdminService = require('./realmAdminSvc');
 
 const utils = {
+
+  /**
+  * From the big list of webade configs, return all APPLICATION preferences that match the search critera in the name that are not masked
+  * @param {string} webadeConfigsList - The array of all the webade configs.
+  * @param {string} searchCriteria - The regex to search through the preference name on.
+  */
+  filterForInsecurePrefs: (webadeConfigsList, searchCriteria) => {
+    if (webadeConfigsList && webadeConfigsList.applicationConfigurations
+      && webadeConfigsList.applicationConfigurations.length) {
+      // From all the configs, get out the preferences
+      // filter on the search criteria and the sensitiveDataInd field
+      const regex = new RegExp(searchCriteria, 'gi');
+      const applications = webadeConfigsList.applicationConfigurations.map(apps =>
+        ({
+          applicationAcronym: apps.applicationAcronym,
+          applicationName: apps.applicationName,
+          applicationDescription: apps.applicationDescription,
+          enabled: apps.enabledInd,
+          preferences: apps.applicationPreferences.filter(pref =>
+            pref.sensitiveDataInd == false &&
+            pref.name.match(regex)
+          )
+        }));
+      const filteredPrefs = applications.filter(app =>
+        app.preferences && app.preferences.length
+      );
+
+      // Return the list of objects sorted alphabetically
+      return filteredPrefs.sort((a, b) => a.applicationAcronym.localeCompare(b.applicationAcronym));
+    } else {
+      log.error('filterForInsecurePrefs', 'Error in supplied webade configuration list');
+      throw new Error('Unable to fetch preferences - Error in supplied webade configuration list');
+    }
+  },
+
+  /**
+  * From the big list of webade configs, return mapped dependencies for a specific acronym
+  * @param {string} webadeConfigsList - The array of all the webade configs.
+  * @param {string} acronym - Which acronym to filter on.
+  */
+  filterWebAdeDependencies: (webadeConfigsList, acronym) => {
+    if (webadeConfigsList && webadeConfigsList.applicationConfigurations) {
+      // From all the configs, find the ones where
+      const appsWithDependencies = webadeConfigsList.applicationConfigurations.filter(
+        cfg => cfg.profiles.some(
+          prof => prof.profileRoles.some(
+            pr => pr.applicationCode == acronym)
+        )
+      );
+      // Map out the relevant values we want from the app configs
+      const dependencies = appsWithDependencies.map(apps =>
+        ({
+          applicationAcronym: apps.applicationAcronym,
+          applicationName: apps.applicationName,
+          applicationDescription: apps.applicationDescription,
+          enabled: apps.enabledInd
+        }));
+      // Return the list of objects sorted alphabetically
+      return dependencies.sort((a, b) => a.applicationAcronym.localeCompare(b.applicationAcronym));
+    } else {
+      log.error('filterWebAdeDependencies', 'Error in supplied webade configuration list');
+      throw new Error('Unable to fetch dependencies - Error in supplied webade configuration list');
+    }
+  },
+
+  // Creates a random password of a certain length and encrypts it with the key
+  generateEncryptPassword: (key, len = 12) => {
+    const pw = generator.generate({
+      length: len,
+      numbers: true
+    });
+
+    return {
+      password: pw,
+      encryptedPassword: cryptico.encrypt(pw, key).cipher
+    };
+  },
+
   /**
   * @function getClientsFromEnv
   * Utility function to call the KC service to get clients for each realm which requires newing it for each realm
