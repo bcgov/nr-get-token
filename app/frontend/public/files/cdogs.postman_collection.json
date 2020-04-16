@@ -1,13 +1,13 @@
 {
 	"info": {
-		"_postman_id": "f0283d8e-98bb-4ad9-8ca4-f6a0733e3771",
+		"_postman_id": "9d0e3531-cd61-4123-828e-ae7b646d7e50",
 		"name": "Common Document Generation Service",
 		"description": "CDOGS - A Document Generation common service",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "v1",
+			"name": "v2",
 			"item": [
 				{
 					"name": "Health",
@@ -18,7 +18,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v1/health",
+									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/health",
 									"protocol": "https",
 									"host": [
 										"cdogs-master-idcqvl-prod",
@@ -29,10 +29,11 @@
 									],
 									"path": [
 										"api",
-										"v1",
+										"v2",
 										"health"
 									]
-								}
+								},
+								"description": "Returns a health check.\r\nThis endpoint is used to see if the API is up and running.\r\n"
 							},
 							"response": []
 						}
@@ -41,31 +42,22 @@
 					"_postman_isSubFolder": true
 				},
 				{
-					"name": "DocGen",
+					"name": "Render",
 					"item": [
 						{
-							"name": "/docGen",
+							"name": "/render/:uid",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
 							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
+								"method": "GET",
+								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"contexts\": [\n        {\n            \"firstName\": \"Jane\",\n            \"lastName\": \"Smith\"\n        }\n    ],\n    \"template\": {\n    \t\"filename\": \"test.docx\",\n        \"contentEncodingType\": \"base64\",\n        \"content\": \"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\"\n    }\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": ""
 								},
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v1/docGen",
+									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/render/:uid?download=true",
 									"protocol": "https",
 									"host": [
 										"cdogs-master-idcqvl-prod",
@@ -76,10 +68,63 @@
 									],
 									"path": [
 										"api",
-										"v1",
-										"docGen"
+										"v2",
+										"render",
+										":uid"
+									],
+									"query": [
+										{
+											"key": "download",
+											"value": "true",
+											"description": "boolean, Indicate if the response should return the binary file"
+										}
+									],
+									"variable": [
+										{
+											"description": "Hash for file, returned via X-Report-Hash headers when report generated",
+											"key": "uid",
+											"value": "a150459b-8c5a-47b6-8789-fc9f30e31987"
+										}
 									]
-								}
+								},
+								"description": "Check if generated file/report has been cached.\r\nThis endpoint returns OK if a generated file can be retrieved from the cache.\r\n"
+							},
+							"response": []
+						},
+						{
+							"name": "/render/:uid",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/render/:uid",
+									"protocol": "https",
+									"host": [
+										"cdogs-master-idcqvl-prod",
+										"pathfinder",
+										"gov",
+										"bc",
+										"ca"
+									],
+									"path": [
+										"api",
+										"v2",
+										"render",
+										":uid"
+									],
+									"variable": [
+										{
+											"description": "Hash for file, returned via X-Report-Hash headers when report generated",
+											"key": "uid",
+											"value": "320930cf9ec47e50bfe79e31b2ccda12859655c2de4640350bb396a9a09dd6ab"
+										}
+									]
+								},
+								"description": "Remove file from cache.\r\nThis endpoint returns OK if a file has been removed from cache.\r\n"
 							},
 							"response": []
 						}
@@ -96,7 +141,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v1/fileTypes",
+									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/fileTypes",
 									"protocol": "https",
 									"host": [
 										"cdogs-master-idcqvl-prod",
@@ -107,10 +152,275 @@
 									],
 									"path": [
 										"api",
-										"v1",
+										"v2",
 										"fileTypes"
 									]
-								}
+								},
+								"description": "Returns a dictionary of supported input template file types and output file types.\r\nThis endpoint checks the supported file types defined by the Carbone JS library.\r\n"
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Template",
+					"item": [
+						{
+							"name": "/template",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "template",
+											"contentType": "",
+											"description": "binary file content",
+											"type": "file",
+											"src": "[see https://dgrsc.pathfinder.gov.bc.ca/dgrsc/#/cdogs for example templates]"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/template",
+									"protocol": "https",
+									"host": [
+										"cdogs-master-idcqvl-prod",
+										"pathfinder",
+										"gov",
+										"bc",
+										"ca"
+									],
+									"path": [
+										"api",
+										"v2",
+										"template"
+									]
+								},
+								"description": "Upload a template\r\nThis endpoint accepts a template to be used for report generation/render."
+							},
+							"response": []
+						},
+						{
+							"name": "/template/:uid",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/template/:uid?download=true",
+									"protocol": "https",
+									"host": [
+										"cdogs-master-idcqvl-prod",
+										"pathfinder",
+										"gov",
+										"bc",
+										"ca"
+									],
+									"path": [
+										"api",
+										"v2",
+										"template",
+										":uid"
+									],
+									"query": [
+										{
+											"key": "download",
+											"value": "true",
+											"description": "boolean, indicate if the response should return the binary file"
+										}
+									],
+									"variable": [
+										{
+											"key": "uid",
+											"value": "320930cf9ec47e50bfe79e31b2ccda12859655c2de4640350bb396a9a09dd6ab",
+											"description": "Hash for template, returned via X-Template-Hash headers when template uploaded"
+										}
+									]
+								},
+								"description": "Check if template has been cached.\r\nThis endpoint returns OK if a template file can be retrieved from the cache.\r\n"
+							},
+							"response": []
+						},
+						{
+							"name": "/template/:uid",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/template/:uid",
+									"protocol": "https",
+									"host": [
+										"cdogs-master-idcqvl-prod",
+										"pathfinder",
+										"gov",
+										"bc",
+										"ca"
+									],
+									"path": [
+										"api",
+										"v2",
+										"template",
+										":uid"
+									],
+									"variable": [
+										{
+											"description": "Hash for template, returned via X-Template-Hash headers when template uploaded",
+											"key": "uid",
+											"value": "320930cf9ec47e50bfe79e31b2ccda12859655c2de4640350bb396a9a09dd6ab"
+										}
+									]
+								},
+								"description": "Remove file from cache.\r\nThis endpoint returns OK if a file has been removed from cache.\r\n"
+							},
+							"response": []
+						},
+						{
+							"name": "/template/:uid/render",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"data\": {\n        \"firstName\": \"Jane\",\n        \"lastName\": \"Smith\",\n        \"title\": \"CEO\"\n    },\n    \"formatters\": \"{\\\"myFormatter\\\":\\\"_function_myFormatter|function(data) { return data.slice(1); }\\\",\\\"myOtherFormatter\\\":\\\"_function_myOtherFormatter|function(data) {return data.slice(2);}\\\"}\",\n    \"options\": {\n        \"cacheReport\": true,\n        \"convertTo\": \"pdf\",\n        \"overwrite\": true,\n        \"reportName\": \"abc_123_{d.firstName}_{d.lastName}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/template/:uid/render",
+									"protocol": "https",
+									"host": [
+										"cdogs-master-idcqvl-prod",
+										"pathfinder",
+										"gov",
+										"bc",
+										"ca"
+									],
+									"path": [
+										"api",
+										"v2",
+										"template",
+										":uid",
+										"render"
+									],
+									"variable": [
+										{
+											"key": "uid",
+											"value": "320930cf9ec47e50bfe79e31b2ccda12859655c2de4640350bb396a9a09dd6ab",
+											"description": "Hash for template, returned via X-Template-Hash headers when template uploaded"
+										}
+									]
+								},
+								"description": "Generate a document from existing Template\r\nThis endpoint accepts a document template id and a set (or multiple sets) of substitution variables and merges them into the document.\r\n"
+							},
+							"response": []
+						},
+						{
+							"name": "/template/render",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"data\": {\n        \"firstName\": \"Jane\",\n        \"lastName\": \"Smith\",\n        \"title\": \"CEO\"\n    },\n    \"formatters\": \"{\\\"myFormatter\\\":\\\"_function_myFormatter|function(data) { return data.slice(1); }\\\",\\\"myOtherFormatter\\\":\\\"_function_myOtherFormatter|function(data) {return data.slice(2);}\\\"}\",\n    \"options\": {\n        \"cacheReport\": true,\n        \"convertTo\": \"pdf\",\n        \"overwrite\": true,\n        \"reportName\": \"abc_123_{d.firstName}_{d.lastName}\"\n    },\n    \"template\": {\n        \"content\": \"PGI+SGVsbG8gV29ybGRcITwvYj4=\",\n        \"encodingType\": \"base64\",\n        \"fileType\": \"docx\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/template/render",
+									"protocol": "https",
+									"host": [
+										"cdogs-master-idcqvl-prod",
+										"pathfinder",
+										"gov",
+										"bc",
+										"ca"
+									],
+									"path": [
+										"api",
+										"v2",
+										"template",
+										"render"
+									]
+								},
+								"description": "Generate document from inline Template\r\nThis endpoint accepts a document template and a set (or multiple sets) of substitution variables and merges them into the document.\r\n"
 							},
 							"response": []
 						}
@@ -119,7 +429,89 @@
 					"_postman_isSubFolder": true
 				}
 			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3a42637f-dcb5-4ef7-83ed-b91020b8b45b",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "c62b836d-bf2c-4f90-80b0-e8696a0e5e89",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Request a Token",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "[PASTE YOUR PASSWORD HERE]",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "[PASTE YOUR SERVICE CLIENT HERE]",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://sso.pathfinder.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token",
+					"protocol": "https",
+					"host": [
+						"sso",
+						"pathfinder",
+						"gov",
+						"bc",
+						"ca"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"jbd6rnxw",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				},
+				"description": "This request will get an OAuth Access Token that is required for calls to the Common Services API's.\n\nThe reponse from this request (the Access Token) can be attached to the top level 'Common Services' collection and then 'Inherited from parent' by the requests contained inside it."
+			},
+			"response": []
 		}
 	],
 	"auth": {

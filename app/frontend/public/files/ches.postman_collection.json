@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "ab533515-b419-411c-8cd3-b1ff5482f2d5",
+		"_postman_id": "238557a4-5165-44c7-ba68-19f092c52ff9",
 		"name": "Common Hosted Email Service",
 		"description": "CHES - Powered by NodeMailer (a shared library)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -340,6 +340,66 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Request a Token",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "[PASTE YOUR PASSWORD HERE]",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "[PASTE YOUR SERVICE CLIENT HERE]",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://sso.pathfinder.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token",
+					"protocol": "https",
+					"host": [
+						"sso",
+						"pathfinder",
+						"gov",
+						"bc",
+						"ca"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"jbd6rnxw",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				},
+				"description": "This request will get an OAuth Access Token that is required for calls to the Common Services API's.\n\nThe reponse from this request (the Access Token) can be attached to the top level 'Common Services' collection and then 'Inherited from parent' by the requests contained inside it."
+			},
+			"response": []
 		}
 	],
 	"auth": {
