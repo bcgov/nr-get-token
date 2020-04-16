@@ -302,11 +302,7 @@ describe(`GET ${basePath}/:webAdeEnv/:appAcronym/dependencies`, () => {
     const overrideApp = helper.expressHelper(basePath, router, clone);
 
     permissionSpy.mockResolvedValue();
-    // No idea why mockResolvedValue doesn't work on this method??? But have to leave for now
-    //utilsSpy.mockResolvedValue({ test: '123' });
-    utilsSpy.mockImplementation(() => {
-      return { test: '123' };
-    });
+    utilsSpy.mockReturnValue({ test: '123' });
     webadeSpy.mockResolvedValue({ test: '123', more: 567 });
 
     const response = await request(overrideApp).get(`${basePath}/INT/XXX/dependencies`);
@@ -320,11 +316,7 @@ describe(`GET ${basePath}/:webAdeEnv/:appAcronym/dependencies`, () => {
   });
 
   it('should return a valid response if user has WEBADE_CFG_READ_ALL', async () => {
-    // No idea why mockResolvedValue doesn't work on this method??? But have to leave for now
-    //utilsSpy.mockResolvedValue({ test: '123' });
-    utilsSpy.mockImplementation(() => {
-      return { test: '123' };
-    });
+    utilsSpy.mockReturnValue({ test: '123' });
     webadeSpy.mockResolvedValue({ test: '123' });
 
     const response = await request(app).get(`${basePath}/INT/XXX/dependencies`);
@@ -408,11 +400,7 @@ describe(`GET ${basePath}/:webAdeEnv/preferences/insecurePrefs`, () => {
   });
 
   it('should return a valid response if user has WEBADE_CFG_READ_ALL', async () => {
-    // No idea why mockResolvedValue doesn't work on this method??? But have to leave for now
-    //utilsSpy.mockResolvedValue({ test: '123' });
-    utilsSpy.mockImplementation(() => {
-      return { test: '123' };
-    });
+    utilsSpy.mockReturnValue({ test: '123' });
     webadeSpy.mockResolvedValue({ test: '123', more: 567 });
 
     const response = await request(app).get(`${basePath}/INT/preferences/insecurePrefs`);

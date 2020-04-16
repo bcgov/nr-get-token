@@ -68,7 +68,7 @@ webadeRouter.get('/:webAdeEnv/appConfigs', [
     }
 
     if (!hasReadAllRole) {
-      return new Problem(403, { detail: 'User lacks permission to get all app configs', }).send(res);
+      return new Problem(403, { detail: 'User lacks permission to get all app configs' }).send(res);
     }
 
     const response = await webadeComponent.getAppConfigs(req.params.webAdeEnv);
@@ -109,7 +109,7 @@ webadeRouter.post('/configForm', [
   // Check if this is allowed, return the error message if not
   const err = await webadeComponent.getPermissionError(req.kauth.grant.access_token.content, configForm);
   if (err) {
-    log.debug('GET /configForm', `No permission to Post WebADE config: ${err}`);
+    log.debug('POST /configForm', `No permission to Post WebADE config: ${err}`);
     return new Problem(403, { detail: err, }).send(res);
   }
   try {

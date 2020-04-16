@@ -19,7 +19,7 @@ const helper = {
     const app = express();
 
     if (keycloakAuthMock) {
-      app.use(function (req, res, next) {
+      app.use((req, res, next) => {
         req.kauth = keycloakAuthMock;
         next();
       });

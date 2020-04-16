@@ -2,16 +2,15 @@ const axios = require('axios');
 const config = require('config');
 const crypto = require('crypto');
 const cryptico = require('cryptico-js');
-const log = require('npmlog');
 const MockAdapter = require('axios-mock-adapter');
 
-const webade = require('../../../src/components/webade');
-const permissionHelpers = require('../../../src/components/permissionHelpers');
 const { acronymService, lifecycleService } = require('../../../src/services');
+const helper = require('../../common/helper');
+const permissionHelpers = require('../../../src/components/permissionHelpers');
 const utils = require('../../../src/components/utils');
+const webade = require('../../../src/components/webade');
 
-log.level = config.get('server.logLevel');
-log.addLevel('debug', 1500, { fg: 'cyan' });
+helper.logHelper();
 
 const mockAxios = new MockAdapter(axios);
 
@@ -110,7 +109,7 @@ describe('postAppConfig', () => {
   const spyLifecycle = jest.spyOn(lifecycleService, 'create');
   const spyAcronym = jest.spyOn(acronymService, 'updateDetails');
 
-  afterEach(() => {
+  beforeEach(() => {
     spy.mockClear();
     spyLifecycle.mockClear();
     spyAcronym.mockClear();
@@ -216,7 +215,7 @@ describe('getAppConfig', () => {
 
   const spy = jest.spyOn(axios, 'get');
 
-  afterEach(() => {
+  beforeEach(() => {
     spy.mockClear();
   });
 
@@ -295,7 +294,7 @@ describe('getAppConfigs', () => {
 
   const spy = jest.spyOn(axios, 'get');
 
-  afterEach(() => {
+  beforeEach(() => {
     spy.mockClear();
   });
 
@@ -357,7 +356,7 @@ describe('getPermissionError', () => {
   const permSpy = jest.spyOn(permissionHelpers, 'checkAcronymPermission');
   jest.mock('../../../src/services/acronym');
 
-  afterEach(() => {
+  beforeEach(() => {
     spy.mockReset();
     permSpy.mockReset();
   });

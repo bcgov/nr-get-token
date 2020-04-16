@@ -227,7 +227,7 @@ const appConfig = {
     // Get a token with the getok service client
     const token = await utils.getWebAdeToken(username, password, 'WEBADE-REST', env);
     if (!token || token.error) {
-      log.error('postAppConfig', `Unable to acquire access_token for ${env}`);
+      log.error('getAppConfig', `Unable to acquire access_token for ${env}`);
       throw new Error('Unable to acquire access_token');
     }
 

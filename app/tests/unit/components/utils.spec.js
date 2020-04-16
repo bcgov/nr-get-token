@@ -34,7 +34,7 @@ describe('filterForInsecurePrefs', () => {
   });
 
   it('should exception on an empty list', () => {
-    expect(() => { utils.filterForInsecurePrefs([], 'password|secret'); }).toThrow(Error);
+    expect(() => utils.filterForInsecurePrefs([], 'password|secret')).toThrow(Error);
   });
 });
 
@@ -49,7 +49,7 @@ describe('filterWebAdeDependencies', () => {
   });
 
   it('should throw on bad input', async () => {
-    expect(() => { utils.filterWebAdeDependencies(undefined, 'DMS'); }).toThrow(Error);
+    expect(() => utils.filterWebAdeDependencies(undefined, 'DMS')).toThrow(Error);
   });
 });
 
