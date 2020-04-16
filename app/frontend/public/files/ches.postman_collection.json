@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "238557a4-5165-44c7-ba68-19f092c52ff9",
+		"_postman_id": "8ee4719e-a49f-4aee-b3cd-ad3e0dcc2073",
 		"name": "Common Hosted Email Service",
 		"description": "CHES - Powered by NodeMailer (a shared library)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
