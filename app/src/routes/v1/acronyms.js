@@ -1,7 +1,6 @@
 const acronymsRouter = require('express').Router();
 
 const keycloak = require('../../components/keycloak');
-const { validationResult } = require('express-validator');
 const log = require('npmlog');
 const Problem = require('api-problem');
 
