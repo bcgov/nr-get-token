@@ -25,7 +25,7 @@
             <v-col cols="6">
               <a
                 class="buttonLink"
-                :href="`/files/${item.postmanCollection}`"
+                :href="`${$config.basePath}/files/${item.postmanCollection}`"
                 :download="item.postmanCollection"
                 target="_blank"
               >
