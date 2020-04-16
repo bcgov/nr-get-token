@@ -85,7 +85,6 @@ webadeRouter.get('/:webAdeEnv/appConfigs', [
 
 // submits a webade application configuration
 webadeRouter.post('/configForm', [
-  param('webAdeEnv').isIn(['INT', 'TEST', 'PROD']),
   body('configForm.applicationAcronym').isString(),
   body('configForm.applicationName').isString(),
   body('configForm.applicationDescription').isString(),
@@ -114,7 +113,6 @@ webadeRouter.post('/configForm', [
     return new Problem(403, { detail: err, }).send(res);
   }
   try {
-
     const response = await webadeComponent.postAppConfig(configForm, publicKey, req.kauth.grant.access_token.content.sub);
     return res.status(200).json(response);
   } catch (error) {
@@ -128,10 +126,20 @@ webadeRouter.get('/:webAdeEnv/:appAcronym/dependencies', [
   param('webAdeEnv').isIn(['INT', 'TEST', 'PROD'])
 ], async (req, res) => {
   try {
+    // TODO: Move this into middleware or equivalent
+    // Validate for Bad Requests
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return new Problem(422, {
+        detail: 'Validation failed',
+        errors: errors.array()
+      }).send(res);
+    }
+
     // Check for required permissions. Can only fetch cfgs for the acronyms you are associated with
     // If the user has "WEBADE_CFG_READ_ALL" then they can get all
     if (!req.kauth.grant.access_token.content.realm_access.roles.includes('WEBADE_CFG_READ_ALL')) {
-      const permissionErr = await permissionHelpers.checkAcronymPermission(req.user.jwt, req.params.appAcronym);
+      const permissionErr = await permissionHelpers.checkAcronymPermission(req.kauth.grant.access_token.content.sub, req.params.appAcronym);
       if (permissionErr) {
         return new Problem(403, { detail: permissionErr, }).send(res);
       }
@@ -139,12 +147,13 @@ webadeRouter.get('/:webAdeEnv/:appAcronym/dependencies', [
 
     const response = await webadeComponent.getAppConfigs(req.params.webAdeEnv);
     if (response) {
-      return res.status(200).json(utils.filterWebAdeDependencies(response, req.params.appAcronym));
+      const filtered = utils.filterWebAdeDependencies(response, req.params.appAcronym);
+      return res.status(200).json(filtered);
     } else {
       return new Problem(404).send(res);
     }
   } catch (error) {
-    log.error(error);
+    log.error(error.message);
     return new Problem(500, { detail: error.message }).send(res);
   }
 });
@@ -155,6 +164,16 @@ webadeRouter.get('/:webAdeEnv/preferences/insecurePrefs', [
   param('webAdeEnv').isIn(['INT', 'TEST', 'PROD'])
 ], async (req, res) => {
   try {
+    // TODO: Move this into middleware or equivalent
+    // Validate for Bad Requests
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return new Problem(422, {
+        detail: 'Validation failed',
+        errors: errors.array()
+      }).send(res);
+    }
+
     const searchCriteria = req.query.searchCriteria;
 
     // Check for required permissions.

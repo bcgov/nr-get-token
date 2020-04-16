@@ -31,23 +31,23 @@ acronymsRouter.get('/:appAcronym', [
 });
 
 /** Returns clients from KC for the supplied acronym */
-acronymsRouter.get('/:acronym/clients', [
-], async (req, res) => {
-  // TODO: Move this into middleware or equivalent
-  // Validate for Bad Requests
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return new Problem(422, {
-      detail: 'Validation failed',
-      errors: errors.array()
-    }).send(res);
+acronymsRouter.get('/:acronym/clients', async (req, res) => {
+  // Check for required permissions. Can only fetch details for the acronyms you are associated with
+  const permissionErr = await permissionHelpers.checkAcronymPermission(req.kauth.grant.access_token.content.sub, req.params.appAcronym);
+  if (permissionErr) {
+    return new Problem(403, { detail: permissionErr }).send(res);
   }
 
-  const result = await acronyms.getAcronymClients(req.params.acronym);
-  if (result === null) {
-    return new Problem(404).send(res);
-  } else {
-    res.status(200).json(result);
+  try {
+    const result = await acronyms.getAcronymClients(req.params.acronym);
+    if (result === null) {
+      return new Problem(404).send(res);
+    } else {
+      res.status(200).json(result);
+    }
+  } catch (error) {
+    log.error(error);
+    return new Problem(500, { detail: error.message }).send(res);
   }
 });
 
