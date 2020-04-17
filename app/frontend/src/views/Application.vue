@@ -11,6 +11,7 @@
       <v-tabs vertical class="mt-10 getok-tabs">
         <v-tab>API Access</v-tab>
         <v-tab>Team</v-tab>
+        <v-tab v-if="showWebAdeTab">WebADE Access</v-tab>
 
         <v-tab-item>
           <h2>{{acronym}}</h2>
@@ -21,28 +22,66 @@
           <h2>{{acronym}}</h2>
           <Team :acronym="acronym" />
         </v-tab-item>
+
+        <v-tab-item v-if="showWebAdeTab">
+          <h2>{{acronym}}</h2>
+          <WebadeAccess :acronym="acronym" />
+        </v-tab-item>
       </v-tabs>
+      acronym: {{JSON.stringify(acronymDetail)}}
     </BaseSecure>
   </v-container>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 import ApiAccess from '@/components/apiAccess/ApiAccess.vue';
 import Team from '@/components/Team.vue';
+import WebadeAccess from '@/components/webadeAccess/WebadeAccess.vue';
+
+import acronymService from '@/services/acronymService';
 import apiAccess from '@/store/modules/apiAccess';
+//import webadeAccess from '@/store/modules/webadeAccess';
 
 export default {
   name: 'Application',
   components: {
     ApiAccess,
-    Team
+    Team,
+    WebadeAccess
   },
   props: ['acronym'],
+  data() {
+    return {
+      acronymDetail: null,
+      userHasWebAdePermission: false
+    };
+  },
+  computed: {
+    ...mapGetters('auth', ['hasWebadePermission']),
+    // The user must explicitly be flagged to allow webade management (keycloak), and the acronym must be flagged to allow webade management (DB)
+    showWebAdeTab() {
+      return this.acronymDetail && this.acronymDetail.permissionWebade && this.hasWebadePermission;
+    }
+  },
   beforeDestroy() {
     this.$store.unregisterModule('apiAccess');
   },
   created() {
     this.$store.registerModule('apiAccess', apiAccess);
+
+    // fetch the full acronym details to determine if this application has webade permission (with a user role check, see computed prop)
+    acronymService
+      .getAcronym(this.acronym)
+      .then(response => {
+        if(response) {
+          this.acronymDetail = response.data;
+        }
+      })
+      .catch((err) => {
+        console.log(`An error occurred fetching acronym detail for ${this.acronym} from the database: ${err}`);  // eslint-disable-line no-console
+      });
   }
 };
 </script>

@@ -121,6 +121,36 @@ describe('auth getters', () => {
     expect(store.getters.hasResourceRoles('app', roles)).toBeFalsy();
   });
 
+  it('hasWebadePermission should return false if unauthenticated', () => {
+    authenticated = false;
+
+    expect(store.getters.authenticated).toBeFalsy();
+    expect(store.getters.hasWebadePermission).toBeFalsy();
+  });
+
+  it('hasWebadePermission should return true when GETOK_ADMIN exists', () => {
+    authenticated = true;
+    roles = [RealmRoles.WEBADE_PERMISSION];
+
+    expect(store.getters.authenticated).toBeTruthy();
+    expect(store.getters.hasWebadePermission).toBeTruthy();
+  });
+
+  it('hasWebadeNrosDmsPermission should return false if unauthenticated', () => {
+    authenticated = false;
+
+    expect(store.getters.authenticated).toBeFalsy();
+    expect(store.getters.hasWebadeNrosDmsPermission).toBeFalsy();
+  });
+
+  it('hasWebadeNrosDmsPermission should return true when GETOK_ADMIN exists', () => {
+    authenticated = true;
+    roles = [RealmRoles.WEBADE_PERMISSION_NROS_DMS];
+
+    expect(store.getters.authenticated).toBeTruthy();
+    expect(store.getters.hasWebadeNrosDmsPermission).toBeTruthy();
+  });
+
   it('isAdmin should return false if unauthenticated', () => {
     authenticated = false;
 

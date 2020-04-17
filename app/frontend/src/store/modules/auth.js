@@ -30,6 +30,14 @@ export default {
       }
       return false; // There are roles to check, but nothing in token to check against
     },
+    hasWebadePermission: (_state, getters) => {
+      if (!getters.authenticated) return false;
+      return hasRoles(getters.realmAccess.roles, [RealmRoles.WEBADE_PERMISSION]);
+    },
+    hasWebadeNrosDmsPermission: (_state, getters) => {
+      if (!getters.authenticated) return false;
+      return hasRoles(getters.realmAccess.roles, [RealmRoles.WEBADE_PERMISSION_NROS_DMS]);
+    },
     isAdmin: (_state, getters) => {
       if (!getters.authenticated) return false;
       return hasRoles(getters.realmAccess.roles, [RealmRoles.GETOK_ADMIN]);
