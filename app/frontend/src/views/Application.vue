@@ -27,8 +27,7 @@
           <h2>{{acronym}}</h2>
           <WebadeAccess :acronym="acronym" />
         </v-tab-item>
-      </v-tabs>
-      acronym: {{JSON.stringify(acronymDetail)}}
+      </v-tabs> 
     </BaseSecure>
   </v-container>
 </template>
@@ -75,7 +74,7 @@ export default {
       .getAcronym(this.acronym)
       .then(response => {
         if(response && response.data) {
-          this.acronymDetail = response.data.acronym;
+          this.acronymDetail = response.data;
         }
       })
       .catch((err) => {

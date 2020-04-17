@@ -23,7 +23,7 @@ describe('Application.vue', () => {
   });
 
   it('renders correctly when acronym result comes back with webade permission', async () => {
-    acronymSpy.mockResolvedValue({ data: { acronym: { acronym: 'XXX', permissionWebade: true } } });
+    acronymSpy.mockResolvedValue({ data: { acronym: 'XXX', permissionWebade: true } } );
 
     store.registerModule('auth', {
       namespaced: true,
@@ -45,7 +45,7 @@ describe('Application.vue', () => {
   });
 
   it('renders correctly when acronym result comes back without webade permission', async () => {
-    acronymSpy.mockResolvedValue({ data: { acronym: { acronym: 'XXX', permissionWebade: false } } });
+    acronymSpy.mockResolvedValue({ data: { acronym: 'XXX', permissionWebade: false } } );
 
     store.registerModule('auth', {
       namespaced: true,
@@ -67,7 +67,28 @@ describe('Application.vue', () => {
   });
 
   it('renders correctly when acronym result comes back with webade permission but user is not allowed', async () => {
-    acronymSpy.mockResolvedValue({ data: { acronym: { acronym: 'XXX', permissionWebade: true } } });
+    acronymSpy.mockResolvedValue({ data:  { acronym: 'XXX', permissionWebade: true } } );
+
+    store.registerModule('auth', {
+      namespaced: true,
+      getters: {
+        hasWebadePermission: () => false
+      }
+    });
+
+    const wrapper = shallowMount(Application, {
+      store,
+      localVue,
+      stubs: ['ApplicationList', 'BaseSecure']
+    });
+    await localVue.nextTick();
+
+    expect(wrapper.vm.showWebadeTab).toEqual(false);
+    expect(wrapper.text()).not.toContain('WEBADE ACCESS');
+  });
+
+  it('renders correctly when acronym call returns no response', async () => {
+    acronymSpy.mockResolvedValue();
 
     store.registerModule('auth', {
       namespaced: true,
@@ -88,7 +109,7 @@ describe('Application.vue', () => {
   });
 
   it('renders correctly when acronym call fails', async () => {
-    acronymSpy.mockResolvedValue({ data: { acronym: 'XXX', permissionWebade: true } });
+    acronymSpy.mockRejectedValue();
 
     store.registerModule('auth', {
       namespaced: true,
