@@ -47,6 +47,7 @@ describe(`GET ${basePath}/:webAdeEnv/:appAcronym/appConfig`, () => {
     expect(response.body).toBeTruthy();
     expect(response.body.detail).toMatch('error');
     expect(permissionSpy).toHaveBeenCalledTimes(1);
+    expect(permissionSpy).toHaveBeenCalledWith('0000-0000', 'XXX');
     expect(webadeSpy).toHaveBeenCalledTimes(0);
   });
 
@@ -64,7 +65,9 @@ describe(`GET ${basePath}/:webAdeEnv/:appAcronym/appConfig`, () => {
     expect(response.body).toBeTruthy();
     expect(response.body).toEqual({ test: '123' });
     expect(permissionSpy).toHaveBeenCalledTimes(1);
+    expect(permissionSpy).toHaveBeenCalledWith('0000-0000', 'XXX');
     expect(webadeSpy).toHaveBeenCalledTimes(1);
+    expect(webadeSpy).toHaveBeenCalledWith('INT', 'XXX');
   });
 
   it('should return a valid response if user has WEBADE_CFG_READ_ALL', async () => {
@@ -77,6 +80,7 @@ describe(`GET ${basePath}/:webAdeEnv/:appAcronym/appConfig`, () => {
     expect(response.body).toEqual({ test: '123' });
     expect(permissionSpy).toHaveBeenCalledTimes(0);
     expect(webadeSpy).toHaveBeenCalledTimes(1);
+    expect(webadeSpy).toHaveBeenCalledWith('INT', 'XXX');
   });
 
   it('should yield a 404 if config is not found', async () => {
@@ -88,6 +92,7 @@ describe(`GET ${basePath}/:webAdeEnv/:appAcronym/appConfig`, () => {
     expect(response.body).toBeTruthy();
     expect(permissionSpy).toHaveBeenCalledTimes(0);
     expect(webadeSpy).toHaveBeenCalledTimes(1);
+    expect(webadeSpy).toHaveBeenCalledWith('INT', 'XXX');
   });
 
   it('should return a 500 if the config fetch throws', async () => {
@@ -156,6 +161,7 @@ describe(`GET ${basePath}/:webAdeEnv/appConfigs`, () => {
     expect(response.body).toBeTruthy();
     expect(response.body).toEqual({ test: '123' });
     expect(webadeSpy).toHaveBeenCalledTimes(1);
+    expect(webadeSpy).toHaveBeenCalledWith('INT');
   });
 
   it('should yield a 404 if configs are not found', async () => {
@@ -166,6 +172,7 @@ describe(`GET ${basePath}/:webAdeEnv/appConfigs`, () => {
     expect(response.statusCode).toBe(404);
     expect(response.body).toBeTruthy();
     expect(webadeSpy).toHaveBeenCalledTimes(1);
+    expect(webadeSpy).toHaveBeenCalledWith('INT');
   });
 
   it('should return a 500 if the config fetch throws', async () => {
@@ -179,6 +186,7 @@ describe(`GET ${basePath}/:webAdeEnv/appConfigs`, () => {
     expect(response.body).toBeTruthy();
     expect(response.body.title).toEqual('Internal Server Error');
     expect(webadeSpy).toHaveBeenCalledTimes(1);
+    expect(webadeSpy).toHaveBeenCalledWith('INT');
   });
 });
 
@@ -223,6 +231,7 @@ describe(`POST ${basePath}/configForm`, () => {
     expect(response.body).toBeTruthy();
     expect(response.body.detail).toMatch('Validation failed');
     expect(permissionSpy).toHaveBeenCalledTimes(1);
+    expect(permissionSpy).toHaveBeenCalledWith(keycloakAuthMock.grant.access_token.content, body.configForm);
     expect(webadeSpy).toHaveBeenCalledTimes(0);
   });
 
@@ -293,6 +302,7 @@ describe(`GET ${basePath}/:webAdeEnv/:appAcronym/dependencies`, () => {
     expect(response.body).toBeTruthy();
     expect(response.body.detail).toMatch('error');
     expect(permissionSpy).toHaveBeenCalledTimes(1);
+    expect(permissionSpy).toHaveBeenCalledWith('0000-0000', 'XXX');
     expect(webadeSpy).toHaveBeenCalledTimes(0);
   });
 
@@ -311,8 +321,11 @@ describe(`GET ${basePath}/:webAdeEnv/:appAcronym/dependencies`, () => {
     expect(response.body).toBeTruthy();
     expect(response.body).toEqual({ test: '123' });
     expect(permissionSpy).toHaveBeenCalledTimes(1);
+    expect(permissionSpy).toHaveBeenCalledWith('0000-0000', 'XXX');
     expect(utilsSpy).toHaveBeenCalledTimes(1);
+    expect(utilsSpy).toHaveBeenCalledWith({ test: '123', more: 567 }, 'XXX');
     expect(webadeSpy).toHaveBeenCalledTimes(1);
+    expect(webadeSpy).toHaveBeenCalledWith('INT');
   });
 
   it('should return a valid response if user has WEBADE_CFG_READ_ALL', async () => {
@@ -326,7 +339,9 @@ describe(`GET ${basePath}/:webAdeEnv/:appAcronym/dependencies`, () => {
     expect(response.body).toEqual({ test: '123' });
     expect(permissionSpy).toHaveBeenCalledTimes(0);
     expect(utilsSpy).toHaveBeenCalledTimes(1);
+    expect(utilsSpy).toHaveBeenCalledWith({ test: '123' }, 'XXX');
     expect(webadeSpy).toHaveBeenCalledTimes(1);
+    expect(webadeSpy).toHaveBeenCalledWith('INT');
   });
 
   it('should yield a 404 if configs are not found', async () => {
@@ -339,6 +354,7 @@ describe(`GET ${basePath}/:webAdeEnv/:appAcronym/dependencies`, () => {
     expect(permissionSpy).toHaveBeenCalledTimes(0);
     expect(utilsSpy).toHaveBeenCalledTimes(0);
     expect(webadeSpy).toHaveBeenCalledTimes(1);
+    expect(webadeSpy).toHaveBeenCalledWith('INT');
   });
 
   it('should return a 500 if the config fetch throws', async () => {
@@ -352,6 +368,7 @@ describe(`GET ${basePath}/:webAdeEnv/:appAcronym/dependencies`, () => {
     expect(response.body).toBeTruthy();
     expect(response.body.title).toEqual('Internal Server Error');
     expect(webadeSpy).toHaveBeenCalledTimes(1);
+    expect(webadeSpy).toHaveBeenCalledWith('INT');
   });
 });
 

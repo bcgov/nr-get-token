@@ -30,6 +30,7 @@ describe(`GET ${basePath}/:appAcronym`, () => {
     expect(response.body).toBeTruthy();
     expect(response.body.detail).toMatch('error');
     expect(permissionSpy).toHaveBeenCalledTimes(1);
+    expect(permissionSpy).toHaveBeenCalledWith('0000-0000', 'XXX');
     expect(acronymSpy).toHaveBeenCalledTimes(0);
   });
 
@@ -56,6 +57,7 @@ describe(`GET ${basePath}/:appAcronym`, () => {
     expect(response.body).toEqual({ acronym: 'xxx' });
     expect(permissionSpy).toHaveBeenCalledTimes(1);
     expect(acronymSpy).toHaveBeenCalledTimes(1);
+    expect(acronymSpy).toHaveBeenCalledWith('XXX');
   });
 
   it('should return a 500 if the acronym fetch throws', async () => {
@@ -93,6 +95,7 @@ describe(`GET ${basePath}/:acronym/clients`, () => {
     expect(response.body).toBeTruthy();
     expect(response.body.detail).toMatch('error');
     expect(permissionSpy).toHaveBeenCalledTimes(1);
+    expect(permissionSpy).toHaveBeenCalledWith('0000-0000', 'XXX');
     expect(acronymSpy).toHaveBeenCalledTimes(0);
   });
 
@@ -119,6 +122,7 @@ describe(`GET ${basePath}/:acronym/clients`, () => {
     expect(response.body).toEqual({ acronym: 'xxx' });
     expect(permissionSpy).toHaveBeenCalledTimes(1);
     expect(acronymSpy).toHaveBeenCalledTimes(1);
+    expect(acronymSpy).toHaveBeenCalledWith('XXX');
   });
 
   it('should return a 500 if the acronym fetch throws', async () => {
@@ -155,6 +159,7 @@ describe(`GET ${basePath}/:acronym/users`, () => {
     expect(response.body).toBeTruthy();
     expect(response.body.detail).toMatch('error');
     expect(permissionSpy).toHaveBeenCalledTimes(1);
+    expect(permissionSpy).toHaveBeenCalledWith('0000-0000', 'XXX');
     expect(acronymSpy).toHaveBeenCalledTimes(0);
   });
 
@@ -181,6 +186,7 @@ describe(`GET ${basePath}/:acronym/users`, () => {
     expect(response.body).toEqual({ acronym: 'xxx', users: [] });
     expect(permissionSpy).toHaveBeenCalledTimes(1);
     expect(acronymSpy).toHaveBeenCalledTimes(1);
+    expect(acronymSpy).toHaveBeenCalledWith('XXX');
   });
 
   it('should return a 500 if the users fetch throws', async () => {
