@@ -1,0 +1,14 @@
+{
+  "grant": {
+    "access_token": {
+      "content": {
+        "sub": "0000-0000",
+        "realm_access": {
+          "roles": [
+            "WEBADE_CFG_READ_ALL"
+          ]
+        }
+      }
+    }
+  }
+}

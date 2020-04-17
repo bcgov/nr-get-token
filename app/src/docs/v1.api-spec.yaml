@@ -355,7 +355,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  "/webAde/{webAdeEnv}/{acronym}/appConfig/":
+  "/webade/{webadeEnv}/{acronym}/appConfig/":
     get:
       summary: >-
         Returns WebADE JSON response for the specified acronym in the specified
@@ -370,7 +370,7 @@ paths:
           required: true
           schema:
             type: string
-        - name: webAdeEnv
+        - name: webadeEnv
           in: path
           description: The ISSS WebADE environment
           required: true
@@ -399,104 +399,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  "/webAde/{webAdeEnv}/{acronym}/dependencies/":
-    get:
-      summary: Returns a list of other WebADE acronyms that reference the one supplied
-      operationId: getDependencies
-      tags:
-        - WebADE Application Configuration
-      parameters:
-        - name: acronym
-          in: path
-          description: Name of the project
-          required: true
-          schema:
-            type: string
-        - name: webAdeEnv
-          in: path
-          description: The ISSS WebADE environment
-          required: true
-          schema:
-            type: string
-            enum:
-              - INT
-              - TEST
-              - PROD
-      responses:
-        "200":
-          description: WebADE JSON response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DependencyList"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  "/webAde/{webAdeEnv}/preferences/insecurePrefs":
-    get:
-      summary: >-
-        Returns a list of all WebADE applicationPreferences that have the
-        sensitiveDataInd set to false matching the search criteria regular
-        expression
-      operationId: getInsecurePrefs
-      tags:
-        - WebADE Application Configuration
-      parameters:
-        - name: webAdeEnv
-          in: path
-          description: The ISSS WebADE environment
-          required: true
-          schema:
-            type: string
-            enum:
-              - INT
-              - TEST
-              - PROD
-        - name: searchCriteria
-          in: query
-          required: true
-          schema:
-            type: string
-            example: secret
-          description: >-
-            A regular expression that will find preferences matching on their
-            name
-      responses:
-        "200":
-          description: WebADE JSON response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InsecurePrefList"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  "/webAde/{webAdeEnv}/appConfigs/":
+  "/webade/{webadeEnv}/appConfigs/":
     get:
       summary: Returns WebADE JSON response for all acronyms
       operationId: appConfigGetAll
       tags:
         - WebADE Application Configuration
       parameters:
-        - name: webAdeEnv
+        - name: webadeEnv
           in: path
           description: The ISSS WebADE environment
           required: true
@@ -547,6 +457,96 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "403":
           $ref: "#/components/responses/Forbidden"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/webade/{webadeEnv}/{acronym}/dependencies/":
+    get:
+      summary: Returns a list of other WebADE acronyms that reference the one supplied
+      operationId: getDependencies
+      tags:
+        - WebADE Application Configuration
+      parameters:
+        - name: acronym
+          in: path
+          description: Name of the project
+          required: true
+          schema:
+            type: string
+        - name: webadeEnv
+          in: path
+          description: The ISSS WebADE environment
+          required: true
+          schema:
+            type: string
+            enum:
+              - INT
+              - TEST
+              - PROD
+      responses:
+        "200":
+          description: WebADE JSON response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DependencyList"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/webade/{webadeEnv}/preferences/insecurePrefs":
+    get:
+      summary: >-
+        Returns a list of all WebADE applicationPreferences that have the
+        sensitiveDataInd set to false matching the search criteria regular
+        expression
+      operationId: getInsecurePrefs
+      tags:
+        - WebADE Application Configuration
+      parameters:
+        - name: webadeEnv
+          in: path
+          description: The ISSS WebADE environment
+          required: true
+          schema:
+            type: string
+            enum:
+              - INT
+              - TEST
+              - PROD
+        - name: searchCriteria
+          in: query
+          required: true
+          schema:
+            type: string
+            example: secret
+          description: >-
+            A regular expression that will find preferences matching on their
+            name
+      responses:
+        "200":
+          description: WebADE JSON response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsecurePrefList"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
         default:
           description: Unexpected error
           content:
@@ -756,11 +756,11 @@ components:
       description: A list of Application Configurations
     AppConfigResponse:
       required:
-        - webAdeResponse
+        - webadeResponse
         - generatedPassword
         - generatedServiceClient
       properties:
-        webAdeResponse:
+        webadeResponse:
           $ref: "#/components/schemas/AppConfig"
         generatedPassword:
           type: string
@@ -1144,7 +1144,7 @@ components:
           description: Identifier for the user in KC
           example: 5b5d0a2f-93a0-4c18-9d70-753648b8e7b9
         username:
-          type: string 
+          type: string
           description: Username from KC
           example: jsmith@idir
         firstName:

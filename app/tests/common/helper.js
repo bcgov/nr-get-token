@@ -12,10 +12,18 @@ const helper = {
    * Creates a stripped-down simple Express server object
    * @param {string} basePath The path to mount the `router` on
    * @param {object} router An express router object to mount
+   * @param {object} keycloakAuthMock An optional object to set the request's kauth property
    * @returns {object} A simple express server object with `router` mounted to `basePath`
    */
-  expressHelper: (basePath, router) => {
+  expressHelper: (basePath, router, keycloakAuthMock = undefined) => {
     const app = express();
+
+    if (keycloakAuthMock) {
+      app.use((req, res, next) => {
+        req.kauth = keycloakAuthMock;
+        next();
+      });
+    }
 
     app.use(express.json());
     app.use(express.urlencoded({
