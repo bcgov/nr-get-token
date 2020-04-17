@@ -9,9 +9,9 @@
         <span>{{acronym}}</span>
       </div>
       <v-tabs vertical class="mt-10 getok-tabs">
-        <v-tab>API Access</v-tab>
-        <v-tab>Team</v-tab>
-        <v-tab v-if="showWebAdeTab">WebADE Access</v-tab>
+        <v-tab>API ACCESS</v-tab>
+        <v-tab>TEAM</v-tab>
+        <v-tab v-if="showWebadeTab">WEBADE ACCESS</v-tab>
 
         <v-tab-item>
           <h2>{{acronym}}</h2>
@@ -54,15 +54,14 @@ export default {
   props: ['acronym'],
   data() {
     return {
-      acronymDetail: null,
-      userHasWebAdePermission: false
+      acronymDetail: null
     };
   },
   computed: {
     ...mapGetters('auth', ['hasWebadePermission']),
     // The user must explicitly be flagged to allow webade management (keycloak), and the acronym must be flagged to allow webade management (DB)
-    showWebAdeTab() {
-      return this.acronymDetail && this.acronymDetail.permissionWebade && this.hasWebadePermission;
+    showWebadeTab() {
+      return !!this.hasWebadePermission && !!(this.acronymDetail && this.acronymDetail.permissionWebade === true);
     }
   },
   beforeDestroy() {
@@ -75,8 +74,8 @@ export default {
     acronymService
       .getAcronym(this.acronym)
       .then(response => {
-        if(response) {
-          this.acronymDetail = response.data;
+        if(response && response.data) {
+          this.acronymDetail = response.data.acronym;
         }
       })
       .catch((err) => {
