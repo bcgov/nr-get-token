@@ -32,7 +32,7 @@ acronymsRouter.get('/:appAcronym', [
 /** Returns clients from KC for the supplied acronym */
 acronymsRouter.get('/:acronym/clients', async (req, res) => {
   // Check for required permissions. Can only fetch details for the acronyms you are associated with
-  const permissionErr = await permissionHelpers.checkAcronymPermission(req.kauth.grant.access_token.content.sub, req.params.appAcronym);
+  const permissionErr = await permissionHelpers.checkAcronymPermission(req.kauth.grant.access_token.content.sub, req.params.acronym);
   if (permissionErr) {
     return new Problem(403, { detail: permissionErr }).send(res);
   }
