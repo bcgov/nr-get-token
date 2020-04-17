@@ -23,11 +23,11 @@
           <Team :acronym="acronym" />
         </v-tab-item>
 
-        <v-tab-item v-if="showWebAdeTab">
+        <v-tab-item v-if="showWebadeTab">
           <h2>{{acronym}}</h2>
           <WebadeAccess :acronym="acronym" />
         </v-tab-item>
-      </v-tabs> 
+      </v-tabs>
     </BaseSecure>
   </v-container>
 </template>
