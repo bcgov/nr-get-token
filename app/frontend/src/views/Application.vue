@@ -41,7 +41,6 @@ import WebadeAccess from '@/components/webadeAccess/WebadeAccess.vue';
 
 import acronymService from '@/services/acronymService';
 import apiAccess from '@/store/modules/apiAccess';
-//import webadeAccess from '@/store/modules/webadeAccess';
 
 export default {
   name: 'Application',

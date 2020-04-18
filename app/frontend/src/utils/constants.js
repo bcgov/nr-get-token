@@ -11,6 +11,11 @@ export const ApiRoutes = Object.freeze({
   WEBADE_CONFIGFORM: '/webAde/configForm'
 });
 
+const apiStore = 'https://i1api.nrs.gov.bc.ca';
+export const CommonServiceRoutes = Object.freeze({
+  TOKEN: `${apiStore}/oauth2/v1/oauth/token?disableDeveloperFilter=true&grant_type=client_credentials&scope=`,
+});
+
 export const FieldValidations = Object.freeze({
   ACRONYM_MAX_LENGTH: 30,
   ACRONYM_MIN_LENGTH: 3,
