@@ -32,6 +32,7 @@ export default {
     ephemeralPasswordRSAKey: state => state.ephemeralPasswordRSAKey,
     existingWebAdeConfig: state => JSON.stringify(state.existingWebAdeConfig, null, 2),
     showWebadeNrosDmsOption: state => state.showWebadeNrosDmsOption,
+    userAppCfg: state => state.userAppCfg,
     appConfigAsString: state => {
       // these are the hardcoded WebADE cfg values users do not enter
       const defaultAppCfg = {

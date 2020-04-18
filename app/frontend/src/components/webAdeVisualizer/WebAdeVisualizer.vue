@@ -60,7 +60,7 @@
 
     <div v-if="errorMessage">
       <v-alert :value="true" type="error"><p>{{errorMessage}}</p>
-      <p>If you think you should not have recieved this error, please try logging out and back in.</p></v-alert>
+        <p>If you think you should not have recieved this error, please try logging out and back in.</p></v-alert>
     </div>
 
     <div v-if="webAdeConfig">

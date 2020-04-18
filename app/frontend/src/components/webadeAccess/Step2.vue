@@ -28,7 +28,7 @@
       <v-radio label="Direct Deploy" value="deploymentDirect"></v-radio>
     </v-radio-group>
 
-    <v-btn text @click="appConfigStep = 2">Back</v-btn>
+    <v-btn text @click="back">Back</v-btn>
 
     <v-dialog
       v-model="confirmationDialog"
@@ -77,7 +77,7 @@
 import SuccessDetails from '@/components/webadeAccess/SuccessDetails.vue';
 
 var jsdiff = require('diff');
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'WebadeStep2',
@@ -95,15 +95,19 @@ export default {
   },
   computed: {
     ...mapGetters('webadeAccess', [
+      'configSubmissionSuccess',
       'existingWebAdeConfig',
     ])
   },
   methods: {
+    ...mapMutations('webadeAccess', ['clearConfigSubmissionMsgs', 'setConfigFormStep']),
+    back() {
+      this.setConfigFormStep(1);
+    },
     async submitConfig() {
       this.generatedToken = '';
       window.scrollTo(0, 0);
-      this.shownPassword = '••••••••';
-      this.$store.commit('webadeAccess/clearConfigSubmissionMsgs');
+      this.clearConfigSubmissionMsgs();
 
       await this.$store.dispatch('webadeAccess/submitConfigForm');
       if (this.configSubmissionSuccess) {
@@ -138,12 +142,6 @@ export default {
       this.$store.commit('webadeAccess/updateUserAppCfg', {
         [field]: value
       });
-    },
-    displayMessage(success, msg) {
-      this.$store.commit(
-        `webadeAccess/setConfigSubmission${success ? 'Success' : 'Error'}`,
-        msg
-      );
     }
   }
 };
@@ -156,5 +154,8 @@ export default {
 .underbutton {
   padding-left: 20px;
   margin-bottom: 15px;
+}
+.underRadioField {
+  padding-left: 32px;
 }
 </style>

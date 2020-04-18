@@ -7,8 +7,7 @@
         <v-text-field
           label="Application Name"
           required
-          :value="userAppCfg.applicationName"
-          v-on:keyup.stop="updateAppCfgField('applicationName', $event.target.value)"
+          v-model="applicationName"
           :counter="fieldValidations.NAME_MAX_LENGTH"
           :rules="applicationNameRules"
         ></v-text-field>
@@ -17,19 +16,17 @@
     <v-text-field
       label="Application Description"
       required
-      :value="userAppCfg.applicationDescription"
-      v-on:keyup.stop="updateAppCfgField('applicationDescription', $event.target.value)"
+      v-model="applicationDescription"
       :counter="fieldValidations.DESCRIPTION_MAX_LENGTH"
       :rules="applicationDescriptionRules"
     ></v-text-field>
     <v-select
-      :items="commonServices"
+      :items="csList"
       label="Common Service(s) Required"
       multiple
       chips
       deletable-chips
-      :value="userAppCfg.commonServices"
-      v-on:change="updateAppCfgField('commonServices', $event)"
+      v-model="commonServices"
     ></v-select>
 
     <v-btn color="primary" @click="next" :disabled="!step1Valid">Next</v-btn>
@@ -47,7 +44,6 @@ export default {
     return {
       fieldValidations: FieldValidations,
       step1Valid: false,
-      userAppCfg: this.$store.state.webadeAccess.userAppCfg,
       applicationNameRules: [
         v => !!v || 'Name is required',
         v =>
@@ -66,8 +62,20 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('webadeAccess', ['showWebadeNrosDmsOption']),
-    commonServices: function() {
+    ...mapGetters('webadeAccess', ['showWebadeNrosDmsOption', 'userAppCfg']),
+    applicationName: {
+      get() { return this.userAppCfg.applicationName; },
+      set(value) { this.updateUserAppCfg({['applicationName']: value}); }
+    },
+    applicationDescription: {
+      get() { return this.userAppCfg.applicationDescription; },
+      set(value) { this.updateUserAppCfg({['applicationDescription']: value}); }
+    },
+    commonServices: {
+      get() { return this.userAppCfg.commonServices; },
+      set(value) { this.updateUserAppCfg({['commonServices']: value}); }
+    },
+    csList: function() {
       return CommonServiceList.filter(
         serv =>
           serv.type === CommonServiceTypes.WEBADE &&
@@ -80,14 +88,9 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('webadeAccess', ['setConfigFormStep']),
+    ...mapMutations('webadeAccess', ['setConfigFormStep', 'updateUserAppCfg']),
     next() {
       this.setConfigFormStep(2);
-    },
-    updateAppCfgField(field, value) {
-      this.$store.commit('webadeAccess/updateUserAppCfg', {
-        [field]: value
-      });
     }
   }
 };
