@@ -65,7 +65,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('configForm', ['appConfigAsString'])
+    ...mapGetters('webadeAccess', ['appConfigAsString'])
   },
   methods: {
     clipboardSuccessHandler() {
@@ -100,5 +100,10 @@ export default {
 .jsonBtn {
   cursor: pointer;
   margin-left: 20px;
+}
+
+.jsonText textarea{
+  font-size: .7rem;
+  line-height: 1rem;
 }
 </style>

@@ -7,8 +7,7 @@ export const ApiRoutes = Object.freeze({
   KC_CLIENTS: '/keycloak/serviceClients',
   KC_CONFIG: '/keycloak/configForm',
   USERS: '/users',
-  WEBADE: '/webAde',
-  WEBADE_CONFIGFORM: '/webAde/configForm'
+  WEBADE: '/webade'
 });
 
 const apiStore = 'https://i1api.nrs.gov.bc.ca';

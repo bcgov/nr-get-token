@@ -146,7 +146,7 @@ const utils = {
    * @returns {object} An object representing the response body
    */
   getWebAdeToken: async (username, password, scope, webadeEnv = 'int') => {
-    const endpoint = config.get(`serviceClient.webAde.${webadeEnv}.endpoint`);
+    const endpoint = config.get(`serviceClient.webAde.${webadeEnv.toLowerCase()}.endpoint`);
     const url = endpoint.replace('webade-api', 'oauth2') + '/oauth/token';
 
     try {

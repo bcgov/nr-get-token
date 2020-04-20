@@ -1,5 +1,5 @@
-// import { getokAxios } from '@/services/interceptors';
-// import { ApiRoutes } from '@/utils/constants';
+import { getokAxios } from '@/services/interceptors';
+import { ApiRoutes } from '@/utils/constants';
 
 export default {
   /**
@@ -8,18 +8,16 @@ export default {
    * @returns {Promise} An axios response
    */
   getWebAdeConfig(env, acronym) {
-    throw new Error(env + acronym);
-    //return getokAxios().get(ApiRoutes.KC_CLIENTS, { timeout: 30000 });
+    return getokAxios().get(`${ApiRoutes.WEBADE}/${env}/${acronym}/appconfig`, { timeout: 30000 });
   },
 
   /**
    * @function postConfigForm
-   * Creates a keycloak service client in the targetted env
-   * @param {object} content An object with applicationAcronym, name, environment, etc (see validation in keycloak router in backend for required fields)
+   * Creates a WebADE service client in the targetted env
+   * @param {object} content The configForm to send to create the WebADE cfg from
    * @returns {Promise} An axios response
    */
   postConfigForm(content) {
-    throw new Error(content);
-    //return getokAxios().post(ApiRoutes.KC_CONFIG, content);
+    return getokAxios().post(`${ApiRoutes.WEBADE}/configForm`, content);
   }
 };

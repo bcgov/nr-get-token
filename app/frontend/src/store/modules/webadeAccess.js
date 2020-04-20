@@ -11,6 +11,7 @@ export default {
     configSubmissionSuccess: '',
     configSubmissionError: '',
     configSubmissionInProgress: false,
+    diffLoading: false,
     ephemeralPasswordRSAKey: null,
     existingWebAdeConfig: '',
     showWebadeNrosDmsOption: false,
@@ -20,7 +21,7 @@ export default {
       applicationDescription: '',
       commonServices: [],
       deploymentMethod: '',
-      clientEnvironment: ''
+      clientEnvironment: 'INT'
     },
   },
   getters: {
@@ -29,6 +30,7 @@ export default {
     configSubmissionError: state => state.configSubmissionError,
     configSubmissionInProgress: state => state.configSubmissionInProgress,
     configFormSubmissionResult: state => state.configFormSubmissionResult,
+    diffLoading: state => state.diffLoading,
     ephemeralPasswordRSAKey: state => state.ephemeralPasswordRSAKey,
     existingWebAdeConfig: state => JSON.stringify(state.existingWebAdeConfig, null, 2),
     showWebadeNrosDmsOption: state => state.showWebadeNrosDmsOption,
@@ -188,6 +190,9 @@ export default {
     setConfigFormSubmissionResult: (state, val) => {
       state.configFormSubmissionResult = val;
     },
+    setDiffLoading: (state, val) => {
+      state.diffLoading = val;
+    },
     setEphemeralPasswordRSAKey: (state, ephemeralPasswordRSAKey) => {
       state.ephemeralPasswordRSAKey = ephemeralPasswordRSAKey;
     },
@@ -199,10 +204,9 @@ export default {
       state.userAppCfg.applicationName = val.name;
       state.userAppCfg.applicationDescription = val.description;
     },
-    setshowWebadeNrosDmsOption: ({ state, context }, acrDetail) => {
-      const userHasNrosDms = context.rootGetters['auth/hasWebadeNrosDmsPermission'];
+    setshowWebadeNrosDmsOption: (state, { acrDetail, authStoreHasNros}) => {
       const dbHasNrosFlag = acrDetail && acrDetail.permissionWebadeNrosDms;
-      state.showWebadeNrosDmsOption = userHasNrosDms && dbHasNrosFlag;
+      state.showWebadeNrosDmsOption = authStoreHasNros && dbHasNrosFlag;
     },
     updateUserAppCfg: (state, userAppCfg) => {
       Object.assign(state.userAppCfg, userAppCfg);
@@ -219,7 +223,8 @@ export default {
           }
         }
         context.commit('setSelectedAcronymDetails', response.data);
-        context.commit('setshowWebadeNrosDmsOption', response.data);
+        const authStoreHasNros = context.rootGetters['auth/hasWebadeNrosDmsPermission'];
+        context.commit('setshowWebadeNrosDmsOption', { acrDetail: response.data, authStoreHasNros });
       } catch (error) {
         context.commit('setConfigSubmissionError', `An error occurred fetching application details for ${acronym}`);
       }
@@ -242,30 +247,37 @@ export default {
       };
       try {
         const response = await webadeService.postConfigForm(body);
-        if (!response || !response.generatedPassword) {
+        if (!response.data || !response.data.generatedPassword) {
           throw new Error('Config form POST response is blank or does not include the password');
         }
 
         const configFormSubmissionResult = {
-          generatedPassword: response.generatedPassword,
-          generatedServiceClient: response.generatedServiceClient
+          generatedPassword: response.data.generatedPassword,
+          generatedServiceClient: response.data.generatedServiceClient
         };
 
         const msg = `SUCCESS, configuration for ${context.state.userAppCfg.applicationAcronym} updated in ${context.state.userAppCfg.clientEnvironment}.`;
         context.commit('setConfigSubmissionSuccess', msg);
         context.commit('setConfigFormSubmissionResult', configFormSubmissionResult);
       } catch (error) {
+        console.error(error); // eslint-disable-line no-console
         context.commit('setConfigSubmissionError', 'An error occurred while attempting to update the application configuration in WebADE.');
       }
     },
     async getWebAdeConfig(context, payload) {
       try {
+        context.commit('setExistingWebAdeConfig', '');
+        context.commit('setDiffLoading', true);
         const response = await webadeService.getWebAdeConfig(payload.webAdeEnv, payload.acronym);
+        const cfg = response.data;
         // remove the 'links' item
-        delete response.links;
-        context.commit('setExistingWebAdeConfig', response);
+        delete cfg.links;
+        context.commit('setExistingWebAdeConfig', cfg);
       } catch (error) {
+        console.error(error); // eslint-disable-line no-console
         context.commit('setExistingWebAdeConfig', `An error occurred getting the existing WebADE configuration for ${payload.acronym} in ${payload.webAdeEnv}`);
+      } finally {
+        context.commit('setDiffLoading', false);
       }
     }
   }

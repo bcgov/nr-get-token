@@ -33,7 +33,7 @@ const permissionHelpers = {
   checkWebAdePostPermissions: async (token, configForm, acronymData, desiredUserRoles = []) => {
     try {
       // Do they have access to the Acronym they are trying to POST
-      const acronymAccessError = await permissionHelpers.checkAcronymPermission(token, configForm.applicationAcronym);
+      const acronymAccessError = await permissionHelpers.checkAcronymPermission(token.sub, configForm.applicationAcronym);
       if (acronymAccessError) {
         return acronymAccessError;
       }

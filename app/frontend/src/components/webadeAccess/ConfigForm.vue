@@ -1,5 +1,5 @@
 <template>
-  <v-stepper v-model="configFormStep" vertical class="elevation-0">
+  <v-stepper v-model="configFormStep" vertical class="elevation-0 pl-0">
     <v-stepper-step :complete="configFormStep > 1" step="1">
       Set up Application
       <small>Enter service client details</small>

@@ -433,7 +433,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /webade/appConfigForm:
+  /webade/configForm:
     post:
       summary: Submit a proposed application
       operationId: appConfigFormPost

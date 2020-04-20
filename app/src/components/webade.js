@@ -159,17 +159,37 @@ const appConfig = {
     const path = '/applicationConfigurations';
     const webAdeUrl = endpoint + path;
     try {
-      const webAdeResponse = await axios.post(webAdeUrl, generatedConfig.webAdeCfg, {
-        headers: {
-          'Authorization': `Bearer ${token.access_token}`,
-          'Content-Type': 'application/json; charset=utf-8'
+      // const webAdeResponse = await axios.post(webAdeUrl, generatedConfig.webAdeCfg, {
+      //   headers: {
+      //     'Authorization': `Bearer ${token.access_token}`,
+      //     'Content-Type': 'application/json; charset=utf-8'
+      //   }
+      // });
+      const webAdeResponse = {
+        data: {
+          url: webAdeUrl,
+          userId: userId,
+          webadeEnv: webadeEnv,
+          generatedConfig: {
+            encryptedPassword: 'pass',
+            webAdeCfg: {
+              serviceClients: [
+                {
+                  accountName: 'SC'
+                }
+              ],
+              configForm: configForm,
+              publicKey: publicKey
+            }
+          }
+
         }
-      });
+      };
       log.verbose('postAppConfig', JSON.stringify(webAdeResponse.data));
 
-      await lifecycleService.create(configForm.applicationAcronym, generatedConfig.webAdeCfg, webadeEnv, userId);
+      // await lifecycleService.create(configForm.applicationAcronym, generatedConfig.webAdeCfg, webadeEnv, userId);
 
-      await acronymService.updateDetails(configForm.applicationAcronym, configForm.applicationName, configForm.applicationDescription);
+      // await acronymService.updateDetails(configForm.applicationAcronym, configForm.applicationName, configForm.applicationDescription);
 
       return {
         webAdeResponse: webAdeResponse.data,
@@ -287,7 +307,7 @@ const appConfig = {
     } catch (error) {
       log.error('getAppConfig', error.message);
       if (error.response) {
-        log.error(error.response.status);
+        log.error('getAppConfig', error.response.status);
         if (error.response.status && error.response.status === 404) {
           // 404, couldn't find a config for the specified acronym, return nothing.
           return '';
