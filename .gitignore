@@ -6,6 +6,7 @@
 build
 coverage
 dist
+**/e2e/videos
 node_modules
 # Ignore only top-level package-lock.json
 /package-lock.json
@@ -30,3 +31,7 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+*.mp4
+
+# temp office files
+~$*

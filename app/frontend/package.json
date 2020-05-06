@@ -18,10 +18,12 @@
     "build": "vue-cli-service build",
     "test": "npm run test:unit",
     "test:unit": "vue-cli-service test:unit --verbose --forceExit --detectOpenHandles --maxWorkers=10",
+    "test:e2e": "vue-cli-service test:e2e",
+    "test:e2e:ci": "vue-cli-service test:e2e --headless --mode production",
     "lint": "vue-cli-service lint",
     "lint:fix": "vue-cli-service lint --fix",
     "pretest": "npm run lint",
-    "clean": "rm -rf coverage dist",
+    "clean": "rm -rf coverage dist **/e2e/videos",
     "purge": "rm -rf node_modules",
     "rebuild": "npm run clean && npm run build",
     "reinstall": "npm run purge && npm install"
@@ -42,6 +44,7 @@
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.3.1",
+    "@vue/cli-plugin-e2e-cypress": "^4.3.1",
     "@vue/cli-plugin-eslint": "^4.3.1",
     "@vue/cli-plugin-router": "^4.3.1",
     "@vue/cli-plugin-unit-jest": "^4.3.1",
