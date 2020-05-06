@@ -3,6 +3,13 @@
  * This globally extends the base Vuetify style
  */
 
+// Variables
+$bcgov-blue: #003366;
+$bcgov-blue-secondary: #38598a;
+$bcgov-orange: #fcba19;
+$bcgov-grey: #efefef;
+$bcgov-font: #494949;
+
 // Sticky Footer
 body {
   display: flex;
@@ -15,22 +22,32 @@ body {
 // Typography
 .v-application {
   font-family: -apple-system, BlinkMacSystemFont, BCSans, Roboto, Verdana, Arial, sans-serif !important;
-  line-height: 1.5;
+  line-height: 1.4;
+  font-size: 0.875rem;
 }
 
-h1 { font-size: 2.074em; /* (37.32px) */ }
-h2 { font-size: 1.728em; /* (31.10px) */ }
-h3 { font-size: 1.444em; /* (25.92px) */ }
-h4 { font-size: 1.2em; /* (21.60px) */ }
+h1 { font-size: 1.9em;  }
+h2 { font-size: 1.7em;  }
+h3 { font-size: 1.3em;  }
+h4 { font-size: 1.05em;  }
 
 h1, h2, h3, h4, h5 {
-  color: #494949;
+  color: $bcgov-font;
   line-height: 1.2;
 }
 
 p {
-  color: #494949;
-  line-height: 1.6;
+  color: $bcgov-font;
+  line-height: 1.4;
+}
+
+// Horizontal Rule
+hr {
+  border-top: 1px solid lightgrey;
+  margin-bottom: 1em;
+  .orange {
+    border-top: 2px solid $bcgov-orange;
+  }
 }
 
 // Anchor and Tab Behavior
@@ -38,7 +55,7 @@ a, .v-tab {
   text-decoration: none;
   &:hover {
     text-decoration: underline;
-    button {
+    button, .v-icon {
       display: inline-block;
       text-decoration: none;
     }
@@ -73,4 +90,3 @@ a, .v-tab {
     }
   }
 }
-
