@@ -5,12 +5,12 @@ import '@/assets/scss/style.scss';
 import axios from 'axios';
 import NProgress from 'nprogress';
 import Vue from 'vue';
-import VueKeycloakJs from '@dsb-norge/vue-keycloak-js';
 
 import App from '@/App.vue';
 import auth from '@/store/modules/auth.js';
 import router from '@/router';
 import store from '@/store';
+import VueKeycloakJs from '@/plugins/keycloak';
 import vuetify from '@/plugins/vuetify';
 
 Vue.config.productionTip = false;

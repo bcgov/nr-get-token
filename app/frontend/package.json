@@ -28,10 +28,10 @@
   },
   "dependencies": {
     "@bcgov/bc-sans": "^1.0.1",
-    "@dsb-norge/vue-keycloak-js": "^1.1.2",
     "axios": "^0.19.2",
     "core-js": "^3.6.5",
     "cryptico-js": "^1.1.0",
+    "keycloak-js": "^10.0.0",
     "nprogress": "^0.2.0",
     "validator": "^13.0.0",
     "vue": "^2.6.11",
