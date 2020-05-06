@@ -60,7 +60,9 @@
           </div>
         </v-skeleton-loader>
       </template>
-      <template v-slot:button-text>Close</template>
+      <template v-slot:button-text>
+        <span>Close</span>
+      </template>
     </BaseDialog>
   </div>
 </template>
