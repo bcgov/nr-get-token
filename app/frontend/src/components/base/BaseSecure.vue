@@ -1,6 +1,6 @@
 <template>
   <div v-if="authenticated">
-    <div v-if="authorized">
+    <div v-if="authorized()">
       <slot />
     </div>
     <div v-else class="text-center">
@@ -32,15 +32,15 @@ export default {
       'createLoginUrl',
       'isAdmin',
       'keycloakReady'
-    ]),
-    authorized() {
-      return this.admin ? this.isAdmin : true;
-    }
+    ])
   },
   methods: {
+    authorized() {
+      return this.admin ? this.isAdmin : true;
+    },
     login() {
       if (this.keycloakReady) {
-        window.location.replace(this.createLoginUrl());
+        window.location.replace(this.createLoginUrl({ idpHint: 'idir' }));
       }
     }
   },

@@ -1,5 +1,5 @@
 <template>
-  <footer class="gov-footer v-footer">
+  <v-footer class="gov-footer">
     <v-btn text id="footer-home" href="https://www.gov.bc.ca/">
       <span>Home</span>
     </v-btn>
@@ -21,7 +21,7 @@
     <v-btn text id="footer-contact" href="https://www2.gov.bc.ca/gov/content/home/contact-us">
       <span>Contact Us</span>
     </v-btn>
-  </footer>
+  </v-footer>
 </template>
 
 <script>
@@ -32,6 +32,14 @@ export default {
 
 <style lang="scss" scoped>
 .gov-footer {
+  background-color: #003366 !important;
+  border-top: 2px solid #fcba19;
+  flex-shrink: 0;
+  min-height: 2.5rem;
+  min-width: 100%;
+  padding-bottom: 0;
+  padding-top: 0;
+
   a {
     color: #ffffff;
     font-size: 1rem;
@@ -40,24 +48,12 @@ export default {
     }
   }
 
-  .v-btn {
+  .v-btn__content > span {
     color: #ffffff;
     font-size: 1rem;
+    font-weight: normal;
     text-decoration: none;
     text-transform: none;
-    span > span {
-      font-weight: normal;
-    }
-  }
-
-  &.v-footer {
-    background-color: #003366;
-    border-top: 2px solid #fcba19;
-    flex-shrink: 0;
-    min-height: 2.5rem;
-    min-width: 100%;
-    padding-bottom: 0;
-    padding-top: 0;
   }
 }
 </style>
