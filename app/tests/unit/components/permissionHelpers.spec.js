@@ -5,34 +5,31 @@ const { userService } = require('../../../src/services');
 helper.logHelper();
 
 describe('checkAcronymPermission', () => {
-  const spy = jest.fn();
-
-  beforeAll(() => {
-    userService.userAcronymList = spy;
-  });
+  const userAcronymListSpy = jest.spyOn(userService, 'userAcronymList');
+  const mapHelper = arr => arr.map(a => ({ acronym: a }));
 
   beforeEach(() => {
-    spy.mockReset();
+    userAcronymListSpy.mockReset();
   });
 
   it('should return undefined when user has permission for acronym', async () => {
-    spy.mockResolvedValue(['MSSC', 'WORG']);
-    const result = permissionHelpers.checkAcronymPermission('333604a0-b527-4afb-a04e-5e4ebf06ce9c', 'WORG');
-    expect(result).resolves.toBeUndefined();
-    expect(spy).toHaveBeenCalledTimes(1);
+    userAcronymListSpy.mockResolvedValue(mapHelper(['MSSC', 'WORG']));
+    const result = await permissionHelpers.checkAcronymPermission('333604a0-b527-4afb-a04e-5e4ebf06ce9c', 'WORG');
+    expect(result).toBeUndefined();
+    expect(userAcronymListSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should return an error string when user does not have permission for acronym', async () => {
-    spy.mockResolvedValue(['MSSC', 'WORG']);
-    const result = permissionHelpers.checkAcronymPermission('333604a0-b527-4afb-a04e-5e4ebf06ce9c', 'ABCD');
-    expect(result).resolves.toEqual('User lacks permission for \'ABCD\' acronym');
-    expect(spy).toHaveBeenCalledTimes(1);
+    userAcronymListSpy.mockResolvedValue(mapHelper(['MSSC', 'WORG']));
+    const result = await permissionHelpers.checkAcronymPermission('333604a0-b527-4afb-a04e-5e4ebf06ce9c', 'ABCD');
+    expect(result).toEqual('User lacks permission for \'ABCD\' acronym');
+    expect(userAcronymListSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should return an error string when user has no acronym permissions', async () => {
-    spy.mockResolvedValue([]);
-    const result = permissionHelpers.checkAcronymPermission('333604a0-b527-4afb-a04e-5e4ebf06ce9c', 'WORG');
-    expect(result).resolves.toEqual('User lacks permission for \'WORG\' acronym');
-    expect(spy).toHaveBeenCalledTimes(1);
+    userAcronymListSpy.mockResolvedValue([]);
+    const result = await permissionHelpers.checkAcronymPermission('333604a0-b527-4afb-a04e-5e4ebf06ce9c', 'WORG');
+    expect(result).toEqual('User lacks permission for \'WORG\' acronym');
+    expect(userAcronymListSpy).toHaveBeenCalledTimes(1);
   });
 });
