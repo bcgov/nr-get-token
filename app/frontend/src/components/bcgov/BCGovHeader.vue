@@ -3,7 +3,13 @@
     <v-toolbar color="#003366" flat>
       <!-- Navbar content -->
       <a href="https://www2.gov.bc.ca">
-        <v-img src="@/assets/images/17_gov3_bc_logo.svg" alt="B.C. Government Logo" />
+        <v-img
+          alt="B.C. Government Logo"
+          contain
+          height="3.5rem"
+          src="@/assets/images/17_gov3_bc_logo.svg"
+          width="10rem"
+        />
       </a>
       <v-toolbar-title class="title">{{ appTitle }}</v-toolbar-title>
       <v-spacer />
