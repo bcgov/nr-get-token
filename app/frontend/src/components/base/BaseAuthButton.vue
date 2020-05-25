@@ -25,13 +25,16 @@ export default {
   methods: {
     login() {
       if (this.keycloakReady) {
-        window.location.replace(this.createLoginUrl());
+        window.location.replace(
+          this.createLoginUrl({ idpHint: 'idir' })
+        );
       }
     },
     logout() {
       if (this.keycloakReady) {
         window.location.replace(
           this.createLogoutUrl({
+            idpHint: 'idir',
             redirectUri: location.origin + location.pathname
           })
         );

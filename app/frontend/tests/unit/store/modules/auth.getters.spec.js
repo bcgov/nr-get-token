@@ -36,7 +36,11 @@ describe('auth getters', () => {
             realm_access: {
               roles: roles
             },
-            resource_access: {}
+            resource_access: {
+              app: {
+                roles: roles
+              }
+            }
           },
           userName: 'uName'
         };
@@ -69,6 +73,52 @@ describe('auth getters', () => {
   it('fullName should return a string', () => {
     expect(store.getters.fullName).toBeTruthy();
     expect(store.getters.fullName).toMatch('fName');
+  });
+
+  it('hasResourceRoles should return false if unauthenticated', () => {
+    authenticated = false;
+
+    expect(store.getters.authenticated).toBeFalsy();
+    expect(store.getters.hasResourceRoles('app', roles)).toBeFalsy();
+  });
+
+  it('hasResourceRoles should return true when checking no roles', () => {
+    authenticated = true;
+    roles = [];
+
+    expect(store.getters.authenticated).toBeTruthy();
+    expect(store.getters.hasResourceRoles('app', roles)).toBeTruthy();
+  });
+
+  it('hasResourceRoles should return true when role exists', () => {
+    authenticated = true;
+    roles = [RealmRoles.GETOK_ADMIN];
+
+    expect(store.getters.authenticated).toBeTruthy();
+    expect(store.getters.hasResourceRoles('app', roles)).toBeTruthy();
+  });
+
+  it('hasResourceRoles should return false when resource does not exist', () => {
+    authenticated = true;
+    roles = [RealmRoles.GETOK_ADMIN];
+
+    // TODO: Find better way to set up keycloak object mock without deleting first
+    delete Vue.prototype.$keycloak;
+    Object.defineProperty(Vue.prototype, '$keycloak', {
+      configurable: true, // Needed to allow deletions later
+      get() {
+        return {
+          authenticated: authenticated,
+          tokenParsed: {
+            realm_access: {},
+            resource_access: {}
+          }
+        };
+      }
+    });
+
+    expect(store.getters.authenticated).toBeTruthy();
+    expect(store.getters.hasResourceRoles('app', roles)).toBeFalsy();
   });
 
   it('isAdmin should return false if unauthenticated', () => {

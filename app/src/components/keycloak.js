@@ -11,5 +11,5 @@ module.exports = new Keycloak({}, {
   serverUrl: config.get('server.keycloak.serverUrl'),
   'ssl-required': 'external',
   'use-resource-role-mappings': true,
-  'verify-token-audience': true
+  'verify-token-audience': false
 });

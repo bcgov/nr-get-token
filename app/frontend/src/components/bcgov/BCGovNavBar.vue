@@ -73,7 +73,7 @@ export default {
           margin: 0;
         }
       }
-      
+
       .router-link-active {
         background-color: #7ba2cc80;
         border-bottom: 2px solid #fcba19;

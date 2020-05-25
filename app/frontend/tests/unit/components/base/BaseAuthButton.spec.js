@@ -7,10 +7,26 @@ const localVue = createLocalVue();
 localVue.use(Vuex);
 
 describe('BaseAuthButton.vue', () => {
+  const { location } = window;
+  const mockReplace = jest.fn(cb => {
+    cb();
+  });
   let store;
 
+  beforeAll(() => {
+    delete window.location;
+    window.location = {
+      replace: mockReplace
+    };
+  });
+
   beforeEach(() => {
+    mockReplace.mockReset();
     store = new Vuex.Store();
+  });
+
+  afterAll(() => {
+    window.location = location;
   });
 
   it('renders login when not authenticated', () => {
@@ -18,8 +34,6 @@ describe('BaseAuthButton.vue', () => {
       namespaced: true,
       getters: {
         authenticated: () => false,
-        createLoginUrl: () => 'test',
-        createLogoutUrl: () => 'test',
         keycloakReady: () => true
       }
     });
@@ -34,8 +48,6 @@ describe('BaseAuthButton.vue', () => {
       namespaced: true,
       getters: {
         authenticated: () => true,
-        createLoginUrl: () => 'test',
-        createLogoutUrl: () => 'test',
         keycloakReady: () => true
       }
     });
@@ -50,8 +62,6 @@ describe('BaseAuthButton.vue', () => {
       namespaced: true,
       getters: {
         authenticated: () => false,
-        createLoginUrl: () => 'test',
-        createLogoutUrl: () => 'test',
         keycloakReady: () => false
       }
     });
@@ -59,5 +69,39 @@ describe('BaseAuthButton.vue', () => {
     const wrapper = shallowMount(BaseAuthButton, { localVue, store });
 
     expect(wrapper.text()).toBeFalsy();
+  });
+
+  it('login button redirects to login url', () => {
+    store.registerModule('auth', {
+      namespaced: true,
+      getters: {
+        authenticated: () => false,
+        createLoginUrl: () => () => 'test',
+        keycloakReady: () => true
+      }
+    });
+
+    const wrapper = shallowMount(BaseAuthButton, { localVue, store });
+    wrapper.vm.login();
+
+    expect(wrapper.text()).toMatch('Login');
+    expect(mockReplace).toHaveBeenCalledTimes(1);
+  });
+
+  it('logout button redirects to logout url', () => {
+    store.registerModule('auth', {
+      namespaced: true,
+      getters: {
+        authenticated: () => true,
+        createLogoutUrl: () => () => 'test',
+        keycloakReady: () => true
+      }
+    });
+
+    const wrapper = shallowMount(BaseAuthButton, { localVue, store });
+    wrapper.vm.logout();
+
+    expect(wrapper.text()).toMatch('Logout');
+    expect(mockReplace).toHaveBeenCalledTimes(1);
   });
 });

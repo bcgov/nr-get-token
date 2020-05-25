@@ -21,6 +21,15 @@ export default {
     createLoginUrl: () => options => Vue.prototype.$keycloak.createLoginUrl(options),
     createLogoutUrl: () => options => Vue.prototype.$keycloak.createLogoutUrl(options),
     fullName: () => Vue.prototype.$keycloak.fullName,
+    hasResourceRoles: (_state, getters) => (resource, roles) => {
+      if (!getters.authenticated) return false;
+      if (!roles.length) return true; // No roles to check against
+
+      if (getters.resourceAccess[resource]) {
+        return hasRoles(getters.resourceAccess[resource].roles, roles);
+      }
+      return false; // There are roles to check, but nothing in token to check against
+    },
     isAdmin: (_state, getters) => {
       if (!getters.authenticated) return false;
       return hasRoles(getters.realmAccess.roles, [RealmRoles.GETOK_ADMIN]);
