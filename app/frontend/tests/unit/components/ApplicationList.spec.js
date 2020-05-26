@@ -2,10 +2,11 @@ import { createLocalVue, shallowMount } from '@vue/test-utils';
 import Vuetify from 'vuetify';
 import Vuex from 'vuex';
 
-import router from '@/router';
+import getRouter from '@/router';
 import ApplicationList from '@/components/ApplicationList.vue';
 import user from '@/store/modules/user.js';
 
+const router = getRouter();
 const localVue = createLocalVue();
 localVue.use(router);
 localVue.use(Vuetify);

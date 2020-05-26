@@ -3,7 +3,7 @@
     <v-btn v-if="authenticated" dark outlined @click="logout">
       <span>Logout</span>
     </v-btn>
-    <v-btn v-else dark outlined @click="login">
+    <v-btn v-else-if="hasLogin" dark outlined @click="login">
       <span>Login</span>
     </v-btn>
   </div>
@@ -20,14 +20,15 @@ export default {
       'createLoginUrl',
       'createLogoutUrl',
       'keycloakReady'
-    ])
+    ]),
+    hasLogin() {
+      return this.$route && this.$route.meta && this.$route.meta.hasLogin;
+    }
   },
   methods: {
     login() {
       if (this.keycloakReady) {
-        window.location.replace(
-          this.createLoginUrl({ idpHint: 'idir' })
-        );
+        window.location.replace(this.createLoginUrl({ idpHint: 'idir' }));
       }
     },
     logout() {
@@ -35,7 +36,7 @@ export default {
         window.location.replace(
           this.createLogoutUrl({
             idpHint: 'idir',
-            redirectUri: location.origin + location.pathname
+            redirectUri: `${location.origin}/${this.$config.basePath}`
           })
         );
       }
