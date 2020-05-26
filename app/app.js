@@ -5,6 +5,7 @@ const log = require('npmlog');
 const morgan = require('morgan');
 const path = require('path');
 const Problem = require('api-problem');
+const querystring = require('querystring');
 
 const db = require('./src/models');
 const keycloak = require('./src/components/keycloak');
@@ -64,8 +65,8 @@ apiRouter.get('/api', (_req, res) => {
 });
 
 // Host API endpoints
-apiRouter.use(`${config.get('server.apiPath')}`, v1Router);
-app.use(`${config.get('server.basePath')}`, apiRouter);
+apiRouter.use(config.get('server.apiPath'), v1Router);
+app.use(config.get('server.basePath'), apiRouter);
 
 // Host the static frontend assets
 const staticFilesPath = config.get('frontend.basePath');
@@ -96,8 +97,9 @@ app.use((req, res) => {
       detail: req.originalUrl
     }).send(res);
   } else {
-    // Redirect any non-API requests to static frontend
-    res.redirect(staticFilesPath);
+    // Redirect any non-API requests to static frontend with redirect breadcrumb
+    const query = querystring.stringify({ r: req.path });
+    res.redirect(`${staticFilesPath}/?${query}`);
   }
 });
 
