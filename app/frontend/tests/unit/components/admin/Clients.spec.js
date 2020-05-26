@@ -1,8 +1,9 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils';
 
-import router from '@/router';
+import getRouter from '@/router';
 import ServiceClients from '@/components/admin/ServiceClients.vue';
 
+const router = getRouter();
 const localVue = createLocalVue();
 localVue.use(router);
 

@@ -1,9 +1,10 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils';
 import Vuetify from 'vuetify';
 
-import router from '@/router';
+import getRouter from '@/router';
 import App from '@/App.vue';
 
+const router = getRouter();
 const localVue = createLocalVue();
 localVue.use(router);
 localVue.use(Vuetify);

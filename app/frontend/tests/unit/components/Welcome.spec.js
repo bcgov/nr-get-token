@@ -1,8 +1,9 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils';
 
-import router from '@/router';
+import getRouter from '@/router';
 import Welcome from '@/components/Welcome.vue';
 
+const router = getRouter();
 const localVue = createLocalVue();
 localVue.use(router);
 

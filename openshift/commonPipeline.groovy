@@ -63,6 +63,7 @@ def runStageBuild() {
             def bcApp = openshift.process('-f',
               'openshift/app.bc.yaml',
               "REPO_NAME=${REPO_NAME}",
+              "ROUTE_PATH=${PATH_ROOT}",
               "JOB_NAME=${JOB_NAME}",
               "SOURCE_REPO_URL=${SOURCE_REPO_URL}",
               "SOURCE_REPO_REF=${SOURCE_REPO_REF}"

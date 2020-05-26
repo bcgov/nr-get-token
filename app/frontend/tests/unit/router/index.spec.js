@@ -1,6 +1,7 @@
-import router from '@/router';
+import getRouter from '@/router';
 
 describe('Router', () => {
+  const router = getRouter();
   const routes = router.options.routes;
 
   it('has the correct number of routes', () => {

@@ -23,7 +23,9 @@ export default {
   name: 'BCGovHeader',
   computed: {
     appTitle() {
-      return process.env.VUE_APP_TITLE;
+      return this.$route && this.$route.meta && this.$route.meta.title
+        ? this.$route.meta.title
+        : process.env.VUE_APP_TITLE;
     }
   }
 };
