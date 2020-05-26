@@ -53,6 +53,9 @@ objects:
           CMD ["npm", "run", "start"]
       strategy:
         dockerStrategy:
+          env:
+            - name: FRONTEND_BASEPATH
+              value: "${ROUTE_PATH}"
           from:
             kind: DockerImage
             name: "mhart/alpine-node:12"
@@ -62,6 +65,10 @@ parameters:
   - name: REPO_NAME
     description: Application repository name
     displayName: Repository Name
+    required: true
+  - name: ROUTE_PATH
+    description: Configure the route path (ex. /pr-5 or /app), also used for FRONTEND_BASEPATH
+    displayName: Route path
     required: true
   - name: JOB_NAME
     description: Job identifier (i.e. 'pr-5' OR 'master')
