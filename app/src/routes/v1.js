@@ -16,6 +16,7 @@ const webadeRouter = require('./v1/webade');
 const getSpec = () => {
   const rawSpec = fs.readFileSync(path.join(__dirname, '../docs/v1.api-spec.yaml'), 'utf8');
   const spec = yaml.safeLoad(rawSpec);
+  spec.servers[0].url = `${config.get('server.basePath')}/api/v1`;
   spec.components.securitySchemes.OpenID.openIdConnectUrl = `${config.get('server.keycloak.serverUrl')}/realms/${config.get('server.keycloak.realm')}/.well-known/openid-configuration`;
   return spec;
 };
