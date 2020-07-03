@@ -66,6 +66,15 @@ export default function getRouter(basePath = '/') {
         },
       },
       {
+        path: '/documentation',
+        name: 'Documentation',
+        component: () => import(/* webpackChunkName: "documentation" */ '@/views/Documentation.vue'),
+        meta: {
+          hasLogin: true,
+          requiresAuth: true
+        }
+      },
+      {
         path: '/404',
         alias: '*',
         name: 'NotFound',

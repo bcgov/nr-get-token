@@ -151,7 +151,7 @@ export default {
           v.length <= FieldValidations.ACRONYM_MAX_LENGTH ||
           `Acronym must be ${FieldValidations.ACRONYM_MAX_LENGTH} characters or less`,
         v =>
-          /^(?:[A-Z]{2,}[_]?)+[A-Z]{1,}$/g.test(v) ||
+          /^(?:[A-Z]{1,}[_]?)+[A-Z]{1,}$/g.test(v) ||
           'Incorrect format. Hover over ? for details.'
       ],
       errorOccurred: false,
