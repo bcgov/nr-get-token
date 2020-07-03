@@ -2,16 +2,25 @@
   <header class="gov-header">
     <v-toolbar color="#003366" flat>
       <!-- Navbar content -->
-      <a href="https://www2.gov.bc.ca">
+      <a href="https://www2.gov.bc.ca" data-test="btn-header-logo">
         <v-img
           alt="B.C. Government Logo"
+          class="d-none d-sm-flex d-md-none"
           contain
           height="3.5rem"
-          src="@/assets/images/17_gov3_bc_logo.svg"
+          src="@/assets/images/bc_logo_square.svg"
+          width="3.5rem"
+        />
+        <v-img
+          alt="B.C. Government Logo"
+          class="d-none d-md-flex"
+          contain
+          height="3.5rem"
+          src="@/assets/images/bc_logo.svg"
           width="10rem"
         />
       </a>
-      <v-toolbar-title class="title">{{ appTitle }}</v-toolbar-title>
+      <h1 data-test="btn-header-title" class="font-weight-bold title">{{ appTitle }}</h1>
       <v-spacer />
       <BaseAuthButton />
     </v-toolbar>
@@ -31,13 +40,19 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/assets/scss/style.scss';
+
 .gov-header {
   border-bottom: 2px solid #fcba19;
-}
-
-.title {
-  color: #ffffff;
-  padding: 1rem;
+  .title {
+    font-family: inherit !important;
+    color: #ffffff;
+    overflow: hidden;
+    padding: 1rem;
+    @media #{map-get($display-breakpoints, 'sm-and-down')} {
+      font-size: 1rem !important;
+    }
+  }
 }
 </style>
