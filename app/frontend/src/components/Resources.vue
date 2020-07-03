@@ -5,7 +5,7 @@
       <v-toolbar flat color="grey lighten-3">
         <v-toolbar-title class="px-3">Resources</v-toolbar-title>
       </v-toolbar>
-      <v-simple-table>
+      <v-simple-table class="css-resp-table">
         <template>
           <tbody>
             <tr>
@@ -32,7 +32,7 @@
                   <li class="my-2">
                     Read the
                     <a
-                      href="https://bcgov.github.io/common-service-showcase/assets/files/common_services_postman_readme.md"
+                      href="https://bcgov.github.io/common-service-showcase/assets/files/common_services_postman_readme"
                     >guide</a> to setup and run.
                   </li>
                 </ul>
@@ -44,13 +44,11 @@
                 <p>We do recommend that you read the API documentation before running the collection.</p>
                 <ul>
                   <li class="my-2">
-                    Common Hosted Email Service (
-                    <a href="https://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/docs">CHES</a>).
+                    Common Hosted Email Service (<a href="https://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/docs">CHES</a>).
                   </li>
                   <li class="my-2">
-                    Common Document Generation Service (
-                    <a
-                      href="https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/docs#tag/DocGen"
+                    Common Document Generation Service (<a
+                      href="https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/docs"
                     >CDOGS</a>).
                   </li>
                 </ul>
@@ -86,23 +84,32 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/scss/style.scss';
 
-td {
-  padding: 2rem;
-  border-right: thin solid rgba(0, 0, 0, 0.12);
-}
-td:first-child {
-  font-weight: 800;
-  font-size: 120%;
-}
-@media #{map-get($display-breakpoints, 'sm-and-down')} {
+.css-resp-table {
+  tr:hover {
+    background: #fff !important;
+  }
   td {
-    display: block;
-    border: none !important;
+  padding: 2rem !important;
+  border-right: thin solid rgba(0, 0, 0, 0.12);
+
+    &:first-child {
+      font-weight: 800;
+      font-size: 120%;
+    }
   }
-  td:nth-child(2) {
-    height: auto;
-    border-bottom: thin solid rgba(0, 0, 0, 0.12) !important;
-    padding: 1em 2em;
+
+  @media #{map-get($display-breakpoints, 'sm-and-down')} {
+    td {
+      display: block;
+      border: none !important;
+
+      &:nth-child(2) {
+        height: auto;
+        border-bottom: thin solid rgba(0, 0, 0, 0.12) !important;
+        padding: 1em 2em;
+      }
+    }
   }
+
 }
 </style>
