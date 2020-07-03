@@ -76,8 +76,16 @@
     </v-card>
   </v-container>
 </template>
+
+<script>
+export default {
+  name: 'Resources'
+};
+</script>
+
 <style lang="scss" scoped>
 @import '@/assets/scss/style.scss';
+
 td {
   padding: 2rem;
   border-right: thin solid rgba(0, 0, 0, 0.12);
