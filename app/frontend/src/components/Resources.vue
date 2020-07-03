@@ -9,6 +9,22 @@
         <template>
           <tbody>
             <tr>
+              <td>API Documentation</td>
+              <td>
+                <p>We recommend that you read the API documentation before running the Postman collection.</p>
+                <ul>
+                  <li class="my-2">
+                    Common Hosted Email Service (<a href="https://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/docs">CHES</a>).
+                  </li>
+                  <li class="my-2">
+                    Common Document Generation Service (<a
+                      href="https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/docs"
+                    >CDOGS</a>).
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
               <td>POSTMAN Collection</td>
               <td>
                 <p>Use the Common Service Postman Collection to verify your service client credentials and see the APIs in action.</p>
@@ -34,22 +50,6 @@
                     <a
                       href="https://bcgov.github.io/common-service-showcase/assets/files/common_services_postman_readme"
                     >guide</a> to setup and run.
-                  </li>
-                </ul>
-              </td>
-            </tr>
-            <tr>
-              <td>API Documentation</td>
-              <td>
-                <p>We do recommend that you read the API documentation before running the collection.</p>
-                <ul>
-                  <li class="my-2">
-                    Common Hosted Email Service (<a href="https://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/docs">CHES</a>).
-                  </li>
-                  <li class="my-2">
-                    Common Document Generation Service (<a
-                      href="https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/docs"
-                    >CDOGS</a>).
                   </li>
                 </ul>
               </td>

@@ -4,7 +4,7 @@
       <v-icon large color="green darken-2">check_circle</v-icon>API Documentation and Usage
     </h2>
     <p class="mb-12">
-      Your service client can make REST calls to a Common Services API. Please view the <router-link :to="{ name: 'Documentation' }">"Documentation".</router-link> page to learn more about these API's, get the full specifications and learn how to test them with Postman.
+      Your service client can make REST calls to the Common Service APIs. Please view the <router-link :to="{ name: 'Documentation' }">"Documentation"</router-link> to learn more about these APIs, their specifications, and how to test them with Postman.
     </p>
     <div>
       <ul>
