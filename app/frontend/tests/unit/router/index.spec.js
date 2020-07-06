@@ -5,7 +5,7 @@ describe('Router', () => {
   const routes = router.options.routes;
 
   it('has the correct number of routes', () => {
-    expect(routes).toHaveLength(7);
+    expect(routes).toHaveLength(8);
   });
 
   it('has the expected routes', () => {
@@ -15,6 +15,7 @@ describe('Router', () => {
     expect(routeSet).toContainEqual(expect.objectContaining({ name: 'MyApps' }));
     expect(routeSet).toContainEqual(expect.objectContaining({ name: 'Application' }));
     expect(routeSet).toContainEqual(expect.objectContaining({ name: 'RequestAccount' }));
+    expect(routeSet).toContainEqual(expect.objectContaining({ name: 'Documentation' }));
     expect(routeSet).toContainEqual(expect.objectContaining({ name: 'NotFound' }));
   });
 });

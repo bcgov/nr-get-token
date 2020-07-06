@@ -4,10 +4,8 @@
       <v-icon large color="green darken-2">check_circle</v-icon>API Documentation and Usage
     </h2>
     <p class="mb-12">
-      This service client can be used to make REST API calls and an example Postman collection is provided.
-      <br />Fetch a new token using the service client and password against the token endpoint (see postman collection) and use that token in your bearer header.
+      Your service client can make REST calls to the Common Service APIs. Please view the <router-link :to="{ name: 'Documentation' }">Documentation</router-link> to learn more about these APIs, their specifications, and how to test them with Postman.
     </p>
-
     <div>
       <ul>
         <li v-for="item in KeycloakCommonServiceList" v-bind:key="item.name" class="mb-5">
@@ -25,8 +23,7 @@
             <v-col cols="6">
               <a
                 class="buttonLink"
-                :href="`${$config.basePath}/files/${item.postmanCollection}`"
-                :download="item.postmanCollection"
+                href="https://bcgov.github.io/common-service-showcase/assets/files/common_services_postman_collection.json"
                 target="_blank"
               >
                 <strong>Postman Collection</strong>
