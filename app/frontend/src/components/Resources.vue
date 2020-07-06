@@ -29,7 +29,7 @@
               <td>
                 <p>Use the Common Service Postman Collection to verify your service client credentials and see the APIs in action.</p>
                 <ul>
-                  <li class="my-2"><router-link :to="{ name: 'RequestAccount' }">Get your service client</router-link>.
+                  <li class="my-2">Get your <router-link :to="{ name: 'RequestAccount' }">service client</router-link>.
                   </li>
                   <li>
                     Download and install
