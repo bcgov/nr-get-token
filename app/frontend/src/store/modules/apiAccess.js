@@ -33,10 +33,8 @@ export default {
     step: state => state.step,
     tokenEndpoint(state) {
       let prefix = 'sso';
-      if (state.environment.toLowerCase() === 'dev') {
-        prefix += '-dev';
-      } else if (state.environment.toLowerCase() === 'test') {
-        prefix += '-test';
+      if (['dev', 'test'].includes(state.environment.toLowerCase())) {
+        prefix += `-${state.environment.toLowerCase()}`;
       }
       return `https://${prefix}.pathfinder.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token`;
     }
