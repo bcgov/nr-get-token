@@ -90,7 +90,7 @@
       <a :href="tokenEndpoint">{{ tokenEndpoint }}</a>
     </p>
 
-    <v-row class="mt-12">
+    <v-row class="mt-12 mb-4">
       <v-col cols="6" offset="3">
         <v-btn color="primary" block depressed @click="confirmDialog = true" :disabled="!passwordDecrypted">
           <span>Finish</span>

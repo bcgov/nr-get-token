@@ -4,11 +4,15 @@
     <hr />
     <h3 class="mb-3">API Docs</h3>
     <ul class="no-bullet">
-      <li>
-        <a href>Common Hosted Email Service</a>
+      <li class="my-2">
+        <a
+          href="https://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/docs"
+        >Common Hosted Email Service</a>
       </li>
-      <li>
-        <a href>Common Document Generation Service</a>
+      <li class="my-2">
+        <a
+          href="https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/docs"
+        >Common Document Generation Service</a>
       </li>
     </ul>
     <hr class="mt-3" />

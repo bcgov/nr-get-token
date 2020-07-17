@@ -11,6 +11,10 @@
       * Available each service client in order:
       <strong>DEV - TEST - PROD</strong>
     </p>
+    <p v-if="clientStatus.dev">
+      Client ID:
+      <strong>{{ `${acronym}_SERVICE_CLIENT` }}</strong>
+    </p>
 
     <v-skeleton-loader
       type="list-item-three-line"
@@ -88,7 +92,7 @@ export default {
     ClientStatus
   },
   computed: {
-    ...mapGetters('apiAccess', ['clientStatus', 'clientStatusLoaded']),
+    ...mapGetters('apiAccess', ['acronym', 'clientStatus', 'clientStatusLoaded']),
     envs: () => KcEnv
   },
   methods: {

@@ -6,11 +6,11 @@
           <v-row no-gutters>
             <v-col cols="12" lg="9" xl="5">
               <v-stepper-header class="elevation-0 pt-4 mb-6">
-                <v-stepper-step :complete="step > 1" step="1">Choose Environment</v-stepper-step>
+                <v-stepper-step :complete="step > 1" step="1">Choose</v-stepper-step>
                 <v-divider></v-divider>
-                <v-stepper-step :complete="step > 2" step="2">Create Client</v-stepper-step>
+                <v-stepper-step :complete="step > 2" step="2">Create</v-stepper-step>
                 <v-divider></v-divider>
-                <v-stepper-step :complete="step > 3" step="3">Store Password</v-stepper-step>
+                <v-stepper-step :complete="step > 3" step="3">Store</v-stepper-step>
               </v-stepper-header>
             </v-col>
           </v-row>
@@ -20,9 +20,6 @@
               <v-row no-gutters>
                 <v-col cols="12" lg="9" xl="5">
                   <Step1 />
-                </v-col>
-                <v-col cols="12" lg="9" xl="5" offset="1">
-                  <ResourcesSidebar />
                 </v-col>
               </v-row>
             </v-stepper-content>
@@ -39,6 +36,9 @@
               <v-row no-gutters>
                 <v-col cols="12" lg="9" xl="5">
                   <Step3 />
+                </v-col>
+                <v-col cols="12" lg="9" xl="5" offset-xl="1">
+                  <ResourcesSidebar />
                 </v-col>
               </v-row>
             </v-stepper-content>
