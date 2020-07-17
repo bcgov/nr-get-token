@@ -31,7 +31,7 @@
     <h3 class="mb-2">Note</h3>
     <p>
       This service client can be used to make REST API calls and an example Postman collection is provided.
-      Fetch a new toekn using the service client and password against the authorization endpoint (see postman collection)
+      Fetch a new token using the service client and password against the authorization endpoint (see postman collection)
       and use that token in your bearer header.
     </p>
   </div>
