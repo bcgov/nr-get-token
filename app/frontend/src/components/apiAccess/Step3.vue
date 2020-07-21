@@ -7,7 +7,7 @@
       Your service client for
       <strong>{{ acronym }}</strong> has been successfully updated in the
       <strong>{{ environment }}</strong>
-      Keycloak realm {{generatedClient}}
+      Keycloak realm: {{generatedClient}}
     </p>
 
     <v-form ref="form" lazy-validation>
@@ -83,26 +83,17 @@
       </v-col>
     </v-row>
 
-    <v-row class="mt-8">
-      <v-col cols="6">
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on }">
-            <v-btn v-on="on" class="mr-4" block outlined @click="goBack">
-              <span>Back</span>
-            </v-btn>
-          </template>
-          <span>Go back to create a new password</span>
-        </v-tooltip>
-      </v-col>
-      <v-col cols="6">
-        <v-btn
-          color="primary"
-          block
-          depressed
-          @click="confirmDialog = true"
-          :disabled="!passwordDecrypted"
-        >
-          <span>Next</span>
+    <p>
+      <strong>Token End Point:</strong>
+    </p>
+    <p>
+      <a :href="tokenEndpoint">{{ tokenEndpoint }}</a>
+    </p>
+
+    <v-row class="mt-12 mb-4">
+      <v-col cols="6" offset="3">
+        <v-btn color="primary" block depressed @click="confirmDialog = true" :disabled="!passwordDecrypted">
+          <span>Finish</span>
         </v-btn>
       </v-col>
     </v-row>
@@ -112,14 +103,14 @@
       type="CONTINUE"
       width="400"
       @close-dialog="confirmDialog = false"
-      @continue-dialog="confirmDialog = false; setStep(4)"
+      @continue-dialog="confirmDialog = false; finish()"
     >
       <template v-slot:icon>
         <v-icon large color="orange darken-2">warning</v-icon>
       </template>
       <template v-slot:text>
         <p>Did you save the password?</p>
-        <p>If you didn't save it, please cancel and keep the password safely before you continue</p>
+        <p>If you didn't save it, please cancel and keep the password safely before you finish</p>
       </template>
     </BaseDialog>
 
@@ -161,7 +152,8 @@ export default {
       'environment',
       'ephemeralPasswordRSAKey',
       'generatedClient',
-      'generatedPassword'
+      'generatedPassword',
+      'tokenEndpoint'
     ])
   },
   methods: {
@@ -184,10 +176,9 @@ export default {
       );
       this.passwordShown = DecryptionResult.plaintext;
     },
-    goBack() {
-      this.passwordShown = '••••••••';
-      this.passwordDecrypted = false;
-      this.setStep(2);
+    finish() {
+      this.$router.push({ name: 'MyApps' });
+      this.setStep(1);
     }
   }
 };

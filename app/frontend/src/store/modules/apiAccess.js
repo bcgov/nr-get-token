@@ -30,7 +30,14 @@ export default {
     ephemeralPasswordRSAKey: state => state.ephemeralPasswordRSAKey,
     generatedClient: state => state.generatedClient,
     generatedPassword: state => state.generatedPassword,
-    step: state => state.step
+    step: state => state.step,
+    tokenEndpoint(state) {
+      let prefix = 'sso';
+      if (['dev', 'test'].includes(state.environment.toLowerCase())) {
+        prefix += `-${state.environment.toLowerCase()}`;
+      }
+      return `https://${prefix}.pathfinder.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token`;
+    }
   },
   mutations: {
     setAcronym: (state, acronym) => {

@@ -44,8 +44,9 @@ p {
 
 // Horizontal Rule
 hr {
-  border-top: 1px solid lightgrey;
+  border-top: 0px;
   margin-bottom: 1em;
+  color: lightgray;
   .orange {
     border-top: 2px solid $bcgov-orange;
   }
