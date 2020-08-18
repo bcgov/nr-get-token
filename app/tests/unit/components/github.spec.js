@@ -45,7 +45,7 @@ describe('sendRequest', () => {
 
     await expect(github.createRequestIssue('ABC', 'comment', 'my.email@gov.bc.ca', 'me@idir'))
       .rejects
-      .toThrow('Error calling github issue creation endpoint. Error: Request failed with status code 403');
+      .toThrow('Request failed with status code 403');
 
     expect(axiosSpy).toHaveBeenCalledTimes(1);
   });
