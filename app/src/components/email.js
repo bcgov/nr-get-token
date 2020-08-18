@@ -14,11 +14,12 @@ const email = {
    * @param {string} idir The sender's IDIR
    */
   sendRequest: async (acronym, comments, from, idir) => {
-    const apiEndpoint = config.get('serviceClient.ches.apiEndpoint');
-    const tokenEndpoint = config.get('serviceClient.ches.tokenEndpoint');
-    const username = config.get('serviceClient.ches.username');
-    const password = config.get('serviceClient.ches.password');
     try {
+      const apiEndpoint = config.get('serviceClient.ches.apiEndpoint');
+      const tokenEndpoint = config.get('serviceClient.ches.tokenEndpoint');
+      const username = config.get('serviceClient.ches.username');
+      const password = config.get('serviceClient.ches.password');
+
       const token = await utils.getKeyCloakToken(username, password, tokenEndpoint);
       const response = await axios.post(apiEndpoint + '/v1/email', {
         body: `<p>Request from GETOK for acronym creation/access</p> <p><strong>User comments:</strong><br/>${comments}`,

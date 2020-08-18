@@ -35,6 +35,9 @@
       "username": "SC_CHES_USERNAME",
       "password": "SC_CHES_PASSWORD"
     },
+    "github": {
+      "token": "SC_GITHUB_TOKEN"
+    },
     "keycloak": {
       "dev": {
         "endpoint": "SC_KC_DEV_ENDPOINT",
