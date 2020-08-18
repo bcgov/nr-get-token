@@ -23,7 +23,7 @@ emailRouter.post('/', [
     }).send(res);
   }
 
-  // Kick off asyncrously in the background. If response from github is needed (get issue URL or something), can await on return val.
+  // Kick off asynchronously in the background. If response from github is needed (get issue URL or something), can await on return val.
   // Fail quietly. If this fails let the user request go through normally (log out failure)
   try {
     github.createRequestIssue(req.body.applicationAcronym, req.body.comments, req.body.from, req.body.idir);
