@@ -17,7 +17,7 @@ const github = {
       const githubApi = config.get('serviceClient.github.apiEndpoint');
 
       // See https://docs.github.com/en/rest/reference/issues
-      await axios.post(githubApi + '/issues', {
+      return axios.post(githubApi + '/issues', {
         owner: 'bcgov-nr-csst',
         repo: 'nr-get-token',
         title: `GETOK Registration for ${acronym} - ${idir}`,

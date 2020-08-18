@@ -72,7 +72,7 @@ oc create -n k8vopl-<env> secret generic getok-sc-ches-secret \
 If generating a new token is required for the github access below. Log in to the repo with the Parrot (nr-csst) account and regenerate a personal access token. Only public_repo scope is needed
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-sc-github-issue-secret \
+oc create -n k8vopl-<env> secret generic getok-sc-github-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=personal-access-token=<token>
 ```

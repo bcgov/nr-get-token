@@ -36,7 +36,7 @@
       "password": "SC_CHES_PASSWORD"
     },
     "github": {
-      "token": "SC_GITHUB_ISSUE_TOKEN"
+      "token": "SC_GITHUB_TOKEN"
     },
     "keycloak": {
       "dev": {

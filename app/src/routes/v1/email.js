@@ -23,9 +23,10 @@ emailRouter.post('/', [
     }).send(res);
   }
 
-  // Fail quietly (no exception raised). If this fails let the user request go through normally (log out failure)
+  // Kick off asyncrously in the background. If response from github is needed (get issue URL or something), can await on return val.
+  // Fail quietly. If this fails let the user request go through normally (log out failure)
   try {
-    await github.createRequestIssue(req.body.applicationAcronym, req.body.comments, req.body.from, req.body.idir);
+    github.createRequestIssue(req.body.applicationAcronym, req.body.comments, req.body.from, req.body.idir);
   } catch (error) {
     log.error('Github issue creation failed, proceeding to send contact email anyways', error.message);
   }
