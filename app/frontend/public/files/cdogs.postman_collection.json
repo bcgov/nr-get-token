@@ -213,7 +213,7 @@
 										"template"
 									]
 								},
-								"description": "Upload a template\r\nThis endpoint accepts a template to be used for report generation/render.\r\nThe body of this form-data/multipart POST should be a binary file. see https://dgrsc.pathfinder.gov.bc.ca/dgrsc/#/cdogs for example templates"
+								"description": "Upload a template\r\nThis endpoint accepts a template to be used for report generation/render.\r\nThe body of this form-data/multipart POST should be a binary file. see https://dgrsc.apps.silver.devops.gov.bc.ca/dgrsc/#/cdogs for example templates"
 							},
 							"response": []
 						},
