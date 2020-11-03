@@ -4,7 +4,7 @@
     "host": "localhost"
   },
   "oidc": {
-    "discovery": "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/vehizw2t/.well-known/openid-configuration"
+    "discovery": "https://dev.oidc.gov.bc.ca/auth/realms/vehizw2t/.well-known/openid-configuration"
   },
   "server": {
     "frontend": "http://localhost:8080",
@@ -24,22 +24,22 @@
     },
     "ches": {
       "tokenEndpoint": "redacted",
-      "emailEndpoint": "https://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api/v1/email",
-      "healthEndpoint": "https://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api/v1/health",
+      "emailEndpoint": "https://ches-dev.pathfinder.gov.bc.ca/api/v1/email",
+      "healthEndpoint": "https://ches-dev.pathfinder.gov.bc.ca/api/v1/health",
       "username": "redacted",
       "password": "redacted"
     },
     "keyCloak": {
       "DEV": {
-        "endpoint": "https://sso-dev.pathfinder.gov.bc.ca",
+        "endpoint": "https://dev.oidc.gov.bc.ca",
         "realm": "98r0z7rz"
       },
       "TEST": {
-        "endpoint": "https://sso-test.pathfinder.gov.bc.ca",
+        "endpoint": "https://test.oidc.gov.bc.ca",
         "realm": "98r0z7rz"
       },
       "PROD": {
-        "endpoint": "https://sso.pathfinder.gov.bc.ca",
+        "endpoint": "https://oidc.gov.bc.ca",
         "realm": "98r0z7rz"
       }
     }

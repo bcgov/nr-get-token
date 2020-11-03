@@ -30,19 +30,19 @@ oc create -n k8vopl-<env> configmap getok-frontend-config \
   --from-literal=FRONTEND_BASEPATH=/app \
   --from-literal=FRONTEND_KC_CLIENTID=getok-frontend \
   --from-literal=FRONTEND_KC_REALM=vehizw2t \
-  --from-literal=FRONTEND_KC_SERVERURL=https://sso-dev.pathfinder.gov.bc.ca/auth
+  --from-literal=FRONTEND_KC_SERVERURL=https://dev.oidc.gov.bc.ca/auth
 ```
 
 ```sh
 oc create -n k8vopl-<env> configmap getok-sc-config \
-  --from-literal=SC_CHES_API_ENDPOINT=https://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api \
-  --from-literal=SC_CHES_TOKEN_ENDPOINT=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token \
+  --from-literal=SC_CHES_API_ENDPOINT=https://ches-dev.pathfinder.gov.bc.ca/api \
+  --from-literal=SC_CHES_TOKEN_ENDPOINT=https://dev.oidc.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token \
   --from-literal=SC_GETOK_ENDPOINT_INT=https://i1api.nrs.gov.bc.ca/webade-api/v1 \
   --from-literal=SC_GETOK_ENDPOINT_TEST=https://t1api.nrs.gov.bc.ca/webade-api/v1 \
   --from-literal=SC_GETOK_ENDPOINT_PROD=https://api.nrs.gov.bc.ca/webade-api/v1 \
-  --from-literal=SC_KC_DEV_ENDPOINT=https://sso-dev.pathfinder.gov.bc.ca \
-  --from-literal=SC_KC_TEST_ENDPOINT=https://sso-test.pathfinder.gov.bc.ca \
-  --from-literal=SC_KC_PROD_ENDPOINT=https://sso.pathfinder.gov.bc.ca \
+  --from-literal=SC_KC_DEV_ENDPOINT=https://dev.oidc.gov.bc.ca \
+  --from-literal=SC_KC_TEST_ENDPOINT=https://test.oidc.gov.bc.ca \
+  --from-literal=SC_KC_PROD_ENDPOINT=https://oidc.gov.bc.ca \
   --from-literal=SC_KC_DEV_REALM=jbd6rnxw \
   --from-literal=SC_KC_TEST_REALM=jbd6rnxw \
   --from-literal=SC_KC_PROD_REALM=jbd6rnxw
@@ -53,7 +53,7 @@ oc create -n k8vopl-<env> configmap getok-server-config \
   --from-literal=SERVER_APIPATH=/api/v1 \
   --from-literal=SERVER_BODYLIMIT=30mb \
   --from-literal=SERVER_KC_REALM=vehizw2t \
-  --from-literal=SERVER_KC_SERVERURL=https://sso-dev.pathfinder.gov.bc.ca/auth \
+  --from-literal=SERVER_KC_SERVERURL=https://dev.oidc.gov.bc.ca/auth \
   --from-literal=SERVER_LOGLEVEL=info \
   --from-literal=SERVER_MORGANFORMAT=combined \
   --from-literal=SERVER_PORT=8080

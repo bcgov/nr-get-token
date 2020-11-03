@@ -6,12 +6,12 @@
     <ul class="no-bullet">
       <li class="my-2">
         <a
-          href="https://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/docs"
+          href="https://ches.pathfinder.gov.bc.ca/api/v1/docs"
         >Common Hosted Email Service</a>
       </li>
       <li class="my-2">
         <a
-          href="https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/docs"
+          href="https://cdogs.pathfinder.gov.bc.ca/api/v2/docs"
         >Common Document Generation Service</a>
       </li>
     </ul>

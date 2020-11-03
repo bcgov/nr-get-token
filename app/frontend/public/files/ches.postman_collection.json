@@ -18,10 +18,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/health",
+									"raw": "http://ches.pathfinder.gov.bc.ca/api/v1/health",
 									"protocol": "http",
 									"host": [
-										"ches-master-9f0fbe-prod",
+										"ches",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -65,10 +65,10 @@
 									}
 								},
 								"url": {
-									"raw": "https://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/email",
+									"raw": "https://ches.pathfinder.gov.bc.ca/api/v1/email",
 									"protocol": "https",
 									"host": [
-										"ches-master-9f0fbe-prod",
+										"ches",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -114,10 +114,10 @@
 									"raw": "{\n    \"attachments\": [\n        {\n            \"content\": \"PGI+SGVsbG8gV29ybGRcITwvYj4=\",\n            \"contentType\": \"string\",\n            \"encoding\": \"base64\",\n            \"filename\": \"testfile.txt\"\n        }\n    ],\n    \"bodyType\": \"text\",\n    \"body\": \"Hello World {{ hello }} content\",\n    \"contexts\": [\n    \t{\n    \t\t\"to\": [\n\t\t        \"email@someemail.com\"\n\t\t    ],\n\t\t    \"context\": {\n\t\t    \t\"orange\": {\n\t\t            \"target\": \"jujaga\"\n\t\t        },\n\t\t        \"hello\": \"jujaga template\"\n\t\t    },\n\t\t    \"delayTS\": 1600000000000,\n\t\t    \"tag\": \"tag\"\n    \t},\n    \t{\n    \t\t\"to\": [\n\t\t        \"gkf63839@aklqo.com\"\n\t\t    ],\n\t\t    \"context\": {\n\t\t    \t\"orange\": {\n\t\t            \"target\": \"lucasoneil\"\n\t\t        },\n\t\t        \"hello\": \"lucas template\"\n\t\t    },\n\t\t    \"delayTS\": 1600000000000,\n\t\t    \"tag\": \"tag\"\n    \t}\n    ],\n    \"encoding\": \"utf-8\",\n    \"from\": \"email.here@gov.bc.ca\",\n    \"priority\": \"normal\",\n    \"subject\": \"Test {{ orange.target }}\"\n}"
 								},
 								"url": {
-									"raw": "https://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/emailMerge",
+									"raw": "https://ches.pathfinder.gov.bc.ca/api/v1/emailMerge",
 									"protocol": "https",
 									"host": [
-										"ches-master-9f0fbe-prod",
+										"ches",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -156,10 +156,10 @@
 									"raw": "{\n    \"attachments\": [\n        {\n            \"content\": \"PGI+SGVsbG8gV29ybGRcITwvYj4=\",\n            \"contentType\": \"string\",\n            \"encoding\": \"base64\",\n            \"filename\": \"testfile.txt\"\n        }\n    ],\n    \"bodyType\": \"text\",\n    \"body\": \"Hello World {{ hello }} content\",\n    \"contexts\": [\n    \t{\n    \t\t\"to\": [\n\t\t        \"email@someemail.com\"\n\t\t    ],\n\t\t    \"context\": {\n\t\t    \t\"orange\": {\n\t\t            \"target\": \"jujaga\"\n\t\t        },\n\t\t        \"hello\": \"jujaga template\"\n\t\t    }\n    \t},\n    \t{\n    \t\t\"to\": [\n\t\t        \"gkf63839@aklqo.com\"\n\t\t    ],\n\t\t    \"context\": {\n\t\t    \t\"orange\": {\n\t\t            \"target\": \"lucasoneil\"\n\t\t        },\n\t\t        \"hello\": \"lucas template\"\n\t\t    },\n\t\t    \"delayTS\": 1579965760073,\n\t\t    \"tag\": \"tag\"\n    \t}\n    ],\n    \"encoding\": \"utf-8\",\n    \"from\": \"some.email@gov.bc.ca\",\n    \"priority\": \"normal\",\n    \"subject\": \"Test {{ orange.target }}\"\n}"
 								},
 								"url": {
-									"raw": "https://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/emailMerge/preview",
+									"raw": "https://ches.pathfinder.gov.bc.ca/api/v1/emailMerge/preview",
 									"protocol": "https",
 									"host": [
-										"ches-master-9f0fbe-prod",
+										"ches",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -188,10 +188,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/status?msgId=58550335-b0f8-417f-aaca-a79fcb407353",
+									"raw": "https://ches.pathfinder.gov.bc.ca/api/v1/status?msgId=58550335-b0f8-417f-aaca-a79fcb407353",
 									"protocol": "https",
 									"host": [
-										"ches-master-9f0fbe-prod",
+										"ches",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -233,10 +233,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/status/:msgId",
+									"raw": "http://ches.pathfinder.gov.bc.ca/api/v1/status/:msgId",
 									"protocol": "http",
 									"host": [
-										"ches-master-9f0fbe-prod",
+										"ches",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -264,10 +264,10 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "https://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/cancel?txId=679e02e8-66ca-4859-8dfb-d8eed3c8d16a",
+									"raw": "https://ches.pathfinder.gov.bc.ca/api/v1/cancel?txId=679e02e8-66ca-4859-8dfb-d8eed3c8d16a",
 									"protocol": "https",
 									"host": [
-										"ches-master-9f0fbe-prod",
+										"ches",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -309,10 +309,10 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "https://ches-master-9f0fbe-prod.pathfinder.gov.bc.ca/api/v1/cancel/:msgId",
+									"raw": "https://ches.pathfinder.gov.bc.ca/api/v1/cancel/:msgId",
 									"protocol": "https",
 									"host": [
-										"ches-master-9f0fbe-prod",
+										"ches",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -379,7 +379,7 @@
 					]
 				},
 				"url": {
-					"raw": "https://sso.pathfinder.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token",
+					"raw": "https://oidc.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token",
 					"protocol": "https",
 					"host": [
 						"sso",
