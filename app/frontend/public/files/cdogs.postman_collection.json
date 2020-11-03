@@ -18,10 +18,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/health",
+									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v2/health",
 									"protocol": "https",
 									"host": [
-										"cdogs-master-idcqvl-prod",
+										"cdogs",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -57,10 +57,10 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/render/:uid?download=true",
+									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v2/render/:uid?download=true",
 									"protocol": "https",
 									"host": [
-										"cdogs-master-idcqvl-prod",
+										"cdogs",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -101,10 +101,10 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/render/:uid",
+									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v2/render/:uid",
 									"protocol": "https",
 									"host": [
-										"cdogs-master-idcqvl-prod",
+										"cdogs",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -141,10 +141,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/fileTypes",
+									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v2/fileTypes",
 									"protocol": "https",
 									"host": [
-										"cdogs-master-idcqvl-prod",
+										"cdogs",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -198,10 +198,10 @@
 									}
 								},
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/template",
+									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v2/template",
 									"protocol": "https",
 									"host": [
-										"cdogs-master-idcqvl-prod",
+										"cdogs",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -243,10 +243,10 @@
 									}
 								},
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/template/:uid?download=true",
+									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v2/template/:uid?download=true",
 									"protocol": "https",
 									"host": [
-										"cdogs-master-idcqvl-prod",
+										"cdogs",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -300,10 +300,10 @@
 									}
 								},
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/template/:uid",
+									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v2/template/:uid",
 									"protocol": "https",
 									"host": [
-										"cdogs-master-idcqvl-prod",
+										"cdogs",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -350,10 +350,10 @@
 									}
 								},
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/template/:uid/render",
+									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v2/template/:uid/render",
 									"protocol": "https",
 									"host": [
-										"cdogs-master-idcqvl-prod",
+										"cdogs",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -404,10 +404,10 @@
 									}
 								},
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v2/template/render",
+									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v2/template/render",
 									"protocol": "https",
 									"host": [
-										"cdogs-master-idcqvl-prod",
+										"cdogs",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -491,7 +491,7 @@
 					]
 				},
 				"url": {
-					"raw": "https://sso.pathfinder.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token",
+					"raw": "https://oidc.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token",
 					"protocol": "https",
 					"host": [
 						"sso",

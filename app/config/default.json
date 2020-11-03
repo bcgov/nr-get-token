@@ -9,7 +9,7 @@
     "keycloak": {
       "clientId": "getok-frontend",
       "realm": "vehizw2t",
-      "serverUrl": "https://sso-dev.pathfinder.gov.bc.ca/auth"
+      "serverUrl": "https://dev.oidc.gov.bc.ca/auth"
     }
   },
   "server": {
@@ -19,7 +19,7 @@
     "keycloak": {
       "clientId": "getok",
       "realm": "vehizw2t",
-      "serverUrl": "https://sso-dev.pathfinder.gov.bc.ca/auth"
+      "serverUrl": "https://dev.oidc.gov.bc.ca/auth"
     },
     "logLevel": "debug",
     "morganFormat": "combined",
@@ -27,23 +27,23 @@
   },
   "serviceClient": {
     "ches": {
-      "apiEndpoint": "https://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api",
-      "tokenEndpoint": "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token"
+      "apiEndpoint": "https://ches-dev.pathfinder.gov.bc.ca/api",
+      "tokenEndpoint": "https://dev.oidc.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token"
     },
     "github": {
       "apiEndpoint": "https://api.github.com/repos/bcgov/nr-get-token"
     },
     "keycloak": {
       "dev": {
-        "endpoint": "https://sso-dev.pathfinder.gov.bc.ca",
+        "endpoint": "https://dev.oidc.gov.bc.ca",
         "realm": "jbd6rnxw"
       },
       "test": {
-        "endpoint": "https://sso-test.pathfinder.gov.bc.ca",
+        "endpoint": "https://test.oidc.gov.bc.ca",
         "realm": "jbd6rnxw"
       },
       "prod": {
-        "endpoint": "https://sso.pathfinder.gov.bc.ca",
+        "endpoint": "https://oidc.gov.bc.ca",
         "realm": "jbd6rnxw"
       }
     },

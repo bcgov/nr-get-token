@@ -18,10 +18,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v1/health",
+									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v1/health",
 									"protocol": "https",
 									"host": [
-										"cdogs-master-idcqvl-prod",
+										"cdogs",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -65,10 +65,10 @@
 									}
 								},
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v1/docGen",
+									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v1/docGen",
 									"protocol": "https",
 									"host": [
-										"cdogs-master-idcqvl-prod",
+										"cdogs",
 										"pathfinder",
 										"gov",
 										"bc",
@@ -96,10 +96,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://cdogs-master-idcqvl-prod.pathfinder.gov.bc.ca/api/v1/fileTypes",
+									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v1/fileTypes",
 									"protocol": "https",
 									"host": [
-										"cdogs-master-idcqvl-prod",
+										"cdogs",
 										"pathfinder",
 										"gov",
 										"bc",
