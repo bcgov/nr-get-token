@@ -122,8 +122,8 @@ export default {
       appDescriptionRules: [
         v => !!v || 'Description is required',
         v =>
-          v.length <= FieldValidations.DESCRIPTION_MAX_LENGTH ||
-          `Description must be ${FieldValidations.DESCRIPTION_MAX_LENGTH} characters or less`
+          v.length <= FieldValidations.DESCRIPTION_MAX_LENGTH_KC ||
+          `Description must be ${FieldValidations.DESCRIPTION_MAX_LENGTH_KC} characters or less`
       ],
       confirmDialog: false,
       errorDialog: false,
