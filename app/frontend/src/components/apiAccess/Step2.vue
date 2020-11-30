@@ -21,7 +21,7 @@
           <v-textarea
             v-model="appDescription"
             auto-grow
-            :counter="fieldValidations.DESCRIPTION_MAX_LENGTH"
+            :counter="fieldValidations.DESCRIPTION_MAX_LENGTH_KC"
             dense
             flat
             outlined
