@@ -2,7 +2,7 @@
   <v-dialog
     :max-width="width"
     persistent
-    v-model="show"
+    v-bind:value="show"
     @click:outside="closeDialog"
     @keydown.esc="closeDialog"
   >
