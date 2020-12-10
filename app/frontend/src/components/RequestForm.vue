@@ -1,6 +1,8 @@
 <template>
   <v-container class="request-form">
-    <p>Please submit the Acronym of the application you wish to add. You will get an email once it is confirmed.</p>
+    <p>
+      Please submit the Acronym of the application you wish to add. You will get an email once it is confirmed.
+    </p>
 
     <v-form ref="form" v-model="valid">
       <v-row>
@@ -39,7 +41,7 @@
         <v-col>
           <label>Application Acronym &nbsp;</label>
           <v-tooltip right>
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-icon v-on="on">help_outline</v-icon>
             </template>
             The Application Acronym must comply with the following format:
@@ -47,7 +49,9 @@
               <li>UPPERCASE LETTERS ONLY</li>
               <li>Underscores may be placed between letters</li>
               <li>Must begin and end with a letter</li>
-              <li>At least {{ fieldValidations.ACRONYM_MIN_LENGTH }} characters</li>
+              <li>
+                At least {{ fieldValidations.ACRONYM_MIN_LENGTH }} characters
+              </li>
               <li>
                 Examples:
                 <em>ABCD</em>,
@@ -67,7 +71,7 @@
             solo
             outlined
           >
-            <template v-slot:append-outer />
+            <template #append-outer />
           </v-text-field>
         </v-col>
       </v-row>
@@ -101,15 +105,20 @@
           depressed
           :disabled="!valid"
           @click="postRegistrationForm()"
-        >Submit</v-btn>
+        >
+          <span>Submit</span>
+        </v-btn>
       </v-col>
     </v-row>
 
-    <BaseDialog v-bind:show="errorOccurred" @close-dialog="errorOccurred = false">
-      <template v-slot:icon>
+    <BaseDialog
+      v-bind:show="errorOccurred"
+      @close-dialog="errorOccurred = false"
+    >
+      <template #icon>
         <v-icon large color="red">cancel</v-icon>
       </template>
-      <template v-slot:text>
+      <template #text>
         <p>
           An error occurred while attempting to add your application.
           <br />You can also add your application by sending an email to
@@ -117,16 +126,25 @@
             href="mailto:NR.CommonServiceShowcase@gov.bc.ca?subject=GETOK Registration for <acronym> - <idir>"
           >NR.CommonServiceShowcase@gov.bc.ca</a>
         </p>
-        <p>Please include your Acronym as well as your IDIR username in your email.</p>
+        <p>
+          Please include your Acronym as well as your IDIR username in your
+          email.
+        </p>
       </template>
     </BaseDialog>
 
-    <BaseDialog v-bind:show="registerSuccess" @close-dialog="registerSuccess = false">
-      <template v-slot:icon>
+    <BaseDialog
+      v-bind:show="registerSuccess"
+      @close-dialog="registerSuccess = false"
+    >
+      <template #icon>
         <v-icon large color="green">check_circle_outline</v-icon>
       </template>
-      <template v-slot:text>
-        <p>Your request has been sent successfully. You will get an email to {{ form.from }} when it is authorized.</p>
+      <template #text>
+        <p>
+          Your request has been sent successfully. You will get an email to
+          {{ form.from }} when it is authorized.
+        </p>
       </template>
     </BaseDialog>
   </v-container>
@@ -141,29 +159,29 @@ import { FieldValidations } from '@/utils/constants.js';
 export default {
   name: 'RequestForm',
   computed: {
-    ...mapGetters('auth', ['tokenParsed', 'userName'])
+    ...mapGetters('auth', ['tokenParsed', 'userName']),
   },
   data() {
     return {
       applicationAcronymRules: [
-        v => !!v || 'Acronym is required',
-        v =>
+        (v) => !!v || 'Acronym is required',
+        (v) =>
           v.length <= FieldValidations.ACRONYM_MAX_LENGTH ||
           `Acronym must be ${FieldValidations.ACRONYM_MAX_LENGTH} characters or less`,
-        v =>
+        (v) =>
           /^(?:[A-Z]{1,}[_]?)+[A-Z]{1,}$/g.test(v) ||
-          'Incorrect format. Hover over ? for details.'
+          'Incorrect format. Hover over ? for details.',
       ],
       errorOccurred: false,
       form: {
         applicationAcronym: '',
         comments: '',
         from: '',
-        idir: ''
+        idir: '',
       },
       fieldValidations: FieldValidations,
       registerSuccess: false,
-      valid: false
+      valid: false,
     };
   },
   methods: {
@@ -175,7 +193,7 @@ export default {
       if (this.valid) {
         emailService
           .sendRegistrationEmail(this.form)
-          .then(response => {
+          .then((response) => {
             if (response) {
               this.registerSuccess = true;
             }
@@ -195,12 +213,12 @@ export default {
     resetState() {
       this.errorOccurred = false;
       this.registerSuccess = false;
-    }
+    },
   },
   mounted() {
     this.resetState();
     this.resetForm();
-  }
+  },
 };
 </script>
 

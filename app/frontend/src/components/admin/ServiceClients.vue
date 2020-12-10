@@ -31,30 +31,30 @@
         show-expand
       >
         <!-- environments -->
-        <template v-slot:item.dev="{item}">
+        <template #[`item.dev`]="{item}">
           <div v-if="item.dev">
             <v-tooltip top>
-              <template v-slot:activator="{ on }">
+              <template #activator="{ on }">
                 <v-icon color="green" v-on="on">check</v-icon>
               </template>
               <span>Keycloak environment last modified: {{ formatEnvDate(item.environments.DEV) }}</span>
             </v-tooltip>
           </div>
         </template>
-        <template v-slot:item.test="{item}">
+        <template #[`item.test`]="{item}">
           <div v-if="item.test">
             <v-tooltip top>
-              <template v-slot:activator="{ on }">
+              <template #activator="{ on }">
                 <v-icon color="green" v-on="on">check</v-icon>
               </template>
               <span>Keycloak environment last modified: {{ formatEnvDate(item.environments.TEST) }}</span>
             </v-tooltip>
           </div>
         </template>
-        <template v-slot:item.prod="{item}">
+        <template #[`item.prod`]="{item}">
           <div v-if="item.prod">
             <v-tooltip top>
-              <template v-slot:activator="{ on }">
+              <template #activator="{ on }">
                 <v-icon color="green" v-on="on">check</v-icon>
               </template>
               <span>Keycloak environment last modified: {{ formatEnvDate(item.environments.PROD) }}</span>
@@ -63,7 +63,7 @@
         </template>
 
         <!-- expanded row -->
-        <template v-slot:expanded-item="{ headers, item }">
+        <template #expanded-item="{ headers, item }">
           <td :class="[responsiveCell]"></td>
           <td :colspan="headers.length - 1" :class="[responsiveCell]">
             <div class="kc-expanded">

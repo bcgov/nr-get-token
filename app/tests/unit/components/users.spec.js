@@ -1,4 +1,4 @@
-const uuid = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 
 const helper = require('../../common/helper');
 const users = require('../../../src/components/users');
@@ -8,7 +8,7 @@ const { userService } = require('../../../src/services');
 helper.logHelper();
 
 const zeroUuid = '00000000-0000-0000-0000-000000000000';
-const randUuid = uuid();
+const randUuid = uuidv4();
 
 describe('getUserAcronyms', () => {
   const findSpy = jest.spyOn(userService, 'find');

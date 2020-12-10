@@ -1,5 +1,5 @@
 const request = require('supertest');
-const uuid = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 
 const helper = require('../../../common/helper');
 
@@ -13,7 +13,7 @@ helper.logHelper();
 
 describe(`GET ${basePath}/:keycloakId/acronyms`, () => {
   const zeroUuid = '00000000-0000-0000-0000-000000000000';
-  const randUuid = uuid();
+  const randUuid = uuidv4();
 
   const getUserAcronymsSpy = jest.spyOn(users, 'getUserAcronyms');
 
@@ -57,7 +57,7 @@ describe(`GET ${basePath}/:keycloakId/acronyms`, () => {
 
 describe(`GET ${basePath}/:keycloakId/acronyms/clients`, () => {
   const zeroUuid = '00000000-0000-0000-0000-000000000000';
-  const randUuid = uuid();
+  const randUuid = uuidv4();
 
   const getUserAcronymClientsSpy = jest.spyOn(users, 'getUserAcronymClients');
 
