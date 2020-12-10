@@ -1,8 +1,7 @@
 <template>
   <v-container class="request-form">
     <p>
-      Please submit the Acronym of the application you wish to add. You will get
-      an email once it is confirmed.
+      Please submit the Acronym of the application you wish to add. You will get an email once it is confirmed.
     </p>
 
     <v-form ref="form" v-model="valid">
