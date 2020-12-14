@@ -84,7 +84,7 @@ def runStageBuild() {
         notifyStageStatus('App', 'FAILURE')
         throw e
       }
-    },
+    }
 
     //     SonarQube: {
     //       unstash APP_COV_STASH
