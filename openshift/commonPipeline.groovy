@@ -54,52 +54,52 @@ def runStageBuild() {
         echo "DEBUG - Using project: ${openshift.project()}"
       }
 
-      parallel(
-        App: {
-          try {
-            notifyStageStatus('App', 'PENDING')
+      // parallel(
+      //   App: {
+      try {
+        notifyStageStatus('App', 'PENDING')
 
-            echo "Processing BuildConfig ${REPO_NAME}-app-${JOB_NAME}..."
-            def bcApp = openshift.process('-f',
-              'openshift/app.bc.yaml',
-              "REPO_NAME=${REPO_NAME}",
-              "ROUTE_PATH=${PATH_ROOT}",
-              "JOB_NAME=${JOB_NAME}",
-              "SOURCE_REPO_URL=${SOURCE_REPO_URL}",
-              "SOURCE_REPO_REF=${SOURCE_REPO_REF}"
-            )
+        echo "Processing BuildConfig ${REPO_NAME}-app-${JOB_NAME}..."
+        def bcApp = openshift.process('-f',
+          'openshift/app.bc.yaml',
+          "REPO_NAME=${REPO_NAME}",
+          "ROUTE_PATH=${PATH_ROOT}",
+          "JOB_NAME=${JOB_NAME}",
+          "SOURCE_REPO_URL=${SOURCE_REPO_URL}",
+          "SOURCE_REPO_REF=${SOURCE_REPO_REF}"
+        )
 
-            echo "Building ImageStream..."
-            openshift.apply(bcApp).narrow('bc').startBuild('-w').logs('-f')
+        echo "Building ImageStream..."
+        openshift.apply(bcApp).narrow('bc').startBuild('-w').logs('-f')
 
-            echo "Tagging Image ${REPO_NAME}-app:latest..."
-            openshift.tag("${REPO_NAME}-app:latest",
-              "${REPO_NAME}-app:${JOB_NAME}"
-            )
+        echo "Tagging Image ${REPO_NAME}-app:latest..."
+        openshift.tag("${REPO_NAME}-app:latest",
+          "${REPO_NAME}-app:${JOB_NAME}"
+        )
 
-            echo 'App build successful'
-            notifyStageStatus('App', 'SUCCESS')
-          } catch (e) {
-            echo 'App build failed'
-            notifyStageStatus('App', 'FAILURE')
-            throw e
-          }
-        },
-
-        // SonarQube: {
-        //   unstash APP_COV_STASH
-        //   unstash FE_COV_STASH
-
-        //   echo 'Performing SonarQube static code analysis...'
-        //   sh """
-        //   sonar-scanner \
-        //     -Dsonar.host.url='${SONARQUBE_URL_INT}' \
-        //     -Dsonar.projectKey='${REPO_NAME}-${JOB_NAME}' \
-        //     -Dsonar.projectName='${APP_NAME} (${JOB_NAME.toUpperCase()})'
-        //   """
-        // }
-      )
+        echo 'App build successful'
+        notifyStageStatus('App', 'SUCCESS')
+      } catch (e) {
+        echo 'App build failed'
+        notifyStageStatus('App', 'FAILURE')
+        throw e
+      }
     }
+
+    //     SonarQube: {
+    //       unstash APP_COV_STASH
+    //       unstash FE_COV_STASH
+
+    //       echo 'Performing SonarQube static code analysis...'
+    //       sh """
+    //       sonar-scanner \
+    //         -Dsonar.host.url='${SONARQUBE_URL_INT}' \
+    //         -Dsonar.projectKey='${REPO_NAME}-${JOB_NAME}' \
+    //         -Dsonar.projectName='${APP_NAME} (${JOB_NAME.toUpperCase()})'
+    //       """
+    //     }
+    //   )
+    // }
   }
 }
 
@@ -216,22 +216,22 @@ def notifyStageStatus(String name, String status) {
 
 // Create deployment status and pass to Jenkins-GitHub library
 def createDeploymentStatus(String environment, String status, String jobName, String hostEnv, String pathEnv) {
-  def task = (JOB_BASE_NAME.startsWith('PR-')) ? "deploy:pull:${CHANGE_ID}" : "deploy:${jobName}"
-  def ghDeploymentId = new GitHubHelper().createDeployment(
-    this,
-    SOURCE_REPO_REF,
-    [
-      'environment': environment,
-      'task': task
-    ]
-  )
+  // def task = (JOB_BASE_NAME.startsWith('PR-')) ? "deploy:pull:${CHANGE_ID}" : "deploy:${jobName}"
+  // def ghDeploymentId = new GitHubHelper().createDeployment(
+  //   this,
+  //   SOURCE_REPO_REF,
+  //   [
+  //     'environment': environment,
+  //     'task': task
+  //   ]
+  // )
 
-  new GitHubHelper().createDeploymentStatus(
-    this,
-    ghDeploymentId,
-    status,
-    ['targetUrl': "https://${hostEnv}${pathEnv}"]
-  )
+  // new GitHubHelper().createDeploymentStatus(
+  //   this,
+  //   ghDeploymentId,
+  //   status,
+  //   ['targetUrl': "https://${hostEnv}${pathEnv}"]
+  // )
 
   if (status.equalsIgnoreCase('SUCCESS')) {
     echo "${environment} deployment successful at https://${hostEnv}${pathEnv}"

@@ -166,8 +166,8 @@ pipeline {
       script {
         // Comment on Pull Request if build changes to successful
         if(currentBuild.currentResult.equalsIgnoreCase('SUCCESS')) {
-          echo "Posting 'SonarQube Analysis: ${SONARQUBE_URL_EXT}/dashboard?id=${REPO_NAME}-${JOB_NAME}' to Pull Request..."
-          commonPipeline.commentOnPR("SonarQube Analysis: ${SONARQUBE_URL_EXT}/dashboard?id=${REPO_NAME}-${JOB_NAME}")
+          echo "Posting 'PR Deployed at: https://${DEV_HOST}${PATH_ROOT}' to Pull Request..."
+          commonPipeline.commentOnPR("PR Deployed at: https://${DEV_HOST}${PATH_ROOT}")
         }
       }
     }

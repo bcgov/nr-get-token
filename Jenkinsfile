@@ -5,8 +5,8 @@
 // ------------------
 
 // Global Variable Stash Names
-APP_COV_STASH = 'app-coverage'
-FE_COV_STASH = 'frontend-coverage'
+// APP_COV_STASH = 'app-coverage'
+// FE_COV_STASH = 'frontend-coverage'
 
 // --------------------
 // Declarative Pipeline
@@ -43,7 +43,7 @@ pipeline {
     TEST_HOST = "${APP_NAME}-test.${APP_DOMAIN}"
     PROD_HOST = "${APP_NAME}.${APP_DOMAIN}"
     // PATH_ROOT will be appended to ENV_HOST
-    PATH_ROOT = "/${JOB_NAME.equalsIgnoreCase('master') ? APP_NAME : JOB_NAME}"
+    PATH_ROOT = "/${JOB_NAME.equalsIgnoreCase('master') ? 'app' : JOB_NAME}"
 
     // SonarQube Endpoint URL
     SONARQUBE_URL_INT = 'http://sonarqube:9000'

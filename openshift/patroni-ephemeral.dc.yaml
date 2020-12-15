@@ -6,10 +6,11 @@ metadata:
     description: Patroni Postgresql database cluster, with ephemeral storage.
     iconClass: icon-postgresql
     openshift.io/display-name: Patroni Postgresql (Ephemeral)
-    openshift.io/long-description: This template deploys a patroni postgresql HA cluster
+    openshift.io/long-description:
+      This template deploys a patroni postgresql HA cluster
       with ephemeral storage.
     tags: postgresql
-  name: patroni-postgregsql-ephemeral
+  name: patroni-pgsql-ephemeral
 labels:
   app: "${APP_NAME}-${INSTANCE}"
   app.kubernetes.io/instance: "${INSTANCE}"
@@ -17,314 +18,365 @@ labels:
   app.kubernetes.io/name: patroni
   app.kubernetes.io/managed-by: template
   app.kubernetes.io/part-of: "${APP_NAME}-${INSTANCE}"
-  app.kubernetes.io/version: '10'
+  app.kubernetes.io/version: "12"
+  app.openshift.io/runtime: postgresql
   cluster-name: "${INSTANCE}"
 objects:
-# - apiVersion: security.devops.gov.bc.ca/v1alpha1
-#   kind: NetworkSecurityPolicy
-#   metadata:
-#     name: "${APP_NAME}-${INSTANCE}-sa-${NAME}-${INSTANCE}-k8s-api-comms"
-#   spec:
-#     description: |
-#       Allow patroni cluster to talk to the internal k8s api
-#     source:
-#       - - "$namespace=${NAMESPACE}"
-#         - "@app:k8s:serviceaccountname=${NAME}-${INSTANCE}"
-#     destination:
-#       - - int:network=internal-cluster-api-endpoint
-# - kind: NetworkSecurityPolicy
-#   apiVersion: security.devops.gov.bc.ca/v1alpha1
-#   metadata:
-#     name: "${NAME}-${INSTANCE}-pods-to-cluster-${NAMESPACE}"
-#   spec:
-#     description: |
-#       Allow patroni pods to open connections to other cluster pods
-#     source:
-#       - - "$namespace=${NAMESPACE}"
-#         - "cluster-name=${INSTANCE}"
-#         - "statefulset=${NAME}-${INSTANCE}"
-#     destination:
-#       - - "$namespace=${NAMESPACE}"
-#         - "cluster-name=${INSTANCE}"
-#         - "statefulset=${NAME}-${INSTANCE}"
-- apiVersion: v1
-  kind: Service
-  metadata:
-    name: "${NAME}-${INSTANCE}"
-  spec:
-    ports:
-    - port: 5432
-      protocol: TCP
-      targetPort: 5432
-    selector:
-      cluster-name: "${INSTANCE}"
-      role: master
-      app.kubernetes.io/name: patroni
-    sessionAffinity: None
-    type: ClusterIP
-  status:
-    loadBalancer: {}
-- apiVersion: apps/v1
-  kind: StatefulSet
-  metadata:
-    name: "${NAME}-${INSTANCE}"
-  spec:
-    podManagementPolicy: OrderedReady
-    replicas: 2
-    revisionHistoryLimit: 10
-    selector:
-      matchLabels:
-        statefulset: "${NAME}-${INSTANCE}"
-    serviceName: "${NAME}-${INSTANCE}"
-    template:
-      metadata:
-        labels:
+  - apiVersion: security.devops.gov.bc.ca/v1alpha1
+    kind: NetworkSecurityPolicy
+    metadata:
+      name: "${NAME}-${INSTANCE}-sa-deployer-k8s-api-comms"
+    spec:
+      description: |
+        Allow pods to talk to the internal k8s api
+      source:
+        - - "$namespace=${NAMESPACE}"
+          - "@app:k8s:serviceaccountname=deployer"
+      destination:
+        - - int:network=internal-cluster-api-endpoint
+  - apiVersion: security.devops.gov.bc.ca/v1alpha1
+    kind: NetworkSecurityPolicy
+    metadata:
+      name: "${NAME}-${INSTANCE}-sa-${NAME}-${INSTANCE}-k8s-api-comms"
+    spec:
+      description: |
+        Allow patroni cluster to talk to the internal k8s api
+      source:
+        - - "$namespace=${NAMESPACE}"
+          - "@app:k8s:serviceaccountname=${NAME}-${INSTANCE}"
+      destination:
+        - - int:network=internal-cluster-api-endpoint
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: "${NAME}-${INSTANCE}-cluster-comms"
+    spec:
+      description: |
+        Allow patroni pods to open connections to other cluster pods
+      source:
+        - - "$namespace=${NAMESPACE}"
+          - "cluster-name=${INSTANCE}"
+          - "statefulset=${NAME}-${INSTANCE}"
+      destination:
+        - - "$namespace=${NAMESPACE}"
+          - "cluster-name=${INSTANCE}"
+          - "statefulset=${NAME}-${INSTANCE}"
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: "${NAME}-${INSTANCE}"
+    spec:
+      ports:
+        - port: 5432
+          protocol: TCP
+          targetPort: 5432
+      selector:
+        cluster-name: "${INSTANCE}"
+        role: master
+        app.kubernetes.io/name: patroni
+      sessionAffinity: None
+      type: ClusterIP
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: "${NAME}-${INSTANCE}-readonly"
+    spec:
+      ports:
+        - port: 5432
+          protocol: TCP
+          targetPort: 5432
+      selector:
+        cluster-name: "${INSTANCE}"
+        role: replica
+        app.kubernetes.io/name: patroni
+      sessionAffinity: None
+      type: ClusterIP
+  - apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: "${NAME}-${INSTANCE}"
+    spec:
+      podManagementPolicy: OrderedReady
+      replicas: ${{REPLICAS}}
+      revisionHistoryLimit: 10
+      selector:
+        matchLabels:
           statefulset: "${NAME}-${INSTANCE}"
-          cluster-name: "${INSTANCE}"
-          app.kubernetes.io/name: patroni
-      spec:
-        affinity:
-          podAntiAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - ${NAME}-${INSTANCE}
-              topologyKey: "kubernetes.io/hostname"
-        containers:
-        - env:
-          - name: APP_DATABASE
-            valueFrom:
-              secretKeyRef:
-                key: app-db-name
-                name: "${NAME}-${INSTANCE}-secret"
-          - name: APP_USER
-            valueFrom:
-              secretKeyRef:
-                key: app-db-username
-                name: "${NAME}-${INSTANCE}-secret"
-          - name: APP_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: app-db-password
-                name: "${NAME}-${INSTANCE}-secret"
-          - name: POD_IP
-            valueFrom:
-              fieldRef:
-                apiVersion: v1
-                fieldPath: status.podIP
-          - name: PATRONI_KUBERNETES_LABELS
-            value: '{"cluster-name": "${INSTANCE}", "app.kubernetes.io/name": "patroni"}'
-          - name: PATRONI_KUBERNETES_NAMESPACE
-            valueFrom:
-              fieldRef:
-                apiVersion: v1
-                fieldPath: metadata.namespace
-          - name: PATRONI_SUPERUSER_USERNAME
-            valueFrom:
-              secretKeyRef:
-                key: superuser-username
-                name: "${NAME}-${INSTANCE}-secret"
-          - name: PATRONI_SUPERUSER_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: superuser-password
-                name: "${NAME}-${INSTANCE}-secret"
-          - name: PATRONI_REPLICATION_USERNAME
-            valueFrom:
-              secretKeyRef:
-                key: replication-username
-                name: "${NAME}-${INSTANCE}-secret"
-          - name: PATRONI_REPLICATION_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: replication-password
-                name: "${NAME}-${INSTANCE}-secret"
-          - name: PATRONI_LOG_LEVEL
-            value: WARNING
-          - name: PATRONI_NAME
-            valueFrom:
-              fieldRef:
-                apiVersion: v1
-                fieldPath: metadata.name
-          - name: PATRONI_POSTGRESQL_DATA_DIR
-            value: "/home/postgres/pgdata/pgroot/data"
-          - name: PATRONI_POSTGRESQL_PGPASS
-            value: "/tmp/pgpass"
-          - name: PATRONI_POSTGRESQL_LISTEN
-            value: 0.0.0.0:5432
-          - name: PATRONI_RESTAPI_LISTEN
-            value: 0.0.0.0:8008
-          - name: PATRONI_SCOPE
-            value: "${INSTANCE}"
-          - name: POSTGRESQL_MAX_CONNECTIONS
-            value: '500'
-          - name: POSTGRESQL_MAX_PREPARED_TRANSACTIONS
-            value: '500'
-          image: "${IMAGE_REGISTRY}/${IMAGE_STREAM_NAMESPACE}/${IMAGE_STREAM_TAG}"
-          imagePullPolicy: Always
-          livenessProbe:
-            exec:
-              command:
-                - /usr/share/scripts/patroni/health_check.sh
-            initialDelaySeconds: 5
-            timeoutSeconds: 5
-            failureThreshold: 4
-          name: postgresql
-          ports:
-          - containerPort: 8008
-            protocol: TCP
-          - containerPort: 5432
-            protocol: TCP
-          resources:
-            requests:
-              cpu: ${CPU_REQUEST}
-              memory: ${MEMORY_REQUEST}
-            limits:
-              cpu: ${CPU_LIMIT}
-              memory: ${MEMORY_LIMIT}
-          terminationMessagePath: "/dev/termination-log"
-          terminationMessagePolicy: File
-          readinessProbe:
-            exec:
-              command:
-                - /usr/share/scripts/patroni/health_check.sh
-            initialDelaySeconds: 5
-            timeoutSeconds: 5
-            failureThreshold: 4
-          volumeMounts:
-          - mountPath: "/home/postgres/pgdata"
-            name: postgresql
-        dnsPolicy: ClusterFirst
-        restartPolicy: Always
-        schedulerName: default-scheduler
-        securityContext: {}
-        serviceAccountName: "${NAME}-${INSTANCE}"
-        terminationGracePeriodSeconds: 0
-        volumes:
-        - name: postgresql
-          emptyDir: {}
-    updateStrategy:
-      type: RollingUpdate
-- apiVersion: v1
-  kind: ServiceAccount
-  metadata:
-    name: "${NAME}-${INSTANCE}"
-- apiVersion: rbac.authorization.k8s.io/v1
-  kind: Role
-  metadata:
-    name: "${NAME}-${INSTANCE}"
-  rules:
-  - apiGroups:
-    - ''
-    resources:
-    - services
-    verbs:
-    - create
-    - get
-    - list
-    - patch
-    - update
-    - watch
-    - delete
-  - apiGroups:
-    - ''
-    resources:
-    - configmaps
-    verbs:
-    - create
-    - get
-    - list
-    - patch
-    - update
-    - watch
-    - delete
-  - apiGroups:
-    - ''
-    resources:
-    - endpoints
-    verbs:
-    - get
-    - patch
-    - update
-    - create
-    - list
-    - watch
-    - delete
-  - apiGroups:
-    - ''
-    resources:
-    - pods
-    verbs:
-    - get
-    - list
-    - patch
-    - update
-    - watch
-- apiVersion: rbac.authorization.k8s.io/v1
-  kind: RoleBinding
-  metadata:
-    name: "${NAME}-${INSTANCE}"
-  roleRef:
-    apiGroup: rbac.authorization.k8s.io
+      serviceName: "${NAME}-${INSTANCE}"
+      template:
+        metadata:
+          labels:
+            cluster-name: "${INSTANCE}"
+            statefulset: "${NAME}-${INSTANCE}"
+            app.kubernetes.io/name: patroni
+        spec:
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                      - key: statefulset
+                        operator: In
+                        values:
+                          - ${NAME}-${INSTANCE}
+                  topologyKey: "kubernetes.io/hostname"
+          containers:
+            - name: postgresql
+              image: "${IMAGE_REGISTRY}/${IMAGE_STREAM_NAMESPACE}/${IMAGE_STREAM_TAG}"
+              imagePullPolicy: Always
+              env:
+                - name: APP_DATABASE
+                  valueFrom:
+                    secretKeyRef:
+                      key: app-db-name
+                      name: "${NAME}-${INSTANCE}-secret"
+                - name: APP_USER
+                  valueFrom:
+                    secretKeyRef:
+                      key: app-db-username
+                      name: "${NAME}-${INSTANCE}-secret"
+                - name: APP_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: app-db-password
+                      name: "${NAME}-${INSTANCE}-secret"
+                - name: POD_IP
+                  valueFrom:
+                    fieldRef:
+                      apiVersion: v1
+                      fieldPath: status.podIP
+                - name: PATRONI_KUBERNETES_LABELS
+                  value: '{"cluster-name": "${INSTANCE}", "app.kubernetes.io/name": "patroni"}'
+                - name: PATRONI_KUBERNETES_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      apiVersion: v1
+                      fieldPath: metadata.namespace
+                - name: PATRONI_SUPERUSER_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      key: superuser-username
+                      name: "${NAME}-${INSTANCE}-secret"
+                - name: PATRONI_SUPERUSER_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: superuser-password
+                      name: "${NAME}-${INSTANCE}-secret"
+                - name: PATRONI_REPLICATION_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      key: replication-username
+                      name: "${NAME}-${INSTANCE}-secret"
+                - name: PATRONI_REPLICATION_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: replication-password
+                      name: "${NAME}-${INSTANCE}-secret"
+                - name: PATRONI_LOG_LEVEL
+                  value: WARNING
+                - name: PATRONI_NAME
+                  valueFrom:
+                    fieldRef:
+                      apiVersion: v1
+                      fieldPath: metadata.name
+                - name: PATRONI_POSTGRESQL_DATA_DIR
+                  value: "/home/postgres/pgdata/pgroot/data"
+                - name: PATRONI_POSTGRESQL_PGPASS
+                  value: "/tmp/pgpass"
+                - name: PATRONI_POSTGRESQL_LISTEN
+                  value: 0.0.0.0:5432
+                - name: PATRONI_RESTAPI_LISTEN
+                  value: 0.0.0.0:8008
+                - name: PATRONI_SCOPE
+                  value: "${INSTANCE}"
+                - name: POSTGRESQL_MAX_CONNECTIONS
+                  value: "500"
+                - name: POSTGRESQL_MAX_PREPARED_TRANSACTIONS
+                  value: "500"
+              lifecycle:
+                preStop:
+                  exec:
+                    command:
+                      - /usr/bin/env
+                      - bash
+                      - -c
+                      - |
+                        # switch leader pod if the current pod is the leader
+                        if curl --fail http://localhost:8008/read-write; then
+                          patronictl switchover --force
+                        fi
+              livenessProbe:
+                exec:
+                  command:
+                    - /usr/bin/env
+                    - bash
+                    - -c
+                    - |
+                      set -Eeuo pipefail && curl -s localhost:8008/liveness | jq -e ". | select(.state == \"running\")"
+                initialDelaySeconds: 10
+                timeoutSeconds: 5
+                failureThreshold: 3
+              ports:
+                - containerPort: 8008
+                  protocol: TCP
+                - containerPort: 5432
+                  protocol: TCP
+              readinessProbe:
+                exec:
+                  command:
+                    - /usr/bin/env
+                    - bash
+                    - -c
+                    - |
+                      set -Eeuo pipefail && df "${PATRONI_POSTGRESQL_DATA_DIR:-/home/postgres/pgdata}" --output=pcent | tail -n 1 | awk '{if ($1+0 > 90) exit 1; else exit 0;}' && pg_isready -q && curl -s localhost:8008/readiness | jq -e ". | select(.state == \"running\")"
+                initialDelaySeconds: 10
+                timeoutSeconds: 5
+                failureThreshold: 3
+              resources:
+                requests:
+                  cpu: ${CPU_REQUEST}
+                  memory: ${MEMORY_REQUEST}
+                limits:
+                  cpu: ${CPU_LIMIT}
+                  memory: ${MEMORY_LIMIT}
+              terminationMessagePath: "/dev/termination-log"
+              terminationMessagePolicy: File
+              volumeMounts:
+                - mountPath: "/home/postgres/pgdata"
+                  name: postgresql
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          securityContext: {}
+          serviceAccountName: "${NAME}-${INSTANCE}"
+          volumes:
+            - name: postgresql
+              emptyDir: {}
+      updateStrategy:
+        type: RollingUpdate
+  - apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      name: "${NAME}-${INSTANCE}"
+  - apiVersion: rbac.authorization.k8s.io/v1
     kind: Role
-    name: "${NAME}-${INSTANCE}"
-  subjects:
-  - kind: ServiceAccount
-    name: "${NAME}-${INSTANCE}"
+    metadata:
+      name: "${NAME}-${INSTANCE}"
+    rules:
+      - apiGroups:
+          - ""
+        resources:
+          - services
+        verbs:
+          - create
+          - get
+          - list
+          - patch
+          - update
+          - watch
+          - delete
+      - apiGroups:
+          - ""
+        resources:
+          - configmaps
+        verbs:
+          - create
+          - get
+          - list
+          - patch
+          - update
+          - watch
+          - delete
+      - apiGroups:
+          - ""
+        resources:
+          - endpoints
+        verbs:
+          - get
+          - patch
+          - update
+          - create
+          - list
+          - watch
+          - delete
+      - apiGroups:
+          - ""
+        resources:
+          - pods
+        verbs:
+          - get
+          - list
+          - patch
+          - update
+          - watch
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      name: "${NAME}-${INSTANCE}"
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: Role
+      name: "${NAME}-${INSTANCE}"
+    subjects:
+      - kind: ServiceAccount
+        name: "${NAME}-${INSTANCE}"
 parameters:
-- name: APP_NAME
-  description: The name of the application which will use this database.
-  displayName: Application client name
-  required: true
-- name: NAME
-  description: The name of the application for labelling all artifacts.
-  displayName: Application Name
-  required: true
-  value: patroni
-- name: INSTANCE
-  description: The name of this instance of the application
-  displayName: Application Instance Name
-  required: true
-- name: NAMESPACE
-  description: Target namespace reference (i.e. 'k8vopl-dev')
-  displayName: Target Namespace
-  required: true
-- name: IMAGE_REGISTRY
-  description: The base OpenShift docker registry
-  displayName: Docker Image Registry
-  required: true
-  value: docker-registry.default.svc:5000
-- name: IMAGE_STREAM_NAMESPACE
-  description: The OpenShift Namespace where the patroni and postgresql ImageStream
-    resides.
-  displayName: ImageStream Namespace
-  required: true
-  value: bcgov
-- name: IMAGE_STREAM_TAG
-  description: Patroni ImageTag
-  displayName: ImageStream Tag
-  required: true
-  value: patroni:v10-stable
-- name: CPU_REQUEST
-  description: Starting amount of CPU the container can use.
-  displayName: CPU Request
-  required: true
-  value: '250m'
-- name: CPU_LIMIT
-  description: Maximum amount of CPU the container can use.
-  displayName: CPU Limit
-  required: true
-  value: '500m'
-- name: MEMORY_REQUEST
-  description: Starting amount of memory the container can use.
-  displayName: Memory Request
-  required: true
-  value: 256Mi
-- name: MEMORY_LIMIT
-  description: Maximum amount of memory the container can use.
-  displayName: Memory Limit
-  required: true
-  value: 512Mi
+  - name: APP_NAME
+    description: The name of the application which will use this database.
+    displayName: Application client name
+    required: true
+  - name: NAME
+    description: The name of the application for labelling all artifacts.
+    displayName: Application Name
+    required: true
+    value: patroni
+  - name: INSTANCE
+    description: The name of this instance of the application
+    displayName: Application Instance Name
+    required: true
+  - name: NAMESPACE
+    description: Target namespace reference (i.e. 'k8vopl-dev')
+    displayName: Target Namespace
+    required: true
+  - name: REPLICAS
+    description: The number of StatefulSet replicas to use.
+    displayName: Replicas
+    required: true
+    value: "3"
+  - name: IMAGE_REGISTRY
+    description: The base OpenShift docker registry
+    displayName: Docker Image Registry
+    required: true
+    value: image-registry.openshift-image-registry.svc:5000
+  - name: IMAGE_STREAM_NAMESPACE
+    description:
+      The OpenShift Namespace where the patroni and postgresql ImageStream
+      resides.
+    displayName: ImageStream Namespace
+    required: true
+    value: bcgov
+  - name: IMAGE_STREAM_TAG
+    description: Patroni ImageTag
+    displayName: ImageStream Tag
+    required: true
+    value: patroni-postgres:12.4-latest
+  - name: CPU_REQUEST
+    description: Starting amount of CPU the container can use.
+    displayName: CPU Request
+    required: true
+    value: "50m"
+  - name: CPU_LIMIT
+    description: Maximum amount of CPU the container can use.
+    displayName: CPU Limit
+    required: true
+    value: "500m"
+  - name: MEMORY_REQUEST
+    description: Starting amount of memory the container can use.
+    displayName: Memory Request
+    required: true
+    value: 256Mi
+  - name: MEMORY_LIMIT
+    description: Maximum amount of memory the container can use.
+    displayName: Memory Limit
+    required: true
+    value: 512Mi
