@@ -24,17 +24,23 @@ In order to prepare an environment, you will need to ensure that all of the foll
 
 *Note:* Replace anything in angle brackets with the appropriate value!
 
+*Note 2:* The Keycloak Public Key can be found in the Keycloak Admin Panel under Realm Settings > Keys. Look for the Public key button (normally under RS256 row), and click to see the key. The key should begin with a pattern of `MIIBIjANB...`.
+
 ```sh
-oc create -n k8vopl-<env> configmap getok-frontend-config \
+export NAMESPACE=<yournamespace>
+export APP_NAME=<yourappshortname>
+export PUBLIC_KEY=<yourkeycloakpublickey>
+
+oc create -n $NAMESPACE configmap $APP_NAME-frontend-config \
   --from-literal=FRONTEND_APIPATH=api/v1 \
   --from-literal=FRONTEND_BASEPATH=/app \
-  --from-literal=FRONTEND_KC_CLIENTID=getok-frontend \
+  --from-literal=FRONTEND_KC_CLIENTID=$APP_NAME-frontend \
   --from-literal=FRONTEND_KC_REALM=vehizw2t \
   --from-literal=FRONTEND_KC_SERVERURL=https://dev.oidc.gov.bc.ca/auth
 ```
 
 ```sh
-oc create -n k8vopl-<env> configmap getok-sc-config \
+oc create -n $NAMESPACE configmap $APP_NAME-sc-config \
   --from-literal=SC_CHES_API_ENDPOINT=https://ches-dev.pathfinder.gov.bc.ca/api \
   --from-literal=SC_CHES_TOKEN_ENDPOINT=https://dev.oidc.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token \
   --from-literal=SC_GETOK_ENDPOINT_INT=https://i1api.nrs.gov.bc.ca/webade-api/v1 \
@@ -49,9 +55,10 @@ oc create -n k8vopl-<env> configmap getok-sc-config \
 ```
 
 ```sh
-oc create -n k8vopl-<env> configmap getok-server-config \
+oc create -n $NAMESPACE configmap $APP_NAME-server-config \
   --from-literal=SERVER_APIPATH=/api/v1 \
   --from-literal=SERVER_BODYLIMIT=30mb \
+  --from-literal=SERVER_KC_PUBLICKEY=$PUBLIC_KEY \
   --from-literal=SERVER_KC_REALM=vehizw2t \
   --from-literal=SERVER_KC_SERVERURL=https://dev.oidc.gov.bc.ca/auth \
   --from-literal=SERVER_LOGLEVEL=info \
@@ -66,14 +73,17 @@ Replace anything in angle brackets with the appropriate value!
 *Note:* Publickey must be a PEM-encoded value encapsulated in double quotes in the argument. Newlines should not be re-encoded when using this command. If authentication fails, it's very likely a newline whitespace issue.
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-keycloak-secret \
+export NAMESPACE=<yournamespace>
+export APP_NAME=<yourappshortname>
+
+oc create -n $NAMESPACE secret generic $APP_NAME-keycloak-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>
 ```
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-sc-ches-secret \
+oc create -n $NAMESPACE secret generic $APP_NAME-sc-ches-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>
@@ -82,48 +92,48 @@ oc create -n k8vopl-<env> secret generic getok-sc-ches-secret \
 If generating a new token is required for the github access below. Log in to the repo with the Parrot (nr-csst) account and regenerate a personal access token. Only public_repo scope is needed
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-sc-github-secret \
+oc create -n $NAMESPACE secret generic $APP_NAME-sc-github-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=personal-access-token=<token>
 ```
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-sc-keycloak-dev-secret \
+oc create -n $NAMESPACE secret generic $APP_NAME-sc-keycloak-dev-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>
 ```
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-sc-keycloak-test-secret \
+oc create -n $NAMESPACE secret generic $APP_NAME-sc-keycloak-test-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>
 ```
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-sc-keycloak-prod-secret \
+oc create -n $NAMESPACE secret generic $APP_NAME-sc-keycloak-prod-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>
 ```
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-sc-webade-int-secret \
+oc create -n $NAMESPACE secret generic $APP_NAME-sc-webade-int-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>
 ```
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-sc-webade-test-secret \
+oc create -n $NAMESPACE secret generic $APP_NAME-sc-webade-test-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>
 ```
 
 ```sh
-oc create -n k8vopl-<env> secret generic getok-sc-webade-prod-secret \
+oc create -n $NAMESPACE secret generic $APP_NAME-sc-webade-prod-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>
