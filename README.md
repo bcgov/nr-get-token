@@ -1,4 +1,4 @@
-# Common Service Get Token [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+# Common Service Get Token [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE) [![img](https://img.shields.io/badge/Lifecycle-Stable-97ca00)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
 
 To learn more about the **Common Services** available visit the [Common Services Showcase](https://bcgov.github.io/common-service-showcase/) page.
 
@@ -21,6 +21,7 @@ GETOK is a web-based tool for development teams to manage their application's se
     Jenkinsfile.cicd           - Pull-Request Pipeline
     LICENSE                    - License
     sonar-project.properties   - SonarQube configuration
+    vetur.config.js            - Vetur configuration
 
 ## Documentation
 
