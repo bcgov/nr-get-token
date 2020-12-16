@@ -26,9 +26,30 @@ objects:
           - role=app
       destination:
         - - ext:network=any
+  - apiVersion: security.devops.gov.bc.ca/v1alpha1
+    kind: NetworkSecurityPolicy
+    metadata:
+      name: "${APP_NAME}-app-${JOB_NAME}-patroni-${JOB_NAME}-master-comms"
+    spec:
+      description: |
+        Allow pods to open connections to patroni cluster
+      source:
+        - - "$namespace=${NAMESPACE}"
+          - "app=${APP_NAME}-${JOB_NAME}"
+          - "deploymentconfig=${APP_NAME}-app-${JOB_NAME}"
+          - role=app
+        - - "$namespace=${NAMESPACE}"
+          - "openshift.io/deployer-pod.type=hook-pre"
+      destination:
+        - - "$namespace=${NAMESPACE}"
+          - "cluster-name=${JOB_NAME}"
+          - "statefulset=patroni-${JOB_NAME}"
+          - role=master
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
+      annotations:
+        app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"StatefulSet","name":"patroni-${JOB_NAME}"}]'
       name: "${APP_NAME}-app-${JOB_NAME}"
     spec:
       replicas: 2
