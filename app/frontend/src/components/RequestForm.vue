@@ -1,7 +1,8 @@
 <template>
   <v-container class="request-form">
     <p>
-      Please submit the Acronym of the application you wish to add. You will get an email once it is confirmed.
+      Please submit the Acronym of the application you wish to add. You will get
+      an email once it is confirmed.
     </p>
 
     <v-form ref="form" v-model="valid">
@@ -124,7 +125,9 @@
           <br />You can also add your application by sending an email to
           <a
             href="mailto:NR.CommonServiceShowcase@gov.bc.ca?subject=GETOK Registration for <acronym> - <idir>"
-          >NR.CommonServiceShowcase@gov.bc.ca</a>
+          >
+            NR.CommonServiceShowcase@gov.bc.ca
+          </a>
         </p>
         <p>
           Please include your Acronym as well as your IDIR username in your
@@ -147,6 +150,15 @@
         </p>
       </template>
     </BaseDialog>
+
+    <v-dialog v-model="sending" hide-overlay persistent width="300">
+      <v-card color="primary" dark>
+        <v-card-text>
+          Sending request
+          <v-progress-linear indeterminate color="white" class="mb-0" />
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -181,6 +193,7 @@ export default {
       },
       fieldValidations: FieldValidations,
       registerSuccess: false,
+      sending: false,
       valid: false,
     };
   },
@@ -190,6 +203,7 @@ export default {
     },
     postRegistrationForm() {
       this.resetState();
+      this.sending = true;
       if (this.valid) {
         emailService
           .sendRegistrationEmail(this.form)
@@ -200,6 +214,9 @@ export default {
           })
           .catch(() => {
             this.errorOccurred = true;
+          })
+          .finally(() => {
+            this.sending = false;
           });
       }
     },
