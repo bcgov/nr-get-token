@@ -1,5 +1,9 @@
 # Common Service Get Token [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE) [![img](https://img.shields.io/badge/Lifecycle-Stable-97ca00)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
 
+![Tests](https://github.com/bcgov/nr-get-token/workflows/Tests/badge.svg)
+[![Maintainability](https://api.codeclimate.com/v1/badges/1b687dfb13ea3390707d/maintainability)](https://codeclimate.com/github/bcgov/nr-get-token/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/1b687dfb13ea3390707d/test_coverage)](https://codeclimate.com/github/bcgov/nr-get-token/test_coverage)
+
 To learn more about the **Common Services** available visit the [Common Services Showcase](https://bcgov.github.io/common-service-showcase/) page.
 
 GETOK is a web-based tool for development teams to manage their application's secure access to Common Services. Users can create and deploy Keycloak or WebADE service client application configuration instantly to gain access to common service APIs like email notifications, document management, or document generation.
@@ -20,7 +24,6 @@ GETOK is a web-based tool for development teams to manage their application's se
     Jenkinsfile                - Top-level Pipeline
     Jenkinsfile.cicd           - Pull-Request Pipeline
     LICENSE                    - License
-    sonar-project.properties   - SonarQube configuration
     vetur.config.js            - Vetur configuration
 
 ## Documentation
