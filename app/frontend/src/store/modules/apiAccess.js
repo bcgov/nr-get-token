@@ -32,11 +32,11 @@ export default {
     generatedPassword: state => state.generatedPassword,
     step: state => state.step,
     tokenEndpoint(state) {
-      let prefix = 'sso';
+      let prefix = 'oidc';
       if (['dev', 'test'].includes(state.environment.toLowerCase())) {
-        prefix += `-${state.environment.toLowerCase()}`;
+        prefix = `${state.environment.toLowerCase()}.${prefix}`;
       }
-      return `https://${prefix}.pathfinder.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token`;
+      return `https://${prefix}.apps.silver.devops.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token`;
     }
   },
   mutations: {
