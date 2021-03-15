@@ -45,6 +45,15 @@ if (process.env.NODE_ENV !== 'test') {
 // Use Keycloak OIDC Middleware
 app.use(keycloak.middleware());
 
+// Block requests if shutting down
+app.use((_req, res, next) => {
+  if (state.shutdown) {
+    throw new Error('Server shutting down');
+  } else {
+    next();
+  }
+});
+
 // Frontend configuration endpoint
 apiRouter.use('/config', (_req, res, next) => {
   try {
@@ -57,11 +66,7 @@ apiRouter.use('/config', (_req, res, next) => {
 
 // GetOK Base API Directory
 apiRouter.get('/api', (_req, res) => {
-  if (state.shutdown) {
-    throw new Error('Server shutting down');
-  } else {
-    res.status(200).json('ok');
-  }
+  res.status(200).json('ok');
 });
 
 // Host API endpoints
@@ -113,18 +118,17 @@ process.on('unhandledRejection', err => {
 /**
  * @function shutdown
  * Begins shutting down this application. It will hard exit after 3 seconds.
- * @param {string} signal A signal
  */
-function shutdown(signal) {
+function shutdown() {
   if (!state.shutdown) {
-    log.info(`Received ${signal} signal. Shutting down...`);
+    log.info('Received kill signal. Shutting down...');
     state.shutdown = true;
     // Wait 3 seconds before hard exiting
     setTimeout(() => process.exit(), 3000);
   }
 }
 
-process.on('SIGTERM', shutdown, 'SIGTERM');
-process.on('SIGINT', shutdown, 'SIGINT');
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);
 
 module.exports = app;
