@@ -54,7 +54,7 @@ oc create -n $NAMESPACE configmap $APP_NAME-frontend-config \
 
 ```sh
 oc create -n $NAMESPACE configmap $APP_NAME-sc-config \
-  --from-literal=SC_CHES_API_ENDPOINT=https://ches-dev.pathfinder.gov.bc.ca/api \
+  --from-literal=SC_CHES_API_ENDPOINT=https://ches-dev.apps.silver.devops.gov.bc.ca/api \
   --from-literal=SC_CHES_TOKEN_ENDPOINT=https://dev.oidc.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token \
   --from-literal=SC_GETOK_ENDPOINT_INT=https://i1api.nrs.gov.bc.ca/webade-api/v1 \
   --from-literal=SC_GETOK_ENDPOINT_TEST=https://t1api.nrs.gov.bc.ca/webade-api/v1 \
@@ -217,7 +217,7 @@ Our application template take in the following parameters:
 The Jenkins pipeline will handle deployment invocation automatically. However should you need to run it manually, you can do so with the following for example:
 
 ```sh
-oc -n e9bfa5-<env> process -f openshift/app.dc.yaml -p REPO_NAME=nr-get-token -p JOB_NAME=master -p NAMESPACE=e9bfa5-<env> -p APP_NAME=getok -p ROUTE_HOST=getok-dev.pathfinder.gov.bc.ca -p ROUTE_PATH=master -o yaml | oc -n e9bfa5-<env> apply -f -
+oc -n e9bfa5-<env> process -f openshift/app.dc.yaml -p REPO_NAME=nr-get-token -p JOB_NAME=master -p NAMESPACE=e9bfa5-<env> -p APP_NAME=getok -p ROUTE_HOST=getok-dev.apps.silver.devops.gov.bc.ca -p ROUTE_PATH=master -o yaml | oc -n e9bfa5-<env> apply -f -
 ```
 
 Due to the triggers that are set in the deploymentconfig, the deployment will begin automatically. However, you can deploy manually by use the following command for example:

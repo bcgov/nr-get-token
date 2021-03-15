@@ -14,11 +14,11 @@
                 <p>We recommend that you read the API documentation before running the Postman collection.</p>
                 <ul>
                   <li class="my-2">
-                    Common Hosted Email Service (<a href="https://ches.pathfinder.gov.bc.ca/api/v1/docs">CHES</a>).
+                    Common Hosted Email Service (<a href="https://ches.nrs.gov.bc.ca/api/v1/docs">CHES</a>).
                   </li>
                   <li class="my-2">
                     Common Document Generation Service (<a
-                      href="https://cdogs.pathfinder.gov.bc.ca/api/v2/docs"
+                      href="https://cdogs.nrs.gov.bc.ca/api/v2/docs"
                     >CDOGS</a>).
                   </li>
                 </ul>

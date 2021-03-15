@@ -18,11 +18,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v2/health",
+									"raw": "https://cdogs.nrs.gov.bc.ca/api/v2/health",
 									"protocol": "https",
 									"host": [
 										"cdogs",
-										"pathfinder",
+										"nrs",
 										"gov",
 										"bc",
 										"ca"
@@ -57,11 +57,11 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v2/render/:uid?download=true",
+									"raw": "https://cdogs.nrs.gov.bc.ca/api/v2/render/:uid?download=true",
 									"protocol": "https",
 									"host": [
 										"cdogs",
-										"pathfinder",
+										"nrs",
 										"gov",
 										"bc",
 										"ca"
@@ -101,11 +101,11 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v2/render/:uid",
+									"raw": "https://cdogs.nrs.gov.bc.ca/api/v2/render/:uid",
 									"protocol": "https",
 									"host": [
 										"cdogs",
-										"pathfinder",
+										"nrs",
 										"gov",
 										"bc",
 										"ca"
@@ -141,11 +141,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v2/fileTypes",
+									"raw": "https://cdogs.nrs.gov.bc.ca/api/v2/fileTypes",
 									"protocol": "https",
 									"host": [
 										"cdogs",
-										"pathfinder",
+										"nrs",
 										"gov",
 										"bc",
 										"ca"
@@ -198,11 +198,11 @@
 									}
 								},
 								"url": {
-									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v2/template",
+									"raw": "https://cdogs.nrs.gov.bc.ca/api/v2/template",
 									"protocol": "https",
 									"host": [
 										"cdogs",
-										"pathfinder",
+										"nrs",
 										"gov",
 										"bc",
 										"ca"
@@ -243,11 +243,11 @@
 									}
 								},
 								"url": {
-									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v2/template/:uid?download=true",
+									"raw": "https://cdogs.nrs.gov.bc.ca/api/v2/template/:uid?download=true",
 									"protocol": "https",
 									"host": [
 										"cdogs",
-										"pathfinder",
+										"nrs",
 										"gov",
 										"bc",
 										"ca"
@@ -300,11 +300,11 @@
 									}
 								},
 								"url": {
-									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v2/template/:uid",
+									"raw": "https://cdogs.nrs.gov.bc.ca/api/v2/template/:uid",
 									"protocol": "https",
 									"host": [
 										"cdogs",
-										"pathfinder",
+										"nrs",
 										"gov",
 										"bc",
 										"ca"
@@ -350,11 +350,11 @@
 									}
 								},
 								"url": {
-									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v2/template/:uid/render",
+									"raw": "https://cdogs.nrs.gov.bc.ca/api/v2/template/:uid/render",
 									"protocol": "https",
 									"host": [
 										"cdogs",
-										"pathfinder",
+										"nrs",
 										"gov",
 										"bc",
 										"ca"
@@ -404,11 +404,11 @@
 									}
 								},
 								"url": {
-									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v2/template/render",
+									"raw": "https://cdogs.nrs.gov.bc.ca/api/v2/template/render",
 									"protocol": "https",
 									"host": [
 										"cdogs",
-										"pathfinder",
+										"nrs",
 										"gov",
 										"bc",
 										"ca"
@@ -494,8 +494,7 @@
 					"raw": "https://oidc.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token",
 					"protocol": "https",
 					"host": [
-						"sso",
-						"pathfinder",
+						"oidc",
 						"gov",
 						"bc",
 						"ca"

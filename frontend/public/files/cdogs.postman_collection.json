@@ -18,11 +18,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v1/health",
+									"raw": "https://cdogs.nrs.gov.bc.ca/api/v1/health",
 									"protocol": "https",
 									"host": [
 										"cdogs",
-										"pathfinder",
+										"nrs",
 										"gov",
 										"bc",
 										"ca"
@@ -65,11 +65,11 @@
 									}
 								},
 								"url": {
-									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v1/docGen",
+									"raw": "https://cdogs.nrs.gov.bc.ca/api/v1/docGen",
 									"protocol": "https",
 									"host": [
 										"cdogs",
-										"pathfinder",
+										"nrs",
 										"gov",
 										"bc",
 										"ca"
@@ -96,11 +96,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://cdogs.pathfinder.gov.bc.ca/api/v1/fileTypes",
+									"raw": "https://cdogs.nrs.gov.bc.ca/api/v1/fileTypes",
 									"protocol": "https",
 									"host": [
 										"cdogs",
-										"pathfinder",
+										"nrs",
 										"gov",
 										"bc",
 										"ca"
