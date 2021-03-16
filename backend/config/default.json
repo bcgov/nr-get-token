@@ -24,8 +24,8 @@
     },
     "ches": {
       "tokenEndpoint": "redacted",
-      "emailEndpoint": "https://ches-dev.pathfinder.gov.bc.ca/api/v1/email",
-      "healthEndpoint": "https://ches-dev.pathfinder.gov.bc.ca/api/v1/health",
+      "emailEndpoint": "https://ches-dev.apps.silver.devops.gov.bc.ca/api/v1/email",
+      "healthEndpoint": "https://ches-dev.apps.silver.devops.gov.bc.ca/api/v1/health",
       "username": "redacted",
       "password": "redacted"
     },

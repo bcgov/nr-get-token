@@ -27,7 +27,7 @@
   },
   "serviceClient": {
     "ches": {
-      "apiEndpoint": "https://ches-dev.pathfinder.gov.bc.ca/api",
+      "apiEndpoint": "https://ches-dev.apps.silver.devops.gov.bc.ca/api",
       "tokenEndpoint": "https://dev.oidc.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token"
     },
     "github": {
