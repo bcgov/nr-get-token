@@ -27,7 +27,7 @@ describe('apiAccess getters', () => {
     expect(store.getters.tokenEndpoint).toEqual('https://test.oidc.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token');
   });
 
-  it('step should return dev oidc endpoint for test', () => {
+  it('step should return dev oidc endpoint for dev', () => {
     store.state.environment = 'dev';
     expect(store.getters.tokenEndpoint).toEqual('https://dev.oidc.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token');
   });
