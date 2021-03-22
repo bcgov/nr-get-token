@@ -66,6 +66,7 @@
       :type="!submissionInProgress ? 'CONTINUE' : ''"
       @close-dialog="confirmDialog = false"
       @continue-dialog="sendFormToApi()"
+      width="700"
     >
       <template v-slot:icon>
         <v-icon v-if="!submissionInProgress" large color="orange darken-2">warning</v-icon>
@@ -79,6 +80,20 @@
             This will create your
             <strong>{{ environment }}</strong> service client for the
             <strong>{{ acronym }}</strong> application.
+          </p>
+          <p>
+            <strong>Disclaimer and statement of responsibility for users of Common Services:</strong>
+            <ul>
+              <li>It is your responsibility to comply with Privacy laws governing the collection, use and disclosure of personally identifiable information.</li>
+              <li>Access to this Common Services does not inherently grant permission to collect, use or disclose any personally identifiable information.</li>
+              <li>It is your responsibility to obtain consent to collect information as required by law.</li>
+              <li>Before using Common Services you are required to discuss the intention of your application with your
+                <a href="https://www2.gov.bc.ca/gov/content/governments/services-for-government/information-management-technology/privacy/resources/privacy-officers" target="_blank">
+                  Ministry Privacy Officer <v-icon small color="primary">open_in_new</v-icon>
+                </a>
+                and to complete assessments as required.
+              </li>
+            </ul>
           </p>
           <p>Do you want to continue?</p>
         </div>
