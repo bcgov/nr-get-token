@@ -36,7 +36,7 @@ export default {
       if (['dev', 'test'].includes(state.environment.toLowerCase())) {
         prefix = `${state.environment.toLowerCase()}.${prefix}`;
       }
-      return `https://${prefix}.apps.silver.devops.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token`;
+      return `https://${prefix}.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token`;
     }
   },
   mutations: {

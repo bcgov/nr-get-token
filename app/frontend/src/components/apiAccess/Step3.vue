@@ -87,7 +87,7 @@
       <strong>Token End Point:</strong>
     </p>
     <p>
-      <a :href="tokenEndpoint">{{ tokenEndpoint }}</a>
+      <a :href="tokenEndpoint" target="_blank">{{ tokenEndpoint }}</a>
     </p>
 
     <v-row class="mt-12 mb-4">

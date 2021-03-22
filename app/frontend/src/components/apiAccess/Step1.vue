@@ -8,7 +8,7 @@
     </ul>
     <h2 class="mt-8 pb-2">Service Client Status</h2>
     <p>
-      * Available each service client in order:
+      * Each service client is available in order:
       <strong>DEV - TEST - PROD</strong>
     </p>
     <p v-if="clientStatus.dev">
