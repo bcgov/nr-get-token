@@ -1,5 +1,5 @@
 ---
-openapi: 3.0.2
+openapi: 3.0.3
 info:
   version: 1.0.0
   title: GetOK API
@@ -16,8 +16,8 @@ servers:
   - url: /api/v1
     description: This Server
 security:
-  - bearerAuth: []
-  - OpenID: []
+  - BearerAuth: []
+    OpenID: []
 paths:
   "/acronyms/{acronym}":
     get:
