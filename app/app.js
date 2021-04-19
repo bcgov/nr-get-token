@@ -15,8 +15,13 @@ const v1Router = require('./src/routes/v1');
 
 const apiRouter = express.Router();
 const state = {
+  connections: {
+    data: false
+  },
+  ready: false,
   shutdown: false
 };
+let probeId;
 
 const app = express();
 app.use(compression());
@@ -58,23 +63,19 @@ if (process.env.NODE_ENV !== 'test') {
   }
   // Add Morgan endpoint logging
   app.use(morgan(config.get('server.morganFormat'), morganOpts));
-
-  // Check database connection and exit if unsuccessful
-  db.sequelize.authenticate()
-    .then(() => log.info('Database connection established'))
-    .catch(err => {
-      log.error(err);
-      shutdown('DBFAIL');
-    });
+  // Initialize connections and exit if unsuccessful
+  initializeConnections();
 }
 
 // Use Keycloak OIDC Middleware
 app.use(keycloak.middleware());
 
-// Block requests if shutting down
+// Block requests until service is ready
 app.use((_req, res, next) => {
   if (state.shutdown) {
-    throw new Error('Server shutting down');
+    new Problem(503, { details: 'Server is shutting down' }).send(res);
+  } else if (!state.ready) {
+    new Problem(503, { details: 'Server is not ready' }).send(res);
   } else {
     next();
   }
@@ -141,20 +142,93 @@ process.on('unhandledRejection', err => {
   }
 });
 
-/**
- * @function shutdown
- * Begins shutting down this application. It will hard exit after 3 seconds.
- */
-function shutdown() {
-  if (!state.shutdown) {
-    log.info('Received kill signal. Shutting down...');
-    state.shutdown = true;
-    // Wait 3 seconds before hard exiting
-    setTimeout(() => process.exit(), 3000);
-  }
-}
-
+// Graceful shutdown support
 process.on('SIGTERM', shutdown);
 process.on('SIGINT', shutdown);
+process.on('SIGUSR1', shutdown);
+process.on('SIGUSR2', shutdown);
+process.on('exit', () => {
+  log.info('Exiting...');
+});
+
+/**
+ * @function shutdown
+ * Shuts down this application after at least 3 seconds.
+ */
+function shutdown() {
+  log.info('Received kill signal. Shutting down...');
+  // Wait 3 seconds before starting cleanup
+  if (!state.shutdown) setTimeout(cleanup, 3000);
+}
+
+/**
+ * @function cleanup
+ * Cleans up connections in this application.
+ */
+function cleanup() {
+  log.info('Service no longer accepting traffic');
+  state.shutdown = true;
+
+  log.info('Cleaning up...');
+  clearInterval(probeId);
+
+  db.sequelize.close().then(() => process.exit());
+
+  // Wait 10 seconds max before hard exiting
+  setTimeout(() => process.exit(), 10000);
+}
+
+/**
+ * @function initializeConnections
+ * Initializes the database connection
+ * This will force the application to exit if it fails
+ */
+function initializeConnections() {
+  // Check database connection and exit if unsuccessful
+  db.sequelize.authenticate()
+    .then(() => {
+      state.connections.data = true;
+      log.info('Database connection reachable');
+    })
+    .catch(err => {
+      state.connections.data = false;
+      log.error('initializeConnections', 'Connection initialization failure', err.message);
+      process.exitCode = 1;
+      shutdown();
+    })
+    .finally(() => {
+      state.ready = Object.values(state.connections).every(x => x);
+      if (state.ready) {
+        log.info('Service ready to accept traffic');
+        // Start periodic 10 second connection probe check
+        probeId = setInterval(checkConnections, 10000);
+      }
+    });
+}
+
+/**
+ * @function checkConnections
+ * Checks Database connectivity
+ * This will force the application to exit if a connection fails
+ */
+function checkConnections() {
+  const wasReady = state.ready;
+  if (!state.shutdown) {
+    db.sequelize.authenticate()
+      .then(() => state.connections.data = true)
+      .catch(err => {
+        state.connections.data = false;
+        log.error('checkConnections', 'Connection probe failure', err.message);
+        process.exitCode = 1;
+        shutdown();
+      })
+      .finally(() => {
+        state.ready = Object.values(state.connections).every(x => x);
+        if (!wasReady && state.ready) {
+          log.info('Service ready to accept traffic');
+        }
+      });
+  }
+}
 
 module.exports = app;
