@@ -1,7 +1,8 @@
 version: "2"
 exclude_patterns:
   - config/
-  - "**/db/"
+  - db/
+  - "**/migrations/"
   - dist/
   - features/
   - "**/node_modules/"
