@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const cryptico = require('cryptico-js');
 const MockAdapter = require('axios-mock-adapter');
 
-const { acronymService, lifecycleService } = require('../../../src/services');
+const { acronymService, deploymentHistoryService } = require('../../../src/services');
 const helper = require('../../common/helper');
 const permissionHelpers = require('../../../src/components/permissionHelpers');
 const utils = require('../../../src/components/utils');
@@ -102,16 +102,16 @@ describe('postAppConfig', () => {
   const userId = '00000000-0000-0000-0000-000000000000';
   const url = config.get('serviceClient.webAde.int.endpoint') + '/applicationConfigurations';
 
-  lifecycleService.create = jest.fn().mockResolvedValue();
+  deploymentHistoryService.create = jest.fn().mockResolvedValue();
   acronymService.updateDetails = jest.fn().mockResolvedValue();
 
   const spy = jest.spyOn(axios, 'post');
-  const spyLifecycle = jest.spyOn(lifecycleService, 'create');
+  const spyHistory = jest.spyOn(deploymentHistoryService, 'create');
   const spyAcronym = jest.spyOn(acronymService, 'updateDetails');
 
   beforeEach(() => {
     spy.mockClear();
-    spyLifecycle.mockClear();
+    spyHistory.mockClear();
     spyAcronym.mockClear();
   });
 
@@ -124,7 +124,7 @@ describe('postAppConfig', () => {
       clientEnvironment: 'INT'
     }, pubKeyString)).rejects.toThrowError('Unable to acquire access_token');
     expect(spy).toHaveBeenCalledTimes(0);
-    expect(spyLifecycle).not.toHaveBeenCalled();
+    expect(spyHistory).not.toHaveBeenCalled();
   });
 
   it('should error if WebADE post returned an error', async () => {
@@ -155,7 +155,7 @@ describe('postAppConfig', () => {
         'Content-Type': 'application/json; charset=utf-8'
       }
     });
-    expect(spyLifecycle).not.toHaveBeenCalled();
+    expect(spyHistory).not.toHaveBeenCalled();
   });
 
   it('should yield a response upon successful WebADE post', async () => {
@@ -200,8 +200,8 @@ describe('postAppConfig', () => {
         'Content-Type': 'application/json; charset=utf-8'
       }
     });
-    expect(spyLifecycle).toHaveBeenCalledTimes(1);
-    expect(spyLifecycle).toHaveBeenCalledWith(appAcronym, generatedConfig.webAdeCfg, webadeEnv, userId);
+    expect(spyHistory).toHaveBeenCalledTimes(1);
+    expect(spyHistory).toHaveBeenCalledWith(appAcronym, generatedConfig.webAdeCfg, webadeEnv, userId);
     expect(spyAcronym).toHaveBeenCalledTimes(1);
     expect(spyAcronym).toHaveBeenCalledWith(appAcronym, 'name', 'description');
   });

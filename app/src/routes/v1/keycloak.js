@@ -12,7 +12,7 @@ const permissionHelpers = require('../../components/permissionHelpers');
 const KeyCloakServiceClientManager = require('../../components/keyCloakServiceClientMgr');
 const RealmAdminService = require('../../components/realmAdminSvc');
 
-const { lifecycleService } = require('../../services');
+const { deploymentHistoryService } = require('../../services');
 
 // fetches all the service clients for all KC realms and related data from db
 // used in admin service clients table
@@ -75,8 +75,8 @@ keycloakRouter.post('/configForm', [
     const response = await kcScMgr.manage(configForm);
     const encryptedPassword = cryptico.encrypt(response.generatedPassword, publicKey).cipher;
 
-    // Write a lifecycle record
-    await lifecycleService.create(configForm.applicationAcronym, configForm, configForm.clientEnvironment, userid);
+    // Write a history record
+    await deploymentHistoryService.create(configForm.applicationAcronym, configForm, configForm.clientEnvironment, userid);
     return res.status(200).json({
       oidcTokenUrl: response.oidcTokenUrl,
       generatedServiceClient: response.generatedServiceClient,

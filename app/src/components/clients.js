@@ -4,7 +4,7 @@ const acronyms = require('./acronyms');
 const KeyCloakServiceClientManager = require('./keyCloakServiceClientMgr');
 const RealmAdminService = require('./realmAdminSvc');
 
-const { lifecycleService } = require('../services');
+const { deploymentHistoryService } = require('../services');
 
 const clients = {
   /**
@@ -25,15 +25,14 @@ const clients = {
       if (acronymObj) {
         sc.acronymDetails = acronymObj.dataValues;
 
-        // promotions (from lifecycle table for now)
-        const promotions = await lifecycleService.findLatestPromotions(sc.acronymDetails.acronymId);
+        // promotions (from deployment history table)
+        const promotions = await deploymentHistoryService.findLatestPromotions(sc.acronymDetails.acronymId);
 
         promotions.forEach(promotion => {
           if (promotion.length) {
             const data = promotion[0].dataValues;
             if (sc.environments[data.env]) {
               sc.environments[data.env].created = data.createdAt;
-              sc.environments[data.env].updated = data.updatedAt;
             }
           }
         });
