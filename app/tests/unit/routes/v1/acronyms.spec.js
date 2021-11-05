@@ -75,7 +75,7 @@ describe(`GET ${basePath}/:appAcronym`, () => {
 });
 
 
-describe(`GET ${basePath}/:acronym/clients`, () => {
+describe(`GET ${basePath}/:acronym/history`, () => {
   const acronymSpy = jest.spyOn(acronyms, 'getAcronymClients');
   const permissionSpy = jest.spyOn(permissionHelpers, 'checkAcronymPermission');
 
@@ -128,6 +128,68 @@ describe(`GET ${basePath}/:acronym/clients`, () => {
     });
 
     const response = await request(app).get(`${basePath}/XXX/clients`);
+
+    expect(response.statusCode).toBe(500);
+    expect(response.body).toBeTruthy();
+    expect(response.body.title).toEqual('Internal Server Error');
+    expect(permissionSpy).toHaveBeenCalledTimes(1);
+    expect(acronymSpy).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe(`GET ${basePath}/:acronym/history`, () => {
+  const acronymSpy = jest.spyOn(acronyms, 'getAcronymHistory');
+  const permissionSpy = jest.spyOn(permissionHelpers, 'checkAcronymPermission');
+
+  beforeEach(() => {
+    acronymSpy.mockReset();
+    permissionSpy.mockReset();
+  });
+
+  it('should yield a 403 if permission check fails', async () => {
+    permissionSpy.mockResolvedValue('error');
+
+    const response = await request(app).get(`${basePath}/XXX/history`);
+
+    expect(response.statusCode).toBe(403);
+    expect(response.body).toBeTruthy();
+    expect(response.body.detail).toMatch('error');
+    expect(permissionSpy).toHaveBeenCalledTimes(1);
+    expect(acronymSpy).toHaveBeenCalledTimes(0);
+  });
+
+  it('should yield a 404 if no clients found', async () => {
+    permissionSpy.mockResolvedValue();
+    acronymSpy.mockResolvedValue(null);
+
+    const response = await request(app).get(`${basePath}/XXX/history`);
+
+    expect(response.statusCode).toBe(404);
+    expect(response.body).toBeTruthy();
+    expect(permissionSpy).toHaveBeenCalledTimes(1);
+    expect(acronymSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should yield a valid response', async () => {
+    permissionSpy.mockResolvedValue();
+    acronymSpy.mockResolvedValue({ acronym: 'xxx' });
+
+    const response = await request(app).get(`${basePath}/XXX/history`);
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toBeTruthy();
+    expect(response.body).toEqual({ acronym: 'xxx' });
+    expect(permissionSpy).toHaveBeenCalledTimes(1);
+    expect(acronymSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return a 500 if the acronym fetch throws', async () => {
+    permissionSpy.mockResolvedValue();
+    acronymSpy.mockImplementation(() => {
+      throw new Error();
+    });
+
+    const response = await request(app).get(`${basePath}/XXX/history`);
 
     expect(response.statusCode).toBe(500);
     expect(response.body).toBeTruthy();

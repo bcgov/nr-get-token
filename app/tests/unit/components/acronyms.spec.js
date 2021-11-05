@@ -1,5 +1,5 @@
 const acronyms = require('../../../src/components/acronyms');
-const { acronymService } = require('../../../src/services');
+const { acronymService, deploymentHistoryService } = require('../../../src/services');
 const helper = require('../../common/helper');
 const usersComponent = require('../../../src/components/users');
 const utils = require('../../../src/components/utils');
@@ -187,5 +187,34 @@ describe('getUserAcronymClients', () => {
 
     expect(result).toEqual({ acronym: 'XXX', dev: mockClient, test: mockClient, prod: mockClient });
     expect(getClientsSpy).toHaveBeenCalledTimes(3);
+  });
+});
+
+describe('getAcronymHistory', () => {
+  const findHistorySpy = jest.spyOn(deploymentHistoryService, 'findHistory');
+
+  beforeEach(() => {
+    findHistorySpy.mockClear();
+  });
+
+  it('should return empty array history when no history records', async () => {
+    findHistorySpy.mockResolvedValue([]);
+
+    const result = await acronyms.getAcronymHistory('ZZZ');
+
+    expect(result).toEqual([]);
+    expect(findHistorySpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return a history object if there is one', async () => {
+    const mockHistory = {
+      env: 'dev', historyId: 1234, createdAt: '2021-11-04T22:50:10.997Z', enabled: true, name: 'XXX name'
+    };
+    findHistorySpy.mockResolvedValue([mockHistory]);
+
+    const result = await acronyms.getAcronymHistory('XXX');
+
+    expect(result).toEqual([mockHistory]);
+    expect(findHistorySpy).toHaveBeenCalledTimes(1);
   });
 });
