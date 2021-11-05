@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'userId',
       through: model.UserAcronym
     });
-    User.hasMany(model.LifecycleHistory, {
+    User.hasMany(model.DeploymentHistory, {
       foreignKey: 'userId'
     });
   };

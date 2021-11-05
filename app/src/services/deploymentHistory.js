@@ -12,55 +12,48 @@ module.exports = {
       appConfig.serviceClients.forEach(sc => delete sc.secret);
     }
 
-    let lifecycleHistory;
+    let deploymentHistory;
     await db.sequelize.transaction(async t => {
-      const lifecycle = await db.Lifecycle.create({
+      deploymentHistory = await db.DeploymentHistory.create({
         acronymId: acronymObj.acronymId,
-        appConfig: appConfig,
-        env: env
-      }, {
-        transaction: t
-      });
-
-      lifecycleHistory = await db.LifecycleHistory.create({
-        lifecycleId: lifecycle.lifecycleId,
         userId: userObj.userId,
-        env: env
+        env: env,
+        appConfig: appConfig,
       }, {
         transaction: t
       });
     });
 
-    return lifecycleHistory;
+    return deploymentHistory;
   },
 
   /**
    * @function getLatestEnvAction
-   * Finds the latest lifecycle action for `env`
+   * Finds the latest deployment action for `env`
    * @param {string} acronymId The desired acronymId
    * @param {string} env The desired environment
-   * @returns {object} A lifecycle object if it exists
+   * @returns {object} A deployment history object if it exists
    */
   async getLatestEnvAction(acronymId, env) {
-    const lifecycle = await db.Lifecycle.findAll({
+    const history = await db.DeploymentHistory.findAll({
       where: {
         acronymId: acronymId,
         env: env
       },
       order: [
-        ['updatedAt', 'DESC']
+        ['createdAt', 'DESC']
       ],
       limit: 1
     });
 
-    return lifecycle.length ? lifecycle : null;
+    return history.length ? history : null;
   },
 
   /**
    * @function findLatestPromotions
    * Returns an array of all latest promotions in each environment for `acronymId`
    * @param {string} acronymId The desired acronymId
-   * @returns {object[]} An array of lifecycle object
+   * @returns {object[]} An array of history object
    */
   async findLatestPromotions(acronymId) {
     const results = await Promise.all(['DEV', 'TEST', 'PROD'].map(env => {

@@ -5,15 +5,10 @@ module.exports = {
     return await db.Acronym.findOne({
       include: [
         {
-          model: db.Lifecycle,
+          model: db.DeploymentHistory,
           include: [
             {
-              model: db.LifecycleHistory,
-              include: [
-                {
-                  model: db.User
-                }
-              ]
+              model: db.User
             }
           ]
         }

@@ -2,7 +2,7 @@ const axios = require('axios');
 const config = require('config');
 const log = require('npmlog');
 
-const { acronymService, lifecycleService } = require('../services');
+const { acronymService, deploymentHistoryService } = require('../services');
 const utils = require('./utils');
 const permissionHelper = require('./permissionHelpers');
 
@@ -167,7 +167,7 @@ const appConfig = {
       });
       log.verbose('postAppConfig', JSON.stringify(webAdeResponse.data));
 
-      await lifecycleService.create(configForm.applicationAcronym, generatedConfig.webAdeCfg, webadeEnv, userId);
+      await deploymentHistoryService.create(configForm.applicationAcronym, generatedConfig.webAdeCfg, webadeEnv, userId);
 
       await acronymService.updateDetails(configForm.applicationAcronym, configForm.applicationName, configForm.applicationDescription);
 

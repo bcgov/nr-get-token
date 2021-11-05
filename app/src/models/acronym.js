@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'acronymId',
       through: model.UserAcronym
     });
-    Acronym.hasMany(model.Lifecycle, {
+    Acronym.hasMany(model.DeploymentHistory, {
       foreignKey: 'acronymId'
     });
   };

@@ -1,6 +1,6 @@
 module.exports = {
   acronymService: require('./acronym'),
   auditService: require('./audit'),
-  lifecycleService: require('./lifecycle'),
+  deploymentHistoryService: require('./deploymentHistory'),
   userService: require('./user')
 };
