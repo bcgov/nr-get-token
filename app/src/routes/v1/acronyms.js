@@ -50,6 +50,27 @@ acronymsRouter.get('/:acronym/clients', async (req, res) => {
   }
 });
 
+/** Returns service client history from the history table for the supplied acronym */
+acronymsRouter.get('/:acronym/history', async (req, res) => {
+  // Check for required permissions. Can only fetch details for the acronyms you are associated with
+  const permissionErr = await permissionHelpers.checkAcronymPermission(req.kauth.grant.access_token.content.sub, req.params.acronym);
+  if (permissionErr) {
+    return new Problem(403, { detail: permissionErr }).send(res);
+  }
+
+  try {
+    const result = await acronyms.getAcronymHistory(req.params.acronym);
+    if (result === null) {
+      return new Problem(404).send(res);
+    } else {
+      res.status(200).json(result);
+    }
+  } catch (error) {
+    log.error(error);
+    return new Problem(500, { detail: error.message }).send(res);
+  }
+});
+
 /** Returns users from KC for the supplied acronym */
 acronymsRouter.get('/:acronym/users', async (req, res) => {
   // Check for required permissions. Can only fetch details for the acronyms you are associated with

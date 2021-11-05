@@ -32,6 +32,20 @@ export default {
   },
 
   /**
+ * @function getServiceClientHistory
+ * Fetch the history for the acronym
+ * @param {string} acronym app acronym
+ * @returns {Promise} An axios response
+ */
+  getServiceClientHistory(acronym) {
+    if (acronym) {
+      return getokAxios().get(`${ApiRoutes.ACRONYMS}/${acronym}/history`, { timeout: 30000 });
+    } else {
+      return Promise.reject('No acronym supplied');
+    }
+  },
+
+  /**
    * @function getUsers
    * Fetch the users associated with the acronym
    * @param {string} acronym app acronym
