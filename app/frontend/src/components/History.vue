@@ -16,7 +16,7 @@
           An error occurred while loading history, please refresh and try again
         </v-alert>
         <v-simple-table class="getok-simple-table">
-          <template v-slot:default>
+          <template>
             <thead>
               <tr>
                 <th class="text-left">Date</th>
@@ -29,6 +29,9 @@
                 <td>{{ formatDate(item.date) }}</td>
                 <td>{{ item.idir }}</td>
                 <td>{{ item.env }}</td>
+              </tr>
+              <tr v-if="histories.length === 0">
+                <small>No Service Client deployments have occurred yet for application <strong>{{ acronym }}</strong>.</small>
               </tr>
             </tbody>
           </template>
