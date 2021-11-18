@@ -60,5 +60,30 @@ module.exports = {
       return this.getLatestEnvAction(acronymId, env);
     }));
     return results.filter(x => !!x);
+  },
+
+  /**
+   * @function findHistory
+   * Returns an array of the deployment history for an acronym, joined with the user records
+   * @param {string} acronym The desired acronym
+   * @returns {object[]} An array of history object
+   */
+  async findHistory(acronym) {
+    return await db.Acronym.findOne({
+      include: [
+        {
+          model: db.DeploymentHistory,
+          include: [
+            {
+              model: db.User
+            }
+          ]
+        }
+      ],
+      where: { acronym: acronym },
+      order: [
+        [db.DeploymentHistory, 'createdAt', 'DESC']
+      ],
+    });
   }
 };

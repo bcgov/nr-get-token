@@ -11,6 +11,7 @@
       <v-tabs vertical class="mt-10 getok-tabs">
         <v-tab>API Access</v-tab>
         <v-tab>Team</v-tab>
+        <v-tab>History</v-tab>
 
         <v-tab-item>
           <h2>{{acronym}}</h2>
@@ -21,6 +22,11 @@
           <h2>{{acronym}}</h2>
           <Team :acronym="acronym" />
         </v-tab-item>
+
+        <v-tab-item>
+          <h2>{{acronym}}</h2>
+          <History :acronym="acronym" />
+        </v-tab-item>
       </v-tabs>
     </BaseSecure>
   </v-container>
@@ -28,6 +34,7 @@
 
 <script>
 import ApiAccess from '@/components/apiAccess/ApiAccess.vue';
+import History from '@/components/History.vue';
 import Team from '@/components/Team.vue';
 import apiAccess from '@/store/modules/apiAccess';
 
@@ -35,6 +42,7 @@ export default {
   name: 'Application',
   components: {
     ApiAccess,
+    History,
     Team
   },
   props: ['acronym'],

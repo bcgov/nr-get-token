@@ -1,7 +1,7 @@
 const axios = require('axios');
 const log = require('npmlog');
 
-const { acronymService, userService } = require('../services');
+const { acronymService, deploymentHistoryService, userService } = require('../services');
 const userComponent = require('./users');
 const utils = require('./utils');
 
@@ -109,6 +109,17 @@ const acronyms = {
       test: tc ? tc : null,
       prod: pc ? pc : null
     };
+  },
+
+  /**
+   * @function getAcronymHistory
+   * Returns deployment history records for an acronym
+   * @param {string} acronym The acronym
+   * @returns {object[]} An array of history objects
+   */
+  getAcronymHistory: async acronym => {
+    log.debug('getAcronymHistory', `getting history for ${acronym}`);
+    return await deploymentHistoryService.findHistory(acronym);
   },
 
   registerUserToAcronym: async (token, kcRealm, acronym, username) => {
