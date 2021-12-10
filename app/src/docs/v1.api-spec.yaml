@@ -570,7 +570,7 @@ components:
         name:
           type: string
           description: The name of the endpoint
-          example: WebADE API
+          example: Keycloak API
         endpoint:
           type: string
           description: Base endpoint URL

@@ -68,10 +68,7 @@ def runStageDeploy(String stageEnv, String projectEnv, String hostEnv, String pa
       openshift.selector('secret', "${APP_NAME}-sc-ches-secret").exists() &&
       openshift.selector('secret', "${APP_NAME}-sc-keycloak-dev-secret").exists() &&
       openshift.selector('secret', "${APP_NAME}-sc-keycloak-test-secret").exists() &&
-      openshift.selector('secret', "${APP_NAME}-sc-keycloak-prod-secret").exists() &&
-      openshift.selector('secret', "${APP_NAME}-sc-webade-int-secret").exists() &&
-      openshift.selector('secret', "${APP_NAME}-sc-webade-test-secret").exists() &&
-      openshift.selector('secret', "${APP_NAME}-sc-webade-prod-secret").exists())) {
+      openshift.selector('secret', "${APP_NAME}-sc-keycloak-prod-secret").exists())) {
         echo 'Some ConfigMaps and/or Secrets are missing. Please consult the openshift readme for details.'
         throw new Exception('Missing ConfigMaps and/or Secrets')
       }
