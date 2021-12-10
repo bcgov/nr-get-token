@@ -20,7 +20,7 @@
           width="10rem"
         />
       </a>
-      <h1 data-test="btn-header-title" class="font-weight-bold title">{{ appTitle }}</h1>
+      <h1 data-test="btn-header-title" class="font-weight-bold text-h6">{{ appTitle }}</h1>
       <v-spacer />
       <BaseAuthButton />
     </v-toolbar>
