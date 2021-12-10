@@ -56,9 +56,6 @@ oc create -n $NAMESPACE configmap $APP_NAME-frontend-config \
 oc create -n $NAMESPACE configmap $APP_NAME-sc-config \
   --from-literal=SC_CHES_API_ENDPOINT=https://ches-dev.apps.silver.devops.gov.bc.ca/api \
   --from-literal=SC_CHES_TOKEN_ENDPOINT=https://dev.oidc.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token \
-  --from-literal=SC_GETOK_ENDPOINT_INT=https://i1api.nrs.gov.bc.ca/webade-api/v1 \
-  --from-literal=SC_GETOK_ENDPOINT_TEST=https://t1api.nrs.gov.bc.ca/webade-api/v1 \
-  --from-literal=SC_GETOK_ENDPOINT_PROD=https://api.nrs.gov.bc.ca/webade-api/v1 \
   --from-literal=SC_KC_DEV_ENDPOINT=https://dev.oidc.gov.bc.ca \
   --from-literal=SC_KC_TEST_ENDPOINT=https://test.oidc.gov.bc.ca \
   --from-literal=SC_KC_PROD_ENDPOINT=https://oidc.gov.bc.ca \
@@ -125,27 +122,6 @@ oc create -n $NAMESPACE secret generic $APP_NAME-sc-keycloak-test-secret \
 
 ```sh
 oc create -n $NAMESPACE secret generic $APP_NAME-sc-keycloak-prod-secret \
-  --type=kubernetes.io/basic-auth \
-  --from-literal=username=<username> \
-  --from-literal=password=<password>
-```
-
-```sh
-oc create -n $NAMESPACE secret generic $APP_NAME-sc-webade-int-secret \
-  --type=kubernetes.io/basic-auth \
-  --from-literal=username=<username> \
-  --from-literal=password=<password>
-```
-
-```sh
-oc create -n $NAMESPACE secret generic $APP_NAME-sc-webade-test-secret \
-  --type=kubernetes.io/basic-auth \
-  --from-literal=username=<username> \
-  --from-literal=password=<password>
-```
-
-```sh
-oc create -n $NAMESPACE secret generic $APP_NAME-sc-webade-prod-secret \
   --type=kubernetes.io/basic-auth \
   --from-literal=username=<username> \
   --from-literal=password=<password>

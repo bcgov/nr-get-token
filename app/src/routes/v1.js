@@ -11,7 +11,6 @@ const checksRouter = require('./v1/checks');
 const emailRouter = require('./v1/email');
 const usersRouter = require('./v1/users');
 const keycloakRouter = require('./v1/keycloak');
-const webadeRouter = require('./v1/webade');
 
 const getSpec = () => {
   const rawSpec = fs.readFileSync(path.join(__dirname, '../docs/v1.api-spec.yaml'), 'utf8');
@@ -30,8 +29,7 @@ router.get('/', (_req, res) => {
       '/docs',
       '/email',
       '/keycloak',
-      '/users',
-      '/webade'
+      '/users'
     ]
   });
 });
@@ -66,10 +64,5 @@ router.use('/keycloak', keycloak.protect(), keycloakRouter);
 
 /** Users Router */
 router.use('/users', keycloak.protect(), usersRouter);
-
-/** WebADE Router */
-router.use('/webade', keycloak.protect(), webadeRouter);
-
-
 
 module.exports = router;

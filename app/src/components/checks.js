@@ -46,41 +46,8 @@ const checks = {
     return result;
   },
 
-  /**
-   * @function getWebAdeOauth2Status
-   * Retrieves the webade Oauth status of the specified `webadeEnv` environment
-   * @param {string} [webadeEnv='int'] The desired webade envionment
-   * @return {object} The status result of the webade environment
-   */
-  getWebAdeOauth2Status: async (webadeEnv = 'int') => {
-    const result = {
-      authenticated: false,
-      authorized: false,
-      endpoint: config.get(`serviceClient.webAde.${webadeEnv}.endpoint`),
-      healthCheck: false,
-      name: `WebADE API (${webadeEnv})`
-    };
-
-    try {
-      const username = config.get(`serviceClient.webAde.${webadeEnv}.username`);
-      const password = config.get(`serviceClient.webAde.${webadeEnv}.password`);
-      const webAdeResponse = await utils.getWebAdeToken(username, password, 'WEBADE-REST', webadeEnv);
-
-      result.healthCheck = !!webAdeResponse;
-      result.authenticated = 'access_token' in webAdeResponse;
-      result.authorized = 'scope' in webAdeResponse && webAdeResponse.scope.includes('WEBADE-REST.UPDATEAPPLICATIONS');
-    } catch (error) {
-      log.error('getWebAdeOauth2Status', error.message);
-    }
-
-    return result;
-  },
-
   getStatus: () => Promise.all([
-    checks.getChesStatus(),
-    checks.getWebAdeOauth2Status('int'),
-    checks.getWebAdeOauth2Status('test'),
-    checks.getWebAdeOauth2Status('prod')
+    checks.getChesStatus()
   ])
 };
 

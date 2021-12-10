@@ -6,9 +6,7 @@ export const ApiRoutes = Object.freeze({
   HEALTH: '/checks/status',
   KC_CLIENTS: '/keycloak/serviceClients',
   KC_CONFIG: '/keycloak/configForm',
-  USERS: '/users',
-  WEBADE: '/webAde',
-  WEBADE_CONFIGFORM: '/webAde/configForm'
+  USERS: '/users'
 });
 
 export const FieldValidations = Object.freeze({
@@ -36,16 +34,4 @@ export const KcClientStatus = Object.freeze({
 export const RealmRoles = Object.freeze({
   GETOK_ADMIN: 'GETOK_ADMIN',
   GETOK_ADMIN_ADD_USER: 'GETOK_ADMIN_ADD_USER',
-  WEBADE_CFG_READ: 'WEBADE_CFG_READ',
-  WEBADE_CFG_READ_ALL: 'WEBADE_CFG_READ_ALL',
-  WEBADE_PERMISSION: 'WEBADE_PERMISSION',
-  WEBADE_PERMISSION_NROS_DMS: 'WEBADE_PERMISSION_NROS_DMS'
-});
-
-export const WebAdeEnvs = Object.freeze({
-  INT: 'CREATE',
-  S1: 'S1',
-  S2: 'S2',
-  TEST: 'TEST',
-  PROD: 'PROD'
 });

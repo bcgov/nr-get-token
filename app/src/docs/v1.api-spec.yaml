@@ -4,8 +4,7 @@ info:
   version: 1.0.0
   title: GetOK API
   description: >-
-    This API automates the process for getting setup to use common services
-    published on https://apistore.nrs.gov.bc.ca/store/
+    This API automates the process for getting setup to use NR Common Services
   license:
     name: Apache 2.0
     url: "https://www.apache.org/licenses/LICENSE-2.0.html"
@@ -387,204 +386,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  "/webade/{webadeEnv}/{acronym}/appConfig/":
-    get:
-      summary: >-
-        Returns WebADE JSON response for the specified acronym in the specified
-        environment
-      operationId: appConfigGetAcronym
-      tags:
-        - WebADE Application Configuration
-      parameters:
-        - name: acronym
-          in: path
-          description: Name of the project
-          required: true
-          schema:
-            type: string
-        - name: webadeEnv
-          in: path
-          description: The ISSS WebADE environment
-          required: true
-          schema:
-            type: string
-            enum:
-              - INT
-              - TEST
-              - PROD
-      responses:
-        "200":
-          description: WebADE JSON response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AppConfig"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  "/webade/{webadeEnv}/appConfigs/":
-    get:
-      summary: Returns WebADE JSON response for all acronyms
-      operationId: appConfigGetAll
-      tags:
-        - WebADE Application Configuration
-      parameters:
-        - name: webadeEnv
-          in: path
-          description: The ISSS WebADE environment
-          required: true
-          schema:
-            type: string
-            enum:
-              - INT
-              - TEST
-              - PROD
-      responses:
-        "200":
-          description: Array of WebADE JSONs
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AppConfigList"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /webade/appConfigForm:
-    post:
-      summary: Submit a proposed application
-      operationId: appConfigFormPost
-      tags:
-        - WebADE Application Configuration
-      requestBody:
-        description: Form fields required to generate a minimal Application Configuration
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AppConfigForm"
-      responses:
-        "200":
-          description: WebADE JSON response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AppConfigResponse"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  "/webade/{webadeEnv}/{acronym}/dependencies/":
-    get:
-      summary: Returns a list of other WebADE acronyms that reference the one supplied
-      operationId: getDependencies
-      tags:
-        - WebADE Application Configuration
-      parameters:
-        - name: acronym
-          in: path
-          description: Name of the project
-          required: true
-          schema:
-            type: string
-        - name: webadeEnv
-          in: path
-          description: The ISSS WebADE environment
-          required: true
-          schema:
-            type: string
-            enum:
-              - INT
-              - TEST
-              - PROD
-      responses:
-        "200":
-          description: WebADE JSON response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DependencyList"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  "/webade/{webadeEnv}/preferences/insecurePrefs":
-    get:
-      summary: >-
-        Returns a list of all WebADE applicationPreferences that have the
-        sensitiveDataInd set to false matching the search criteria regular
-        expression
-      operationId: getInsecurePrefs
-      tags:
-        - WebADE Application Configuration
-      parameters:
-        - name: webadeEnv
-          in: path
-          description: The ISSS WebADE environment
-          required: true
-          schema:
-            type: string
-            enum:
-              - INT
-              - TEST
-              - PROD
-        - name: searchCriteria
-          in: query
-          required: true
-          schema:
-            type: string
-            example: secret
-          description: >-
-            A regular expression that will find preferences matching on their
-            name
-      responses:
-        "200":
-          description: WebADE JSON response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InsecurePrefList"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
 components:
   securitySchemes:
     BearerAuth:
@@ -646,12 +447,6 @@ components:
         name:
           type: string
           example: Messaging Service Showcase
-        permissionWebade:
-          type: boolean
-          example: true
-        permissionWebadeNrosDms:
-          type: boolean
-          example: false
     AcronymHistory:
       type: object
       properties:
@@ -672,124 +467,6 @@ components:
             $ref: "#/components/schemas/UserAcronymDetail"
         user:
             $ref: "#/components/schemas/User"
-    AppConfig:
-      type: object
-      properties:
-        "@type":
-          type: string
-          example: "http://webade.gov.bc.ca/applicationConfiguration"
-        applicationAcronym:
-          type: string
-          example: MSSC
-        custodianNumber:
-          type: integer
-          minimum: 0
-        applicationName:
-          type: string
-          example: Application Name
-        applicationDescription:
-          type: string
-          example: Application Description
-        applicationObjectPrefix:
-          type: string
-          example: null
-        enabledInd:
-          type: boolean
-          example: true
-        distributeTypeCd:
-          type: string
-          example: null
-        managementEnabledInd:
-          type: boolean
-          example: false
-        applicationVersion:
-          type: string
-          example: null
-        reportedWebadeVersion:
-          type: string
-          example: null
-        actions:
-          type: array
-          items:
-            type: object
-          example: []
-        roles:
-          type: array
-          items:
-            type: object
-          example: []
-        wdePreferences:
-          type: array
-          items:
-            type: object
-          example: []
-        applicationPreferences:
-          type: array
-          items:
-            type: object
-          example: []
-        globalPreferences:
-          type: array
-          items:
-            type: object
-          example: []
-        defaultUserPreferences:
-          type: array
-          items:
-            type: object
-          example: []
-        profiles:
-          type: array
-          items:
-            type: object
-          example: []
-        serviceClients:
-          type: array
-          items:
-            type: object
-          example: []
-        groupAuthorizations:
-          type: array
-          items:
-            type: object
-          example: []
-    AppConfigForm:
-      type: object
-      required:
-        - applicationAcronym
-        - applicationName
-        - applicationDescription
-        - clientEnvironment
-        - commonServices
-        - passwordPublicKey
-      properties:
-        applicationAcronym:
-          type: string
-          example: MSSC
-        applicationName:
-          type: string
-          example: Application Name
-        applicationDescription:
-          type: string
-          example: Application Description
-        commonServices:
-          type: array
-          items:
-            type: string
-            example: cmsg
-          description: An array of applicationAcronyms
-        passwordPublicKey:
-          type: string
-          description: A public key in PEM format without the headers
-          example: MIGfMA0GCSqGS...
-        clientEnvironment:
-          type: string
-          enum:
-            - INT
-            - TEST
-            - PROD
-          description: Which WebADE environment to work on
-          example: INT
     AppConfigKC:
       type: object
       properties:
@@ -811,29 +488,6 @@ components:
             type: string
             example: CHES
           description: An array of applicationAcronyms
-    AppConfigList:
-      type: array
-      items:
-        $ref: "#/components/schemas/AppConfig"
-      description: A list of Application Configurations
-    AppConfigResponse:
-      required:
-        - webadeResponse
-        - generatedPassword
-        - generatedServiceClient
-      properties:
-        webadeResponse:
-          $ref: "#/components/schemas/AppConfig"
-        generatedPassword:
-          type: string
-          description: >-
-            Contains the generated password, encrypted with the user-supplied
-            public key
-          example: ABC123XYZ
-        generatedServiceClient:
-          type: string
-          description: Contains the service client name that was written to WebADE
-          example: DOMO_SERVICE_CLIENT
     BadRequest:
       allOf:
         - $ref: "#/components/schemas/Problem"
@@ -880,11 +534,6 @@ components:
           type: string
           description: The sender's IDIR
           example: jsmith@idir
-    DependencyList:
-      type: array
-      items:
-        $ref: "#/components/schemas/WebAdeProject"
-      description: A list of dependent webade projects
     DeploymentHistory:
       type: object
       properties:
@@ -909,11 +558,6 @@ components:
         userId:
           type: string
           example: a199f328-3d0e-4bd0-8d89-8beccdace745
-    InsecurePrefList:
-      type: array
-      items:
-        $ref: "#/components/schemas/WebAdePreferenceList"
-      description: A list of webade projects and the list preference names
     EndpointStatus:
       type: object
       required:
@@ -1154,7 +798,7 @@ components:
           example: ABC123XYZ
         generatedServiceClient:
           type: string
-          description: Contains the service client name that was written to WebADE
+          description: Contains the service client name that was written
           example: CHES_SERVICE_CLIENT
     NotFound:
       allOf:
@@ -1273,82 +917,6 @@ components:
               example: Unprocessable Entity
             type:
               example: "https://httpstatuses.com/422"
-    WebAdeProject:
-      type: object
-      required:
-        - applicationAcronym
-        - applicationName
-        - applicationDescription
-        - enabled
-      properties:
-        applicationAcronym:
-          type: string
-          example: MSSC
-        applicationName:
-          type: string
-          example: Application Name
-        applicationDescription:
-          type: string
-          example: Application Description
-        enabled:
-          type: boolean
-          example: true
-      description: "A WebADE project acronym, name, and description"
-    WebAdePreferenceList:
-      type: object
-      required:
-        - applicationAcronym
-        - applicationName
-        - applicationDescription
-        - preferences
-      properties:
-        applicationAcronym:
-          type: string
-          example: MSSC
-        applicationName:
-          type: string
-          example: Application Name
-        applicationDescription:
-          type: string
-          example: Application Description
-        preferences:
-          type: array
-          items:
-            $ref: "#/components/schemas/WebadePreference"
-      description: A WebADE project and a list of associated preferences
-    WebadePreference:
-      type: object
-      required:
-        - dataTypeCode
-        - description
-        - name
-        - sensitiveDataInd
-        - setName
-        - subTypeCode
-        - value
-      properties:
-        dataTypeCode:
-          type: string
-          example: STRING
-        description:
-          type: string
-          example: description of preference
-        name:
-          type: string
-          example: posse.token.service.url
-        sensitiveDataInd:
-          type: boolean
-          example: false
-        setName:
-          type: string
-          example: aqua
-        subTypeCode:
-          type: string
-          example: bootstrap-config
-        value:
-          type: string
-          example: "https://j200.gov.bc.ca/ws/NrsServices/session"
-      description: A WebADE preference object
   responses:
     Accepted:
       description: Accepted

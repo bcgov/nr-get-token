@@ -45,7 +45,7 @@ export default {
 
 .gov-header {
   border-bottom: 2px solid #fcba19;
-  .title {
+  .text-h6 {
     font-family: inherit !important;
     color: #ffffff;
     overflow: hidden;
