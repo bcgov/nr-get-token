@@ -2,7 +2,7 @@
 
 To learn more about the **Common Services** available visit the [Common Services Showcase](https://bcgov.github.io/common-service-showcase/) page.
 
-GETOK is a web-based tool for development teams to manage their application's secure access to Common Services. Users can create and deploy Keycloak  service clients instantly to gain access to common service APIs like email notifications, document management, or document generation.
+GETOK is a web-based tool for development teams to manage their application's secure access to Common Services. Users can create and deploy Keycloak service clients instantly to gain access to common service APIs like email notifications, document management, or document generation.
 
 ## Application
 
