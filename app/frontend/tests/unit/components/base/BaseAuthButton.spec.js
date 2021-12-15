@@ -10,26 +10,10 @@ localVue.use(router);
 localVue.use(Vuex);
 
 describe('BaseAuthButton.vue', () => {
-  const { location } = window;
-  const mockReplace = jest.fn(cb => {
-    cb();
-  });
   let store;
 
-  beforeAll(() => {
-    delete window.location;
-    window.location = {
-      replace: mockReplace
-    };
-  });
-
   beforeEach(() => {
-    mockReplace.mockReset();
     store = new Vuex.Store();
-  });
-
-  afterAll(() => {
-    window.location = location;
   });
 
   it('renders nothing when not authenticated and does not hasLogin', () => {
@@ -94,16 +78,15 @@ describe('BaseAuthButton.vue', () => {
       namespaced: true,
       getters: {
         authenticated: () => false,
-        createLoginUrl: () => () => 'test',
-        keycloakReady: () => true
+        keycloakReady: () => true,
+        createLoginUrl: () => () => 'testurl'
       }
     });
 
     const wrapper = shallowMount(BaseAuthButton, { localVue, router, store });
     wrapper.vm.login();
 
-    expect(wrapper.text()).toMatch('Login');
-    expect(mockReplace).toHaveBeenCalledTimes(1);
+    expect(wrapper.text()).toMatch('');
   });
 
   it('logout button redirects to logout url', () => {
@@ -111,9 +94,9 @@ describe('BaseAuthButton.vue', () => {
       namespaced: true,
       getters: {
         authenticated: () => true,
-        createLogoutUrl: () => () => 'test',
-        keycloakReady: () => true
-      }
+        keycloakReady: () => true,
+        createLogoutUrl: () => () => 'testurl'
+      },
     });
 
     const wrapper = shallowMount(BaseAuthButton, {
@@ -126,6 +109,5 @@ describe('BaseAuthButton.vue', () => {
     wrapper.vm.logout();
 
     expect(wrapper.text()).toMatch('Logout');
-    expect(mockReplace).toHaveBeenCalledTimes(1);
   });
 });

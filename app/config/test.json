@@ -31,20 +31,6 @@
         "username": "username",
         "password": "password"
       }
-    },
-    "webAde": {
-      "int": {
-        "username": "username",
-        "password": "password"
-      },
-      "test": {
-        "username": "username",
-        "password": "password"
-      },
-      "prod": {
-        "username": "username",
-        "password": "password"
-      }
     }
   }
 }

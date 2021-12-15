@@ -1,6 +1,16 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: (queryInterface) => {
     return Promise.all([
+      // Remove these unused fields as part of Webade sunsetting
+      queryInterface.removeColumn('acronym', 'permissionWebadeNrosDms'),
+      queryInterface.removeColumn('acronym', 'permissionWebade')
+    ]);
+
+  },
+
+  down: (queryInterface, Sequelize) => {
+    return Promise.all([
+      // Put them back (though any data would be lost, but they're unused)
       queryInterface.addColumn(
         'acronym',
         'permissionWebade',
@@ -21,13 +31,6 @@ module.exports = {
           type: Sequelize.BOOLEAN
         }
       ),
-    ]);
-  },
-
-  down: (queryInterface) => {
-    return Promise.all([
-      queryInterface.removeColumn('acronym', 'permissionWebadeNrosDms'),
-      queryInterface.removeColumn('acronym', 'permissionWebade')
     ]);
   }
 };

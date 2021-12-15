@@ -46,17 +46,6 @@
         "endpoint": "https://oidc.gov.bc.ca",
         "realm": "jbd6rnxw"
       }
-    },
-    "webAde": {
-      "int": {
-        "endpoint": "https://i1api.nrs.gov.bc.ca/webade-api/v1"
-      },
-      "test": {
-        "endpoint": "https://t1api.nrs.gov.bc.ca/webade-api/v1"
-      },
-      "prod": {
-        "endpoint": "https://api.nrs.gov.bc.ca/webade-api/v1"
-      }
     }
   }
 }

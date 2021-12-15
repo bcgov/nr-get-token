@@ -2,7 +2,7 @@
 
 To learn more about the **Common Services** available visit the [Common Services Showcase](https://bcgov.github.io/common-service-showcase/) page.
 
-GETOK is a web-based tool for development teams to manage their application's secure access to Common Services. Users can create and deploy Keycloak or WebADE service client application configuration instantly to gain access to common service APIs like email notifications, document management, or document generation.
+GETOK is a web-based tool for development teams to manage their application's secure access to Common Services. Users can create and deploy Keycloak service clients instantly to gain access to common service APIs like email notifications, document management, or document generation.
 
 ## Application
 
@@ -96,15 +96,6 @@ For more details, please consult the config library [documentation](https://gith
 The following variables are not re-implemented yet
 
 | Environment Variable | Description |
-| `SC_GETOKINT_ENDPOINT` | Base API endpoint for WebADE OAuth (INT env) |
-| `SC_GETOKINT_USERNAME` | Service client username (INT env) |
-| `SC_GETOKINT_PASSWORD` | Service client password (INT env) |
-| `SC_GETOKTEST_ENDPOINT` | Base API endpoint for WebADE OAuth (TEST env) |
-| `SC_GETOKTEST_USERNAME` | Service client username (TEST env) |
-| `SC_GETOKTEST_PASSWORD` | Service client password (TEST env) |
-| `SC_GETOKPROD_ENDPOINT` | Base API endpoint for WebADE OAuth (PROD env) |
-| `SC_GETOKPROD_USERNAME` | Service client username (PROD env) |
-| `SC_GETOKPROD_PASSWORD` | Service client password (PROD env) |
 | `CHES_TOKEN_ENDPOINT` | Keycloak token endpoint (YAMS Realm) for common service token fetching |
 | `CHES_EMAIL_ENDPOINT` | CHES endpoint for sending email |
 | `CHES_HEALTH_ENDPOINT` | CHES health check endpoint |

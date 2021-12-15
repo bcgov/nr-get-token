@@ -59,23 +59,6 @@
         "password": "SC_KC_PROD_PASSWORD",
         "realm": "SC_KC_PROD_REALM"
       }
-    },
-    "webAde": {
-      "int": {
-        "endpoint": "SC_WEBADE_INT_ENDPOINT",
-        "username": "SC_WEBADE_INT_USERNAME",
-        "password": "SC_WEBADE_INT_PASSWORD"
-      },
-      "test": {
-        "endpoint": "SC_WEBADE_TEST_ENDPOINT",
-        "username": "SC_WEBADE_TEST_USERNAME",
-        "password": "SC_WEBADE_TEST_PASSWORD"
-      },
-      "prod": {
-        "endpoint": "SC_WEBADE_PROD_ENDPOINT",
-        "username": "SC_WEBADE_PROD_USERNAME",
-        "password": "SC_WEBADE_PROD_PASSWORD"
-      }
     }
   }
 }

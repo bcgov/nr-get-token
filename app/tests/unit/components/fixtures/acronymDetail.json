@@ -3,8 +3,6 @@
   "acronym": "WORG",
   "name": "Document Generation",
   "description": "A showcase app to use the dgen API",
-  "permissionWebade": true,
-  "permissionWebadeNrosDms": true,
   "createdAt": "2020-01-07T18:33:49.656Z",
   "updatedAt": "2020-01-07T18:33:49.656Z",
   "deletedAt": null

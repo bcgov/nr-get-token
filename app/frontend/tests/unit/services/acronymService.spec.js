@@ -20,8 +20,6 @@ describe('getAcronym', () => {
     acronym: 'MSSC',
     name: '',
     description: 'None Entered',
-    permissionWebade: false,
-    permissionWebadeNrosDms: false,
     createdAt: '2019-08-15T20:14:41.966Z',
     updatedAt: '2019-08-15T20:14:41.966Z',
     deletedAt: null

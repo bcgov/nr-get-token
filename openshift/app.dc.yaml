@@ -216,36 +216,6 @@ objects:
                     secretKeyRef:
                       key: password
                       name: getok-sc-keycloak-prod-secret
-                - name: SC_WEBADE_INT_USERNAME
-                  valueFrom:
-                    secretKeyRef:
-                      key: username
-                      name: getok-sc-webade-int-secret
-                - name: SC_WEBADE_INT_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      key: password
-                      name: getok-sc-webade-int-secret
-                - name: SC_WEBADE_TEST_USERNAME
-                  valueFrom:
-                    secretKeyRef:
-                      key: username
-                      name: getok-sc-webade-test-secret
-                - name: SC_WEBADE_TEST_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      key: password
-                      name: getok-sc-webade-test-secret
-                - name: SC_WEBADE_PROD_USERNAME
-                  valueFrom:
-                    secretKeyRef:
-                      key: username
-                      name: getok-sc-webade-prod-secret
-                - name: SC_WEBADE_PROD_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      key: password
-                      name: getok-sc-webade-prod-secret
               envFrom:
                 - configMapRef:
                     name: getok-frontend-config
