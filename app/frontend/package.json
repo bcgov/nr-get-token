@@ -29,7 +29,7 @@
   "dependencies": {
     "@bcgov/bc-sans": "^1.0.1",
     "axios": "^0.24.0",
-    "core-js": "^3.19.1",
+    "core-js": "^3.20.0",
     "cryptico-js": "^1.1.0",
     "keycloak-js": "^15.0.2",
     "nprogress": "^0.2.0",
