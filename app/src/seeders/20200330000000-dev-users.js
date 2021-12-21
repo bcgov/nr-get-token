@@ -5,15 +5,13 @@ const acronymData = [
     acronymId: '00000000-0000-4000-8000-000000000000',
     acronym: 'TEMP',
     name: 'Temp application name',
-    description: 'Temp application description',
-    permissionWebade: true
+    description: 'Temp application description'
   },
   {
     acronymId: '00000000-0000-4000-8001-000000000000',
     acronym: 'WORG',
     name: 'Hello name',
-    description: 'Hello description',
-    permissionWebade: false
+    description: 'Hello description'
   }
 ];
 
