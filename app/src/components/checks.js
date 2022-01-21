@@ -1,7 +1,7 @@
 const axios = require('axios');
 const config = require('config');
 const jwt = require('jsonwebtoken');
-const log = require('npmlog');
+const log = require('./log')(module.filename);
 
 const utils = require('./utils');
 
@@ -21,34 +21,37 @@ const checks = {
       authorized: false,
       endpoint: config.get('serviceClient.ches.apiEndpoint'),
       healthCheck: false,
-      name: 'Common Hosted Email Service'
+      name: 'Common Hosted Email Service',
     };
 
     try {
-      const tokenResponse = await utils.getKeyCloakToken(username, password, tokenEndpoint);
+      const tokenResponse = await utils.getKeyCloakToken(
+        username,
+        password,
+        tokenEndpoint
+      );
       if (tokenResponse) {
         const decoded = jwt.decode(tokenResponse.access_token);
         if (decoded) {
           result.authorized = true;
-          result.authenticated = decoded.resource_access.CHES.roles.includes('EMAILER');
+          result.authenticated =
+            decoded.resource_access.CHES.roles.includes('EMAILER');
           await axios.get(result.endpoint + '/v1/health', {
             headers: {
-              'Authorization': `Bearer ${tokenResponse.access_token}`
-            }
+              Authorization: `Bearer ${tokenResponse.access_token}`,
+            },
           });
           result.healthCheck = true;
         }
       }
     } catch (error) {
-      log.error('getChesStatus', error.message);
+      log.error(error.message, { function: 'getChesStatus' });
     }
 
     return result;
   },
 
-  getStatus: () => Promise.all([
-    checks.getChesStatus()
-  ])
+  getStatus: () => Promise.all([checks.getChesStatus()]),
 };
 
 module.exports = checks;

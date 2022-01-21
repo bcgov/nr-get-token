@@ -1,13 +1,11 @@
 const compression = require('compression');
 const config = require('config');
 const express = require('express');
-const fs = require('fs');
-const log = require('npmlog');
-const morgan = require('morgan');
 const path = require('path');
 const Problem = require('api-problem');
 const querystring = require('querystring');
-const Writable = require('stream').Writable;
+const log = require('./src/components/log')(module.filename);
+const httpLogger = require('./src/components/log').httpLogger;
 
 const db = require('./src/models');
 const keycloak = require('./src/components/keycloak');
@@ -16,10 +14,10 @@ const v1Router = require('./src/routes/v1');
 const apiRouter = express.Router();
 const state = {
   connections: {
-    data: false
+    data: false,
   },
   ready: false,
-  shutdown: false
+  shutdown: false,
 };
 let probeId;
 
@@ -28,41 +26,13 @@ app.use(compression());
 app.use(express.json({ limit: config.get('server.bodyLimit') }));
 app.use(express.urlencoded({ extended: true }));
 
-// Logging Setup
-log.level = config.get('server.logLevel');
-log.addLevel('debug', 1500, { fg: 'cyan' });
-
-let logFileStream;
-let teeStream;
-if (config.has('server.logFile')) {
-  // Write to logFile in append mode
-  logFileStream = fs.createWriteStream(config.get('server.logFile'), { flags: 'a' });
-  teeStream = new Writable({
-    objectMode: true,
-    write: (data, _, done) => {
-      process.stdout.write(data);
-      logFileStream.write(data);
-      done();
-    }
-  });
-  log.disableColor();
-  log.stream = teeStream;
-}
-
-// Print out configuration settings in verbose startup
-log.verbose('Config', JSON.stringify(config));
+// Print out configuration settings in debug startup
+log.debug('App configuration', config);
 
 // Skip if running tests
 if (process.env.NODE_ENV !== 'test') {
-  const morganOpts = {
-    // Skip logging kube-probe requests
-    skip: (req) => req.headers['user-agent'] && req.headers['user-agent'].includes('kube-probe')
-  };
-  if (config.has('server.logFile')) {
-    morganOpts.stream = teeStream;
-  }
-  // Add Morgan endpoint logging
-  app.use(morgan(config.get('server.morganFormat'), morganOpts));
+  app.use(httpLogger);
+
   // Initialize connections and exit if unsuccessful
   initializeConnections();
 }
@@ -102,21 +72,23 @@ app.use(config.get('server.basePath'), apiRouter);
 
 // Host the static frontend assets
 const staticFilesPath = config.get('frontend.basePath');
-app.use('/favicon.ico', (_req, res) => { res.redirect(`${staticFilesPath}/favicon.ico`); });
+app.use('/favicon.ico', (_req, res) => {
+  res.redirect(`${staticFilesPath}/favicon.ico`);
+});
 app.use(staticFilesPath, express.static(path.join(__dirname, 'frontend/dist')));
 
 // Handle 500
 // eslint-disable-next-line no-unused-vars
 app.use((err, _req, res, _next) => {
   if (err.stack) {
-    log.error(err.stack);
+    log.error(err);
   }
 
   if (err instanceof Problem) {
     err.send(res, null);
   } else {
     new Problem(500, 'Server Error', {
-      detail: (err.message) ? err.message : err
+      detail: err.message ? err.message : err,
     }).send(res);
   }
 });
@@ -126,7 +98,7 @@ app.use((req, res) => {
   if (req.originalUrl.startsWith(`${config.get('server.basePath')}/api`)) {
     // Return a 404 problem if attempting to access API
     new Problem(404, 'Page Not Found', {
-      detail: req.originalUrl
+      detail: req.originalUrl,
     }).send(res);
   } else {
     // Redirect any non-API requests to static frontend with redirect breadcrumb
@@ -136,9 +108,9 @@ app.use((req, res) => {
 });
 
 // Prevent unhandled errors from crashing application
-process.on('unhandledRejection', err => {
+process.on('unhandledRejection', (err) => {
   if (err && err.stack) {
-    log.error(err.stack);
+    log.error(err);
   }
 });
 
@@ -185,19 +157,24 @@ function cleanup() {
  */
 function initializeConnections() {
   // Check database connection and exit if unsuccessful
-  db.sequelize.authenticate()
+  db.sequelize
+    .authenticate()
     .then(() => {
       state.connections.data = true;
       log.info('Database connection reachable');
     })
-    .catch(err => {
+    .catch((err) => {
       state.connections.data = false;
-      log.error('initializeConnections', 'Connection initialization failure', err.message);
+      log.error(
+        'initializeConnections',
+        'Connection initialization failure',
+        err.message
+      );
       process.exitCode = 1;
       shutdown();
     })
     .finally(() => {
-      state.ready = Object.values(state.connections).every(x => x);
+      state.ready = Object.values(state.connections).every((x) => x);
       if (state.ready) {
         log.info('Service ready to accept traffic');
         // Start periodic 10 second connection probe check
@@ -214,16 +191,17 @@ function initializeConnections() {
 function checkConnections() {
   const wasReady = state.ready;
   if (!state.shutdown) {
-    db.sequelize.authenticate()
-      .then(() => state.connections.data = true)
-      .catch(err => {
+    db.sequelize
+      .authenticate()
+      .then(() => (state.connections.data = true))
+      .catch((err) => {
         state.connections.data = false;
         log.error('checkConnections', 'Connection probe failure', err.message);
         process.exitCode = 1;
         shutdown();
       })
       .finally(() => {
-        state.ready = Object.values(state.connections).every(x => x);
+        state.ready = Object.values(state.connections).every((x) => x);
         if (!wasReady && state.ready) {
           log.info('Service ready to accept traffic');
         }

@@ -16,7 +16,7 @@
   },
   "server": {
     "apiPath": "SERVER_APIPATH",
-    "basePath" : "SERVER_BASEPATH",
+    "basePath": "SERVER_BASEPATH",
     "bodyLimit": "SERVER_BODYLIMIT",
     "keycloak": {
       "clientId": "SERVER_KC_CLIENTID",
@@ -27,7 +27,6 @@
     },
     "logFile": "SERVER_LOGFILE",
     "logLevel": "SERVER_LOGLEVEL",
-    "morganFormat": "SERVER_MORGANFORMAT",
     "port": "SERVER_PORT"
   },
   "serviceClient": {

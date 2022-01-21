@@ -7,9 +7,6 @@ const KeyCloakServiceClientManager = require('../../../src/components/keyCloakSe
 const RealmAdminService = require('../../../src/components/realmAdminSvc');
 const { acronymService } = require('../../../src/services');
 
-const helper = require('../../common/helper');
-helper.logHelper();
-
 let realmConfig = {};
 let realmAdminService = undefined;
 let form = {};
@@ -18,17 +15,39 @@ jest.mock('../../../src/components/realmAdminSvc', () => {
   return jest.fn().mockImplementation(() => {
     return {
       tokenUrl: 'https://tokenurl',
-      getClients: () => { return [{ id: 1, clientId: 'ZZZ_SERVICE_CLIENT' }, { id: 2, clientId: 'XXX_SERVICE_CLIENT' }, { id: 3, clientId: 'YYY_SERVICE_CLIENT' }]; },
-      createClient: () => { return { id: '1', clientId: 'generatedserviceclientid' }; },
-      getClientRoles: () => { return []; },
-      addClientRole: () => { return []; },
-      setRoleComposites: () => { },
-      getRoleComposites: () => { return [{ id: '456', name: 'GENERATOR', description: 'This role is.' }]; },
-      getServiceAccountUser: () => { return { id: '2', 'clientId': '1' }; },
-      addServiceAccountRole: () => { },
-      getUsers: () => { return [{ id: 1, username: 'me@idir' }]; },
-      getClientSecret: () => { return { value: 'itsasecret' }; },
-      generateNewClientSecret: () => { return { value: 'newsecret' }; }
+      getClients: () => {
+        return [
+          { id: 1, clientId: 'ZZZ_SERVICE_CLIENT' },
+          { id: 2, clientId: 'XXX_SERVICE_CLIENT' },
+          { id: 3, clientId: 'YYY_SERVICE_CLIENT' },
+        ];
+      },
+      createClient: () => {
+        return { id: '1', clientId: 'generatedserviceclientid' };
+      },
+      getClientRoles: () => {
+        return [];
+      },
+      addClientRole: () => {
+        return [];
+      },
+      setRoleComposites: () => {},
+      getRoleComposites: () => {
+        return [{ id: '456', name: 'GENERATOR', description: 'This role is.' }];
+      },
+      getServiceAccountUser: () => {
+        return { id: '2', clientId: '1' };
+      },
+      addServiceAccountRole: () => {},
+      getUsers: () => {
+        return [{ id: 1, username: 'me@idir' }];
+      },
+      getClientSecret: () => {
+        return { value: 'itsasecret' };
+      },
+      generateNewClientSecret: () => {
+        return { value: 'newsecret' };
+      },
     };
   });
 });
@@ -38,11 +57,16 @@ beforeEach(() => {
     endpoint: realmBaseUrl,
     username: clientId,
     password: clientSecret,
-    realm: realmId
+    realm: realmId,
   } = config.get('serviceClient.keycloak.dev');
   realmConfig = { realmId, realmBaseUrl, clientId, clientSecret };
   realmAdminService = new RealmAdminService(realmConfig);
-  form = { applicationAcronym: 'ABC', applicationName: 'Alphabet', applicationDescription: 'Easy as 1,2,3.', commonServices: ['cmn-srv-ex-a'] };
+  form = {
+    applicationAcronym: 'ABC',
+    applicationName: 'Alphabet',
+    applicationDescription: 'Easy as 1,2,3.',
+    commonServices: ['cmn-srv-ex-a'],
+  };
 });
 
 describe('KeyCloakServiceClientManager create', () => {
@@ -59,7 +83,6 @@ describe('KeyCloakServiceClientManager create', () => {
     const mgr = new KeyCloakServiceClientManager(realmAdminService);
     expect(mgr).toBeTruthy();
   });
-
 });
 
 describe('KeyCloakServiceClientManager manage', () => {
@@ -104,7 +127,6 @@ describe('KeyCloakServiceClientManager manage', () => {
     expect(r.oidcTokenUrl).toBeTruthy();
     expect(r.generatedServiceClient).toEqual('generatedserviceclientid');
   }, 10000);
-
 });
 
 describe('KeyCloakServiceClientManager fetchClients', () => {
@@ -143,7 +165,6 @@ describe('KeyCloakServiceClientManager fetchClients', () => {
     const r = await mgr.fetchClients(['SDFH']);
     expect(r).toEqual([]);
   });
-
 });
 
 describe('KeyCloakServiceClientManager findUsers', () => {

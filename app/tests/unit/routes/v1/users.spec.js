@@ -9,7 +9,6 @@ const users = require('../../../../src/components/users');
 // Simple Express Server
 const basePath = '/api/v1/users';
 const app = helper.expressHelper(basePath, router);
-helper.logHelper();
 
 describe(`GET ${basePath}/:keycloakId/acronyms`, () => {
   const zeroUuid = '00000000-0000-0000-0000-000000000000';
@@ -77,7 +76,9 @@ describe(`GET ${basePath}/:keycloakId/acronyms/clients`, () => {
   it('should yield a not found', async () => {
     getUserAcronymClientsSpy.mockResolvedValue(null);
 
-    const response = await request(app).get(`${basePath}/${zeroUuid}/acronyms/clients`);
+    const response = await request(app).get(
+      `${basePath}/${zeroUuid}/acronyms/clients`
+    );
 
     expect(response.statusCode).toBe(404);
     expect(response.body).toBeTruthy();
@@ -89,7 +90,9 @@ describe(`GET ${basePath}/:keycloakId/acronyms/clients`, () => {
     const out = [{ acronym: 'TEST', owner: false }];
     getUserAcronymClientsSpy.mockResolvedValue(out);
 
-    const response = await request(app).get(`${basePath}/${randUuid}/acronyms/clients`);
+    const response = await request(app).get(
+      `${basePath}/${randUuid}/acronyms/clients`
+    );
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toBeTruthy();

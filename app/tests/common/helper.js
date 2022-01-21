@@ -1,5 +1,4 @@
 const express = require('express');
-const log = require('npmlog');
 const Problem = require('api-problem');
 
 /**
@@ -26,9 +25,11 @@ const helper = {
     }
 
     app.use(express.json());
-    app.use(express.urlencoded({
-      extended: false
-    }));
+    app.use(
+      express.urlencoded({
+        extended: false,
+      })
+    );
     app.use(basePath, router);
 
     // Handle 500
@@ -38,7 +39,7 @@ const helper = {
         err.send(res);
       } else {
         new Problem(500, {
-          details: (err.message) ? err.message : err
+          details: err.message ? err.message : err,
         }).send(res);
       }
     });
@@ -50,17 +51,6 @@ const helper = {
 
     return app;
   },
-
-  /**
-   * @function logHelper
-   * Configures an npmlog instance to have debug level logging and the right log level
-   */
-  logHelper: () => {
-    log.level = 'silent';
-    log.addLevel('debug', 1500, {
-      fg: 'cyan'
-    });
-  }
 };
 
 module.exports = helper;

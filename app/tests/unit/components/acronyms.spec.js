@@ -1,11 +1,10 @@
 const acronyms = require('../../../src/components/acronyms');
-const { acronymService, deploymentHistoryService } = require('../../../src/services');
-const helper = require('../../common/helper');
+const {
+  acronymService,
+  deploymentHistoryService,
+} = require('../../../src/services');
 const usersComponent = require('../../../src/components/users');
 const utils = require('../../../src/components/utils');
-
-helper.logHelper();
-
 
 describe('getAcronym', () => {
   const acronymDetailFixture = require('./fixtures/acronymDetail.json');
@@ -70,9 +69,10 @@ describe('getUsers', () => {
   });
 
   it('should throw an error if no acronym supplied', async () => {
-    await expect(acronyms.getUsers(undefined)).rejects.toThrow('No app acronym supplied to getUsers');
+    await expect(acronyms.getUsers(undefined)).rejects.toThrow(
+      'No app acronym supplied to getUsers'
+    );
   });
-
 
   it('should return an empty array if the service returns undefined', async () => {
     acronymService.acronymUserList.mockResolvedValue(undefined);
@@ -104,7 +104,9 @@ describe('getUsers', () => {
     const acr = 'XXX';
 
     const result = acronyms.getUsers(acr);
-    await expect(result).rejects.toThrow(`An error occured fetching users for acronym ${acr}`);
+    await expect(result).rejects.toThrow(
+      `An error occured fetching users for acronym ${acr}`
+    );
 
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(acr);
@@ -129,7 +131,7 @@ describe('getUsers', () => {
       userAcronymDetails: {
         acronym: 'XXX',
         owner: false,
-        createdAt: '2020-03-17T20:53:06.565Z'
+        createdAt: '2020-03-17T20:53:06.565Z',
       },
       user: {
         userId: '1',
@@ -137,15 +139,15 @@ describe('getUsers', () => {
         username: 'hherman@idir',
         firstName: 'Hank',
         lastName: 'Herman',
-        email: 'hherman@gmail.com'
-      }
+        email: 'hherman@gmail.com',
+      },
     });
     expect(result[1]).toBeTruthy();
     expect(result[1]).toEqual({
       userAcronymDetails: {
         acronym: 'XXX',
         owner: false,
-        createdAt: '2020-03-30T04:33:59.375Z'
+        createdAt: '2020-03-30T04:33:59.375Z',
       },
       user: {
         userId: '3',
@@ -153,10 +155,9 @@ describe('getUsers', () => {
         username: 'lneil@idir',
         firstName: 'Luke',
         lastName: 'Neil',
-        email: 'Luke.neil@gov.bc.ca'
-      }
+        email: 'Luke.neil@gov.bc.ca',
+      },
     });
-
   });
 });
 
@@ -172,20 +173,35 @@ describe('getUserAcronymClients', () => {
 
     const result = await acronyms.getAcronymClients('ZZZ');
 
-    expect(result).toEqual({ acronym: 'ZZZ', dev: null, test: null, prod: null });
+    expect(result).toEqual({
+      acronym: 'ZZZ',
+      dev: null,
+      test: null,
+      prod: null,
+    });
     expect(getClientsSpy).toHaveBeenCalledTimes(3);
   });
 
   it('should map service clients to envs when a client is found', async () => {
     const mockClient = {
-      environment: 'fake', id: '1234', clientId: 'XXX_SERVICE_CLIENT', enabled: true, name: 'XXX name',
-      description: 'XXX desc', serviceAccountEmail: 'a@b.com'
+      environment: 'fake',
+      id: '1234',
+      clientId: 'XXX_SERVICE_CLIENT',
+      enabled: true,
+      name: 'XXX name',
+      description: 'XXX desc',
+      serviceAccountEmail: 'a@b.com',
     };
     getClientsSpy.mockResolvedValue([mockClient]);
 
     const result = await acronyms.getAcronymClients('XXX');
 
-    expect(result).toEqual({ acronym: 'XXX', dev: mockClient, test: mockClient, prod: mockClient });
+    expect(result).toEqual({
+      acronym: 'XXX',
+      dev: mockClient,
+      test: mockClient,
+      prod: mockClient,
+    });
     expect(getClientsSpy).toHaveBeenCalledTimes(3);
   });
 });
@@ -208,7 +224,11 @@ describe('getAcronymHistory', () => {
 
   it('should return a history object if there is one', async () => {
     const mockHistory = {
-      env: 'dev', historyId: 1234, createdAt: '2021-11-04T22:50:10.997Z', enabled: true, name: 'XXX name'
+      env: 'dev',
+      historyId: 1234,
+      createdAt: '2021-11-04T22:50:10.997Z',
+      enabled: true,
+      name: 'XXX name',
     };
     findHistorySpy.mockResolvedValue([mockHistory]);
 
