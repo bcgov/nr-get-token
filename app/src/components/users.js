@@ -64,9 +64,7 @@ const users = {
       return [];
     }
     const acronyms = acronymsFromDb.map((acr) => acr.acronym);
-    log.debug(`Acronyms for user: ${JSON.stringify(acronyms)}`, {
-      function: 'getUserAcronymClients',
-    });
+    log.debug('Acronyms for user', { function: 'getUserAcronymClients', acronyms: acronyms });
 
     const [devClients, testClients, prodClients] = await Promise.all([
       utils.getClientsFromEnv('dev', acronyms),

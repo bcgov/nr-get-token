@@ -166,7 +166,8 @@ class KeyCloakServiceClientManager {
   }
 
   async fetchClients(applicationAcronymList) {
-    log.debug(applicationAcronymList, { function: 'fetchClients' });
+    log.debug('applicationAcronymList', { function: 'fetchClients', applicationAcronymList: applicationAcronymList });
+
     if (!applicationAcronymList || !Array.isArray(applicationAcronymList)) {
       log.error('No applicationAcronymList provided.', {
         function: 'fetchClients',
@@ -235,18 +236,14 @@ class KeyCloakServiceClientManager {
 
   // Get all users based on search param, supply undefined as searchParams to get ALL users in realm
   async findUsers(searchParams) {
-    log.debug(`Params: ${JSON.stringify(searchParams)}`, {
-      function: 'findUsers',
-    });
+    log.debug('Params', { function: 'findUsers', searchParams: searchParams });
 
     const users = await this.svc.getUsers(searchParams);
 
     if (users && users.length) {
       return users;
     } else {
-      log.debug(`No users found for ${JSON.stringify(searchParams)}`, {
-        function: 'findUsers',
-      });
+      log.debug('No users found', { function: 'findUsers', searchParams: searchParams });
       return undefined;
     }
   }

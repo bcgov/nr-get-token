@@ -17,10 +17,8 @@ const permissionHelpers = {
     // Do they have access to the Acronym they are trying to POST
     if (!acronyms.map((acr) => acr.acronym).includes(applicationAcronym)) {
       log.info(
-        `User not authorized for acronym ${applicationAcronym}. User: ${JSON.stringify(
-          userId
-        )}`,
-        { function: 'checkAcronymPermission' }
+        `User not authorized for acronym ${applicationAcronym}`,
+        { function: 'checkAcronymPermission', userId: userId }
       );
       return `User lacks permission for '${applicationAcronym}' acronym`;
     }

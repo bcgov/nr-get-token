@@ -53,7 +53,7 @@ const acronyms = {
       if (!acronymUsers || !acronymUsers.length) {
         return [];
       }
-      log.verbose(JSON.stringify(acronymUsers, 0, 2), { function: 'getUsers' });
+      log.verbose('acronymUsers', { function: 'getUsers', acronymUsers: acronymUsers });
 
       // Get the keycloak userinfo for the relevant users
       // Could call GET /{realm}/users/{id} for each ID but more efficient to just get all users and filter server side here
@@ -90,7 +90,7 @@ const acronyms = {
           },
         };
       });
-      log.verbose(JSON.stringify(users), { function: 'getUsers - users:' });
+      log.verbose('users', { function: 'getUsers', users: users });
 
       return users;
     } catch (error) {

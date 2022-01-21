@@ -56,9 +56,8 @@ const utils = {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         }
       );
-      log.verbose(JSON.stringify(response.data), {
-        function: 'getKeyCloakToken',
-      });
+
+      log.verbose('Keycloak response', { function: 'getKeyCloakToken', data: response.data });
       return response.data;
     } catch (error) {
       log.error(JSON.stringify(error), { function: 'getKeyCloakToken' });
