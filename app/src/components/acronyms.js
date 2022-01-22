@@ -23,7 +23,7 @@ const acronyms = {
     }
     try {
       const acronymDetails = await acronymService.find(applicationAcronym);
-      log.verbose(JSON.stringify(acronymDetails), { function: 'getAcronym' });
+      log.verbose('acronymDetails', { function: 'getUsers', acronymDetails: acronymDetails });
       return acronymDetails ? acronymDetails : null;
     } catch (error) {
       log.error(error.message, { function: 'getAcronym' });

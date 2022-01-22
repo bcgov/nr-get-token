@@ -39,7 +39,7 @@ class RealmAdminService {
 
   async getRealm() {
     const response = await this.axios.get(this.realmAdminUrl).catch((e) => {
-      log.error(JSON.stringify(e), { function: 'getRealm' });
+      log.error('Failed to get realm', { function: 'getRealm', error: e });
       throw e;
     });
     return response.data;
@@ -49,7 +49,7 @@ class RealmAdminService {
     const response = await this.axios
       .get(`${this.realmAdminUrl}/clients`)
       .catch((e) => {
-        log.error(JSON.stringify(e), { function: 'getClients' });
+        log.error('Failed to get clients', { function: 'getClients', error: e });
         throw e;
       });
     return response.data;
@@ -63,7 +63,7 @@ class RealmAdminService {
     const response = await this.axios
       .get(`${this.realmAdminUrl}/clients/${id}`)
       .catch((e) => {
-        log.error(JSON.stringify(e), { function: 'getClient' });
+        log.error('Failed to get client', { function: 'getClient', error: e });
         throw e;
       });
     return response.data;
@@ -180,7 +180,7 @@ class RealmAdminService {
         },
       })
       .catch((e) => {
-        log.error(JSON.stringify(e), { function: 'createClient' });
+        log.error('Failed to create client', { function: 'createClient', error: e });
         throw e;
       });
 
@@ -220,7 +220,7 @@ class RealmAdminService {
         }
       )
       .catch((e) => {
-        log.error(JSON.stringify(e), { function: 'updateClientDetails' });
+        log.error('Failed to update client details', { function: 'updateClientDetails', error: e });
         throw e;
       });
     // response should be 204... go fetch the updated client...
@@ -236,7 +236,7 @@ class RealmAdminService {
     const response = await this.axios
       .get(`${this.realmAdminUrl}/clients/${id}/client-secret`)
       .catch((e) => {
-        log.error(JSON.stringify(e), { function: 'getClientSecret' });
+        log.error('Failed to get client secret', { function: 'getClientSecret', error: e });
         throw e;
       });
     return response.data;
@@ -259,7 +259,7 @@ class RealmAdminService {
         },
       })
       .catch((e) => {
-        log.error(JSON.stringify(e), { function: 'generateNewClientSecret' });
+        log.error('Failed to generate new client secret', { function: 'generateNewClientSecret', error: e });
         throw e;
       });
     return response.data;
@@ -276,7 +276,7 @@ class RealmAdminService {
     const response = await this.axios
       .get(`${this.realmAdminUrl}/clients/${id}/service-account-user`)
       .catch((e) => {
-        log.error(JSON.stringify(e), { function: 'getServiceAccountUser' });
+        log.error('Failed to get service account user', { function: 'getServiceAccountUser', error: e });
         throw e;
       });
     return response.data;
@@ -291,7 +291,7 @@ class RealmAdminService {
     const response = await this.axios
       .get(`${this.realmAdminUrl}/clients/${id}/roles`)
       .catch((e) => {
-        log.error(JSON.stringify(e), { function: 'getClientRoles' });
+        log.error('Failed to get client roles', { function: 'getClientRoles', error: e });
         throw e;
       });
     return response.data;
@@ -316,7 +316,7 @@ class RealmAdminService {
     const response = await this.axios
       .delete(`${this.realmAdminUrl}/clients/${id}/roles/${roleName}`)
       .catch((e) => {
-        log.error(JSON.stringify(e), { function: 'removeClientRole' });
+        log.error('Failed to remove client role', { function: 'removeClientRole', error: e });
         throw e;
       });
     return response;
@@ -351,7 +351,7 @@ class RealmAdminService {
         }
       )
       .catch((e) => {
-        log.error(JSON.stringify(e), { function: 'addClientRole' });
+        log.error('Failed to add client role', { function: 'addClientRole', error: e });
         throw e;
       });
     //response should be 201 created... return the list of roles
@@ -395,7 +395,7 @@ class RealmAdminService {
         }
       )
       .catch((e) => {
-        log.error(JSON.stringify(e), { function: 'addServiceAccountRole' });
+        log.error('Failed to add service account role', { function: 'addServiceAccountRole', error: e });
         throw e;
       });
     return response.data;
@@ -421,7 +421,7 @@ class RealmAdminService {
 
     const url = `${this.realmAdminUrl}/clients/${clientId}/roles/${roleName}/composites`;
     const response = await this.axios.get(url).catch((e) => {
-      log.error(JSON.stringify(e), { function: 'getRoleComposites' });
+      log.error('Failed to get role composites', { function: 'getRoleComposites', error: e });
       throw e;
     });
     return response.data;
@@ -460,7 +460,7 @@ class RealmAdminService {
         }
       )
       .catch((e) => {
-        log.error(JSON.stringify(e), { function: 'setRoleComposites' });
+        log.error('Failed to set role composites', { function: 'setRoleComposites', error: e });
         throw e;
       });
     //204 created...
@@ -486,7 +486,7 @@ class RealmAdminService {
     const response = await this.axios
       .get(url, { params: queryParams })
       .catch((e) => {
-        log.error(JSON.stringify(e), { function: 'getUsers' });
+        log.error('Failed to get users', { function: 'getUsers', error: e });
         throw e;
       });
     return response.data;

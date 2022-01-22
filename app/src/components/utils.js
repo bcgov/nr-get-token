@@ -60,8 +60,7 @@ const utils = {
       log.verbose('Keycloak response', { function: 'getKeyCloakToken', data: response.data });
       return response.data;
     } catch (error) {
-      log.error(JSON.stringify(error), { function: 'getKeyCloakToken' });
-      log.error(error.message, { function: 'getKeyCloakToken' });
+      log.error('Failed to get KeyCloak token', { function: 'getKeyCloakToken', error: error });
       return error.response.data;
     }
   },
