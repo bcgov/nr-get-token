@@ -1,5 +1,5 @@
 const config = require('config');
-const log = require('npmlog');
+const log = require('../src/components/log')(module.filename);
 const Sequelize = require('sequelize');
 
 module.exports = {
@@ -12,17 +12,17 @@ module.exports = {
     freezeTableName: true,
     paranoid: true, // Prevents hard deletions by flagging deletedAt instead
     timestamps: true,
-    underscored: false // Makes attributes be named with underscores
+    underscored: false, // Makes attributes be named with underscores
   },
   dialect: 'postgres',
   isolationLevel: Sequelize.Transaction.SERIALIZABLE,
-  logging: query => log.verbose('Database', query),
+  logging: (query) => log.verbose('Database', query),
   migrationStorageTableName: 'sequelize_meta',
   pool: {
     max: 5,
     idle: 10000,
-    acquire: 60000
+    acquire: 60000,
   },
   seederStorage: 'sequelize',
-  seederStorageTableName: 'sequelize_data'
+  seederStorageTableName: 'sequelize_data',
 };

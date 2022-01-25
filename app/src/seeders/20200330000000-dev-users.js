@@ -45,6 +45,12 @@ const userData = [
     displayName: 'Tim Csaky',
     keycloakId: '5d9142e6-af23-4085-9a98-cc1f6f1e6612',
     username: 'tcsaky@idir'
+  },
+  {
+    userId: '00000000-0000-4001-8005-000000000000',
+    displayName: 'Kyle Morel',
+    keycloakId: '5341cc6e-bf11-4c3c-b7f5-e53b267c92d6',
+    username: 'kylmorel@idir',
   }
 ];
 

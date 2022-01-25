@@ -5,9 +5,6 @@ const mockAxios = new MockAdapter(axios);
 
 const RealmAdminService = require('../../../src/components/realmAdminSvc');
 
-const helper = require('../../common/helper');
-helper.logHelper();
-
 let realmConfig = {};
 
 beforeEach(() => {
@@ -15,13 +12,12 @@ beforeEach(() => {
     endpoint: realmBaseUrl,
     username: clientId,
     password: clientSecret,
-    realm: realmId
+    realm: realmId,
   } = config.get('serviceClient.keycloak.dev');
   realmConfig = { realmId, realmBaseUrl, clientId, clientSecret };
 });
 
 describe('RealmAdminService create', () => {
-
   it('should throw an error without realmId', async () => {
     expect(() => {
       const badConfig = { ...realmConfig };
@@ -44,7 +40,6 @@ describe('RealmAdminService create', () => {
     }).toThrow();
   });
   it('should throw an error without clientSecret', async () => {
-
     expect(() => {
       const badConfig = { ...realmConfig };
       delete badConfig.clientSecret;
@@ -59,13 +54,10 @@ describe('RealmAdminService create', () => {
     expect(result.axios).toBeTruthy();
     expect(result.realmAdminUrl).toBeTruthy();
     expect(result.tokenUrl).toBeTruthy();
-
   });
-
 });
 
 describe('RealmAdminService getRealm', () => {
-
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = undefined;
@@ -93,7 +85,6 @@ describe('RealmAdminService getRealm', () => {
 });
 
 describe('RealmAdminService getClients', () => {
-
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = undefined;
@@ -121,7 +112,6 @@ describe('RealmAdminService getClients', () => {
 });
 
 describe('RealmAdminService getClient', () => {
-
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = undefined;
@@ -154,7 +144,6 @@ describe('RealmAdminService getClient', () => {
 });
 
 describe('RealmAdminService createClient', () => {
-
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = undefined;
@@ -189,7 +178,9 @@ describe('RealmAdminService createClient', () => {
   it('should return a new client', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = axios.create();
-    mockAxios.onPost(`${svc.realmAdminUrl}/clients`).reply(201, 'truthy', { location: `${svc.realmAdminUrl}/clients/1` });
+    mockAxios
+      .onPost(`${svc.realmAdminUrl}/clients`)
+      .reply(201, 'truthy', { location: `${svc.realmAdminUrl}/clients/1` });
     mockAxios.onGet(`${svc.realmAdminUrl}/clients/1`).reply(200, 'truthy');
 
     const result = await svc.createClient('A', 'B', 'C');
@@ -198,7 +189,6 @@ describe('RealmAdminService createClient', () => {
 });
 
 describe('RealmAdminService updateClientDetails', () => {
-
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = undefined;
@@ -220,19 +210,25 @@ describe('RealmAdminService updateClientDetails', () => {
 
   it('should throw an error when null client parameter...', async () => {
     const svc = new RealmAdminService(realmConfig);
-    await expect(svc.updateClientDetails(undefined, 'B', 'C')).rejects.toThrow();
+    await expect(
+      svc.updateClientDetails(undefined, 'B', 'C')
+    ).rejects.toThrow();
   });
 
   it('should throw an error when null client name parameter...', async () => {
     const svc = new RealmAdminService(realmConfig);
     const client = { id: '1' };
-    await expect(svc.updateClientDetails(client, undefined, 'C')).rejects.toThrow();
+    await expect(
+      svc.updateClientDetails(client, undefined, 'C')
+    ).rejects.toThrow();
   });
 
   it('should throw an error when null client description parameter...', async () => {
     const svc = new RealmAdminService(realmConfig);
     const client = { id: '1' };
-    await expect(svc.updateClientDetails(client, undefined, undefined)).rejects.toThrow();
+    await expect(
+      svc.updateClientDetails(client, undefined, undefined)
+    ).rejects.toThrow();
   });
 
   it('should return a new client', async () => {
@@ -248,7 +244,6 @@ describe('RealmAdminService updateClientDetails', () => {
 });
 
 describe('RealmAdminService getClientSecret', () => {
-
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = undefined;
@@ -273,7 +268,9 @@ describe('RealmAdminService getClientSecret', () => {
   it('should return a client', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = axios.create();
-    mockAxios.onGet(`${svc.realmAdminUrl}/clients/1/client-secret`).reply(200, 'truthy');
+    mockAxios
+      .onGet(`${svc.realmAdminUrl}/clients/1/client-secret`)
+      .reply(200, 'truthy');
 
     const result = await svc.getClientSecret('1');
     expect(result).toBeTruthy();
@@ -281,7 +278,6 @@ describe('RealmAdminService getClientSecret', () => {
 });
 
 describe('RealmAdminService generateNewClientSecret', () => {
-
   it('should throw an error if axios undefined', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = undefined;
@@ -306,7 +302,9 @@ describe('RealmAdminService generateNewClientSecret', () => {
   it('should return a secret update response', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = axios.create();
-    mockAxios.onPost(`${svc.realmAdminUrl}/clients/1/client-secret`).reply(200, 'truthy');
+    mockAxios
+      .onPost(`${svc.realmAdminUrl}/clients/1/client-secret`)
+      .reply(200, 'truthy');
 
     const result = await svc.generateNewClientSecret('1');
     expect(result).toBeTruthy();
@@ -314,7 +312,6 @@ describe('RealmAdminService generateNewClientSecret', () => {
 });
 
 describe('RealmAdminService getServiceAccountUser', () => {
-
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = undefined;
@@ -339,7 +336,9 @@ describe('RealmAdminService getServiceAccountUser', () => {
   it('should return a service account user', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = axios.create();
-    mockAxios.onGet(`${svc.realmAdminUrl}/clients/1/service-account-user`).reply(200, 'truthy');
+    mockAxios
+      .onGet(`${svc.realmAdminUrl}/clients/1/service-account-user`)
+      .reply(200, 'truthy');
 
     const result = await svc.getServiceAccountUser('1');
     expect(result).toBeTruthy();
@@ -347,7 +346,6 @@ describe('RealmAdminService getServiceAccountUser', () => {
 });
 
 describe('RealmAdminService getClientRoles', () => {
-
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = undefined;
@@ -372,7 +370,9 @@ describe('RealmAdminService getClientRoles', () => {
   it('should return client roles', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = axios.create();
-    mockAxios.onGet(`${svc.realmAdminUrl}/clients/1/roles`).reply(200, 'truthy');
+    mockAxios
+      .onGet(`${svc.realmAdminUrl}/clients/1/roles`)
+      .reply(200, 'truthy');
 
     const result = await svc.getClientRoles('1');
     expect(result).toBeTruthy();
@@ -380,7 +380,6 @@ describe('RealmAdminService getClientRoles', () => {
 });
 
 describe('RealmAdminService removeClientRole', () => {
-
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = undefined;
@@ -410,7 +409,9 @@ describe('RealmAdminService removeClientRole', () => {
   it('should return client roles', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = axios.create();
-    mockAxios.onDelete(`${svc.realmAdminUrl}/clients/1/roles/theRole`).reply(204, 'truthy');
+    mockAxios
+      .onDelete(`${svc.realmAdminUrl}/clients/1/roles/theRole`)
+      .reply(204, 'truthy');
 
     const result = await svc.removeClientRole('1', 'theRole');
     expect(result).toBeTruthy();
@@ -418,7 +419,6 @@ describe('RealmAdminService removeClientRole', () => {
 });
 
 describe('RealmAdminService addClientRole', () => {
-
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = undefined;
@@ -448,7 +448,9 @@ describe('RealmAdminService addClientRole', () => {
   it('should return client roles', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = axios.create();
-    mockAxios.onPost(`${svc.realmAdminUrl}/clients/1/roles`).reply(201, 'truthy');
+    mockAxios
+      .onPost(`${svc.realmAdminUrl}/clients/1/roles`)
+      .reply(201, 'truthy');
 
     const result = await svc.addClientRole('1', 'theRole');
     expect(result).toBeTruthy();
@@ -456,42 +458,55 @@ describe('RealmAdminService addClientRole', () => {
 });
 
 describe('RealmAdminService addServiceAccountRole', () => {
-
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = undefined;
-    await expect(svc.addServiceAccountRole('SA', '1', { id: '2' })).rejects.toThrow();
+    await expect(
+      svc.addServiceAccountRole('SA', '1', { id: '2' })
+    ).rejects.toThrow();
   });
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.realmAdminUrl = undefined;
-    await expect(svc.addServiceAccountRole('SA', '1', { id: '2' })).rejects.toThrow();
+    await expect(
+      svc.addServiceAccountRole('SA', '1', { id: '2' })
+    ).rejects.toThrow();
   });
   it('should throw an error when realm url is bad...', async () => {
     const svc = new RealmAdminService(realmConfig);
     mockAxios.onGet(svc.realmAdminUrl).reply(500);
-    await expect(svc.addServiceAccountRole('SA', '1', { id: '2' })).rejects.toThrow();
+    await expect(
+      svc.addServiceAccountRole('SA', '1', { id: '2' })
+    ).rejects.toThrow();
   });
 
   it('should throw an error when null service account id parameter...', async () => {
     const svc = new RealmAdminService(realmConfig);
-    await expect(svc.addServiceAccountRole(undefined, '1', { id: '2' })).rejects.toThrow();
+    await expect(
+      svc.addServiceAccountRole(undefined, '1', { id: '2' })
+    ).rejects.toThrow();
   });
 
   it('should throw an error when null client id parameter...', async () => {
     const svc = new RealmAdminService(realmConfig);
-    await expect(svc.addServiceAccountRole('SA', undefined, { id: '2' })).rejects.toThrow();
+    await expect(
+      svc.addServiceAccountRole('SA', undefined, { id: '2' })
+    ).rejects.toThrow();
   });
 
   it('should throw an error when null role parameter...', async () => {
     const svc = new RealmAdminService(realmConfig);
-    await expect(svc.addServiceAccountRole('SA', '1', undefined)).rejects.toThrow();
+    await expect(
+      svc.addServiceAccountRole('SA', '1', undefined)
+    ).rejects.toThrow();
   });
 
   it('should return client roles', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = axios.create();
-    mockAxios.onPost(`${svc.realmAdminUrl}/users/SA/role-mappings/clients/1`).reply(204, 'truthy');
+    mockAxios
+      .onPost(`${svc.realmAdminUrl}/users/SA/role-mappings/clients/1`)
+      .reply(204, 'truthy');
 
     const result = await svc.addServiceAccountRole('SA', '1', { id: '2' });
     expect(result).toBeTruthy();
@@ -499,50 +514,64 @@ describe('RealmAdminService addServiceAccountRole', () => {
 });
 
 describe('RealmAdminService setRoleComposites', () => {
-
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = undefined;
-    await expect(svc.setRoleComposites({ id: '1' }, 'theRole', [{ id: '2' }])).rejects.toThrow();
+    await expect(
+      svc.setRoleComposites({ id: '1' }, 'theRole', [{ id: '2' }])
+    ).rejects.toThrow();
   });
   it('should throw an error connection is not set', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.realmAdminUrl = undefined;
-    await expect(svc.setRoleComposites({ id: '1' }, 'theRole', [{ id: '2' }])).rejects.toThrow();
+    await expect(
+      svc.setRoleComposites({ id: '1' }, 'theRole', [{ id: '2' }])
+    ).rejects.toThrow();
   });
   it('should throw an error when realm url is bad...', async () => {
     const svc = new RealmAdminService(realmConfig);
     mockAxios.onGet(svc.realmAdminUrl).reply(500);
-    await expect(svc.setRoleComposites({ id: '1' }, 'theRole', [{ id: '2' }])).rejects.toThrow();
+    await expect(
+      svc.setRoleComposites({ id: '1' }, 'theRole', [{ id: '2' }])
+    ).rejects.toThrow();
   });
 
   it('should throw an error when null client parameter...', async () => {
     const svc = new RealmAdminService(realmConfig);
-    await expect(svc.setRoleComposites(undefined, 'theRole', [{ id: '2' }])).rejects.toThrow();
+    await expect(
+      svc.setRoleComposites(undefined, 'theRole', [{ id: '2' }])
+    ).rejects.toThrow();
   });
 
   it('should throw an error when null role name parameter...', async () => {
     const svc = new RealmAdminService(realmConfig);
-    await expect(svc.setRoleComposites({ id: '1' }, undefined, [{ id: '2' }])).rejects.toThrow();
+    await expect(
+      svc.setRoleComposites({ id: '1' }, undefined, [{ id: '2' }])
+    ).rejects.toThrow();
   });
 
   it('should throw an error when null roles parameter...', async () => {
     const svc = new RealmAdminService(realmConfig);
-    await expect(svc.setRoleComposites({ id: '1' }, 'theRole', undefined)).rejects.toThrow();
+    await expect(
+      svc.setRoleComposites({ id: '1' }, 'theRole', undefined)
+    ).rejects.toThrow();
   });
 
   it('should return client roles', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = axios.create();
-    mockAxios.onPost(`${svc.realmAdminUrl}/clients/1/roles/theRole/composites`).reply(204, 'truthy');
+    mockAxios
+      .onPost(`${svc.realmAdminUrl}/clients/1/roles/theRole/composites`)
+      .reply(204, 'truthy');
 
-    const result = await svc.setRoleComposites({ id: '1' }, 'theRole', [{ id: '2' }]);
+    const result = await svc.setRoleComposites({ id: '1' }, 'theRole', [
+      { id: '2' },
+    ]);
     expect(result).toBeTruthy();
   });
 });
 
 describe('RealmAdminService getRoleComposites', () => {
-
   it('should throw an error if no clientId provided', async () => {
     const svc = new RealmAdminService(realmConfig);
     await expect(svc.getRoleComposites(undefined, '')).rejects.toThrow();
@@ -555,7 +584,9 @@ describe('RealmAdminService getRoleComposites', () => {
   it('should return composite roles', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = axios.create();
-    mockAxios.onGet(`${svc.realmAdminUrl}/clients/1/roles/theRole/composites`).reply(204, 'yes returned');
+    mockAxios
+      .onGet(`${svc.realmAdminUrl}/clients/1/roles/theRole/composites`)
+      .reply(204, 'yes returned');
 
     const result = await svc.getRoleComposites('1', 'theRole');
     expect(result).toBeTruthy();
@@ -566,26 +597,30 @@ describe('RealmAdminService getRoleComposites', () => {
     mockAxios.onGet(svc.realmAdminUrl).reply(500);
     await expect(svc.getRoleComposites('1', 'theRole')).rejects.toThrow();
   });
-
 });
 
 describe('RealmAdminService getUsers', () => {
-
   it('should throw an error if non object query provided', async () => {
     const svc = new RealmAdminService(realmConfig);
-    await expect(svc.getUsers('user')).rejects.toThrow('Cannot get users: optional searchParams parameter must be an object.');
+    await expect(svc.getUsers('user')).rejects.toThrow(
+      'Cannot get users: optional searchParams parameter must be an object.'
+    );
   });
 
   it('should throw an error if array provided', async () => {
     const svc = new RealmAdminService(realmConfig);
-    await expect(svc.getUsers(['abcd'])).rejects.toThrow('Cannot get users: optional searchParams parameter must be an object.');
+    await expect(svc.getUsers(['abcd'])).rejects.toThrow(
+      'Cannot get users: optional searchParams parameter must be an object.'
+    );
   });
 
   it('should return users searched on', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = axios.create();
     const testQuery = { username: 'me@idir' };
-    mockAxios.onGet(`${svc.realmAdminUrl}/users`, { params: testQuery }).reply(204, 'yes returned');
+    mockAxios
+      .onGet(`${svc.realmAdminUrl}/users`, { params: testQuery })
+      .reply(204, 'yes returned');
 
     const result = await svc.getUsers(testQuery);
     expect(result).toBeTruthy();
@@ -595,8 +630,14 @@ describe('RealmAdminService getUsers', () => {
   it('should handle multiple query params', async () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = axios.create();
-    const testQuery = { username: 'me@idir', firstname: 'test', lastname:'test' };
-    mockAxios.onGet(`${svc.realmAdminUrl}/users`, { params: testQuery }).reply(204, 'yes returned');
+    const testQuery = {
+      username: 'me@idir',
+      firstname: 'test',
+      lastname: 'test',
+    };
+    mockAxios
+      .onGet(`${svc.realmAdminUrl}/users`, { params: testQuery })
+      .reply(204, 'yes returned');
 
     const result = await svc.getUsers(testQuery);
     expect(result).toBeTruthy();
@@ -607,7 +648,9 @@ describe('RealmAdminService getUsers', () => {
     const svc = new RealmAdminService(realmConfig);
     svc.axios = axios.create();
     const testQuery = {};
-    mockAxios.onGet(`${svc.realmAdminUrl}/users`, { params: testQuery }).reply(204, 'yes returned');
+    mockAxios
+      .onGet(`${svc.realmAdminUrl}/users`, { params: testQuery })
+      .reply(204, 'yes returned');
 
     const result = await svc.getUsers(testQuery);
     expect(result).toBeTruthy();
@@ -619,5 +662,4 @@ describe('RealmAdminService getUsers', () => {
     mockAxios.onGet(svc.realmAdminUrl).reply(500);
     await expect(svc.getUsers({ users: 'me@idir' })).rejects.toThrow();
   });
-
 });

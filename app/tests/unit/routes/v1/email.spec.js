@@ -9,7 +9,6 @@ const githubComponent = require('../../../../src/components/github');
 // Simple Express Server
 const basePath = '/api/v1/email';
 const app = helper.expressHelper(basePath, router);
-helper.logHelper();
 
 describe(`POST ${basePath}`, () => {
   const sendRequestSpy = jest.spyOn(emailComponent, 'sendRequest');
@@ -21,7 +20,7 @@ describe(`POST ${basePath}`, () => {
       applicationAcronym: 'TEST',
       comments: 'comment',
       from: 'email@example.com',
-      idir: 'user@idir'
+      idir: 'user@idir',
     };
     sendRequestSpy.mockReset();
     createIssueSpy.mockReset();
@@ -37,9 +36,19 @@ describe(`POST ${basePath}`, () => {
     expect(response.body).toBeTruthy();
     expect(response.body).toMatch('test');
     expect(sendRequestSpy).toHaveBeenCalledTimes(1);
-    expect(sendRequestSpy).toHaveBeenCalledWith(body.applicationAcronym, body.comments, body.from, body.idir);
+    expect(sendRequestSpy).toHaveBeenCalledWith(
+      body.applicationAcronym,
+      body.comments,
+      body.from,
+      body.idir
+    );
     expect(createIssueSpy).toHaveBeenCalledTimes(1);
-    expect(createIssueSpy).toHaveBeenCalledWith(body.applicationAcronym, body.comments, body.from, body.idir);
+    expect(createIssueSpy).toHaveBeenCalledWith(
+      body.applicationAcronym,
+      body.comments,
+      body.from,
+      body.idir
+    );
   });
 
   it('should yield a validation failure', async () => {
@@ -73,9 +82,19 @@ describe(`POST ${basePath}`, () => {
     expect(response.body).toBeTruthy();
     expect(response.body.detail).toBe(errMsg);
     expect(sendRequestSpy).toHaveBeenCalledTimes(1);
-    expect(sendRequestSpy).toHaveBeenCalledWith(body.applicationAcronym, body.comments, body.from, body.idir);
+    expect(sendRequestSpy).toHaveBeenCalledWith(
+      body.applicationAcronym,
+      body.comments,
+      body.from,
+      body.idir
+    );
     expect(createIssueSpy).toHaveBeenCalledTimes(1);
-    expect(createIssueSpy).toHaveBeenCalledWith(body.applicationAcronym, body.comments, body.from, body.idir);
+    expect(createIssueSpy).toHaveBeenCalledWith(
+      body.applicationAcronym,
+      body.comments,
+      body.from,
+      body.idir
+    );
   });
 
   it('should yield a created response even if github creation fails', async () => {
@@ -91,8 +110,18 @@ describe(`POST ${basePath}`, () => {
     expect(response.body).toBeTruthy();
     expect(response.body).toMatch('test');
     expect(sendRequestSpy).toHaveBeenCalledTimes(1);
-    expect(sendRequestSpy).toHaveBeenCalledWith(body.applicationAcronym, body.comments, body.from, body.idir);
+    expect(sendRequestSpy).toHaveBeenCalledWith(
+      body.applicationAcronym,
+      body.comments,
+      body.from,
+      body.idir
+    );
     expect(createIssueSpy).toHaveBeenCalledTimes(1);
-    expect(createIssueSpy).toHaveBeenCalledWith(body.applicationAcronym, body.comments, body.from, body.idir);
+    expect(createIssueSpy).toHaveBeenCalledWith(
+      body.applicationAcronym,
+      body.comments,
+      body.from,
+      body.idir
+    );
   });
 });

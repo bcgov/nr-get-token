@@ -1,6 +1,6 @@
 const axios = require('axios');
 const config = require('config');
-const log = require('npmlog');
+const log = require('./log')(module.filename);
 
 const github = {
   /**
@@ -17,18 +17,24 @@ const github = {
       const githubApi = config.get('serviceClient.github.apiEndpoint');
 
       // See https://docs.github.com/en/rest/reference/issues
-      return axios.post(githubApi + '/issues', {
-        owner: 'bcgov-nr-csst',
-        repo: 'nr-get-token',
-        title: `GETOK Registration for ${acronym} - ${idir}`,
-        body: `<p>Request from GETOK for acronym creation/access</p> <p>Acronym: ${acronym} <br /> IDIR: ${idir} <br /> Email: ${from}</p> <p><strong>User comments:</strong><br/>${comments}`,
-        labels: ['Acronym Request']
-      }, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
+      return axios.post(
+        githubApi + '/issues',
+        {
+          owner: 'bcgov-nr-csst',
+          repo: 'nr-get-token',
+          title: `GETOK Registration for ${acronym} - ${idir}`,
+          body: `<p>Request from GETOK for acronym creation/access</p> <p>Acronym: ${acronym} <br /> IDIR: ${idir} <br /> Email: ${from}</p> <p><strong>User comments:</strong><br/>${comments}`,
+          labels: ['Acronym Request'],
+        },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
     } catch (error) {
-      log.error('github.createRequestIssue', error.message);
-      throw new Error(`Error calling github issue creation endpoint. Error: ${error.message}`);
+      log.error(error.message, { function: 'createRequestIssue' });
+      throw new Error(
+        `Error calling github issue creation endpoint. Error: ${error.message}`
+      );
     }
   },
 };

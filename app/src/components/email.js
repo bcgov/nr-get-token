@@ -1,6 +1,6 @@
 const axios = require('axios');
 const config = require('config');
-const log = require('npmlog');
+const log = require('./log')(module.filename);
 
 const utils = require('./utils');
 
@@ -20,25 +20,35 @@ const email = {
       const username = config.get('serviceClient.ches.username');
       const password = config.get('serviceClient.ches.password');
 
-      const token = await utils.getKeyCloakToken(username, password, tokenEndpoint);
-      const response = await axios.post(apiEndpoint + '/v1/email', {
-        body: `<p>Request from GETOK for acronym creation/access</p> <p><strong>User comments:</strong><br/>${comments}`,
-        bodyType: 'html',
-        from: from,
-        priority: 'high',
-        to: ['NR.CommonServiceShowcase@gov.bc.ca'],
-        subject: `GETOK Registration for ${acronym} - ${idir}`
-      }, {
-        headers: { Authorization: `Bearer ${token.access_token}` }
-      });
+      const token = await utils.getKeyCloakToken(
+        username,
+        password,
+        tokenEndpoint
+      );
+      const response = await axios.post(
+        apiEndpoint + '/v1/email',
+        {
+          body: `<p>Request from GETOK for acronym creation/access</p> <p><strong>User comments:</strong><br/>${comments}`,
+          bodyType: 'html',
+          from: from,
+          priority: 'high',
+          to: ['NR.CommonServiceShowcase@gov.bc.ca'],
+          subject: `GETOK Registration for ${acronym} - ${idir}`,
+        },
+        {
+          headers: { Authorization: `Bearer ${token.access_token}` },
+        }
+      );
 
       if (response.status == 201) {
         return response.data;
       } else {
-        throw new Error(`Error from POST to CHES. Response Code: ${response.status}`);
+        throw new Error(
+          `Error from POST to CHES. Response Code: ${response.status}`
+        );
       }
     } catch (error) {
-      log.error('email.sendRequest', error.message);
+      log.error(error.message, { function: 'sendRequest' });
       throw new Error(`Error calling email endpoint. Error: ${error.message}`);
     }
   },

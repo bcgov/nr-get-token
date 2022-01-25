@@ -8,7 +8,6 @@ const checks = require('../../../../src/components/checks');
 // Simple Express Server
 const basePath = '/api/v1/checks';
 const app = helper.expressHelper(basePath, router);
-helper.logHelper();
 
 describe(`GET ${basePath}/status`, () => {
   const getStatusSpy = jest.spyOn(checks, 'getStatus');

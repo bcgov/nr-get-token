@@ -10,7 +10,6 @@ const permissionHelpers = require('../../../../src/components/permissionHelpers'
 const basePath = '/api/v1/acronyms';
 const keycloakAuthMock = require('../fixtures/kauth.json');
 const app = helper.expressHelper(basePath, router, keycloakAuthMock);
-helper.logHelper();
 
 describe(`GET ${basePath}/:appAcronym`, () => {
   const acronymSpy = jest.spyOn(acronyms, 'getAcronym');
@@ -73,7 +72,6 @@ describe(`GET ${basePath}/:appAcronym`, () => {
     expect(acronymSpy).toHaveBeenCalledTimes(1);
   });
 });
-
 
 describe(`GET ${basePath}/:acronym/history`, () => {
   const acronymSpy = jest.spyOn(acronyms, 'getAcronymClients');
