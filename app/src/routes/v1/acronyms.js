@@ -135,4 +135,28 @@ acronymsRouter.get(
   }
 );
 
+// A special administrative call to get all the acronyms in the app
+acronymsRouter.get('/',
+  keycloak.protect('realm:GETOK_ADMIN_ADD_USER'),
+  async (req, res) => {
+    try {
+      const token = req.headers.authorization.split(' ')[1];
+      const response = await acronyms.registerUserToAcronym(
+        token,
+        req.kauth.grant.access_token.content.iss,
+        req.params.appAcronym,
+        req.params.username
+      );
+      if (response) {
+        return res.status(200).json(response);
+      } else {
+        return new Problem(404).send(res);
+      }
+    } catch (error) {
+      log.error(error);
+      return new Problem(500, { detail: error.message }).send(res);
+    }
+  }
+);
+
 module.exports = acronymsRouter;
