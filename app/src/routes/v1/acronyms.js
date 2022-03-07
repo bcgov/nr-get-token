@@ -140,13 +140,7 @@ acronymsRouter.get('/',
   keycloak.protect('realm:GETOK_ADMIN_ADD_USER'),
   async (req, res) => {
     try {
-      const token = req.headers.authorization.split(' ')[1];
-      const response = await acronyms.registerUserToAcronym(
-        token,
-        req.kauth.grant.access_token.content.iss,
-        req.params.appAcronym,
-        req.params.username
-      );
+      const response = await acronyms.getAllAcronyms();
       if (response) {
         return res.status(200).json(response);
       } else {

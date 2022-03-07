@@ -4,8 +4,17 @@ import { ApiRoutes } from '@/utils/constants';
 
 export default {
   /**
+   * @function getAllAcronyms
+   * Fetch acronyms
+   * @returns {Promise} An axios response
+   */
+  getAllAcronyms() {
+    return getokAxios().get(`${ApiRoutes.ACRONYMS}/`);
+  },
+
+  /**
    * @function getAcronym
-   * Fetch acronym details from Keycloak
+   * Fetch acronym details
    * @param {string} acronym app acronym
    * @returns {Promise} An axios response
    */

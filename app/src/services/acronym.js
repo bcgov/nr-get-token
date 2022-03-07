@@ -1,6 +1,10 @@
 const db = require('../models');
 
 module.exports = {
+  async findAll() {
+    return await db.Acronym.findAll();
+  },
+
   async find(acronym) {
     return await db.Acronym.findOne({
       where: {

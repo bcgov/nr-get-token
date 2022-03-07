@@ -23,7 +23,7 @@ const acronyms = {
     }
     try {
       const acronymDetails = await acronymService.find(applicationAcronym);
-      log.verbose('acronymDetails', { function: 'getUsers', acronymDetails: acronymDetails });
+      log.verbose('acronymDetails', { function: 'getAcronym', acronymDetails: acronymDetails });
       return acronymDetails ? acronymDetails : null;
     } catch (error) {
       log.error(error.message, { function: 'getAcronym' });
@@ -32,6 +32,25 @@ const acronyms = {
       );
     }
   },
+
+
+  /**
+   *  @function getAllAcronyms
+   *  Fetch acronyms from GETOK database.
+   */
+  getAllAcronyms: async () => {
+    try {
+      const acronymDetails = await acronymService.findAll();
+      log.verbose('acronymDetails', { function: 'getAllAcronyms', acronymDetails: acronymDetails });
+      return acronymDetails ? acronymDetails : [];
+    } catch (error) {
+      log.error(error.message, { function: 'getAllAcronyms' });
+      throw new Error(
+        `An error occured fetching acronym details from GETOK database. ${error.message}`
+      );
+    }
+  },
+
 
   /**
    *  @function getUsers
