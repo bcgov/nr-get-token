@@ -5,8 +5,23 @@
     </v-toolbar>
 
     <v-skeleton-loader type="article, actions" :loading="loading">
-      <v-form @submit.prevent="grantAccess" ref="form" lazy-validation>
+      <v-form @submit.prevent="submit" ref="form" lazy-validation>
         <v-container>
+          <p>
+            After a user requests access to GETOK, you can grant them access to
+            an Acronym here. There will be an email in the
+            <em>NR Common Services</em> inbox with their access request details.
+            <br />
+            If the Acronym does not exist in GETOK, the form below will add it.
+            Or select an existing Acronym to grant access to the user. <br />
+            After access is granted the requestor will recieve an email and they
+            can come back with their access and
+            <strong>self-serve</strong> manage their service clients.
+            <strong>
+              You should not do anything manual in Keycloak as part of this
+              process
+            </strong>
+          </p>
           <v-row>
             <v-col sm="6" lg="4">
               <label>Application Acronym &nbsp;</label>
@@ -27,12 +42,12 @@
               />
             </v-col>
             <v-col sm="6" lg="4">
+              <label>IDIR</label>
               <v-text-field
-                class="pt-6"
+                v-model="idir"
                 dense
                 flat
                 hint="The IDIR (ex: 'loneil') of the user requesting access"
-                label="IDIR"
                 persistent-hint
                 required
                 :rules="idirRules"
@@ -41,23 +56,101 @@
                 outlined
               />
             </v-col>
+            <v-col sm="6" lg="4">
+              <label>Comment</label>
+              <v-textarea
+                v-model="comment"
+                dense
+                flat
+                hint="Optional comment to include in the email to the requestor"
+                persistent-hint
+                rows="1"
+                single-line
+                solo
+                outlined
+              />
+            </v-col>
           </v-row>
         </v-container>
 
-        {{ selectedAcronym }}
         <v-card-actions>
           <v-btn outlined @click="resetForm">
             <v-icon left>mdi-refresh</v-icon>
             <span>Reset</span>
           </v-btn>
           <v-spacer />
-          <v-btn color="primary" depressed :loading="loading">
+          <v-btn color="primary" depressed :loading="loading" @click="submit">
             <v-icon left>add_circle</v-icon>
             <span>Grant Access</span>
           </v-btn>
         </v-card-actions>
       </v-form>
     </v-skeleton-loader>
+
+    <BaseDialog
+      :show="confirmDialog"
+      :type="!grantInProgress ? 'CONTINUE' : ''"
+      @close-dialog="confirmDialog = false"
+      @continue-dialog="grantAccess()"
+      width="700"
+    >
+      <template v-slot:icon>
+        <v-icon v-if="!grantInProgress" large color="orange darken-2">
+          warning
+        </v-icon>
+      </template>
+      <template v-slot:text>
+        <div v-if="grantInProgress" class="text-center">
+          <v-progress-circular indeterminate color="primary" :size="120">
+            Submitting
+          </v-progress-circular>
+        </div>
+        <div v-else>
+          <p v-if="isExistingAcronym">
+            This will add the user <strong>{{ idir }}</strong> to the existing
+            <strong>{{ selectedAcronym }}</strong> acronym.
+          </p>
+          <p v-else>
+            This will create a new
+            <strong>{{ selectedAcronym }}</strong> acronym and add the user
+            <strong>{{ idir }}</strong> to it.
+          </p>
+
+          <p class="mb-3">
+            <strong>
+              Details of the email that will be sent to {{ idir }}
+            </strong>
+            <br />
+            (email will also be CC'd to
+            <em>NR.CommonServiceShowcase@gov.bc.ca</em>)
+          </p>
+          <p>
+            <strong>Application Acronym:</strong> {{ selectedAcronym }} <br />
+            <strong>Requested by:</strong> {{ idir }} <br />
+            <strong>Comments:</strong> {{ comment ? comment : 'N/A' }} <br />
+            <strong>Status: </strong>
+            <span v-if="isExistingAcronym" class="green--text">
+              Team Member Added
+            </span>
+            <span v-else class="green--text">Approved</span>
+            <br />
+            <strong>Next Step:</strong> Finish Registration <br />
+          </p>
+          <p>Do you want to continue?</p>
+        </div>
+      </template>
+    </BaseDialog>
+
+    <BaseDialog :show="errorDialog" @close-dialog="errorDialog = false">
+      <template v-slot:icon>
+        <v-icon large color="red">cancel</v-icon>
+      </template>
+      <template v-slot:text>
+        <p>
+          An error occurred trying to grant access for {{ idir }} to {{ selectedAcronym }}
+        </p>
+      </template>
+    </BaseDialog>
   </v-card>
 </template>
 
@@ -76,45 +169,58 @@ export default {
       acronymRules: [
         (v) => !!v || 'Acronym is required',
         (v) =>
-          v.length <= FieldValidations.ACRONYM_MAX_LENGTH ||
+          (v && v.length <= FieldValidations.ACRONYM_MAX_LENGTH) ||
           `Acronym must be ${FieldValidations.ACRONYM_MAX_LENGTH} characters or less`,
         (v) =>
           /^(?:[A-Z]{1,}[_]?)+[A-Z]{1,}$/g.test(v) ||
           'Incorrect format. Hover over ? for details.',
       ],
       idirRules: [(v) => !!v || 'IDIR is required'],
+
       acronyms: [],
-      form: {},
+      comment: undefined,
+      confirmDialog: false,
+      errorDialog: false,
+      grantInProgress: false,
+      idir: undefined,
       loading: true,
       response: undefined,
       selectedAcronym: undefined,
       test: undefined,
     };
   },
+  computed: {
+    isExistingAcronym() {
+      return this.acronyms && this.acronyms.includes(this.selectedAcronym);
+    },
+  },
   methods: {
     resetForm() {
-      this.form = {};
+      this.$refs.form.reset();
       this.response = undefined;
     },
     async getAcronyms() {
       const res = await acronymService.getAllAcronyms();
       this.acronyms = res.data.map((a) => a.acronym).sort();
     },
-    async grantAccess() {},
-    // testApi() {
-    //   this.loading = true;
-    //   testerService
-    //     .getTestResponse(this.form.path)
-    //     .then((response) => {
-    //       this.response = JSON.stringify(response.data, null, 2);
-    //     })
-    //     .catch((error) => {
-    //       this.response = error;
-    //     })
-    //     .finally(() => {
-    //       this.loading = false;
-    //     });
-    // },
+    async submit() {
+      if (this.$refs.form.validate()) {
+        this.confirmDialog = true;
+      }
+    },
+    async grantAccess() {
+      this.grantInProgress = true;
+      const success = false;
+      this.confirmDialog = false;
+      if (success) {
+        this.setStep(3);
+      } else {
+        this.errorDialog = true;
+      }
+
+      // To give the animation enough time to fade so it doesn't juke a little
+      setTimeout(() => (this.grantInProgress = false), 1000);
+    },
   },
   async mounted() {
     await this.getAcronyms();
