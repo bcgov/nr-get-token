@@ -80,5 +80,21 @@ export default {
     } else {
       return Promise.reject('No acronym supplied');
     }
+  },
+
+  /**
+   * @function registerUserToAcronym
+   * Associate an IDIR with an acronym and email the registration email
+   * @param {string} acronym app acronym
+   * @param {string} idir the user to register
+   * @param {object} body the POST request body
+   * @returns {Promise} An axios response
+   */
+  registerUserToAcronym(acronym, idir, body) {
+    if (acronym && idir) {
+      return getokAxios().post(`${ApiRoutes.ACRONYMS}/${acronym}/addUser/${idir}`, body);
+    } else {
+      return Promise.reject('No acronym or IDIR supplied');
+    }
   }
 };

@@ -105,7 +105,7 @@ acronymsRouter.get('/:acronym/users', async (req, res) => {
 
 // A special administrative call to add users to acronym. This is a temporary shim until we have an actual administrative
 // section of the app in place
-acronymsRouter.get(
+acronymsRouter.post(
   '/:appAcronym/addUser/:username',
   keycloak.protect('realm:GETOK_ADMIN_ADD_USER'),
   async (req, res) => {

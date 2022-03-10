@@ -71,6 +71,15 @@
               />
             </v-col>
           </v-row>
+
+          <div v-if="accessGrantResult" class="my-6">
+            <v-icon color="success">check_circle</v-icon>
+            The user
+            <strong>{{ accessGrantResult.user.username }}</strong>
+            ({{ accessGrantResult.user.displayName }}) was registered to
+            <strong>{{ this.selectedAcronym }}</strong> and an email was
+            dispatched to <strong>{{ accessGrantResult.email }}</strong>
+          </div>
         </v-container>
 
         <v-card-actions>
@@ -147,8 +156,10 @@
       </template>
       <template v-slot:text>
         <p>
-          An error occurred trying to grant access for {{ idir }} to {{ selectedAcronym }}
+          An error occurred trying to grant access for {{ idir }} to
+          {{ selectedAcronym }}
         </p>
+        <p>{{ error }}</p>
       </template>
     </BaseDialog>
   </v-card>
@@ -177,9 +188,11 @@ export default {
       ],
       idirRules: [(v) => !!v || 'IDIR is required'],
 
+      accessGrantResult: null,
       acronyms: [],
       comment: undefined,
       confirmDialog: false,
+      error: undefined,
       errorDialog: false,
       grantInProgress: false,
       idir: undefined,
@@ -209,17 +222,26 @@ export default {
       }
     },
     async grantAccess() {
+      this.accessGrantResult = null;
+      this.error = undefined;
       this.grantInProgress = true;
-      const success = false;
-      this.confirmDialog = false;
-      if (success) {
-        this.setStep(3);
-      } else {
+      try {
+        const res = await acronymService.registerUserToAcronym(
+          this.selectedAcronym,
+          this.idir,
+          { comment: this.comment }
+        );
+        this.accessGrantResult = res.data;
+      } catch (error) {
+        this.error = error.response
+          ? `${error.response.status}: ${JSON.stringify(error.response.data)}`
+          : error;
         this.errorDialog = true;
+      } finally {
+        this.confirmDialog = false;
+        // To give the animation enough time to fade so it doesn't juke a little
+        setTimeout(() => (this.grantInProgress = false), 1000);
       }
-
-      // To give the animation enough time to fade so it doesn't juke a little
-      setTimeout(() => (this.grantInProgress = false), 1000);
     },
   },
   async mounted() {

@@ -209,7 +209,8 @@ const acronyms = {
     const dbAcronym = await userService.addAcronym(user.id, acronym);
 
     return {
-      user: dbUser,
+      user: dbUser[0],
+      email: user.email,
       acronym: dbAcronym,
     };
   },
