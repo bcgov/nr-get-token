@@ -97,7 +97,7 @@ const email = {
           to: [to],
         }],
         from: 'NR.CommonServiceShowcase@gov.bc.ca',
-        cc: ['lucas.oneil@gov.bc.ca'],
+        cc: ['NR.CommonServiceShowcase@gov.bc.ca'],
         subject: `RE: GETOK Registration for ${acronym} - ${idir}`,
       };
 
