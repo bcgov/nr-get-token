@@ -34,6 +34,7 @@
                 hint="Select an existing acronym or add a new one"
                 :items="acronyms"
                 persistent-hint
+                :disabled="readOnly"
                 required
                 :rules="acronymRules"
                 single-line
@@ -49,6 +50,7 @@
                 flat
                 hint="The IDIR (ex: 'loneil') of the user requesting access"
                 persistent-hint
+                :disabled="readOnly"
                 required
                 :rules="idirRules"
                 single-line
@@ -64,6 +66,7 @@
                 flat
                 hint="Optional comment to include in the email to the requestor"
                 persistent-hint
+                :disabled="readOnly"
                 rows="1"
                 single-line
                 solo
@@ -78,7 +81,17 @@
             <strong>{{ accessGrantResult.user.username }}</strong>
             ({{ accessGrantResult.user.displayName }}) was registered to
             <strong>{{ this.selectedAcronym }}</strong> and an email was
-            dispatched to <strong>{{ accessGrantResult.email }}</strong>
+            dispatched to <strong>{{ accessGrantResult.email }}</strong> <br />
+            <small>
+              Please close any open
+              <a
+                href="https://github.com/bcgov/nr-get-token/issues"
+                target="_blank"
+              >
+                github issue</a
+              >
+              and note the access details including the date/time.
+            </small>
           </div>
         </v-container>
 
@@ -127,23 +140,22 @@
 
           <p class="mb-3">
             <strong>
-              Details of the email that will be sent to {{ idir }}
+              Details of the email that will be sent to {{ idir }}:
             </strong>
             <br />
             (email will also be CC'd to
             <em>NR.CommonServiceShowcase@gov.bc.ca</em>)
           </p>
-          <p>
+          <p class="email-preview">
             <strong>Application Acronym:</strong> {{ selectedAcronym }} <br />
             <strong>Requested by:</strong> {{ idir }} <br />
             <strong>Comments:</strong> {{ comment ? comment : 'N/A' }} <br />
             <strong>Status: </strong>
-            <span v-if="isExistingAcronym" class="green--text">
-              Team Member Added
+            <span class="green--text">
+              {{ msgStatus }}
             </span>
-            <span v-else class="green--text">Approved</span>
             <br />
-            <strong>Next Step:</strong> Finish Registration <br />
+            <strong>Next Step:</strong> {{ msgNextSteps }} <br />
           </p>
           <p>Do you want to continue?</p>
         </div>
@@ -197,12 +209,20 @@ export default {
       grantInProgress: false,
       idir: undefined,
       loading: true,
-      response: undefined,
+      readOnly: false,
       selectedAcronym: undefined,
       test: undefined,
     };
   },
   computed: {
+    msgNextSteps() {
+      return this.isExistingAcronym
+        ? 'Manage Your Application'
+        : 'Finish Registration';
+    },
+    msgStatus() {
+      return this.isExistingAcronym ? 'TEAM MEMBER ADDED' : 'APPROVED';
+    },
     isExistingAcronym() {
       return this.acronyms && this.acronyms.includes(this.selectedAcronym);
     },
@@ -210,7 +230,8 @@ export default {
   methods: {
     resetForm() {
       this.$refs.form.reset();
-      this.response = undefined;
+      this.accessGrantResult = null;
+      this.readOnly = false;
     },
     async getAcronyms() {
       const res = await acronymService.getAllAcronyms();
@@ -229,9 +250,14 @@ export default {
         const res = await acronymService.registerUserToAcronym(
           this.selectedAcronym,
           this.idir,
-          { comment: this.comment }
+          {
+            comment: this.comment,
+            status: this.msgStatus,
+            nextSteps: this.msgNextSteps,
+          }
         );
         this.accessGrantResult = res.data;
+        this.readOnly = true;
       } catch (error) {
         this.error = error.response
           ? `${error.response.status}: ${JSON.stringify(error.response.data)}`
@@ -241,6 +267,7 @@ export default {
         this.confirmDialog = false;
         // To give the animation enough time to fade so it doesn't juke a little
         setTimeout(() => (this.grantInProgress = false), 1000);
+        this.getAcronyms();
       }
     },
   },
@@ -250,3 +277,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.email-preview {
+  padding: 1em;
+  border: 1px solid #003366;
+  line-height: 220%;
+}
+</style>

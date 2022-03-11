@@ -1,6 +1,8 @@
 const axios = require('axios');
 const log = require('./log')(module.filename);
 
+const email = require('./email');
+
 const {
   acronymService,
   deploymentHistoryService,
@@ -168,7 +170,7 @@ const acronyms = {
     return await deploymentHistoryService.findHistory(acronym);
   },
 
-  registerUserToAcronym: async (token, kcRealm, acronym, username) => {
+  registerUserToAcronym: async (token, kcRealm, acronym, username, comments, status, nextSteps) => {
     log.info(`Request made to add ${username} to ${acronym}`, {
       function: 'registerUserToAcronym',
     });
@@ -207,6 +209,9 @@ const acronyms = {
 
     // Add update user-acronym association
     const dbAcronym = await userService.addAcronym(user.id, acronym);
+
+    // Email the user the registration template
+    await email.sendConfirmationEmail(acronym, username, comments, status, nextSteps, user.email);
 
     return {
       user: dbUser[0],

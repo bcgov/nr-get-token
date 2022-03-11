@@ -117,11 +117,17 @@ acronymsRouter.post(
 
     try {
       const token = req.headers.authorization.split(' ')[1];
+      const emailComments = req.body && req.body.comment ? req.body.comment : 'N/A';
+      const status = req.body && req.body.status ? req.body.status : 'APPROVED';
+      const nextSteps = req.body && req.body.nextSteps ? req.body.nextSteps : 'Finish Registration';
       const response = await acronyms.registerUserToAcronym(
         token,
         req.kauth.grant.access_token.content.iss,
         req.params.appAcronym,
-        req.params.username
+        req.params.username,
+        emailComments,
+        status,
+        nextSteps
       );
       if (response) {
         return res.status(200).json(response);
