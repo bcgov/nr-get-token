@@ -11,9 +11,12 @@
             After a user requests access to GETOK, you can grant them access to
             an Acronym here. There will be an email in the
             <em>NR Common Services</em> inbox with their access request details.
-            <br />
+          </p>
+          <p>
             If the Acronym does not exist in GETOK, the form below will add it.
-            Or select an existing Acronym to grant access to the user. <br />
+            Or select an existing Acronym to grant access to the user.
+          </p>
+          <p>
             After access is granted the requestor will recieve an email and they
             can come back with their access and
             <strong>self-serve</strong> manage their service clients.
