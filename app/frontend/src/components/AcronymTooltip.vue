@@ -8,7 +8,10 @@
       <li>UPPERCASE LETTERS ONLY</li>
       <li>Underscores may be placed between letters</li>
       <li>Must begin and end with a letter</li>
-      <li>At least {{ fieldValidations.ACRONYM_MIN_LENGTH }} characters</li>
+      <li>
+        Between {{ fieldValidations.ACRONYM_MIN_LENGTH }} and
+        {{ fieldValidations.ACRONYM_MAX_LENGTH }} characters
+      </li>
       <li>
         Examples:
         <em>ABCD</em>,
