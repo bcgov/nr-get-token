@@ -22,7 +22,7 @@
             <strong>self-serve</strong> manage their service clients.
             <strong>
               You should not do anything manual in Keycloak as part of this
-              process
+              process!
             </strong>
           </p>
           <v-row align="center">
