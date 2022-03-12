@@ -35,7 +35,6 @@ const acronyms = {
     }
   },
 
-
   /**
    *  @function getAllAcronyms
    *  Fetch acronyms from GETOK database.

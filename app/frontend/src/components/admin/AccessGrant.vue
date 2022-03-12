@@ -25,8 +25,8 @@
               process
             </strong>
           </p>
-          <v-row>
-            <v-col sm="6" lg="4">
+          <v-row align="center">
+            <v-col sm="6" lg="4" class="pt-2">
               <label>Application Acronym &nbsp;</label>
               <AcronymTooltip />
               <v-combobox

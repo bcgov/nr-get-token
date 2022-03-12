@@ -26,10 +26,8 @@ import { FieldValidations } from '@/utils/constants.js';
 
 export default {
   name: 'AcronymTooltip',
-  data() {
-    return {
-      fieldValidations: FieldValidations,
-    };
+  computed: {
+    fieldValidations: () => FieldValidations,
   },
 };
 </script>
