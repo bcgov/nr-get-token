@@ -4,8 +4,17 @@ import { ApiRoutes } from '@/utils/constants';
 
 export default {
   /**
+   * @function getAllAcronyms
+   * Fetch acronyms
+   * @returns {Promise} An axios response
+   */
+  getAllAcronyms() {
+    return getokAxios().get(`${ApiRoutes.ACRONYMS}/`);
+  },
+
+  /**
    * @function getAcronym
-   * Fetch acronym details from Keycloak
+   * Fetch acronym details
    * @param {string} acronym app acronym
    * @returns {Promise} An axios response
    */
@@ -70,6 +79,22 @@ export default {
       return getokAxios().post(`${ApiRoutes.ACRONYMS}/${configForm.acronym}/clients`, configForm);
     } else {
       return Promise.reject('No acronym supplied');
+    }
+  },
+
+  /**
+   * @function registerUserToAcronym
+   * Associate an IDIR with an acronym and email the registration email
+   * @param {string} acronym app acronym
+   * @param {string} idir the user to register
+   * @param {object} body the POST request body
+   * @returns {Promise} An axios response
+   */
+  registerUserToAcronym(acronym, idir, body) {
+    if (acronym && idir) {
+      return getokAxios().post(`${ApiRoutes.ACRONYMS}/${acronym}/addUser/${idir}`, body);
+    } else {
+      return Promise.reject('No acronym or IDIR supplied');
     }
   }
 };

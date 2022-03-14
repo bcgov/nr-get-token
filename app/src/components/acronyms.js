@@ -1,6 +1,8 @@
 const axios = require('axios');
 const log = require('./log')(module.filename);
 
+const email = require('./email');
+
 const {
   acronymService,
   deploymentHistoryService,
@@ -23,7 +25,7 @@ const acronyms = {
     }
     try {
       const acronymDetails = await acronymService.find(applicationAcronym);
-      log.verbose('acronymDetails', { function: 'getUsers', acronymDetails: acronymDetails });
+      log.verbose('acronymDetails', { function: 'getAcronym', acronymDetails: acronymDetails });
       return acronymDetails ? acronymDetails : null;
     } catch (error) {
       log.error(error.message, { function: 'getAcronym' });
@@ -32,6 +34,24 @@ const acronyms = {
       );
     }
   },
+
+  /**
+   *  @function getAllAcronyms
+   *  Fetch acronyms from GETOK database.
+   */
+  getAllAcronyms: async () => {
+    try {
+      const acronymDetails = await acronymService.findAll();
+      log.verbose('acronymDetails', { function: 'getAllAcronyms', acronymDetails: acronymDetails });
+      return acronymDetails ? acronymDetails : [];
+    } catch (error) {
+      log.error(error.message, { function: 'getAllAcronyms' });
+      throw new Error(
+        `An error occured fetching acronym details from GETOK database. ${error.message}`
+      );
+    }
+  },
+
 
   /**
    *  @function getUsers
@@ -149,7 +169,7 @@ const acronyms = {
     return await deploymentHistoryService.findHistory(acronym);
   },
 
-  registerUserToAcronym: async (token, kcRealm, acronym, username) => {
+  registerUserToAcronym: async (token, kcRealm, acronym, username, comments, status, nextSteps) => {
     log.info(`Request made to add ${username} to ${acronym}`, {
       function: 'registerUserToAcronym',
     });
@@ -189,8 +209,12 @@ const acronyms = {
     // Add update user-acronym association
     const dbAcronym = await userService.addAcronym(user.id, acronym);
 
+    // Email the user the registration template
+    await email.sendConfirmationEmail(acronym, username, comments, status, nextSteps, user.email);
+
     return {
-      user: dbUser,
+      user: dbUser[0],
+      email: user.email,
       acronym: dbAcronym,
     };
   },

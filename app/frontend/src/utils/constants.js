@@ -10,7 +10,7 @@ export const ApiRoutes = Object.freeze({
 });
 
 export const FieldValidations = Object.freeze({
-  ACRONYM_MAX_LENGTH: 30,
+  ACRONYM_MAX_LENGTH: 16,
   ACRONYM_MIN_LENGTH: 3,
   DESCRIPTION_MAX_LENGTH: 2000,
   DESCRIPTION_MAX_LENGTH_KC: 255,

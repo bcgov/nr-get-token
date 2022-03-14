@@ -18,6 +18,34 @@ security:
   - BearerAuth: []
     OpenID: []
 paths:
+  "/acronyms/":
+    get:
+      summary: An administrative call to fetch all acronyms
+      operationId: getAllAcronyms
+      tags:
+        - Acronyms
+      security:
+        - OpenID:
+          - realm:GETOK_ADMIN_ADD_USER
+      responses:
+        "200":
+          description: Acronyms list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AcronymList"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   "/acronyms/{acronym}":
     get:
       summary: Returns the details that GETOK stores about an application acronym
@@ -38,6 +66,54 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AcronymDetail"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  "/acronyms/{acronym}/addUser/{username}":
+    post:
+      summary: A special administrative call to add users to acronym and email them.
+      operationId: addUser
+      tags:
+        - Acronyms
+      security:
+        - OpenID:
+          - realm:GETOK_ADMIN_ADD_USER
+      parameters:
+        - name: acronym
+          in: path
+          description: Name of the project
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: path
+          description: IDIR of the user to add
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Details of the contact to email to the user being added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddUserEmailDetails"
+      responses:
+        "200":
+          description: User acronym details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserAcronymDetail"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "403":
@@ -394,7 +470,7 @@ components:
       bearerFormat: JWT
     OpenID:
       type: openIdConnect
-      openIdConnectUrl: "https://example.com/.well-known/openid-configuration"
+      openIdConnectUrl: "https://oidc.gov.bc.ca/auth/realms/vehizw2t/.well-known/openid-configuration"
   schemas:
     AuditHistoryList:
       type: array
@@ -456,6 +532,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/DeploymentHistory"
+    AcronymList:
+      type: array
+      items:
+        $ref: "#/components/schemas/AcronymDetail"
     AcronymUsersList:
       type: array
       items:
@@ -488,6 +568,21 @@ components:
             type: string
             example: CHES
           description: An array of applicationAcronyms
+    AddUserEmailDetails:
+      type: object
+      properties:
+        comment:
+          type: string
+          description: Unformatted comment text
+          example: Thanks for contacting us
+        status:
+          type: string
+          description: A status to display in the email
+          example: APPROVED
+        nextSteps:
+          type: string
+          description: The email field called Next Steps
+          example: Finish Registration
     BadRequest:
       allOf:
         - $ref: "#/components/schemas/Problem"

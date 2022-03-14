@@ -15,7 +15,7 @@ $bcgov-font: #494949;
 body {
   display: flex;
   flex-direction: column;
-  & > .v-content {
+  & > .v-main {
     flex: 1 0 auto;
   }
 }
