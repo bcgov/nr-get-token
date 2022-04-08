@@ -11,7 +11,7 @@ const github = {
    * @param {string} from The sender's registered email
    * @param {string} idir The sender's IDIR
    */
-  createRequestIssue: async (acronym, comments, from, idir) => {
+  createRequestIssue: async (acronym, comments, from, idir, ministry, contact) => {
     try {
       const accessToken = config.get('serviceClient.github.token');
       const githubApi = config.get('serviceClient.github.apiEndpoint');
@@ -23,7 +23,7 @@ const github = {
           owner: 'bcgov-nr-csst',
           repo: 'nr-get-token',
           title: `GETOK Registration for ${acronym} - ${idir}`,
-          body: `<p>Request from GETOK for acronym creation/access</p> <p>Acronym: ${acronym} <br /> IDIR: ${idir} <br /> Email: ${from}</p> <p><strong>User comments:</strong><br/>${comments}`,
+          body: `<p>Request from GETOK for acronym creation/access</p> <p>Acronym: ${acronym} <br /> Ministry: ${ministry} <br /> Contact: ${contact} <br /> IDIR: ${idir} <br /> Email: ${from}</p> <p><strong>User comments:</strong><br/>${comments}`,
           labels: ['Acronym Request'],
         },
         {

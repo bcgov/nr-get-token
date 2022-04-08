@@ -27,6 +27,16 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       comment: 'Description of the application',
       type: DataTypes.STRING(255)
+    },
+    ministry: {
+      allowNull: false,
+      comment: 'Ministry the acronym is under',
+      type: DataTypes.STRING(64)
+    },
+    contact: {
+      allowNull: false,
+      comment: 'Primary contact. Generally the email of either the Product Owner or Technical Lead',
+      type: DataTypes.STRING(64)
     }
   }, {
     comment: 'List of all valid application acronyms',
