@@ -26,7 +26,7 @@ module.exports = {
     ]);
   },
 
-  async down (queryInterface, Sequelize) {
+  async down (queryInterface) {
     return Promise.all([
       queryInterface.removeColumn('acronym', 'contact'),
       queryInterface.removeColumn('acronym', 'ministry'),

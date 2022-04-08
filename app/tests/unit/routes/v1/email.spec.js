@@ -18,6 +18,8 @@ describe(`POST ${basePath}`, () => {
   beforeEach(() => {
     body = {
       applicationAcronym: 'TEST',
+      ministry: 'MINISTRY',
+      contact: 'test@example.com',
       comments: 'comment',
       from: 'email@example.com',
       idir: 'user@idir',
@@ -45,6 +47,8 @@ describe(`POST ${basePath}`, () => {
     expect(createIssueSpy).toHaveBeenCalledTimes(1);
     expect(createIssueSpy).toHaveBeenCalledWith(
       body.applicationAcronym,
+      body.ministry,
+      body.contact,
       body.comments,
       body.from,
       body.idir
@@ -91,6 +95,8 @@ describe(`POST ${basePath}`, () => {
     expect(createIssueSpy).toHaveBeenCalledTimes(1);
     expect(createIssueSpy).toHaveBeenCalledWith(
       body.applicationAcronym,
+      body.ministry,
+      body.contact,
       body.comments,
       body.from,
       body.idir
@@ -119,6 +125,8 @@ describe(`POST ${basePath}`, () => {
     expect(createIssueSpy).toHaveBeenCalledTimes(1);
     expect(createIssueSpy).toHaveBeenCalledWith(
       body.applicationAcronym,
+      body.ministry,
+      body.contact,
       body.comments,
       body.from,
       body.idir

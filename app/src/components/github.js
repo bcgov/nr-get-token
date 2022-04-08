@@ -11,7 +11,7 @@ const github = {
    * @param {string} from The sender's registered email
    * @param {string} idir The sender's IDIR
    */
-  createRequestIssue: async (acronym, comments, from, idir, ministry, contact) => {
+  createRequestIssue: async (acronym, ministry, contact, comments, from, idir) => {
     try {
       const accessToken = config.get('serviceClient.github.token');
       const githubApi = config.get('serviceClient.github.apiEndpoint');
