@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = {
   async up (queryInterface, Sequelize) {
     return Promise.all([
@@ -20,7 +18,7 @@ module.exports = {
           comment: 'Primary contact. Generally the email of either the Product Owner or Technical Lead',
           allowNull: false,
           defaultValue: 'None Entered',
-          type: Sequelize.STRING(64)
+          type: Sequelize.STRING(255)
         }
       )
     ]);

@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     contact: {
       allowNull: false,
       comment: 'Primary contact. Generally the email of either the Product Owner or Technical Lead',
-      type: DataTypes.STRING(64)
+      type: DataTypes.STRING(255)
     }
   }, {
     comment: 'List of all valid application acronyms',
