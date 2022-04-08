@@ -80,6 +80,12 @@
 
             <div class="kc-expanded">
               <!-- app details -->
+              <strong>Contact: </strong>
+              <span>{{ item.acronymDetails.contact }}</span>
+            </div>
+
+            <div class="kc-expanded">
+              <!-- app details -->
               <strong>Acronym Created: </strong>
               <span>{{ formatDate(item.acronymDetails.createdAt) }}</span>
             </div>
