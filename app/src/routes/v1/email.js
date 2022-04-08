@@ -15,6 +15,8 @@ emailRouter.post(
     body('comments').isString(),
     body('from').custom((value) => validator.isEmail(value)),
     body('idir').isString(),
+    body('ministry').isString(),
+    body('contact').custom((value) => validator.isEmail(value)),
   ],
   async (req, res) => {
     // Validate for Bad Requests
@@ -33,7 +35,9 @@ emailRouter.post(
         req.body.applicationAcronym,
         req.body.comments,
         req.body.from,
-        req.body.idir
+        req.body.idir,
+        req.body.ministry,
+        req.body.contact
       );
     } catch (error) {
       log.error(

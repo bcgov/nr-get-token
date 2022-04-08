@@ -74,6 +74,12 @@
 
             <div class="kc-expanded">
               <!-- app details -->
+              <strong>Ministry: </strong>
+              <span>{{ item.acronymDetails.ministry }}</span>
+            </div>
+
+            <div class="kc-expanded">
+              <!-- app details -->
               <strong>Acronym Created: </strong>
               <span>{{ formatDate(item.acronymDetails.createdAt) }}</span>
             </div>

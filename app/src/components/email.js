@@ -72,13 +72,15 @@ const email = {
   * @function sendConfirmationEmail
   * Sends an email request through CHES to the user saying they've been registered to an acronym. CC's team inbox.
   * @param {string} acronym The requestor's requested application acronym
+  * @param {string} ministry The ministry the acronym is under
+  * @param {string} contact The primary contact for the acronym
   * @param {string} idir The requestor's IDIR
   * @param {string} comments The optional comment
   * @param {string} status The status text
   * @param {string} nextSteps The Next Steps text
   * @param {string} to The requestor registered email
   */
-  sendConfirmationEmail: async (acronym, idir, comments, status, nextSteps, to) => {
+  sendConfirmationEmail: async (acronym, ministry, contact, idir, comments, status, nextSteps, to) => {
     try {
       const apiEndpoint = config.get('serviceClient.ches.apiEndpoint');
       const token = await email._getChesToken();
@@ -93,7 +95,7 @@ const email = {
         body: template,
         bodyType: 'html',
         contexts: [{
-          context: { acronym: acronym, idir: idir, comments: comments, status: status, nextSteps: nextSteps },
+          context: { acronym: acronym, ministry: ministry, contact: contact, idir: idir, comments: comments, status: status, nextSteps: nextSteps },
           to: [to],
         }],
         from: 'NR.CommonServiceShowcase@gov.bc.ca',

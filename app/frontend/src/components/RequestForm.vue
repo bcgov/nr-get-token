@@ -60,13 +60,58 @@
       </v-row>
       <v-row>
         <v-col>
-          <label>Comments (optional)</label>
+          <label>Ministry</label>
+          <v-text-field
+            v-model="form.ministry"
+            dense
+            flat
+            hide-details="auto"
+            required
+            :rules="ministryRules"
+            single-line
+            solo
+            outlined
+          >
+            <template #append-outer />
+          </v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <label>Contact &nbsp;</label>
+          <v-tooltip right>
+            <template #activator="{ on }">
+              <v-icon v-on="on">help_outline</v-icon>
+            </template>
+            Generally the email of either the Product Owner or Technical Lead
+          </v-tooltip>
+          <v-text-field
+            v-model="form.contact"
+            dense
+            flat
+            hide-details="auto"
+            required
+            :rules="contactRules"
+            single-line
+            solo
+            outlined
+          >
+            <template #append-outer />
+          </v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <label>Comments</label>
           <v-textarea
             v-model="form.comments"
             auto-grow
             dense
             flat
             hide-details="auto"
+            placeholder="Describe your acronym and which common services you will be using"
+            required
+            :rules="applicationCommentRules"
             outlined
             rows="3"
             solo
@@ -170,12 +215,23 @@ export default {
           /^(?:[A-Z]{1,}[_]?)+[A-Z]{1,}$/g.test(v) ||
           'Incorrect format. Hover over ? for details.',
       ],
+      applicationCommentRules: [
+        (v) => !!v || 'Comment is required',
+      ],
+      ministryRules: [
+        (v) => !!v || 'Ministry is required',
+      ],
+      contactRules: [
+        (v) => !!v || 'Contact is required',
+      ],
       errorOccurred: false,
       form: {
         applicationAcronym: '',
         comments: '',
         from: '',
         idir: '',
+        ministry: '',
+        contact: '',
       },
       fieldValidations: FieldValidations,
       registerSuccess: false,
@@ -211,6 +267,8 @@ export default {
       this.form.comments = '';
       this.form.from = this.tokenParsed.email;
       this.form.idir = this.userName;
+      this.form.ministry = '';
+      this.form.contact = '';
       this.valid = false;
     },
     resetState() {

@@ -116,6 +116,8 @@ acronymsRouter.post(
 
     try {
       const token = req.headers.authorization.split(' ')[1];
+      const ministry = req.body && req.body.ministry ? req.body.ministry : 'Not Entered';
+      const contact = req.body && req.body.contact ? req.body.contact : 'Not Entered';
       const emailComments = req.body && req.body.comment ? req.body.comment : 'N/A';
       const status = req.body && req.body.status ? req.body.status : 'APPROVED';
       const nextSteps = req.body && req.body.nextSteps ? req.body.nextSteps : 'Finish Registration';
@@ -123,6 +125,8 @@ acronymsRouter.post(
         token,
         req.kauth.grant.access_token.content.iss,
         req.params.appAcronym,
+        ministry,
+        contact,
         req.params.username,
         emailComments,
         status,
