@@ -27,7 +27,7 @@
           </p>
           <v-row align="center">
             <v-col sm="6" lg="4" class="pt-2">
-              <label>Application Acronym &nbsp;</label>
+              <label class="pad-tooltip">Application Acronym</label>
               <AcronymTooltip />
               <v-combobox
                 v-model="selectedAcronym"
@@ -51,7 +51,7 @@
                 v-model="ministry"
                 dense
                 flat
-                hint="Acronym of the ministry this new Acronym is under"
+                hint="Ministry this application is under"
                 persistent-hint
                 :disabled="readOnly"
                 required
@@ -326,5 +326,9 @@ export default {
   padding: 1em;
   border: 1px solid #003366;
   line-height: 220%;
+}
+
+.pad-tooltip {
+  padding-right: 3px;
 }
 </style>
