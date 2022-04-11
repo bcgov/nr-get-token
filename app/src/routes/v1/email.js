@@ -13,7 +13,6 @@ emailRouter.post(
   [
     body('applicationAcronym').isString(),
     body('ministry').isString(),
-    body('contact').custom((value) => validator.isEmail(value)),
     body('comments').isString(),
     body('from').custom((value) => validator.isEmail(value)),
     body('idir').isString(),
@@ -34,7 +33,6 @@ emailRouter.post(
       github.createRequestIssue(
         req.body.applicationAcronym,
         req.body.ministry,
-        req.body.contact,
         req.body.comments,
         req.body.from,
         req.body.idir,

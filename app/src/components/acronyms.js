@@ -169,14 +169,14 @@ const acronyms = {
     return await deploymentHistoryService.findHistory(acronym);
   },
 
-  registerUserToAcronym: async (token, kcRealm, acronym, ministry, contact, username, comments, status, nextSteps) => {
+  registerUserToAcronym: async (token, kcRealm, acronym, ministry, username, comments, status, nextSteps) => {
     log.info(`Request made to add ${username} to ${acronym}`, {
       function: 'registerUserToAcronym',
     });
 
     acronym = acronym.toUpperCase();
     username = username.toLowerCase();
-    await acronymService.findOrCreateList([acronym], ministry, contact);
+    await acronymService.findOrCreateList([acronym], ministry);
 
     // Get user details from KC
     const url = `${kcRealm.replace(
@@ -210,7 +210,7 @@ const acronyms = {
     const dbAcronym = await userService.addAcronym(user.id, acronym);
 
     // Email the user the registration template
-    await email.sendConfirmationEmail(acronym, ministry, contact, username, comments, status, nextSteps, user.email);
+    await email.sendConfirmationEmail(acronym, ministry, username, comments, status, nextSteps, user.email);
 
     return {
       user: dbUser[0],

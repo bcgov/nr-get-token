@@ -26,7 +26,7 @@
             </strong>
           </p>
           <v-row align="center">
-            <v-col sm="6" lg="4" class="pt-2">
+            <v-col sm="6" lg="3" class="pt-2">
               <label class="pad-tooltip">Application Acronym</label>
               <AcronymTooltip />
               <v-combobox
@@ -45,7 +45,7 @@
                 outlined
               />
             </v-col>
-            <v-col sm="6" lg="4" class="pt-2">
+            <v-col sm="6" lg="3" class="pt-2">
               <label>Ministry</label>
               <v-text-field
                 v-model="ministry"
@@ -61,23 +61,7 @@
                 outlined
               />
             </v-col>
-            <v-col sm="6" lg="4" class="pt-2">
-              <label>Contact</label>
-              <v-text-field
-                v-model="contact"
-                dense
-                flat
-                hint="Generally the email of either the Product Owner or Technical Lead"
-                persistent-hint
-                :disabled="readOnly"
-                required
-                :rules="contactRules"
-                single-line
-                solo
-                outlined
-              />
-            </v-col>
-            <v-col sm="6" lg="4">
+            <v-col sm="6" lg="3">
               <label>IDIR</label>
               <v-text-field
                 v-model="idir"
@@ -93,7 +77,7 @@
                 outlined
               />
             </v-col>
-            <v-col sm="6" lg="4">
+            <v-col sm="6" lg="3">
               <label>Comment</label>
               <v-textarea
                 v-model="comment"
@@ -184,7 +168,6 @@
           <p class="email-preview">
             <strong>Application Acronym:</strong> {{ selectedAcronym }} <br />
             <strong>Ministry:</strong> {{ ministry }} <br />
-            <strong>Contact:</strong> {{ contact }} <br />
             <strong>Requested by:</strong> {{ idir }} <br />
             <strong>Comments:</strong> {{ comment ? comment : 'N/A' }} <br />
             <strong>Status: </strong>
@@ -236,13 +219,11 @@ export default {
           'Incorrect format. Hover over ? for details.',
       ],
       ministryRules: [(v) => !!v || 'Ministry is required'],
-      contactRules: [(v) => !!v || 'Contact is required'],
       idirRules: [(v) => !!v || 'IDIR is required'],
 
       accessGrantResult: null,
       acronyms: [],
       ministry: undefined,
-      contact: undefined,
       comment: undefined,
       confirmDialog: false,
       error: undefined,
@@ -293,7 +274,6 @@ export default {
           this.idir,
           {
             ministry: this.ministry,
-            contact: this.contact,
             comment: this.comment,
             status: this.msgStatus,
             nextSteps: this.msgNextSteps,
