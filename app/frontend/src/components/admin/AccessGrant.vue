@@ -54,8 +54,6 @@
                 hint="Ministry this application is under"
                 persistent-hint
                 :disabled="readOnly"
-                required
-                :rules="ministryRules"
                 single-line
                 solo
                 outlined
@@ -218,7 +216,6 @@ export default {
           /^(?:[A-Z]{1,}[_]?)+[A-Z]{1,}$/g.test(v) ||
           'Incorrect format. Hover over ? for details.',
       ],
-      ministryRules: [(v) => !!v || 'Ministry is required'],
       idirRules: [(v) => !!v || 'IDIR is required'],
 
       accessGrantResult: null,
