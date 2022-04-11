@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(255)
     },
     ministry: {
-      allowNull: false,
+      allowNull: true,
       comment: 'Ministry the acronym is under',
       type: DataTypes.STRING(64)
     }

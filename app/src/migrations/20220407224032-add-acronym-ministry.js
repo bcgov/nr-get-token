@@ -6,8 +6,7 @@ module.exports = {
         'ministry',
         {
           comment: 'Ministry the acronym is under',
-          allowNull: false,
-          defaultValue: 'None Entered',
+          allowNull: true,
           type: Sequelize.STRING(64)
         }
       )

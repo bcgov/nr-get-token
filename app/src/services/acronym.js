@@ -13,7 +13,7 @@ module.exports = {
     });
   },
 
-  async findOrCreateList(acronymList, ministry, name = '', description = '') {
+  async findOrCreateList(acronymList, ministry = undefined, name = '', description = '') {
     if (typeof acronymList === 'object' && acronymList instanceof Array) {
       return Promise.all(acronymList.map(acronym => {
         return db.Acronym.findCreateFind({
