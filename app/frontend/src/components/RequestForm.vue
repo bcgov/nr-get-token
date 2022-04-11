@@ -40,7 +40,7 @@
       </v-row>
       <v-row>
         <v-col>
-          <label>Application Acronym &nbsp;</label>
+          <label class="pad-tooltip">Application Acronym</label>
           <AcronymTooltip />
           <v-text-field
             v-model="form.applicationAcronym"
@@ -78,7 +78,7 @@
       </v-row>
       <v-row>
         <v-col>
-          <label>Contact &nbsp;</label>
+          <label class="pad-tooltip">Contact</label>
           <v-tooltip right>
             <template #activator="{ on }">
               <v-icon v-on="on">help_outline</v-icon>
@@ -287,5 +287,9 @@ export default {
 .request-form {
   max-width: 30rem;
   margin: 0 auto;
+}
+
+.pad-tooltip {
+  padding-right: 3px;
 }
 </style>
