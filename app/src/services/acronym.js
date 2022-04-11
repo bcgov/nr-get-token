@@ -13,7 +13,7 @@ module.exports = {
     });
   },
 
-  async findOrCreateList(acronymList, ministry, contact, name = '', description = '') {
+  async findOrCreateList(acronymList, ministry, name = '', description = '') {
     if (typeof acronymList === 'object' && acronymList instanceof Array) {
       return Promise.all(acronymList.map(acronym => {
         return db.Acronym.findCreateFind({
@@ -23,8 +23,7 @@ module.exports = {
           defaults: {
             name: name,
             description: description,
-            ministry: ministry,
-            contact: contact
+            ministry: ministry
           }
         });
       }));

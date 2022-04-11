@@ -78,30 +78,6 @@
       </v-row>
       <v-row>
         <v-col>
-          <label class="pad-tooltip">Contact</label>
-          <v-tooltip right>
-            <template #activator="{ on }">
-              <v-icon v-on="on">help_outline</v-icon>
-            </template>
-            Generally the email of either the Product Owner or Technical Lead
-          </v-tooltip>
-          <v-text-field
-            v-model="form.contact"
-            dense
-            flat
-            hide-details="auto"
-            required
-            :rules="contactRules"
-            single-line
-            solo
-            outlined
-          >
-            <template #append-outer />
-          </v-text-field>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
           <label>Comments</label>
           <v-textarea
             v-model="form.comments"
@@ -221,9 +197,6 @@ export default {
       ministryRules: [
         (v) => !!v || 'Ministry is required',
       ],
-      contactRules: [
-        (v) => !!v || 'Contact is required',
-      ],
       errorOccurred: false,
       form: {
         applicationAcronym: '',
@@ -231,7 +204,6 @@ export default {
         from: '',
         idir: '',
         ministry: '',
-        contact: '',
       },
       fieldValidations: FieldValidations,
       registerSuccess: false,
@@ -268,7 +240,6 @@ export default {
       this.form.from = this.tokenParsed.email;
       this.form.idir = this.userName;
       this.form.ministry = '';
-      this.form.contact = '';
       this.valid = false;
     },
     resetState() {
