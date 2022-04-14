@@ -28,7 +28,7 @@ const users = {
       realmId,
     });
     const kcScMgr = new KeyCloakServiceClientManager(realmSvc);
-    return kcScMgr.findUsers();
+    return kcScMgr.findUsers({max: 2147483647});
   },
 
   /**
