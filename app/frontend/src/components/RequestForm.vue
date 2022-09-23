@@ -78,6 +78,10 @@
       </v-row>
       <v-row>
         <v-col>
+          <p>
+            Describe your application and which common services you will be
+            using. If you are using CHES, please confirm your project has <a @click="showChesNotice = true">approval from OCIO Messaging</a>
+          </p>
           <label>Comments</label>
           <v-textarea
             v-model="form.comments"
@@ -85,7 +89,7 @@
             dense
             flat
             hide-details="auto"
-            placeholder="Describe your acronym and which common services you will be using"
+            placeholder="Describe your application and which common services you will be using"
             required
             :rules="applicationCommentRules"
             outlined
@@ -162,6 +166,41 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+
+    <!-- CHES OCIO Notice-->
+    <BaseDialog
+      v-bind:show="showChesNotice"
+      @close-dialog="showChesNotice = false"
+    >
+      <template #icon>
+        <v-icon large color="primary">info_outline</v-icon>
+      </template>
+      <template #text>
+        <p class="mb-2">
+          Please read the guide on
+          <a
+            target="_blank"
+            href="https://github.com/bcgov/common-hosted-email-service/wiki/Best-Practices"
+          >Best Practices for use of the CHES messaging API</a>.
+        </p>
+        <p class="mb-2">
+          There is a change to our onboarding process for CHES. Before
+          requesting your API credentials through GETOK, you must make an IStore
+          request for a consultation with OCIO Messaging (the underlying SMTP
+          service provider). Book your consultation through your service desk
+          (Office Productivity > Consulting Services > Messaging and
+          Collaboration - Consulting) or email
+          <a href="mailto:mcs@gov.bc.ca">mcs@gov.bc.ca</a>.
+        </p>
+        <p>
+          Requests to the CHES API must originate from an IP adress within the
+          BC Government's SpanBC network. If your application is hosted outside
+          of the SpanBC network OCIO may be able to find you an alternate
+          solution. Failure to contact OCIO may affect your access to the CHES
+          service.
+        </p>
+      </template>
+    </BaseDialog>
   </v-container>
 </template>
 
@@ -191,12 +230,8 @@ export default {
           /^(?:[A-Z]{1,}[_]?)+[A-Z]{1,}$/g.test(v) ||
           'Incorrect format. Hover over ? for details.',
       ],
-      applicationCommentRules: [
-        (v) => !!v || 'Comment is required',
-      ],
-      ministryRules: [
-        (v) => !!v || 'Ministry is required',
-      ],
+      applicationCommentRules: [(v) => !!v || 'Comment is required'],
+      ministryRules: [(v) => !!v || 'Ministry is required'],
       errorOccurred: false,
       form: {
         applicationAcronym: '',
@@ -209,6 +244,7 @@ export default {
       registerSuccess: false,
       sending: false,
       valid: false,
+      showChesNotice: false,
     };
   },
   methods: {
@@ -250,6 +286,7 @@ export default {
   mounted() {
     this.resetState();
     this.resetForm();
+    this.showChesNotice = false;
   },
 };
 </script>
