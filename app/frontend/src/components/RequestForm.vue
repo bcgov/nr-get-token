@@ -193,7 +193,7 @@
           <a href="mailto:mcs@gov.bc.ca">mcs@gov.bc.ca</a>.
         </p>
         <p>
-          Requests to the CHES API must originate from an IP adress within the
+          Requests to the CHES API must originate from an IP address within the
           BC Government's SpanBC network. If your application is hosted outside
           of the SpanBC network OCIO may be able to find you an alternate
           solution. Failure to contact OCIO may affect your access to the CHES
