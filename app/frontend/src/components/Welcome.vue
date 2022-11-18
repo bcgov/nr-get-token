@@ -4,7 +4,7 @@
       <h3 style="color: white !important">Attention GETOK users!</h3>
       <p class="mt-4" style="color: white !important">Access to our hosted services is migrating to the API Services Portal at
         <a style="color: white !important; text-decoration: underline !important; font-weight: bold" target=" _blank" href="https://api.gov.bc.ca/">api.gov.bc.ca</a>
-        <br>After December 2022, your credentials obtained through GETOK will no longer work.<br>For more guidance on this transition, please read 
+        <br>After December 2022, your credentials obtained through GETOK will no longer work.<br>For more guidance on this transition, please read
         <a style="color: white !important; text-decoration: underline !important; font-weight: bold" target=" _blank" href="https://github.com/bcgov/common-service-showcase/wiki/CSB-2022-005">more details on our Wiki.</a>
       </p>
     </div>
@@ -16,14 +16,8 @@
       <div class="pa-6">
         <ul>
           <li class="my-2">
-            <strong>New User:</strong> Go to
-            <router-link to="">"Request Account"</router-link> and submit the form to add your application.
-            <br />* Check your email for the confirmation, then you’re ready to go!
-          </li>
-          <li class="my-2">
-            <strong>Existing User:</strong> Manage your application from
-            <router-link :to="{ name: 'MyApps' }">"My Applications"</router-link> or
-            <router-link to="">"Request Account"</router-link> for a new application
+            <strong>Existing Users:</strong> Manage your application from
+            <router-link :to="{ name: 'MyApps' }">"My Applications"</router-link>
           </li>
           <li class="my-2">
             <strong>Get Token for your application:</strong>
