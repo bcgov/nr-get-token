@@ -34,7 +34,6 @@ describe('BCGovNavBar.vue', () => {
 
     expect(wrapper.text()).toContain('About');
     expect(wrapper.text()).toContain('My Applications');
-    expect(wrapper.text()).toContain('Request Account');
   });
 
   it('renders with an admin button', () => {
@@ -53,7 +52,6 @@ describe('BCGovNavBar.vue', () => {
 
     expect(wrapper.text()).toContain('About');
     expect(wrapper.text()).toContain('My Applications');
-    expect(wrapper.text()).toContain('Request Account');
     expect(wrapper.text()).toContain('Admin');
   });
 });

@@ -57,23 +57,6 @@ export default function getRouter(basePath = '/') {
         props: true
       },
       {
-        path: '/requestAccount',
-        name: 'RequestAccount',
-        component: () => import(/* webpackChunkName: "request-account" */ '@/views/RequestAccount.vue'),
-        meta: {
-          hasLogin: true,
-          requiresAuth: true
-        },
-      },
-      {
-        path: '/documentation',
-        name: 'Documentation',
-        component: () => import(/* webpackChunkName: "documentation" */ '@/views/Documentation.vue'),
-        meta: {
-          hasLogin: true
-        }
-      },
-      {
         path: '/404',
         alias: '*',
         name: 'NotFound',
