@@ -8,6 +8,12 @@
         <li>
           <router-link :to="{ name: 'MyApps' }">My Applications</router-link>
         </li>
+        <li>
+          <router-link :to="{ name: 'RequestAccount' }">Request Account</router-link>
+        </li>
+        <li>
+          <router-link :to="{ name: 'Documentation' }">Documentation</router-link>
+        </li>
         <li v-if="isAdmin">
           <router-link :to="{ name: 'Admin' }">Admin</router-link>
         </li>
