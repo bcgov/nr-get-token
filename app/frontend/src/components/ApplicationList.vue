@@ -1,22 +1,15 @@
 <template>
   <v-container>
-    <div class="mx-auto mb-8 alert info pa-4" style="max-width: 800px;">
-      <h3 style="color: white !important">Attention GETOK users!</h3>
-      <p class="mt-4" style="color: white !important">Access to our hosted services is migrating to the API Services Portal at
-        <a style="color: white !important; text-decoration: underline !important; font-weight: bold" target=" _blank" href="https://api.gov.bc.ca/">api.gov.bc.ca</a>
-        <br>After December 2022, your credentials obtained through GETOK will no longer work.<br>For more guidance on this transition, please read 
-        <a style="color: white !important; text-decoration: underline !important; font-weight: bold" target=" _blank" href="https://github.com/bcgov/common-service-showcase/wiki/CSB-2022-005">more details on our Wiki.</a>
-      </p>
-    </div>
     <h2>My Applications</h2>
+    <p>*Submit the Request Account form to add a new application</p>
     <br />
     <v-container fluid class="px-0">
       <v-row dense>
         <v-col cols="12" md="4" xl="2" class="my-app-card">
-          <BaseActionCard>
+          <BaseActionCard linkName="RequestAccount">
             <div class="new-app text-center">
               <h3>Add a New Application</h3>
-              <v-icon large color="gray darken-4">mdi-plus-circle</v-icon>
+              <v-icon large color="blue darken-4">mdi-plus-circle</v-icon>
             </div>
           </BaseActionCard>
         </v-col>
