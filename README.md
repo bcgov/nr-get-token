@@ -1,4 +1,4 @@
-# Common Service Get Token [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE) [![img](https://img.shields.io/badge/Lifecycle-Stable-97ca00)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
+# Common Service Get Token [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE) [![Lifecycle:Retired](https://img.shields.io/badge/Lifecycle-Retired-d45500)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
 
 ![Tests](https://github.com/bcgov/nr-get-token/workflows/Tests/badge.svg)
 [![Maintainability](https://api.codeclimate.com/v1/badges/1b687dfb13ea3390707d/maintainability)](https://codeclimate.com/github/bcgov/nr-get-token/maintainability)
